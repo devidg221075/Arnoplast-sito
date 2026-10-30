@@ -79,3 +79,35 @@ test('missing_description_searchable_by_code', () => {
   assert.deepEqual(codes(search(idx(), '2801-0505')), ['2801-0505']);
   assert.deepEqual(codes(search(buildIndex(undefined), 'abc')), []);
 });
+
+const MIXED = [
+  { code: '1807-0751', description: 'Vite', url: '/p1/#1807-0751', products: ['Copripalo Prisma', 'Copripalo Qubo'] },
+  { code: '1807-0752', description: 'Vite lunga', url: '/p1/#1807-0752', products: ['Copripalo Prisma'] },
+  { name: 'Copripalo Prisma', kind: 'product', parent: 'Copripalo · Agricoltura', url: '/p1/' },
+  { name: 'Espositori', kind: 'family', parent: 'Agricoltura', url: '/f2/' },
+  { name: 'Gilet alta visibilita', kind: 'product', parent: 'Abbigliamento · Garden', url: '/p3/' },
+];
+const mixed = () => buildIndex(MIXED);
+
+test('finds_products_and_families_by_name', () => {
+  assert.deepEqual(search(mixed(), 'copripalo prisma').map((r) => r.name), ['Copripalo Prisma']);
+  assert.deepEqual(search(mixed(), 'espositori').map((r) => r.name), ['Espositori']);
+  assert.deepEqual(search(mixed(), 'gilet').map((r) => r.name), ['Gilet alta visibilita']);
+  assert.deepEqual(search(mixed(), 'agricoltura').map((r) => r.name).sort(), ['Copripalo Prisma', 'Espositori']);
+});
+
+test('code_first_then_names_then_descriptions', () => {
+  const i = buildIndex([
+    { code: '5000-0001', description: 'Nastro viola', url: '/d' },
+    { name: 'Viola', kind: 'family', parent: 'Garden', url: '/f' },
+    { code: 'VIOL-1', description: 'altro', url: '/c' },
+  ]);
+  const r = search(i, 'viol');
+  assert.deepEqual(r.map((x) => x.code || x.name), ['VIOL-1', 'Viola', '5000-0001']);
+});
+
+test('one_result_per_code_keeps_product_list', () => {
+  const r = search(mixed(), '1807-0751');
+  assert.equal(r.length, 1);
+  assert.deepEqual(r[0].products, ['Copripalo Prisma', 'Copripalo Qubo']);
+});

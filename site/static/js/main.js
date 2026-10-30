@@ -1,10 +1,12 @@
 // Comportamento del prototipo: lista richiesta, contatori, modulo, ricerca, menu mobile.
 // ES module senza dipendenze. Tutto l'accesso a localStorage passa da quote.js (load/save).
-import { addItem, canAdd, setQty, removeItem, isValidQty, load, save, emailBody, QTY_MAX, STORAGE_KEY } from './quote.js';
+import { addItem, canAdd, setQty, removeItem, isValidQty, load, save, emailBody, itemKey, QTY_MAX, STORAGE_KEY } from './quote.js';
 import { buildIndex, search } from './search.js';
 
 const LANG = document.documentElement.lang || 'it';
 // Testi dell'interfaccia generati da JS (italiano; le traduzioni arrivano con WordPress).
+/** Confezione e prodotto di origine di una voce, es. "conf. da 40 – Prisma". */
+const meta = (i) => [i.conf ? `conf. da ${i.conf}` : '', i.product || ''].filter(Boolean).join(' – ');
 const MSG = {
   qtyInvalid: `Quantità non valida: inserisci un numero intero da 1 a ${QTY_MAX}.`,
   qtyOverMax: (have) => `Quantità massima per riga: ${QTY_MAX.toLocaleString('it-IT')} (ne hai già ${have.toLocaleString('it-IT')}).`,
@@ -12,15 +14,18 @@ const MSG = {
   removed: (code) => `${code} rimosso dalla richiesta.`,
   qtyUpdated: (code, qty) => `Quantità di ${code} aggiornata a ${qty}.`,
   qtyLabel: 'Q.tà',
-  qtyAria: (code) => `Quantità ${code}`,
-  remove: (code) => `Rimuovi ${code}`,
+  qtyAria: (i) => `Quantità ${i.code}${meta(i) ? ` (${meta(i)})` : ''}`,
+  remove: (i) => `Rimuovi ${i.code}${meta(i) ? ` (${meta(i)})` : ''}`,
   emptyList: 'La lista è vuota: aggiungi almeno un articolo dalle schede prodotto prima di inviare.',
   name: 'Inserisci nome e cognome.',
   email: 'Inserisci un indirizzo email valido.',
   privacy: "Per inviare la richiesta devi accettare l'informativa privacy.",
   fix: 'Controlla i campi evidenziati:',
-  thanks: 'Grazie! Si è aperto il tuo programma di posta con la richiesta già compilata: invia il messaggio per completarla. La lista resta salvata.',
+  thanks: 'Abbiamo provato ad aprire il tuo programma di posta con la richiesta già compilata. Se non si apre, scrivi a info@arnoplast.it incollando il testo qui sotto. La lista resta salvata.',
+  copyLabel: 'Testo della richiesta, da copiare',
   noResults: 'Nessun risultato.',
+  kindFamily: 'Famiglia',
+  kindProduct: 'Prodotto',
 };
 
 // localStorage può non esistere o lanciare (modalità privata, cookie bloccati): quote.js lo gestisce.
@@ -89,13 +94,17 @@ function onAdd(btn) {
   const input = siblingQty(btn);
   const qty = input ? parseQty(input.value) : 1;
   const code = btn.dataset.code || '';
-  const over = qty !== null && !canAdd(list, code, qty);
+  const conf = Number(btn.dataset.conf);
+  const item = { code, description: btn.dataset.description || '', product: btn.dataset.product || '',
+                 conf: Number.isInteger(conf) && conf > 0 ? conf : null };
+  const key = itemKey(item);
+  const over = qty !== null && !canAdd(list, key, qty);
   if (qty === null || over) {
     if (input) {
       input.setAttribute('aria-invalid', 'true');
       input.focus();
     }
-    const have = over ? (list.find((i) => i.code === code.trim()) || { qty: 0 }).qty : 0;
+    const have = over ? (list.find((i) => itemKey(i) === key) || { qty: 0 }).qty : 0;
     const text = over ? MSG.qtyOverMax(have) : MSG.qtyInvalid;
     const msg = rowMessage(btn, text);
     if (input) input.setAttribute('aria-describedby', msg.id || (msg.id = `msg-${Math.random().toString(36).slice(2, 8)}`));
@@ -106,7 +115,7 @@ function onAdd(btn) {
     input.value = String(qty);
   }
   rowMessage(btn, '');
-  commit(addItem(list, { code, description: btn.dataset.description || '', qty }), { bump: true });
+  commit(addItem(list, { ...item, qty }), { bump: true });
   btn.classList.add('is-added');
   clearTimeout(btn._addedTimer);
   btn._addedTimer = setTimeout(() => btn.classList.remove('is-added'), 1600);
@@ -150,6 +159,8 @@ function renderQuote() {
     const li = document.createElement('li');
     li.className = 'quote-line';
     li.dataset.code = item.code;
+    const key = itemKey(item);
+    li.dataset.key = key;
 
     const code = document.createElement('span');
     code.className = 'ql-code';
@@ -158,6 +169,12 @@ function renderQuote() {
     const desc = document.createElement('span');
     desc.className = 'ql-desc';
     desc.textContent = item.description;
+    if (meta(item)) {
+      const m = document.createElement('small');
+      m.className = 'ql-meta';
+      m.textContent = meta(item);
+      desc.append(' ', m);
+    }
 
     const qtyWrap = document.createElement('label');
     qtyWrap.className = 'ql-qty';
@@ -172,17 +189,17 @@ function renderQuote() {
     qty.step = '1';
     qty.inputMode = 'numeric';
     qty.value = String(item.qty);
-    qty.setAttribute('aria-label', MSG.qtyAria(item.code));
+    qty.setAttribute('aria-label', MSG.qtyAria(item));
     qty.addEventListener('change', () => {
       const n = parseQty(qty.value);
       if (n === null) {
         // Valore non valido: torna all'ultimo valore salvato.
-        const cur = list.find((i) => i.code === item.code);
+        const cur = list.find((i) => itemKey(i) === key);
         qty.value = String(cur ? cur.qty : item.qty);
         announce(MSG.qtyInvalid);
         return;
       }
-      commit(setQty(list, item.code, n));
+      commit(setQty(list, key, n));
       qty.value = String(n);
       announce(MSG.qtyUpdated(item.code, n));
     });
@@ -191,7 +208,7 @@ function renderQuote() {
     const rm = document.createElement('button');
     rm.type = 'button';
     rm.className = 'ql-remove';
-    rm.setAttribute('aria-label', MSG.remove(item.code));
+    rm.setAttribute('aria-label', MSG.remove(item));
     const x = document.createElement('span');
     x.setAttribute('aria-hidden', 'true');
     x.textContent = '\u00d7';
@@ -199,7 +216,7 @@ function renderQuote() {
     rm.addEventListener('click', () => {
       const lis = $$('.quote-line', listEl);
       const idx = lis.indexOf(li);
-      commit(removeItem(list, item.code));
+      commit(removeItem(list, key));
       renderQuote();
       announce(MSG.removed(item.code));
       // Sposta il fuoco su un elemento sensato dopo la rimozione.
@@ -241,6 +258,24 @@ function formMessage(html, ok = false) {
   box.hidden = false;
   box.focus({ preventScroll: true });
   box.scrollIntoView({ block: 'nearest', behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
+}
+
+// Un mailto con molte righe supera facilmente ~2000 caratteri e puo' essere troncato o non aprirsi:
+// il testo completo resta sempre disponibile e copiabile.
+function showCopyable(text) {
+  const box = $('#form-message');
+  if (!box) return;
+  const label = document.createElement('label');
+  label.className = 'copy-label';
+  label.textContent = MSG.copyLabel;
+  const ta = document.createElement('textarea');
+  ta.readOnly = true;
+  ta.className = 'copy-text';
+  ta.rows = Math.min(14, text.split('\n').length + 1);
+  ta.value = text;
+  ta.addEventListener('focus', () => ta.select());
+  label.appendChild(ta);
+  box.appendChild(label);
 }
 
 if (form) {
@@ -292,6 +327,7 @@ if (form) {
       + encodeURIComponent(emailBody(list, data));
     window.location.href = href;
     formMessage(MSG.thanks, true);
+    showCopyable(`A: info@arnoplast.it\nOggetto: Richiesta di preventivo\n\n${emailBody(list, data)}`);
     // La lista resta salvata dopo l'invio.
   });
 }
@@ -362,10 +398,18 @@ function renderResults() {
     link.href = a.url;
     const c = document.createElement('span');
     c.className = 'r-code';
-    c.textContent = a.code;
     const d = document.createElement('span');
     d.className = 'r-desc';
-    d.textContent = a.description;
+    if (typeof a.code === 'string') {
+      // Articolo: un risultato per codice, con i prodotti in cui compare.
+      c.textContent = a.code;
+      const names = [...new Set(Array.isArray(a.products) ? a.products : [])];
+      const more = names.length > 2 ? ` +${names.length - 2}` : '';
+      d.textContent = [names.slice(0, 2).join(', ') + more, a.description].filter((x) => x && x.trim()).join(' · ');
+    } else {
+      c.textContent = a.kind === 'family' ? MSG.kindFamily : MSG.kindProduct;
+      d.textContent = [a.name, a.parent].filter(Boolean).join(' · ');
+    }
     link.append(c, d);
     li.appendChild(link);
     ul.appendChild(li);

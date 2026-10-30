@@ -5,17 +5,21 @@ const norm = (s) => (typeof s === 'string' ? s : '')
   .toLowerCase();
 const stripCode = (s) => norm(s).replace(/[\s-]+/g, '');
 
-export function buildIndex(articles) {
-  const list = Array.isArray(articles) ? articles : [];
+/**
+ * Voci dell'indice: articoli ({code, description, url, products}) e pagine
+ * ({name, kind: 'product' | 'family', parent, url}). Un articolo per codice (i prodotti
+ * in cui compare sono elencati in `products`).
+ */
+export function buildIndex(entries) {
+  const list = Array.isArray(entries) ? entries : [];
   return list
     .filter((a) => a && typeof a === 'object')
-    .map((a) => ({
-      article: a,
-      codeKey: stripCode(a.code),
-      desc: norm(a.description),
-    }));
+    .map((a) => (typeof a.name === 'string' && typeof a.code !== 'string'
+      ? { entry: a, page: true, codeKey: '', desc: norm(`${a.name} ${a.parent || ''}`) }
+      : { entry: a, page: false, codeKey: stripCode(a.code), desc: norm(a.description) }));
 }
 
+/** Ordine dei risultati: codice, poi nome di prodotto/famiglia, poi descrizione articolo. */
 export function search(index, query, limit = 20) {
   if (typeof query !== 'string' || !Array.isArray(index)) return [];
   if (typeof limit !== 'number' || !(limit > 0)) return [];
@@ -24,10 +28,13 @@ export function search(index, query, limit = 20) {
   const codeQ = stripCode(q);
   const words = q.split(/\s+/).filter(Boolean);
   const byCode = [];
+  const byPage = [];
   const byDesc = [];
   for (const e of index) {
-    if (codeQ && e.codeKey.startsWith(codeQ)) byCode.push(e.article);
-    else if (e.desc && words.every((w) => e.desc.includes(w))) byDesc.push(e.article);
+    if (e.page) {
+      if (words.every((w) => e.desc.includes(w))) byPage.push(e.entry);
+    } else if (codeQ && e.codeKey.startsWith(codeQ)) byCode.push(e.entry);
+    else if (e.desc && words.every((w) => e.desc.includes(w))) byDesc.push(e.entry);
   }
-  return byCode.concat(byDesc).slice(0, Math.floor(limit) || 1);
+  return byCode.concat(byPage, byDesc).slice(0, Math.floor(limit) || 1);
 }

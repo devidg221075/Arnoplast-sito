@@ -30,7 +30,7 @@ page.on('console', (m) => { if (m.type() === 'error') errors.push(m.text()); });
 page.on('pageerror', (e) => errors.push(e.message));
 await page.route('mailto:*', (route) => route.abort()); // mai aprire un client di posta
 
-const stored = () => page.evaluate(() => JSON.parse(localStorage.getItem('arnoplast.quote.v1') || '[]'));
+const stored = () => page.evaluate(() => JSON.parse(localStorage.getItem('arnoplast.quote.v2') || '[]'));
 const counters = () => page.$$eval('.quote-count', (els) => els.map((e) => e.textContent.trim()));
 
 await page.goto(BASE + PRODUCT, { waitUntil: 'networkidle' });
@@ -120,7 +120,7 @@ if (mailtos.length) {
   const body = decodeURIComponent(u.split('&body=')[1] || '');
   ok(u.startsWith('mailto:info@arnoplast.it?subject=Richiesta%20di%20preventivo&body='), 'mailto: destinatario e oggetto');
   ok(body.includes('Nome: Mario Rossi') && body.includes('Email: mario@example.com') && body.includes('Righe richieste: 2')
-    && body.includes(`${codeA} |`) && body.includes(`${codeB} |`) && body.includes('q.tà: 12'), 'mailto: corpo con dati e righe');
+    && body.includes(`${codeA} |`) && body.includes(`${codeB} |`) && body.includes('q.tà 12'), 'mailto: corpo con dati e righe');
   console.log('     mailto body:\n' + body.split('\n').map((l) => `       ${l}`).join('\n'));
 }
 ok(await page.locator('#form-message.ok').isVisible(), 'messaggio di ringraziamento');
@@ -166,12 +166,12 @@ ok(/massima per riga: 99\.999/.test(await capRow.locator('.qty-msg').textContent
 ok((await stored())[0].qty === 99999, `tetto 99999: quantita' salvata resta 99999 (${JSON.stringify(await stored())})`);
 await page.reload({ waitUntil: 'networkidle' });
 ok((await stored()).length === 1 && (await stored())[0].qty === 99999 && (await counters()).every((c) => c === '1'), 'tetto 99999: dopo ricarica resta 99999');
-await page.evaluate(() => localStorage.setItem('arnoplast.quote.v1', JSON.stringify([{ code: 'X', description: '', qty: 199998 }])));
+await page.evaluate(() => localStorage.setItem('arnoplast.quote.v2', JSON.stringify([{ code: 'X', description: '', qty: 199998 }])));
 await page.goto(BASE + QUOTE, { waitUntil: 'networkidle' });
 ok(await page.locator('.quote-line').count() === 0, 'riga salvata oltre 99999 scartata al caricamento');
 
 // Varianti della home: contatore in testata, ingresso ricerca della pagina, barra varianti.
-await page.evaluate(() => localStorage.setItem('arnoplast.quote.v1', JSON.stringify([{ code: '1807-1351', description: 'Coprip Prisma 7x7', qty: 3 }])));
+await page.evaluate(() => localStorage.setItem('arnoplast.quote.v2', JSON.stringify([{ code: '1807-1351', description: 'Coprip Prisma 7x7', qty: 3 }])));
 for (const v of ['a', 'b', 'c']) {
   await page.goto(`${BASE}/it/home-${v}/`, { waitUntil: 'networkidle' });
   ok((await counters()).every((c) => c === '1'), `home-${v}: contatori = 1`);
@@ -191,6 +191,45 @@ await page.click('#site-search');
 await page.keyboard.type('prisma');
 await page.waitForTimeout(300);
 await page.unroute('**/search-index.json');
+
+// Stesso codice con confezione/prodotto diversi (1807-1310GZ in Prisma e Qubo): voci separate, con confezione e prodotto.
+await page.goto(BASE + PRODUCT, { waitUntil: 'networkidle' });
+await page.evaluate(() => localStorage.clear());
+for (const prod of ['copripalo-prisma', 'copripalo-qubo']) {
+  await page.goto(`${BASE}/it/agricoltura/copripalo/${prod}/`, { waitUntil: 'networkidle' });
+  await page.locator('tbody tr[id="1807-1310GZ"] .add-to-quote').click();
+}
+const packs = await stored();
+ok(packs.length === 2 && packs[0].conf !== packs[1].conf && packs.every((i) => i.product), `stesso codice, due confezioni: due voci (${packs.map((i) => `${i.product} da ${i.conf}`).join('; ')})`);
+await page.goto(BASE + QUOTE, { waitUntil: 'networkidle' });
+ok(await page.locator('.quote-line').count() === 2 && (await page.locator('.ql-meta').allTextContents()).every((t) => /conf\. da \d+ – Copripalo/.test(t)), 'pagina richiesta: confezione e prodotto su ogni riga');
+await page.fill('#q-name', 'Mario Rossi');
+await page.fill('#q-email', 'mario@example.com');
+await page.check('#q-privacy');
+await page.click('#quote-form button[type=submit]');
+const copy = await page.locator('textarea.copy-text').inputValue();
+ok(/info@arnoplast\.it/.test(await page.locator('#form-message').textContent()) && copy.includes('conf. (da') && copy.split('1807-1310GZ').length === 3, 'testo copiabile con le due righe e conf.');
+
+// Telefono (390 px): nessuno scroll orizzontale e bottone visibile, su famiglie, prodotti e preventivo.
+const noOverflow = () => page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth);
+for (const path of ['/it/agricoltura/copripalo/', '/it/agricoltura/copripalo/copripalo-prisma/', '/it/agricoltura/copripalo/copripalo-qubo/',
+  '/it/agricoltura/moschettoni-e-tiranti/colibri/', '/it/garden/testine/', QUOTE]) {
+  await page.goto(BASE + path, { waitUntil: 'networkidle' });
+  ok(await noOverflow(), `390 px ${path}: nessun overflow orizzontale`);
+  if (path.includes('copripalo-')) {
+    const b = await page.locator('.add-to-quote').first().boundingBox();
+    ok(b && b.x >= 0 && b.x + b.width <= 390, `390 px ${path}: bottone Aggiungi dentro lo schermo (x=${Math.round(b.x)}-${Math.round(b.x + b.width)})`);
+  }
+}
+
+// Senza JavaScript: avviso con mailto e telefono, nessun modulo inerte.
+const nojs = await browser.newContext({ viewport: { width: 390, height: 844 }, javaScriptEnabled: false });
+const p2 = await nojs.newPage();
+await p2.goto(BASE + PRODUCT);
+ok(await p2.locator('.noscript-note a[href^="mailto:info@arnoplast.it"]').isVisible() && !(await p2.locator('.add-row').first().isVisible()), 'senza JS (prodotto): avviso mailto, nessun bottone inerte');
+await p2.goto(BASE + QUOTE);
+ok(await p2.locator('.noscript-note a[href^="mailto:info@arnoplast.it"]').isVisible() && !(await p2.locator('#quote-form').isVisible()), 'senza JS (preventivo): avviso mailto, modulo nascosto');
+await nojs.close();
 
 const foreign = requests.filter((u) => new URL(u).origin !== origin);
 ok(foreign.length === 0, `nessuna richiesta esterna (${requests.length} richieste, ${new Set(requests).size} URL distinti)`);
