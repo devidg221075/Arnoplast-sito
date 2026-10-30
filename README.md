@@ -48,5 +48,13 @@ va servito dalla radice di un dominio, ad esempio:
 
     (cd dist && python3 -m http.server 8000)
 
+Per una copia da sfogliare senza server (doppio clic su `index.html`, anche da
+chi non ha Python):
+
+    python tools/offline_site.py <cartella-fuori-dal-repo>
+
+Crea la cartella e il relativo `.zip`, con link relativi e JS in un solo script;
+il sito in `dist/` non cambia.
+
 Le foto della home (gia' in `site/static/img/home/`) si rigenerano con
 `python tools/home_images.py <cartella-temporanea>` (poppler, ImageMagick, Pillow con WebP).
