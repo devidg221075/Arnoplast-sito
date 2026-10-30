@@ -4,6 +4,7 @@ from __future__ import annotations
 import json
 import shutil
 import sys
+from html import escape
 from pathlib import Path
 
 from jinja2 import Environment, FileSystemLoader, select_autoescape
@@ -32,6 +33,15 @@ CONTACTS = {
     "email": "info@arnoplast.it",
     "web": "www.arnoplast.it",
 }
+
+# Dominio di produzione: serve ai canonical e alla sitemap (la fase WordPress puo' cambiarlo qui).
+SITE_URL = "https://www.arnoplast.it"
+
+# Miniature delle liste famiglia: larghezze (px) generate al build, in WebP.
+THUMB_WIDTHS = (200, 400)
+THUMB_SIZES = "(min-width: 1024px) 22vw, (min-width: 600px) 30vw, 46vw"
+# Le prime miniature sono sopra la piega (2 colonne x 2 righe su telefono): niente lazy.
+EAGER_THUMBS = 4
 
 # Informativa privacy esistente; la fase WordPress puo' cambiarla qui.
 PRIVACY_URL = "https://www.arnoplast.it/privacy-policy-arno-plast"
@@ -64,7 +74,7 @@ def _env(lang: str) -> Environment:
     env = Environment(loader=FileSystemLoader(SITE_DIR / "templates"),
                       autoescape=select_autoescape(["html"], default=True),
                       trim_blocks=True, lstrip_blocks=True)
-    env.globals.update(lang=lang, t=lambda k: t(k, lang), text=lambda d: text(d, lang),
+    env.globals.update(lang=lang, contacts=CONTACTS, t=lambda k: t(k, lang), text=lambda d: text(d, lang),
                        menu=[(f"/{lang}/", "menu.products"),
                              (f"/{lang}/applicazioni/", "menu.applications"),
                              (f"/{lang}/video/", "menu.videos"),
@@ -114,6 +124,65 @@ def _image_size(path: Path) -> tuple[int, int] | None:
             return (w, h) if w and h else None
         i += 2 + seg
     return None
+
+
+_THUMB_CACHE: dict[tuple[str, int, int], tuple[bytes, int]] = {}  # build ripetuti nello stesso processo (test)
+
+
+def _thumb_bytes(src: Path, width: int) -> tuple[bytes, int]:
+    """WebP della pagina `src` a larghezza `width` (e la sua altezza)."""
+    from io import BytesIO
+    from PIL import Image
+    key = (str(src), src.stat().st_mtime_ns, width)
+    if key not in _THUMB_CACHE:
+        with Image.open(src) as im:
+            im = im.convert("RGB")
+            h = max(1, round(im.height * width / im.width))
+            buf = BytesIO()
+            im.resize((width, h), Image.LANCZOS).save(buf, "WEBP", quality=68, method=6)
+        _THUMB_CACHE[key] = (buf.getvalue(), h)
+    return _THUMB_CACHE[key]
+
+
+def make_thumbs(prod, out: Path) -> dict | None:
+    """Miniature WebP del prodotto in out/thumbs/ -> src (la piu' grande), srcset, width, height.
+
+    Senza Pillow o con un file illeggibile ricade sull'immagine originale (se esiste)."""
+    if not prod.image or not (DATA_DIR / prod.image).is_file():
+        return None
+    try:
+        rel = Path(*Path(prod.image).with_suffix("").parts[1:])  # senza il prefisso images/
+        made = []
+        for w in THUMB_WIDTHS:
+            data, h = _thumb_bytes(DATA_DIR / prod.image, w)
+            dest = out / "thumbs" / rel.parent / f"{rel.name}-{w}.webp"
+            dest.parent.mkdir(parents=True, exist_ok=True)
+            dest.write_bytes(data)
+            made.append((w, h, f"/thumbs/{rel.parent.as_posix()}/{rel.name}-{w}.webp"))
+        w, h, url = made[-1]
+        return {"src": url, "width": w, "height": h,
+                "srcset": ", ".join(f"{u} {x}w" for x, _, u in made)}
+    except Exception as e:  # noqa: BLE001 - la miniatura e' accessoria
+        print(f"ATTENZIONE: miniatura non generata per {prod.image}: {e}", file=sys.stderr)
+        size = _image_size(DATA_DIR / prod.image)
+        return {"src": f"/{prod.image}", "srcset": None,
+                "width": size[0] if size else None, "height": size[1] if size else None}
+
+
+def _unique_ids(codes: list[str]) -> list[str]:
+    """Id HTML per riga: il primo uso del codice resta il codice (per i frammenti #codice), i
+    successivi diventano codice-2, codice-3..."""
+    seen: dict[str, int] = {}
+    ids = []
+    for c in codes:
+        seen[c] = seen.get(c, 0) + 1
+        ids.append(c if seen[c] == 1 else f"{c}-{seen[c]}")
+    return ids
+
+
+def _clip(s: str, n: int = 160) -> str:
+    s = " ".join(s.split())
+    return s if len(s) <= n else s[:n - 1].rstrip(" ,;:.") + "…"
 
 
 def _webp_size(path: Path) -> tuple[int, int] | None:
@@ -178,17 +247,26 @@ def build_site(c: Catalog, out: Path, lang: str = "it", sources: Path | None = N
     env = _env(lang)
     written: list[Path] = []
     base = out / lang
+    urls: list[str] = []
 
-    def render(tpl: str, dest: Path, **ctx) -> None:
-        _write(dest / "index.html", env.get_template(tpl).render(**ctx), written)
+    def render(tpl: str, dest: Path, description: str | None = None, **ctx) -> None:
+        rel = dest.relative_to(out).as_posix()
+        canonical = None if rel.startswith(f"{lang}/home-") else f"{SITE_URL}/{rel}/"
+        if canonical:
+            urls.append(canonical)
+        _write(dest / "index.html", env.get_template(tpl).render(
+            description=_clip(description, 200) if description else None, canonical=canonical, **ctx), written)
 
     home = home_context(c, lang)
     for v in HOME_VARIANTS:
         render(f"home_{v}.html", base / f"home-{v}", title=t("home.title", lang), variant=v,
                variant_switch=True, **home)
-    render("home_a.html", base, title=t("home.title", lang), variant="a", variant_switch=False, **home)
+    render("home_a.html", base, description=t("home.tagline", lang), title=t("home.title", lang),
+           variant="a", variant_switch=False, **home)
 
-    search: list[dict] = []
+    # Ricerca: un articolo per codice (con i prodotti in cui compare) + una voce per famiglia e prodotto.
+    search_arts: dict[str, dict] = {}
+    search_pages: list[dict] = []
     for line in c.lines:
         pdf = None
         if line.slug in CATALOG_PDFS:
@@ -198,17 +276,31 @@ def build_site(c: Catalog, out: Path, lang: str = "it", sources: Path | None = N
                 shutil.copyfile(sources / src_name, out / "downloads" / pub_name)
                 mb = f"{(sources / src_name).stat().st_size / 1e6:.1f}".replace(".", ",")
                 pdf = {"url": f"/downloads/{pub_name}", "mb": mb}
-        render("line.html", base / line.slug, line=line, title=text(line.name, lang), pdf=pdf)
+        n_prod = sum(len(f.products) for f in line.families)
+        render("line.html", base / line.slug, line=line, title=text(line.name, lang), pdf=pdf,
+               description=f"{text(line.name, lang)}: {len(line.families)} famiglie e {n_prod} prodotti "
+                           "del catalogo ARNOplast.")
         for fam in line.families:
+            fam_url = f"/{lang}/{line.slug}/{fam.slug}/"
+            search_pages.append({"name": text(fam.name, lang), "kind": "family",
+                                 "parent": text(line.name, lang), "url": fam_url})
+            names = ", ".join(text(p.name, lang) for p in fam.products[:3])
             render("family.html", base / line.slug / fam.slug, line=line, family=fam,
                    title=text(fam.name, lang),
-                   thumbs={p.slug: _image_url(p) for p in fam.products})
+                   description=f"{text(fam.name, lang)} ({text(line.name, lang)}): "
+                               f"{len(fam.products)} prodotti, tra cui {names}.",
+                   thumbs={p.slug: make_thumbs(p, out) for p in fam.products},
+                   eager_thumbs=EAGER_THUMBS, thumb_sizes=THUMB_SIZES)
             for prod in fam.products:
                 url = f"/{lang}/{line.slug}/{fam.slug}/{prod.slug}/"
                 arts = prod.articles
                 has_image = _image_url(prod) is not None
+                mats = ", ".join(MATERIALS.get(m, m) for m in prod.materials)
                 render("product.html", base / line.slug / fam.slug / prod.slug,
                        line=line, family=fam, product=prod, title=text(prod.name, lang),
+                       description=f"{text(prod.name, lang)}, {text(fam.name, lang)} ({text(line.name, lang)}): "
+                                   f"{len(arts)} codici articolo" + (f". Materiali: {mats}" if mats else "") + ".",
+                       row_ids=_unique_ids([a.code for a in arts]),
                        show_conf=any(a.conf is not None for a in arts),
                        show_imb=any(a.imb is not None for a in arts),
                        show_pallet=any(a.pallet is not None for a in arts),
@@ -218,20 +310,24 @@ def build_site(c: Catalog, out: Path, lang: str = "it", sources: Path | None = N
                     dest = out / prod.image
                     dest.parent.mkdir(parents=True, exist_ok=True)
                     shutil.copyfile(DATA_DIR / prod.image, dest)
+                search_pages.append({"name": text(prod.name, lang), "kind": "product",
+                                     "parent": f"{text(fam.name, lang)} · {text(line.name, lang)}", "url": url})
                 seen: set[str] = set()
                 for a in arts:
                     if a.code in seen:
                         continue
                     seen.add(a.code)
-                    search.append({"code": a.code, "description": text(a.description, lang),
-                                   "url": f"{url}#{a.code}"})
+                    e = search_arts.setdefault(a.code, {"code": a.code, "description": text(a.description, lang),
+                                                        "url": f"{url}#{a.code}", "products": []})
+                    e["products"].append(text(prod.name, lang))
 
     render("quote.html", base / "richiesta-preventivo", line=None, title=t("quote.title", lang),
-           privacy_url=PRIVACY_URL)
+           description=t("quote.intro", lang), privacy_url=PRIVACY_URL)
     render("page.html", base / "contatti", line=None, title=t("page.contacts", lang),
+           description=f"{CONTACTS['name']}, {CONTACTS['address']}. Tel. {CONTACTS['phone']}, {CONTACTS['email']}.",
            kind="contacts", contacts=CONTACTS)
     render("page.html", base / "azienda", line=None, title=t("page.company", lang),
-           kind="company", paragraphs=COMPANY_HISTORY)
+           description=" ".join(COMPANY_HISTORY[:2]), kind="company", paragraphs=COMPANY_HISTORY)
     render("page.html", base / "applicazioni", line=None, title=t("page.applications", lang),
            kind="placeholder")
     render("page.html", base / "video", line=None, title=t("page.videos", lang),
@@ -240,7 +336,14 @@ def build_site(c: Catalog, out: Path, lang: str = "it", sources: Path | None = N
            kind="reserved")
 
     (base / "search-index.json").write_text(
-        json.dumps(search, ensure_ascii=False, separators=(",", ":")), encoding="utf-8")
+        json.dumps(list(search_arts.values()) + search_pages, ensure_ascii=False, separators=(",", ":")),
+        encoding="utf-8")
+    (out / "sitemap.xml").write_text(
+        '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
+        + "".join(f"  <url><loc>{escape(u)}</loc></url>\n" for u in dict.fromkeys(urls))
+        + "</urlset>\n", encoding="utf-8")
+    (out / "robots.txt").write_text(f"User-agent: *\nAllow: /\n\nSitemap: {SITE_URL}/sitemap.xml\n",
+                                    encoding="utf-8")
 
     static = SITE_DIR / "static"
     if static.is_dir():

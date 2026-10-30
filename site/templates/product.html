@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% block head_extra %}<link rel="stylesheet" href="/static/css/product.css">{% endblock %}
 {% block main %}
 <article class="product">
   <div class="wrap product-top">
@@ -36,6 +37,7 @@
       {% if product.articles %}<p class="hint">{{ t('product.code_hint') }}</p>{% endif %}
     </div>
     {% if product.articles %}
+    <noscript><p class="noscript-note" role="note">{{ t('noscript.product') }} <a href="mailto:{{ contacts.email }}">{{ contacts.email }}</a> · {{ contacts.phone }}</p></noscript>
     <div class="table-wrap">
     <table class="articles">
       <thead>
@@ -50,17 +52,21 @@
       </thead>
       <tbody>
       {% for a in product.articles %}
-        <tr id="{{ a.code }}" class="kind-{{ a.kind }}">
+        <tr id="{{ row_ids[loop.index0] }}" class="kind-{{ a.kind }}">
           <td class="code">{{ a.code }}</td>
           <td class="desc">{{ text(a.description) }}{% if a.kind in ('optional', 'spare') %} <span class="badge badge-{{ a.kind }}">{{ t('kind.' ~ a.kind) }}</span>{% endif %}</td>
-          {% if show_conf %}<td class="num">{{ a.conf if a.conf is not none else '-' }}</td>{% endif %}
-          {% if show_imb %}<td class="num">{{ a.imb if a.imb is not none else '-' }}</td>{% endif %}
-          {% if show_pallet %}<td class="num">{{ a.pallet if a.pallet is not none else '-' }}</td>{% endif %}
+          {% if show_conf %}<td class="num" data-label="{{ t('col.conf') }}">{{ a.conf if a.conf is not none else '-' }}</td>{% endif %}
+          {% if show_imb %}<td class="num" data-label="{{ t('col.imb') }}">{{ a.imb if a.imb is not none else '-' }}</td>{% endif %}
+          {% if show_pallet %}<td class="num" data-label="{{ t('col.pallet') }}">{{ a.pallet if a.pallet is not none else '-' }}</td>{% endif %}
           <td class="quote-cell">
+            {% if '…' in a.code %}
+            <span class="on-request">{{ t('action.on_request') }} <a href="/{{ lang }}/contatti/">{{ t('action.on_request_cta') }}</a></span>
+            {% else %}
             <div class="add-row">
               <input type="number" min="1" step="1" max="99999" value="1" inputmode="numeric" class="qty" aria-label="{{ t('qty.label') }} {{ a.code }}">
-              <button type="button" class="add-to-quote" data-code="{{ a.code }}" data-description="{{ text(a.description) }}" data-added="{{ t('action.added') }}"><span class="btn-label">{{ t('action.add') }}</span></button>
+              <button type="button" class="add-to-quote" data-code="{{ a.code }}" data-description="{{ text(a.description) }}" data-product="{{ text(product.name) }}" data-conf="{{ a.conf if a.conf is not none else '' }}" data-added="{{ t('action.added') }}"><span class="btn-label">{{ t('action.add') }}</span></button>
             </div>
+            {% endif %}
           </td>
         </tr>
       {% endfor %}

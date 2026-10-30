@@ -5,7 +5,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>{{ title }} - {{ t('site.name') }}</title>
   <meta name="theme-color" content="#0b0b0c">
+  {% if description %}<meta name="description" content="{{ description }}">
+  {% endif %}
+  {% if canonical %}<link rel="canonical" href="{{ canonical }}">
+  {% endif %}
   <script>document.documentElement.classList.add('js')</script>
+  <noscript><style>.quote-count{display:none}</style></noscript>
   <link rel="stylesheet" href="/static/css/main.css">
   <script type="module" src="/static/js/main.js"></script>
   {% block head_extra %}{% endblock %}

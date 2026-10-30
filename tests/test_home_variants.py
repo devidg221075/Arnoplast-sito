@@ -36,7 +36,8 @@ def test_three_variants_built(site):
     assert 'class="vswitch"' in a  # barra di confronto solo sulle varianti
     assert 'class="vswitch"' not in html(out)
     norm = lambda x: re.sub(r"\s+", " ", x)
-    assert norm(strip_switch(re.sub(r'<meta name="robots"[^>]*>', "", a))) == norm(html(out))
+    seo = lambda x: re.sub(r'<(?:meta name="(?:robots|description)"|link rel="canonical")[^>]*>', "", x)
+    assert norm(strip_switch(seo(a))) == norm(seo(html(out)))
     assert html(out, "b") != a and html(out, "c") != a
 
 

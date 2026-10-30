@@ -1,0 +1,21 @@
+/* Solo pagine prodotto: tabella articoli a schede sotto i 600 px (nessuno scroll orizzontale). */
+.noscript-note { margin: 0 0 16px; padding: 12px 14px; border-left: 4px solid var(--accent); background: var(--paper); }
+html:not(.js) .add-row { display: none; }
+.on-request { font-size: .8rem; font-weight: 700; }
+@media (max-width: 599px) {
+  .table-wrap { overflow-x: visible; }
+  .articles, .articles tbody { display: block; }
+  .articles thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+  .articles tr { display: flex; flex-wrap: wrap; align-items: baseline; gap: 2px 14px; padding: 12px; margin-bottom: 10px; background: var(--white); border: 1px solid var(--line); border-radius: var(--r); }
+  .articles tbody tr:nth-child(even) td, .articles td { padding: 0; border: 0; background: none; }
+  .articles tr:target { background: #fff7b0; }
+  .articles tr:target td, .articles tr:target td:first-child { box-shadow: none; }
+  .articles td.code, .articles th.code { position: static; box-shadow: none; flex: 1 0 100%; font-size: .95rem; }
+  .articles td.desc { flex: 1 0 100%; min-width: 0; }
+  .articles td.num { flex: 0 0 auto; text-align: left; font-size: .8rem; color: var(--muted); }
+  .articles td.num::before { content: attr(data-label) " "; font-weight: 800; text-transform: uppercase; font-size: .66rem; letter-spacing: .06em; }
+  .articles .quote-cell { flex: 1 0 100%; width: auto; margin-top: 8px; text-align: left; }
+  .articles .add-row { justify-content: flex-start; }
+  .articles .add-to-quote { flex: 1; max-width: none; font-size: .72rem; }
+  .articles .kind-article + .kind-optional, .articles .kind-article + .kind-spare, .articles .kind-optional + .kind-spare { border-top: 2px solid var(--ink); }
+}

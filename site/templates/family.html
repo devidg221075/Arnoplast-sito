@@ -13,7 +13,7 @@
   {% for p in family.products %}
     <li class="product-card">
       <a href="/{{ lang }}/{{ line.slug }}/{{ family.slug }}/{{ p.slug }}/">
-        <span class="thumb">{% if thumbs and thumbs[p.slug] %}<img src="{{ thumbs[p.slug] }}" alt="" loading="lazy" decoding="async">{% endif %}</span>
+        <span class="thumb">{% set th = thumbs[p.slug] if thumbs else None %}{% if th %}<img src="{{ th.src }}"{% if th.srcset %} srcset="{{ th.srcset }}" sizes="{{ thumb_sizes }}"{% endif %}{% if th.width %} width="{{ th.width }}" height="{{ th.height }}"{% endif %} alt=""{% if loop.index > eager_thumbs %} loading="lazy"{% endif %} decoding="async">{% endif %}</span>
         <span class="product-card-body">
           <span class="card-title">{{ text(p.name) }}</span>
           {% if p.materials %}<span class="materials">{% for m in p.materials %}<span class="tag">{{ m }}</span>{% endfor %}</span>{% endif %}
