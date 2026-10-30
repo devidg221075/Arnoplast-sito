@@ -114,3 +114,27 @@ def test_real_catalog_smoke(tmp_path):
         low = f.read_text(encoding="utf-8").lower()
         for w in ("carrello", "€", "prezzo"):
             assert w not in low, (f, w)
+
+
+def test_quote_page_privacy_link_points_to_live_policy(tmp_path):
+    build_site(cat(prod()), tmp_path)
+    html = (tmp_path / "it" / "richiesta-preventivo" / "index.html").read_text(encoding="utf-8")
+    assert 'href="https://www.arnoplast.it/privacy-policy-arno-plast"' in html
+    assert 'target="_blank"' in html and 'rel="noopener"' in html
+    assert 'href="/it/privacy/"' not in html
+
+
+def test_real_catalog_internal_links_resolve(tmp_path):
+    c = load_catalog(ROOT / "data" / "catalog.json")
+    written = build_site(c, tmp_path)
+    missing = []
+    for f in written:
+        html = f.read_text(encoding="utf-8")
+        for m in re.finditer(r'(?:href|src)="(/[^"]*)"', html):
+            target = re.split(r"[#?]", m.group(1), 1)[0]
+            p = tmp_path / target.lstrip("/")
+            if target.endswith("/"):
+                p = p / "index.html"
+            if not p.is_file():
+                missing.append((f.relative_to(tmp_path).as_posix(), m.group(1)))
+    assert not missing, missing[:5]

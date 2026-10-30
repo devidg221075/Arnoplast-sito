@@ -12,7 +12,7 @@
   <p><label for="q-country">{{ t('quote.country') }}</label> <input type="text" id="q-country" name="country"></p>
   <p><label for="q-notes">{{ t('quote.notes') }}</label> <textarea id="q-notes" name="notes" rows="4"></textarea></p>
   <p><label><input type="checkbox" name="privacy" required> {{ t('quote.privacy') }}</label>
-     <a href="/it/privacy/">{{ t('quote.privacy_link') }}</a></p>
+     <a href="{{ privacy_url }}" target="_blank" rel="noopener">{{ t('quote.privacy_link') }}</a></p>
   <p><button type="submit">{{ t('quote.submit') }}</button></p>
 </form>
 {% endblock %}

@@ -31,6 +31,9 @@ CONTACTS = {
     "web": "www.arnoplast.it",
 }
 
+# Informativa privacy esistente; la fase WordPress puo' cambiarla qui.
+PRIVACY_URL = "https://www.arnoplast.it/privacy-policy-arno-plast"
+
 SECTIONS = ["richiesta-preventivo", "contatti", "azienda", "applicazioni", "video", "area-riservata"]
 
 
@@ -95,7 +98,8 @@ def build_site(c: Catalog, out: Path, lang: str = "it") -> list[Path]:
                     search.append({"code": a.code, "description": text(a.description, lang),
                                    "url": f"{url}#{a.code}"})
 
-    render("quote.html", base / "richiesta-preventivo", line=None, title=t("quote.title", lang))
+    render("quote.html", base / "richiesta-preventivo", line=None, title=t("quote.title", lang),
+           privacy_url=PRIVACY_URL)
     render("page.html", base / "contatti", line=None, title=t("page.contacts", lang),
            kind="contacts", contacts=CONTACTS)
     render("page.html", base / "azienda", line=None, title=t("page.company", lang),
