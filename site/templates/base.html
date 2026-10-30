@@ -12,6 +12,7 @@
 </head>
 <body{% if line %} data-line="{{ line.slug }}" data-accent="{{ line.accent }}"{% endif %}{% block body_attrs %}{% endblock %}>
   <a class="skip" href="#main">{{ t('skip') }}</a>
+  {% block before_header %}{% endblock %}
   <header class="site-header">
     <div class="bar wrap">
       <a class="logo" href="/{{ lang }}/" aria-label="{{ t('site.name') }} - Home"><span class="logo-mark" aria-hidden="true"></span><b>ARNO</b>plast</a>

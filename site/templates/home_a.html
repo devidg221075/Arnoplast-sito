@@ -2,6 +2,7 @@
 {% import "_home.html" as h with context %}
 {# Variante A "Campo": foto a tutto schermo, linee come schede, filiera, passi del preventivo. #}
 {% block head_extra %}{{ h.head('a') }}{% endblock %}
+{% block before_header %}{% if variant_switch %}{% include "variant_switch.html" %}{% endif %}{% endblock %}
 {% block main %}
 <section class="a-hero">
   {{ h.pic('frutteto', 'Frutteto con impianto di rete antigrandine su pali', '(max-aspect-ratio: 1/1) 830px, 100vw', 'a-hero-img', True) }}
@@ -76,5 +77,4 @@
   </div>
   {{ h.contact_list('a-dl') }}
 </section>
-{% if variant_switch %}{% include "variant_switch.html" %}{% endif %}
 {% endblock %}

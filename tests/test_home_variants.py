@@ -152,3 +152,37 @@ def test_variant_photos_are_local_and_small(site):
                 assert path.startswith("/static/img/home/"), path
                 f = out / path.lstrip("/")
                 assert f.is_file() and f.stat().st_size <= 150 * 1024, path
+
+
+def test_variant_switch_is_in_normal_flow_and_styled_in_one_place(site):
+    out, _ = site
+    for v in VARIANTS:
+        h = html(out, v)
+        nav = re.search(r'<nav class="vswitch".*?</nav>', h, re.S).group(0)
+        assert h.index('<nav class="vswitch"') < h.index("<header"), v  # striscia sopra la testata
+        for rule in re.findall(r"\.vswitch[^{]*\{([^}]*)\}", nav):
+            assert not re.search(r"position\s*:\s*(fixed|absolute|sticky)", rule), rule
+        css = (out / "static" / "css" / f"home-{v}.css").read_text(encoding="utf-8")
+        assert "vswitch" not in css, v
+    assert "vswitch" not in (ROOT / "site" / "static" / "css" / "main.css").read_text(encoding="utf-8")
+
+
+def test_image_dimensions_match_files(site):
+    from PIL import Image
+    out, _ = site
+    seen = set()
+    for v in VARIANTS:
+        for tag in re.findall(r"<(?:img|source)\b[^>]*>", html(out, v)):
+            srcset = re.search(r'srcset="([^"]+)"', tag).group(1)
+            largest = max((p.split() for p in srcset.split(",")), key=lambda p: int(p[1][:-1]))[0]
+            w, h = Image.open(out / largest.lstrip("/")).size
+            assert f'width="{w}"' in tag and f'height="{h}"' in tag, (v, tag)
+            for path, desc in (p.split() for p in srcset.split(",")):
+                assert Image.open(out / path.lstrip("/")).size[0] == int(desc[:-1]), path
+            seen.add(largest)
+    garden = [s for s in seen if "linea-garden" in s]
+    assert garden, seen
+    for g in garden:
+        f = out / g.lstrip("/")
+        assert f.stat().st_size <= 90 * 1024
+        assert Image.open(f).size == (960, 640)

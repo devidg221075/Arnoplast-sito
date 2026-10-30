@@ -2,6 +2,7 @@
 {% import "_home.html" as h with context %}
 {# Variante B "Tecnica": chiara ed editoriale, ricerca per codice al centro, numeri dal catalogo. #}
 {% block head_extra %}{{ h.head('b') }}{% endblock %}
+{% block before_header %}{% if variant_switch %}{% include "variant_switch.html" %}{% endif %}{% endblock %}
 {% block main %}
 <section class="b-hero">
   <div class="wrap b-hero-in">
@@ -90,5 +91,4 @@
     {{ h.contact_list('b-dl') }}
   </div>
 </section>
-{% if variant_switch %}{% include "variant_switch.html" %}{% endif %}
 {% endblock %}

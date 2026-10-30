@@ -15,7 +15,7 @@ def pdfimages(pdf, page, prefix):
     subprocess.run(['pdfimages', '-f', str(page), '-l', str(page), '-all', '-p', str(SRC/pdf), str(prefix)], check=True)
 for pg in (1, 2, 3, 4, 5, 6, 8, 26): pdfimages('agricoltura-it.pdf', pg, RAW/'agr')
 pdfimages('agricoltura-it.pdf', 9, S/'prod'/'agr')
-pdfimages('garden-it.pdf', 8, RAW/'gar')
+for pg in (4, 5): pdfimages('garden-it.pdf', pg, RAW/'gar')
 pdfimages('olive-it.pdf', 3, RAW/'oli')
 subprocess.run(['convert', str(RAW/'oli-003-001.jp2'), str(RAW/'oli-p3.jpg')], check=True)
 def render(pdf, page, dpi=200):
@@ -48,7 +48,21 @@ sede = Image.new('RGB', (a.width+b.width, a.height)); sede.paste(a,(0,0)); sede.
 sede.save(S/'sede_full.png'); save(sede.crop((0, 120, sede.width, 120+760)), 'sede', [640, 1214])
 # Linee
 save(Image.open(RAW/'agr-008-000.jpg').convert('RGB').crop((0, 150, 830, 980)), 'linea-agricoltura', [720])
-g = Image.open(RAW/'gar-008-000.jpg').convert('RGB'); print('gar8', g.size); save(g, 'linea-garden', [720])
+# Garden: tre testine fotografate su fondo bianco (garden-it.pdf p.4 e p.5, "Dall'idea al prodotto finito"),
+# composte a grandezza nativa (nessun ingrandimento) su fondo neutro.
+from PIL import ImageChops, ImageStat
+BG = (236, 236, 232)
+garden = Image.new('RGB', (960, 640), BG)
+def whiten(im):
+    """Porta a bianco puro lo sfondo fotografico (mediana dei bordi), cosi' la moltiplicazione non lascia riquadri."""
+    w, h = im.size
+    edges = [im.crop(b) for b in ((0, 0, w, 6), (0, h - 6, w, h), (0, 0, 6, h), (w - 6, 0, w, h))]
+    m = max(200, min(min(min(ImageStat.Stat(e).median) for e in edges), 250)) - 6
+    return im.point(lambda v: min(255, round(v * 255 / m)))
+for f, x, y in (('gar-004-007.jpg', 190, 60), ('gar-005-009.jpg', 410, 150), ('gar-004-002.jpg', 0, 340)):
+    im = whiten(Image.open(RAW/f).convert('RGB'))
+    garden.paste(ImageChops.multiply(garden.crop((x, y, x + im.width, y + im.height)), im), (x, y))
+save(garden, 'linea-garden', [960])
 o = Image.open(RAW/'oli-p3.jpg').convert('RGB'); save(o.crop((0, 0, 1243, 1243)), 'linea-olive', [560], q=50)
 # Prodotti (B): render 200 dpi, coordinate a 100 dpi x2
 save(Image.open(S/'prod/agr-009-001.jpg').convert('RGB'), 'prod-copripalo', [346])

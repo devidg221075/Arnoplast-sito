@@ -3,6 +3,7 @@
 {# Variante C "Scura": nero e rosso, tipografia a tutta larghezza, linee a bande alternate, storia. #}
 {% block head_extra %}{{ h.head('c') }}{% endblock %}
 {% block body_attrs %} class="home-c"{% endblock %}
+{% block before_header %}{% if variant_switch %}{% include "variant_switch.html" %}{% endif %}{% endblock %}
 {% block main %}
 <section class="c-hero">
   <picture>
@@ -68,5 +69,4 @@
   <h2 id="c-contact-t">{{ t('hv.contacts_title') }}</h2>
   {{ h.contact_list('c-dl') }}
 </section>
-{% if variant_switch %}{% include "variant_switch.html" %}{% endif %}
 {% endblock %}

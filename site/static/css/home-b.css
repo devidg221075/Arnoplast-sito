@@ -75,12 +75,7 @@ a:hover > .b-arrow, a:hover .b-tile-cap .b-arrow { background: var(--ink); color
 .b-dl dd { margin: 0; font-weight: 700; }
 .b-dl a { text-decoration: none; border-bottom: 2px solid var(--red); }
 
-.vswitch { position: fixed; right: 12px; bottom: 12px; z-index: 40; display: flex; gap: 2px; padding: 4px; border: 1px solid var(--ink); border-radius: var(--r); background: var(--white); font-family: var(--mono); font-size: .75rem; font-weight: 700; box-shadow: 4px 4px 0 var(--ink); }
-.vswitch::before { content: "variante"; align-self: center; padding: 0 8px; color: var(--muted); }
-.vswitch a { display: grid; place-items: center; width: 30px; height: 30px; border-radius: 2px; text-decoration: none; }
-.vswitch a[aria-current] { background: var(--ink); color: var(--white); }
 
-@media (max-width: 599px) { .vswitch::before { display: none; } }
 @media (min-width: 600px) {
   .b-stats { grid-template-columns: repeat(4, 1fr); }
   .b-stats div + div { padding-left: 20px; border-left: 1px solid var(--line); }
