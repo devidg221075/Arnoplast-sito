@@ -15,6 +15,14 @@ cataloghi PDF (agricoltura, garden, olive) e generatore di sito statico.
     pip install -r requirements.txt
     pytest -q
 
+## Dati del catalogo
+
+    python -m arnoplast.extract.build
+
+Rigenera `data/catalog.json` (versionato) e le immagini prodotto in
+`data/images/` (non versionate) dai PDF in `content/source/`. Richiede
+poppler (`pdftotext`, `pdftoppm`, `pdfinfo`).
+
 ## Build
 
 Il generatore del sito statico sara' aggiunto nei prossimi passi; l'output

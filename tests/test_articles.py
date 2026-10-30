@@ -134,3 +134,22 @@ def test_olive_description_before_code():
     a = one(text)
     assert a.description == {"it": "Agevolatore EXCELSO motore in basso Asta tel. in carbonio N°2 pettini in Plastica"}
     assert (a.conf, a.imb, a.pallet) == (None, 2, None)
+
+
+def test_olive_heading_line_before_code_with_description():
+    text = "\n".join([
+        "      COD.                           DESCRIZIONE                            IMB.",
+        "                Agevolatore MARTINO ECO motore in alto",
+        "    2801-0202   Asta fissa in alluminio                                      2pz",
+        "                Cod ean 8025721031364",
+        "",
+        "                Agevolatore Oleo Carbon",
+        "    2801-0403                                                                2pz",
+        "                n.2 pettini in carbonio",
+        "                Cd ean 8025721032583",
+    ])
+    rows = parse_article_rows(text)
+    assert [(a.code, a.description["it"], a.imb) for a in rows] == [
+        ("2801-0202", "Agevolatore MARTINO ECO motore in alto Asta fissa in alluminio", 2),
+        ("2801-0403", "Agevolatore Oleo Carbon n.2 pettini in carbonio", 2),
+    ]
