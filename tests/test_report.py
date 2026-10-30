@@ -92,3 +92,33 @@ def test_report_states_pages_are_estimated(tmp_path):
     render_report(_cat(), out)
     assert "I numeri di pagina sono stimati automaticamente: confermali sempre sul PDF." \
         in out.read_text(encoding="utf-8")
+
+
+def _dup_cat():
+    def prod(slug, name, arts):
+        return Product(slug, {"it": name}, [], [], [], None, None, arts)
+    a = lambda code, d, conf, imb=None, pal=None: Article(code, {"it": d}, conf, imb, pal, "article")
+    return Catalog([Line("agricoltura", {"it": "Agricoltura"}, "red", [Family("f", {"it": "Fam"}, [
+        prod("prisma", "Prisma", [a("1807-1310GZ", "Viteria GZ", 40, 400, 800), a("9999-0001", "Uguale", 1, 2, 3)]),
+        prod("qubo", "Qubo", [a("1807-1310GZ", "Viteria GZ", 64, 640, 960), a("9999-0001", "Uguale", 1, 2, 3)]),
+        prod("colibri", "Colibri", [a("1802-0410", "Vite", 10), a("1802-0410", "Vite lunga", 20)]),
+    ])])])
+
+
+def test_repeated_codes_lists_only_codes_with_different_data():
+    from arnoplast.extract.report import repeated_codes
+    rep = repeated_codes(_dup_cat())
+    assert sorted(rep) == ["1802-0410", "1807-1310GZ"]
+    assert [(r["product"], r["conf"]) for r in rep["1807-1310GZ"]] == [("Prisma", 40), ("Qubo", 64)]
+    assert len(rep["1802-0410"]) == 2
+
+
+def test_report_has_repeated_codes_section(tmp_path):
+    out = tmp_path / "r.html"
+    render_report(_dup_cat(), out, {"agricoltura/f/prisma": [12], "agricoltura/f/qubo": [14]})
+    html = out.read_text(encoding="utf-8")
+    assert "Codice ripetuto con dati diversi" in html
+    sec = html.split("Codice ripetuto con dati diversi", 1)[1].split("</section>", 1)[0]
+    assert "1807-1310GZ" in sec and "Prisma" in sec and "Qubo" in sec and "pag. 12" in sec
+    assert "9999-0001" not in sec
+    assert 'href="#da-controllare"' in html or 'id="codici-ripetuti"' in html

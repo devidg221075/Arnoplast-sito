@@ -87,6 +87,23 @@ def product_pages(c: Catalog, page_codes: dict[str, list],
     return out
 
 
+def repeated_codes(c: Catalog) -> dict[str, list[dict]]:
+    """Codice -> righe in cui compare, solo per i codici ripetuti con dati diversi
+    (descrizione, conf., imb. o pallet). Non stabilisce quale dato sia corretto."""
+    rows: dict[str, list[dict]] = {}
+    for l in c.lines:
+        for f in l.families:
+            for p in f.products:
+                for a in p.articles:
+                    rows.setdefault(a.code, []).append({
+                        "key": f"{l.slug}/{f.slug}/{p.slug}", "line": text(l.name, "it"),
+                        "product": text(p.name, "it"), "description": text(a.description, "it"),
+                        "conf": a.conf, "imb": a.imb, "pallet": a.pallet})
+    same = lambda r: (r["description"], r["conf"], r["imb"], r["pallet"])
+    return {code: r for code, r in rows.items()
+            if len(r) > 1 and len({same(x) for x in r}) > 1}
+
+
 def _default_pages(c: Catalog) -> dict[str, list[set[str]]]:
     from arnoplast.extract.build import SOURCES
     return {slug: pdf_page_codes(pdf) for slug, pdf in SOURCES.items()
@@ -178,7 +195,24 @@ def render_report(c: Catalog, out: Path,
         h.append("</ul></div>")
     h.append('<div class="warn"><p><b>Anomalie note dei sorgenti</b>, da valutare:</p><ul>')
     h += [f"<li>{_e(o)}</li>" for o in KNOWN_ODDITIES]
-    h.append("</ul></div></section>")
+    h.append("</ul></div>")
+    rep = repeated_codes(c)
+    h.append(f'<div class="warn" id="codici-ripetuti"><p><b>Codice ripetuto con dati diversi</b> '
+             f"({len(rep)} codici): lo stesso codice compare in piu' righe con descrizione o "
+             "conf./imb./pallet diversi. Verifica sul PDF quale dato e' corretto; "
+             "il sito mostra ogni riga con il proprio prodotto.</p>")
+    for code, rows in sorted(rep.items()):
+        h.append(f'<h4><code>{_e(code)}</code></h4><table><tr><th>Prodotto</th><th>Pagina</th>'
+                 '<th>Descrizione</th><th class="n">Conf.</th><th class="n">Imb.</th>'
+                 '<th class="n">Pallet</th></tr>')
+        for r in rows:
+            pg = pages.get(r["key"])
+            page = ("pag. " + ", ".join(str(n) for n in pg)) if pg else "-"
+            h.append(f'<tr><td>{_e(r["line"])} / {_e(r["product"])}</td><td>{_e(page)}</td>'
+                     f'<td>{_e(r["description"])}</td><td class="n">{_n(r["conf"])}</td>'
+                     f'<td class="n">{_n(r["imb"])}</td><td class="n">{_n(r["pallet"])}</td></tr>')
+        h.append("</table>")
+    h.append("</div></section>")
     # indice
     h.append("<nav><h2>Indice</h2><ul>")
     for l in c.lines:
