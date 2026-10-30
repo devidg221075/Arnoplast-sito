@@ -1,5 +1,8 @@
 // Logica lista richiesta (ES module, senza dipendenze). Funzioni pure sulle liste: non mutano l'input.
-const KEY = 'arnoplast.quote.v1';
+export const STORAGE_KEY = 'arnoplast.quote.v1';
+const KEY = STORAGE_KEY;
+/** Quantità massima per riga (totale salvato per codice). */
+export const QTY_MAX = 99999;
 
 export function isValidQty(n) {
   return typeof n === 'number' && Number.isInteger(n) && n >= 1;
@@ -16,6 +19,13 @@ export function addItem(list, item) {
     return base.map((i) => (i.code === code ? { ...i, qty: i.qty + item.qty } : { ...i }));
   }
   return [...base.map((i) => ({ ...i })), { code, description, qty: item.qty }];
+}
+
+/** Vero se aggiungere qty al codice lascia il totale della riga entro QTY_MAX. */
+export function canAdd(list, code, qty) {
+  const c = cleanCode(code);
+  const cur = (Array.isArray(list) ? list : []).find((i) => i.code === c);
+  return (cur ? cur.qty : 0) + qty <= QTY_MAX;
 }
 
 export function setQty(list, code, qty) {
@@ -37,7 +47,7 @@ export function load(storage) {
     const data = JSON.parse(raw);
     if (!Array.isArray(data)) return [];
     return data
-      .filter((i) => i && typeof i === 'object' && typeof i.code === 'string' && i.code.trim() !== '' && isValidQty(i.qty))
+      .filter((i) => i && typeof i === 'object' && typeof i.code === 'string' && i.code.trim() !== '' && isValidQty(i.qty) && i.qty <= QTY_MAX)
       .map((i) => ({ code: i.code.trim(), description: typeof i.description === 'string' ? i.description : '', qty: i.qty }));
   } catch {
     return [];

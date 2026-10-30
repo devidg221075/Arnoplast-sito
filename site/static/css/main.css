@@ -240,7 +240,8 @@ button, input, textarea, select { font: inherit; color: inherit; }
 .articles tr:target td:first-child { box-shadow: inset 5px 0 var(--accent); }
 .articles tr:target td.code { animation: flash 1.2s var(--e) 2; }
 /* Codice fisso a sinistra mentre la tabella scorre (mobile). */
-.articles th.code, .articles td.code { position: sticky; left: 0; z-index: 1; }
+.articles th.code, .articles td.code { position: sticky; left: calc(-1 * var(--gut)); z-index: 1; }
+.articles tr { scroll-margin-left: var(--gut); }
 .articles td.code { box-shadow: 1px 0 var(--line); }
 .add-row { position: relative; display: flex; justify-content: flex-end; align-items: center; gap: 6px; }
 .qty {

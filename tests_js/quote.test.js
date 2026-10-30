@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import {
   addItem, setQty, removeItem, isValidQty, load, save, emailBody,
 } from '../site/static/js/quote.js';
+import { canAdd, QTY_MAX, STORAGE_KEY } from '../site/static/js/quote.js';
 
 const KEY = 'arnoplast.quote.v1';
 const mem = (initial) => {
@@ -125,4 +126,31 @@ test('emailBody_crlf_in_name_cannot_inject_lines', () => {
   assert.ok(!lines.some((x) => x.startsWith('Bcc:')));
   assert.ok(lines.includes('Azienda: A B'));
   assert.ok(!body.includes('\r'));
+});
+
+test('qty_max_and_storage_key_exported', () => {
+  assert.equal(QTY_MAX, 99999);
+  assert.equal(STORAGE_KEY, KEY);
+});
+
+test('canAdd_false_when_line_total_exceeds_max', () => {
+  const l = [{ code: 'A1', description: 'd', qty: 99999 }];
+  assert.equal(canAdd(l, 'A1', 1), false);
+  assert.equal(canAdd(l, ' A1 ', 1), false);
+  assert.equal(canAdd([{ code: 'A1', description: 'd', qty: 50000 }], 'A1', 50000), false);
+  assert.equal(canAdd([], 'B', 100000), false);
+});
+
+test('canAdd_true_up_to_exactly_max', () => {
+  assert.equal(canAdd([{ code: 'A1', description: 'd', qty: 99998 }], 'A1', 1), true);
+  assert.equal(canAdd([{ code: 'A1', description: 'd', qty: 99999 }], 'B2', 99999), true);
+  assert.equal(canAdd([], 'A1', 99999), true);
+});
+
+test('load_drops_items_over_qty_max', () => {
+  const raw = JSON.stringify([
+    { code: 'A', description: 'd', qty: 100000 },
+    { code: 'B', description: 'e', qty: 99999 },
+  ]);
+  assert.deepEqual(load(mem(raw)), [{ code: 'B', description: 'e', qty: 99999 }]);
 });

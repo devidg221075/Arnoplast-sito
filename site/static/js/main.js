@@ -1,13 +1,13 @@
 // Comportamento del prototipo: lista richiesta, contatori, modulo, ricerca, menu mobile.
 // ES module senza dipendenze. Tutto l'accesso a localStorage passa da quote.js (load/save).
-import { addItem, setQty, removeItem, isValidQty, load, save, emailBody } from './quote.js';
+import { addItem, canAdd, setQty, removeItem, isValidQty, load, save, emailBody, QTY_MAX, STORAGE_KEY } from './quote.js';
 import { buildIndex, search } from './search.js';
 
-const QTY_MAX = 99999;
 const LANG = document.documentElement.lang || 'it';
 // Testi dell'interfaccia generati da JS (italiano; le traduzioni arrivano con WordPress).
 const MSG = {
   qtyInvalid: `Quantità non valida: inserisci un numero intero da 1 a ${QTY_MAX}.`,
+  qtyOverMax: (have) => `Quantità massima per riga: ${QTY_MAX.toLocaleString('it-IT')} (ne hai già ${have.toLocaleString('it-IT')}).`,
   added: (code, qty) => `${code} aggiunto alla richiesta (quantità ${qty}).`,
   removed: (code) => `${code} rimosso dalla richiesta.`,
   qtyUpdated: (code, qty) => `Quantità di ${code} aggiornata a ${qty}.`,
@@ -88,12 +88,16 @@ function siblingQty(btn) {
 function onAdd(btn) {
   const input = siblingQty(btn);
   const qty = input ? parseQty(input.value) : 1;
-  if (qty === null) {
+  const code = btn.dataset.code || '';
+  const over = qty !== null && !canAdd(list, code, qty);
+  if (qty === null || over) {
     if (input) {
       input.setAttribute('aria-invalid', 'true');
       input.focus();
     }
-    const msg = rowMessage(btn, MSG.qtyInvalid);
+    const have = over ? (list.find((i) => i.code === code.trim()) || { qty: 0 }).qty : 0;
+    const text = over ? MSG.qtyOverMax(have) : MSG.qtyInvalid;
+    const msg = rowMessage(btn, text);
     if (input) input.setAttribute('aria-describedby', msg.id || (msg.id = `msg-${Math.random().toString(36).slice(2, 8)}`));
     return;
   }
@@ -102,7 +106,6 @@ function onAdd(btn) {
     input.value = String(qty);
   }
   rowMessage(btn, '');
-  const code = btn.dataset.code || '';
   commit(addItem(list, { code, description: btn.dataset.description || '', qty }), { bump: true });
   btn.classList.add('is-added');
   clearTimeout(btn._addedTimer);
@@ -295,7 +298,7 @@ if (form) {
 
 /* ---------- Sincronizzazione tra schede ---------- */
 window.addEventListener('storage', (e) => {
-  if (e.key !== null && e.key !== 'arnoplast.quote.v1') return;
+  if (e.key !== null && e.key !== STORAGE_KEY) return;
   list = load(storage);
   updateCounters();
   renderQuote();

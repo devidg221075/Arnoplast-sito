@@ -152,6 +152,24 @@ ok((await page.locator('.menu-toggle').getAttribute('aria-expanded')) === 'true'
 await page.keyboard.press('Escape');
 ok((await page.locator('.menu-toggle').getAttribute('aria-expanded')) === 'false', 'Esc chiude il menu');
 
+// Tetto di 99999 sul totale di una riga.
+await page.goto(BASE + PRODUCT, { waitUntil: 'networkidle' });
+await page.evaluate(() => localStorage.clear());
+await page.reload({ waitUntil: 'networkidle' });
+const capRow = page.locator('tbody tr').nth(0);
+await capRow.locator('.qty').fill('99999');
+await capRow.locator('.add-to-quote').click();
+await capRow.locator('.qty').fill('1');
+await capRow.locator('.add-to-quote').click();
+ok(/massima per riga: 99\.999/.test(await capRow.locator('.qty-msg').textContent())
+  && (await capRow.locator('.qty').getAttribute('aria-invalid')) === 'true', 'tetto 99999: secondo inserimento rifiutato con messaggio');
+ok((await stored())[0].qty === 99999, `tetto 99999: quantita' salvata resta 99999 (${JSON.stringify(await stored())})`);
+await page.reload({ waitUntil: 'networkidle' });
+ok((await stored()).length === 1 && (await stored())[0].qty === 99999 && (await counters()).every((c) => c === '1'), 'tetto 99999: dopo ricarica resta 99999');
+await page.evaluate(() => localStorage.setItem('arnoplast.quote.v1', JSON.stringify([{ code: 'X', description: '', qty: 199998 }])));
+await page.goto(BASE + QUOTE, { waitUntil: 'networkidle' });
+ok(await page.locator('.quote-line').count() === 0, 'riga salvata oltre 99999 scartata al caricamento');
+
 // Ricerca con indice non raggiungibile: nessun errore.
 await page.route('**/search-index.json', (r) => r.abort());
 await page.goto(BASE + '/it/', { waitUntil: 'networkidle' });
