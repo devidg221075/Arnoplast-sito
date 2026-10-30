@@ -43,13 +43,17 @@ def pdf_page_codes(pdf: Path) -> list[set[str]]:
 
 
 def product_pages(c: Catalog, page_codes: dict[str, list],
-                  family_pages: Callable[[str, int], str | None] | None = None
-                  ) -> dict[str, list[int]]:
+                  family_pages: Callable[[str, int], str | None] | None = None,
+                  probable: set[str] | None = None) -> dict[str, list[int]]:
     """'linea/famiglia/prodotto' -> pagine (1-based) dove compaiono i suoi codici.
 
     `page_codes[linea]` è il testo o l'insieme di codici per pagina.
     `family_pages(linea, pagina)` restituisce il nome della famiglia della
     pagina (None = nessun vincolo).
+
+    Le pagine si stimano coi soli codici unici del prodotto nella famiglia
+    (viterie e riduzioni condivise con i vicini non contano). Senza codici
+    unici si usano tutti i codici e la chiave finisce in `probable`.
     """
     out: dict[str, list[int]] = {}
     for line in c.lines:
@@ -57,8 +61,18 @@ def product_pages(c: Catalog, page_codes: dict[str, list],
                  for p in page_codes.get(line.slug, [])]
         for fam in line.families:
             fname = text(fam.name, "it")
+            count: dict[str, int] = {}
+            for prod in fam.products:
+                for code in {a.code for a in prod.articles}:
+                    count[code] = count.get(code, 0) + 1
             for prod in fam.products:
                 codes = {a.code for a in prod.articles}
+                unique = {k for k in codes if count[k] == 1}
+                key = f"{line.slug}/{fam.slug}/{prod.slug}"
+                if unique:
+                    codes = unique
+                elif probable is not None:
+                    probable.add(key)
                 score = {}
                 for n, found in enumerate(pages, 1):
                     if family_pages and family_pages(line.slug, n) != fname:
@@ -68,7 +82,7 @@ def product_pages(c: Catalog, page_codes: dict[str, list],
                         score[n] = k
                 if score:
                     best = max(score.values())
-                    out[f"{line.slug}/{fam.slug}/{prod.slug}"] = sorted(
+                    out[key] = sorted(
                         n for n, k in score.items() if k * 4 >= best * 3)
     return out
 
@@ -106,11 +120,13 @@ table,h4{break-inside:avoid}h4{break-after:avoid}}
 """
 
 
-def _product_html(prod: Product, pdf_name: str, pages: list[int] | None) -> str:
+def _product_html(prod: Product, pdf_name: str, pages: list[int] | None,
+                  probable: bool = False) -> str:
     h = [f'<h4 id="p-{_e(prod.slug)}">{_e(text(prod.name, "it"))}']
     if pages:
         label = ", ".join(str(p) for p in pages)
-        h.append(f' <span class="src">({_e(pdf_name)}, pag. {_e(label)})</span>')
+        tag = " (probabile)" if probable else ""
+        h.append(f' <span class="src">({_e(pdf_name)}, pag. {_e(label)}{tag})</span>')
     h.append("</h4>")
     if prod.materials:
         h.append("<p>Materiali: " + "".join(
@@ -129,7 +145,8 @@ def _product_html(prod: Product, pdf_name: str, pages: list[int] | None) -> str:
 
 
 def render_report(c: Catalog, out: Path,
-                  pages: dict[str, list[int]] | None = None) -> None:
+                  pages: dict[str, list[int]] | None = None,
+                  probable: set[str] | None = None) -> None:
     """Scrive la pagina di controllo in `out`.
 
     `pages`: mappa 'linea/famiglia/prodotto' -> pagine sorgente (se None non
@@ -138,6 +155,7 @@ def render_report(c: Catalog, out: Path,
     from arnoplast.extract.build import suspect_rows
     from arnoplast.extract.layout import LINES
     pages = pages or {}
+    probable = probable or set()
     n_prod = sum(len(f.products) for l in c.lines for f in l.families)
     n_art = sum(len(p.articles) for l in c.lines for f in l.families
                 for p in f.products)
@@ -146,7 +164,9 @@ def render_report(c: Catalog, out: Path,
          f"<title>Controllo dati catalogo ARNOplast</title><style>{CSS}</style></head><body>",
          "<h1>Controllo dati catalogo ARNOplast</h1>",
          f"<p>{len(c.lines)} linee, {n_prod} prodotti, {n_art} articoli. "
-         "Confronta ogni tabella con la pagina indicata del PDF stampato.</p>"]
+         "Confronta ogni tabella con la pagina indicata del PDF stampato.</p>",
+         "<p><b>I numeri di pagina sono stimati automaticamente: "
+         "confermali sempre sul PDF.</b></p>"]
     # da controllare
     h.append('<section id="da-controllare"><h2>Da controllare</h2>')
     suspects = suspect_rows(c)
@@ -174,7 +194,8 @@ def render_report(c: Catalog, out: Path,
         for f in l.families:
             h.append(f'<h3 id="f-{_e(l.slug)}-{_e(f.slug)}">{_e(text(f.name, "it"))}</h3>')
             for p in f.products:
-                h.append(_product_html(p, pdf_name, pages.get(f"{l.slug}/{f.slug}/{p.slug}")))
+                k = f"{l.slug}/{f.slug}/{p.slug}"
+                h.append(_product_html(p, pdf_name, pages.get(k), k in probable))
     h.append("</body></html>")
     Path(out).write_text("".join(h), encoding="utf-8")
 
@@ -183,8 +204,9 @@ def main() -> int:
     from arnoplast.extract.layout import family_for
     c = load_catalog(DATA_DIR / "catalog.json")
     fp = lambda slug, n: family_for(slug, n)
-    pages = product_pages(c, _default_pages(c), fp)
-    render_report(c, DATA_DIR / "review.html", pages)
+    probable: set[str] = set()
+    pages = product_pages(c, _default_pages(c), fp, probable)
+    render_report(c, DATA_DIR / "review.html", pages, probable)
     print(f"scritto {DATA_DIR / 'review.html'} ({len(pages)} prodotti con pagina)")
     return 0
 
