@@ -211,6 +211,26 @@
 
 ---
 
+## Task 11: Varianti homepage (richiesta dell'utente)
+
+**Files:**
+- Create: `site/templates/home_a.html`, `home_b.html`, `home_c.html`, `site/static/css/home-{a,b,c}.css`
+- Modify: `arnoplast/site/build.py` (genera le tre varianti), `tools/check_perf.js`
+- Test: `tests/test_home_variants.py`
+
+**Interfaces:**
+- Consumes: `build_site`, token CSS del Task 9, `quote.js`, `search.js`.
+- Produces: `/it/home-a/`, `/it/home-b/`, `/it/home-c/` e `/it/` che replica la variante A; stessi dati e stessa lista richiesta in tutte.
+
+Tre direzioni, tutte premium, veloci e moderne (nessun carosello, nessun video in autoplay, una sola immagine hero per variante, caricata in modo prioritario, il resto in lazy):
+- **A, "Campo"**: hero a tutto schermo con foto di impianto, titolo grande, tre linee come schede con accento colore, ricerca codice in evidenza.
+- **B, "Tecnica"**: fondo chiaro, griglia asimmetrica con prodotti e disegni tecnici in primo piano, numeri e certificazioni, ricerca per codice come elemento centrale.
+- **C, "Scura"**: fondo nero con rosso ARNOplast, tipografia a tutta larghezza, scorrimento a sezioni, prodotti in evidenza per linea.
+
+- [ ] **Step 1:** Test `test_three_variants_built`, `test_variants_share_header_with_quote_counter`, `test_each_variant_has_single_priority_hero_image` (un solo `fetchpriority="high"`), `test_variants_have_no_autoplay_video_or_external_scripts`.
+- [ ] **Step 2:** Run → FAIL. **Step 3:** Implementa i tre template e CSS, ciascuno sotto 30 KB di CSS e senza JavaScript nuovo oltre a `main.js`. **Step 4:** Run → PASS.
+- [ ] **Step 5:** `tools/check_perf.js` misura le tre home in emulazione mobile e confronta il peso. **Step 6:** Commit `feat: tre varianti di homepage`. Pubblica le tre varianti per la scelta dell'utente.
+
 ## Self-review
 
 - **Copertura spec:** struttura sito e menu (T8), richiesta preventivo (T6, T9), stile (T9), dati (T2–T5), redirect (T10), prestazioni (T10). Bilingue: modello e `i18n` pronti, testi inglesi e WordPress rimandati ai piani successivi, dichiarato in testa.
