@@ -3,6 +3,7 @@ from __future__ import annotations
 
 import json
 import shutil
+import sys
 from pathlib import Path
 
 from jinja2 import Environment, FileSystemLoader, select_autoescape
@@ -263,9 +264,22 @@ def clean_dir(out: Path) -> None:
     out.mkdir(parents=True)
 
 
+def missing_images(c: Catalog) -> int:
+    """Numero di prodotti il cui file immagine non esiste in data/ (data/images e' non versionata)."""
+    return sum(1 for l in c.lines for f in l.families for p in f.products
+               if p.image and not (DATA_DIR / p.image).is_file())
+
+
 def main(out: Path | None = None, sources: Path | None = None, catalog_path: Path | None = None) -> None:
     c = load_catalog(catalog_path or DATA_DIR / "catalog.json")
     out = Path(out) if out else ROOT / "dist"
+    n = missing_images(c)
+    if n:
+        d = DATA_DIR / "images"
+        why = "manca" if not d.is_dir() else "e' vuota o incompleta" if not any(d.rglob("*.jpg")) else "e' incompleta"
+        print(f"ATTENZIONE: {n} prodotti senza immagine: {d} {why}. Le pagine saranno "
+              "generate senza foto. Rigenerale con: python -m arnoplast.extract.build --images-only",
+              file=sys.stderr)
     clean_dir(out)
     written = build_site(c, out, sources=sources)
     print(f"{len(written)} pagine scritte in {out}")

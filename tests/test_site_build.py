@@ -191,3 +191,32 @@ def test_clean_build_refuses_dangerous_paths(tmp_path):
     with pytest.raises(ValueError):
         clean_dir(tmp_path)
     assert (tmp_path / ".git").exists()
+
+
+def test_main_warns_on_stderr_when_images_missing(tmp_path, capsys):
+    import arnoplast.site.build as sb
+    c = cat(prod(image="images/agricoltura/copripalo.jpg"))
+    (tmp_path / "catalog.json").write_text("{}", encoding="utf-8")
+    from arnoplast.catalog import save_catalog
+    save_catalog(c, tmp_path / "catalog.json")
+    old = sb.DATA_DIR
+    sb.DATA_DIR = tmp_path  # nessuna cartella images
+    try:
+        build_main(out=tmp_path / "out", sources=tmp_path / "nosrc", catalog_path=tmp_path / "catalog.json")
+    finally:
+        sb.DATA_DIR = old
+    err = capsys.readouterr().err
+    assert "ATTENZIONE" in err and "images" in err and "--images-only" in err
+
+
+def test_no_image_warning_when_images_present(tmp_path, capsys):
+    import arnoplast.site.build as sb
+    (tmp_path / "images" / "agricoltura").mkdir(parents=True)
+    (tmp_path / "images" / "agricoltura" / "copripalo.jpg").write_bytes(b"x")
+    c = cat(prod(image="images/agricoltura/copripalo.jpg"))
+    old = sb.DATA_DIR
+    sb.DATA_DIR = tmp_path
+    try:
+        assert sb.missing_images(c) == 0
+    finally:
+        sb.DATA_DIR = old

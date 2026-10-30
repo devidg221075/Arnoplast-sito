@@ -1,6 +1,6 @@
 """Costruzione di data/catalog.json dai tre cataloghi PDF.
 
-Uso: python -m arnoplast.extract.build
+Uso: python -m arnoplast.extract.build [--force | --images-only]
 
 Una pagina prodotto può contenere 1-3 prodotti, impilati in verticale: ogni
 prodotto parte da un titolo in maiuscolo (riconosciuto dall'altezza dei
@@ -12,6 +12,7 @@ diventano prodotti.
 """
 from __future__ import annotations
 
+import argparse
 import re
 import sys
 import unicodedata
@@ -382,12 +383,33 @@ def uncovered_codes(catalog: Catalog, sources: dict[str, Path],
     return out
 
 
-def main() -> int:
-    catalog = build_catalog(SOURCES, DATA_DIR / "images")
+def main(argv: list[str] | None = None) -> int:
+    """Estrazione dai PDF.
+
+    Senza opzioni scrive data/catalog.generated.json (catalog.json, che puo'
+    contenere correzioni manuali, non viene toccato). `--force` sovrascrive
+    data/catalog.json e rigenera le immagini; `--images-only` rigenera solo
+    data/images/ senza scrivere nessun catalogo.
+    """
+    ap = argparse.ArgumentParser(prog="python -m arnoplast.extract.build",
+                                 description=main.__doc__.split("\n\n")[0])
+    mode = ap.add_mutually_exclusive_group()
+    mode.add_argument("--force", action="store_true",
+                      help="sovrascrive data/catalog.json (e rigenera le immagini)")
+    mode.add_argument("--images-only", action="store_true",
+                      help="rigenera solo data/images/, senza scrivere cataloghi")
+    args = ap.parse_args(argv)
+    images = args.force or args.images_only
+    catalog = build_catalog(SOURCES, DATA_DIR / "images" if images else None)
     errors = validate(catalog)
     for e in errors:
         print("ERRORE:", e, file=sys.stderr)
-    save_catalog(catalog, DATA_DIR / "catalog.json")
+    if args.images_only:
+        print(f"immagini scritte in {DATA_DIR / 'images'} (cataloghi non toccati)")
+        return 1 if errors else 0
+    target = DATA_DIR / ("catalog.json" if args.force else "catalog.generated.json")
+    save_catalog(catalog, target)
+    print(f"catalogo scritto in {target}")
     for l in catalog.lines:
         prods = [p for f in l.families for p in f.products]
         print(f"{l.slug}: {len(l.families)} famiglie, {len(prods)} prodotti, "

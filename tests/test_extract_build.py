@@ -250,3 +250,53 @@ def test_elastico_premontato_wildcard_kept_and_flagged(catalog):
     assert [(a.code, a.conf, a.imb, a.pallet) for a in p.articles] == [
         ("1902-02…", None, 100, 2400)]
     assert ("Elastico Premontato", "1902-02…") in suspect_rows(catalog)
+
+
+# --- main(): non sovrascrive catalog.json senza --force ------------------------
+
+def _fake_catalog():
+    from arnoplast.catalog import Article, Catalog, Family, Line, Product
+    a = Article("1000-0001", {"it": "Prova"}, 1, 2, 3, "article")
+    p = Product("p", {"it": "P"}, [], [], [], "images/l/p.jpg", None, [a])
+    return Catalog([Line("l", {"it": "L"}, "red", [Family("f", {"it": "F"}, [p])])])
+
+
+@pytest.fixture
+def fake_main(tmp_path, monkeypatch):
+    import arnoplast.extract.build as b
+    calls = []
+    monkeypatch.setattr(b, "DATA_DIR", tmp_path)
+    monkeypatch.setattr(b, "SOURCES", {})
+
+    def fake_build(sources, images_dir=None):
+        calls.append(images_dir)
+        return _fake_catalog()
+    monkeypatch.setattr(b, "build_catalog", fake_build)
+    monkeypatch.setattr(b, "uncovered_codes", lambda *a, **k: [])
+    return b, tmp_path, calls
+
+
+def test_main_default_writes_generated_and_keeps_manual_catalog(fake_main):
+    b, d, calls = fake_main
+    (d / "catalog.json").write_text("CORREZIONI MANUALI", encoding="utf-8")
+    assert b.main([]) == 0
+    assert (d / "catalog.json").read_text(encoding="utf-8") == "CORREZIONI MANUALI"
+    assert (d / "catalog.generated.json").is_file()
+    assert calls == [None]  # nessuna immagine
+
+
+def test_main_force_overwrites_catalog(fake_main):
+    b, d, calls = fake_main
+    (d / "catalog.json").write_text("vecchio", encoding="utf-8")
+    assert b.main(["--force"]) == 0
+    assert "1000-0001" in (d / "catalog.json").read_text(encoding="utf-8")
+    assert calls == [d / "images"]
+
+
+def test_main_images_only_never_writes_catalogs(fake_main):
+    b, d, calls = fake_main
+    (d / "catalog.json").write_text("CORREZIONI MANUALI", encoding="utf-8")
+    assert b.main(["--images-only"]) == 0
+    assert (d / "catalog.json").read_text(encoding="utf-8") == "CORREZIONI MANUALI"
+    assert not (d / "catalog.generated.json").exists()
+    assert calls == [d / "images"]
