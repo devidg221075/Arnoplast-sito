@@ -133,7 +133,7 @@ def test_real_catalog_internal_links_resolve(tmp_path):
     for f in written:
         html = f.read_text(encoding="utf-8")
         for m in re.finditer(r'(?:href|src)="(/[^"]*)"', html):
-            target = re.split(r"[#?]", m.group(1), 1)[0]
+            target = re.split(r"[#?]", m.group(1), maxsplit=1)[0]
             p = tmp_path / target.lstrip("/")
             if target.endswith("/"):
                 p = p / "index.html"
@@ -220,3 +220,20 @@ def test_no_image_warning_when_images_present(tmp_path, capsys):
         assert sb.missing_images(c) == 0
     finally:
         sb.DATA_DIR = old
+
+
+def test_clean_dir_refuses_anything_inside_repo_except_dist(tmp_path, monkeypatch):
+    import arnoplast.site.build as sb
+    deleted = []
+    monkeypatch.setattr(sb.shutil, "rmtree", lambda p, *a, **k: deleted.append(p))  # mai cancellare davvero
+    monkeypatch.setattr(Path, "mkdir", lambda self, *a, **k: None)
+    for sub in ("data", "site", "content", "arnoplast", "tests", "docs", "data/images"):
+        with pytest.raises(ValueError):
+            clean_dir(ROOT / sub)
+    with pytest.raises(ValueError):
+        build_main(out="data")
+    assert not deleted
+    # dist/ e cartelle di scratch fuori dal repo sono ammesse
+    clean_dir(ROOT / "dist")
+    clean_dir(tmp_path / "scratch")
+    assert len(deleted) <= 2

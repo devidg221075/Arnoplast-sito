@@ -254,10 +254,16 @@ def build_site(c: Catalog, out: Path, lang: str = "it", sources: Path | None = N
 
 
 def clean_dir(out: Path) -> None:
-    """Svuota e ricrea `out`; rifiuta percorsi pericolosi (radice del repo o suoi antenati, /, home, cartelle con .git)."""
+    """Svuota e ricrea `out`. Ammessi solo dist/ (anche sottocartelle) e cartelle fuori dal repo.
+
+    Rifiuta ogni altro percorso dentro il repo (data/, site/, ...), il repo stesso e i suoi
+    antenati, /, la home e le cartelle con .git."""
     out = Path(out).resolve()
-    if (out == Path("/") or out == Path.home().resolve() or out == ROOT or out in ROOT.parents
-            or (out / ".git").exists()):
+    dist = ROOT / "dist"
+    inside = out == ROOT or ROOT in out.parents
+    allowed = out == dist or dist in out.parents
+    if (out == Path("/") or out == Path.home().resolve() or out in ROOT.parents
+            or (inside and not allowed) or (out / ".git").exists()):
         raise ValueError(f"rifiuto di cancellare {out}")
     if out.exists():
         shutil.rmtree(out)
