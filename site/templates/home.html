@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block main %}
+<section class="hero">
+  <h1>{{ t('home.title') }}</h1>
+  <p class="tagline">{{ t('home.tagline') }}</p>
+</section>
+<section class="lines">
+  <h2>{{ t('home.lines') }}</h2>
+  <ul class="line-cards">
+  {% for l in lines %}
+    <li class="line-card" data-line="{{ l.slug }}" data-accent="{{ l.accent }}">
+      <a href="/{{ lang }}/{{ l.slug }}/">
+        <h3>{{ text(l.name) }}</h3>
+        <p>{{ counts[l.slug] }} {{ t('home.products_count') }}</p>
+      </a>
+    </li>
+  {% endfor %}
+  </ul>
+</section>
+<p class="search-prompt">{{ t('home.search_prompt') }}</p>
+{% endblock %}

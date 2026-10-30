@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% block main %}
+<nav class="breadcrumb"><a href="/{{ lang }}/">{{ t('breadcrumb.home') }}</a> / <a href="/{{ lang }}/{{ line.slug }}/">{{ text(line.name) }}</a></nav>
+<h1>{{ text(family.name) }}</h1>
+<h2>{{ t('family.products') }}</h2>
+<ul class="product-list">
+{% for p in family.products %}
+  <li><a href="/{{ lang }}/{{ line.slug }}/{{ family.slug }}/{{ p.slug }}/">{{ text(p.name) }}</a></li>
+{% endfor %}
+</ul>
+{% endblock %}

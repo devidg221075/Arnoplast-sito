@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="{{ lang }}">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{{ title }} - {{ t('site.name') }}</title>
+  <link rel="stylesheet" href="/static/css/main.css">
+  <script type="module" src="/static/js/main.js"></script>
+</head>
+<body{% if line %} data-line="{{ line.slug }}" data-accent="{{ line.accent }}"{% endif %}>
+  <header class="site-header">
+    <a class="logo" href="/{{ lang }}/">{{ t('site.name') }}</a>
+    <div class="site-search">
+      <label for="site-search">{{ t('search.label') }}</label>
+      <input type="search" id="site-search" placeholder="{{ t('search.placeholder') }}" autocomplete="off">
+      <div id="search-results" role="region" aria-label="{{ t('search.results') }}" aria-live="polite"></div>
+    </div>
+    <nav aria-label="{{ t('menu.label') }}">
+      <ul class="menu">
+      {% for href, key in menu %}
+        <li><a href="{{ href }}">{{ t(key) }}</a>{% if key == 'menu.quote' %} <span class="quote-count" aria-live="polite">0</span>{% endif %}</li>
+      {% endfor %}
+      </ul>
+    </nav>
+  </header>
+  <main>
+  {% block main %}{% endblock %}
+  </main>
+  <footer class="site-footer">
+    <p>ARNO Commerciale s.r.l. - Via G. di Vittorio, 37, 50067 Rignano sull'Arno (FI) - ITALY</p>
+  </footer>
+</body>
+</html>

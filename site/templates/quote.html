@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block main %}
+<h1>{{ t('quote.title') }}</h1>
+<p>{{ t('quote.intro') }}</p>
+<div id="quote-list"></div>
+<p id="quote-empty" class="empty-state">{{ t('quote.empty') }}</p>
+<form id="quote-form" method="post" action="#">
+  <p><label for="q-name">{{ t('quote.name') }}</label> <input type="text" id="q-name" name="name" required></p>
+  <p><label for="q-company">{{ t('quote.company') }}</label> <input type="text" id="q-company" name="company"></p>
+  <p><label for="q-email">{{ t('quote.email') }}</label> <input type="email" id="q-email" name="email" required></p>
+  <p><label for="q-phone">{{ t('quote.phone') }}</label> <input type="tel" id="q-phone" name="phone"></p>
+  <p><label for="q-country">{{ t('quote.country') }}</label> <input type="text" id="q-country" name="country"></p>
+  <p><label for="q-notes">{{ t('quote.notes') }}</label> <textarea id="q-notes" name="notes" rows="4"></textarea></p>
+  <p><label><input type="checkbox" name="privacy" required> {{ t('quote.privacy') }}</label>
+     <a href="/it/privacy/">{{ t('quote.privacy_link') }}</a></p>
+  <p><button type="submit">{{ t('quote.submit') }}</button></p>
+</form>
+{% endblock %}

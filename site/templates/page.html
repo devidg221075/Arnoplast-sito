@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block main %}
+<h1>{{ title }}</h1>
+{% if kind == 'company' %}
+  {% for p in paragraphs %}<p>{{ p }}</p>{% endfor %}
+{% elif kind == 'contacts' %}
+  <address>
+    <p><strong>{{ contacts.name }}</strong></p>
+    <p>{{ t('contacts.address') }}: {{ contacts.address }}</p>
+    <p>{{ t('contacts.phone') }} {{ contacts.phone }}</p>
+    <p>{{ t('contacts.fax') }} {{ contacts.fax }}</p>
+    <p>{{ t('contacts.email') }}: <a href="mailto:{{ contacts.email }}">{{ contacts.email }}</a></p>
+    <p>{{ t('contacts.web') }}: <a href="https://{{ contacts.web }}">{{ contacts.web }}</a></p>
+  </address>
+{% elif kind == 'reserved' %}
+  <p class="notice" role="note">{{ t('reserved.notice') }}</p>
+{% else %}
+  <p>{{ t('page.placeholder') }}</p>
+{% endif %}
+{% endblock %}
