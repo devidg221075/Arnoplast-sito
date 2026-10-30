@@ -6,7 +6,7 @@ import { execSync } from 'node:child_process';
 const require = createRequire(import.meta.url);
 const { chromium } = require('playwright');
 const BASE = (process.argv[2] || 'http://localhost:8000').replace(/\/$/, '');
-const PAGES = ['/it/', '/it/home-a/', '/it/home-b/', '/it/home-c/', '/it/agricoltura/', '/it/agricoltura/copripalo/', '/it/agricoltura/copripalo/copripalo-prisma/'];
+const PAGES = ['/it/', '/it/agricoltura/', '/it/agricoltura/copripalo/', '/it/agricoltura/copripalo/copripalo-prisma/'];
 const kb = (n) => (n / 1024).toFixed(1);
 const kind = (type, url) => (type === 'Document' ? 'html' : type === 'Stylesheet' ? 'css' : type === 'Script' ? 'js' : type === 'Image' || /\.(jpe?g|png|webp|svg)(\?|$)/.test(url) ? 'img' : 'altro');
 

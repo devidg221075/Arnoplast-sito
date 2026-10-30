@@ -123,7 +123,7 @@ def test_real_catalog_smoke(tmp_path):
     written = build_site(c, tmp_path)
     n_fam = sum(len(l.families) for l in c.lines)
     n_prod = sum(len(f.products) for l in c.lines for f in l.families)
-    assert len(written) == 1 + 3 + len(c.lines) + n_fam + n_prod + 6  # home + 3 varianti
+    assert len(written) == 1 + len(c.lines) + n_fam + n_prod + 6  # home
     for f in written:
         low = f.read_text(encoding="utf-8").lower()
         for w in ("carrello", "€", "prezzo"):
@@ -342,9 +342,7 @@ def test_meta_description_and_canonical(tmp_path):
     assert '<link rel="canonical" href="https://www.arnoplast.it/it/agricoltura/fam/copripalo/">' in html
     home = (tmp_path / "it" / "index.html").read_text(encoding="utf-8")
     assert '<link rel="canonical" href="https://www.arnoplast.it/it/">' in home
-    for v in "abc":
-        h = (tmp_path / "it" / f"home-{v}" / "index.html").read_text(encoding="utf-8")
-        assert "noindex" in h and 'rel="canonical"' not in h
+    assert "noindex" not in home
 
 
 def test_robots_and_sitemap(tmp_path):

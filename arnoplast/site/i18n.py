@@ -108,7 +108,6 @@ STRINGS = {
         "hv.write": "Scrivici",
         "hv.call": "Chiamaci",
         "hv.where": "Dove siamo",
-        "hv.switch": "Prototipo: varianti homepage",
         "hv.reach": "Venduti in tutta Europa, nel Mediterraneo e oltre oceano",
     },
 }

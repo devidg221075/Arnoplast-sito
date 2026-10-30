@@ -1,9 +1,6 @@
-{# Macro condivise dalle varianti della homepage (home_a/b/c.html). #}
-{% macro head(v, hero=None) %}
-  <link rel="stylesheet" href="/static/css/home-{{ v }}.css">
-  {% if variant_switch %}
-  <meta name="robots" content="noindex">
-  {% endif %}
+{# Macro della homepage (home.html). #}
+{% macro head() %}
+  <link rel="stylesheet" href="/static/css/home.css">
 {% endmacro %}
 
 {% macro pic(name, alt='', sizes='100vw', cls='', priority=False) %}

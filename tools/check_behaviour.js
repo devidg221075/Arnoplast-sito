@@ -170,19 +170,16 @@ await page.evaluate(() => localStorage.setItem('arnoplast.quote.v2', JSON.string
 await page.goto(BASE + QUOTE, { waitUntil: 'networkidle' });
 ok(await page.locator('.quote-line').count() === 0, 'riga salvata oltre 99999 scartata al caricamento');
 
-// Varianti della home: contatore in testata, ingresso ricerca della pagina, barra varianti.
+// Home: contatore in testata, ingresso ricerca della pagina.
 await page.evaluate(() => localStorage.setItem('arnoplast.quote.v2', JSON.stringify([{ code: '1807-1351', description: 'Coprip Prisma 7x7', qty: 3 }])));
-for (const v of ['a', 'b', 'c']) {
-  await page.goto(`${BASE}/it/home-${v}/`, { waitUntil: 'networkidle' });
-  ok((await counters()).every((c) => c === '1'), `home-${v}: contatori = 1`);
-  await page.locator('label[for="site-search"]:not(.sr-only)').first().click();
-  ok(await page.evaluate(() => document.activeElement && document.activeElement.id === 'site-search'), `home-${v}: l'ingresso ricerca porta il fuoco su #site-search`);
-  await page.keyboard.type('prisma');
-  await page.waitForSelector('#search-results a');
-  ok(await page.locator('#search-results a').count() > 0, `home-${v}: tendina risultati`);
-  await page.keyboard.press('Escape');
-  ok(await page.locator('.vswitch a[aria-current="page"]').textContent() === v.toUpperCase(), `home-${v}: barra varianti segna la pagina corrente`);
-}
+await page.goto(`${BASE}/it/`, { waitUntil: 'networkidle' });
+ok((await counters()).every((c) => c === '1'), 'home: contatori = 1');
+await page.locator('label[for="site-search"]:not(.sr-only)').first().click();
+ok(await page.evaluate(() => document.activeElement && document.activeElement.id === 'site-search'), "home: l'ingresso ricerca porta il fuoco su #site-search");
+await page.keyboard.type('prisma');
+await page.waitForSelector('#search-results a');
+ok(await page.locator('#search-results a').count() > 0, 'home: tendina risultati');
+await page.keyboard.press('Escape');
 
 // Ricerca con indice non raggiungibile: nessun errore.
 await page.route('**/search-index.json', (r) => r.abort());

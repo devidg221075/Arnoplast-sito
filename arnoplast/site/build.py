@@ -58,14 +58,7 @@ SOURCE_DIR = ROOT / "content" / "source"
 MATERIALS = {"PP": "Polipropilene", "PA": "Poliammide", "PE": "Polietilene", "PET": "Poliestere",
              "PVC": "Polivinilcloruro", "FV": "Fibra di vetro", "FE": "Ferro zincato", "AL": "Alluminio"}
 
-# Homepage: tre varianti di prototipo (A e' la predefinita, copiata su /it/).
-HOME_VARIANTS = ("a", "b", "c")
 HOME_IMG_DIR = SITE_DIR / "static" / "img" / "home"
-# Prodotti in primo piano (variante B): linea, famiglia, prodotto (None = pagina famiglia), foto.
-FEATURED = [("agricoltura", "copripalo", "copripalo-prisma", "prod-copripalo"),
-            ("garden", "testine", "testina-batti-e-vai-stilo", "prod-testina"),
-            ("olive", "agevolatori-e-macchine", None, "prod-agevolatore"),
-            ("garden", "lame", "lama-a-3-punte", "prod-lama")]
 
 SECTIONS = ["richiesta-preventivo", "contatti", "azienda", "applicazioni", "video", "area-riservata"]
 
@@ -218,27 +211,13 @@ def home_images(folder: Path = HOME_IMG_DIR) -> dict[str, dict]:
 
 
 def home_context(c: Catalog, lang: str) -> dict:
-    """Dati comuni alle varianti della home, tutti calcolati dal catalogo."""
+    """Dati della home, tutti calcolati dal catalogo."""
     counts = {l.slug: sum(len(f.products) for f in l.families) for l in c.lines}
     articles = [a for l in c.lines for f in l.families for p in f.products for a in p.articles]
-    used = {m for l in c.lines for f in l.families for p in f.products for m in p.materials}
     stats = {"lines": len(c.lines), "families": sum(len(l.families) for l in c.lines),
              "products": sum(counts.values()), "codes": len({a.code for a in articles})}
-    imgs = home_images()
-    featured = []
-    lines = {l.slug: l for l in c.lines}
-    for line_slug, fam_slug, prod_slug, img in FEATURED:
-        line = lines.get(line_slug)
-        fam = next((f for f in line.families if f.slug == fam_slug), None) if line else None
-        prod = next((p for p in fam.products if p.slug == prod_slug), None) if fam and prod_slug else None
-        if not fam or img not in imgs or (prod_slug and not prod):
-            continue
-        url = f"/{lang}/{line_slug}/{fam_slug}/" + (f"{prod_slug}/" if prod else "")
-        featured.append({"name": text((prod or fam).name, lang), "url": url, "img": img, "line": line,
-                         "materials": prod.materials if prod else []})
-    return {"lines": c.lines, "line": None, "counts": counts, "stats": stats, "imgs": imgs,
-            "featured": featured, "contacts": CONTACTS,
-            "materials": [(k, v) for k, v in MATERIALS.items() if k in used]}
+    return {"lines": c.lines, "line": None, "counts": counts, "stats": stats, "imgs": home_images(),
+            "contacts": CONTACTS}
 
 
 def build_site(c: Catalog, out: Path, lang: str = "it", sources: Path | None = None) -> list[Path]:
@@ -251,18 +230,13 @@ def build_site(c: Catalog, out: Path, lang: str = "it", sources: Path | None = N
 
     def render(tpl: str, dest: Path, description: str | None = None, **ctx) -> None:
         rel = dest.relative_to(out).as_posix()
-        canonical = None if rel.startswith(f"{lang}/home-") else f"{SITE_URL}/{rel}/"
-        if canonical:
-            urls.append(canonical)
+        canonical = f"{SITE_URL}/{rel}/"
+        urls.append(canonical)
         _write(dest / "index.html", env.get_template(tpl).render(
             description=_clip(description, 200) if description else None, canonical=canonical, **ctx), written)
 
-    home = home_context(c, lang)
-    for v in HOME_VARIANTS:
-        render(f"home_{v}.html", base / f"home-{v}", title=t("home.title", lang), variant=v,
-               variant_switch=True, **home)
-    render("home_a.html", base, description=t("home.tagline", lang), title=t("home.title", lang),
-           variant="a", variant_switch=False, **home)
+    render("home.html", base, description=t("home.tagline", lang), title=t("home.title", lang),
+           **home_context(c, lang))
 
     # Ricerca: un articolo per codice (con i prodotti in cui compare) + una voce per famiglia e prodotto.
     search_arts: dict[str, dict] = {}
