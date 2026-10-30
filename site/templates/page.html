@@ -1,10 +1,16 @@
 {% extends "base.html" %}
 {% block main %}
-<h1>{{ title }}</h1>
+<section class="page-head">
+  <div class="wrap">
+    <nav class="breadcrumb" aria-label="Breadcrumb"><a href="/{{ lang }}/">{{ t('breadcrumb.home') }}</a></nav>
+    <h1>{{ title }}</h1>
+  </div>
+</section>
+<div class="wrap section prose">
 {% if kind == 'company' %}
   {% for p in paragraphs %}<p>{{ p }}</p>{% endfor %}
 {% elif kind == 'contacts' %}
-  <address>
+  <address class="contact-card">
     <p><strong>{{ contacts.name }}</strong></p>
     <p>{{ t('contacts.address') }}: {{ contacts.address }}</p>
     <p>{{ t('contacts.phone') }} {{ contacts.phone }}</p>
@@ -15,6 +21,7 @@
 {% elif kind == 'reserved' %}
   <p class="notice" role="note">{{ t('reserved.notice') }}</p>
 {% else %}
-  <p>{{ t('page.placeholder') }}</p>
+  <p class="notice">{{ t('page.placeholder') }}</p>
 {% endif %}
+</div>
 {% endblock %}

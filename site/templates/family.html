@@ -1,11 +1,27 @@
 {% extends "base.html" %}
 {% block main %}
-<nav class="breadcrumb"><a href="/{{ lang }}/">{{ t('breadcrumb.home') }}</a> / <a href="/{{ lang }}/{{ line.slug }}/">{{ text(line.name) }}</a></nav>
-<h1>{{ text(family.name) }}</h1>
-<h2>{{ t('family.products') }}</h2>
-<ul class="product-list">
-{% for p in family.products %}
-  <li><a href="/{{ lang }}/{{ line.slug }}/{{ family.slug }}/{{ p.slug }}/">{{ text(p.name) }}</a></li>
-{% endfor %}
-</ul>
+<section class="page-head">
+  <div class="wrap">
+    <nav class="breadcrumb" aria-label="Breadcrumb"><a href="/{{ lang }}/">{{ t('breadcrumb.home') }}</a> / <a href="/{{ lang }}/{{ line.slug }}/">{{ text(line.name) }}</a></nav>
+    <p class="kicker">{{ t('family.kicker') }} · {{ family.products | length }} {{ t('home.products_count') }}</p>
+    <h1>{{ text(family.name) }}</h1>
+  </div>
+</section>
+<section class="wrap section">
+  <h2 class="section-title">{{ t('family.products') }}</h2>
+  <ul class="product-list">
+  {% for p in family.products %}
+    <li class="product-card">
+      <a href="/{{ lang }}/{{ line.slug }}/{{ family.slug }}/{{ p.slug }}/">
+        <span class="thumb">{% if thumbs and thumbs[p.slug] %}<img src="{{ thumbs[p.slug] }}" alt="" loading="lazy" decoding="async">{% endif %}</span>
+        <span class="product-card-body">
+          <span class="card-title">{{ text(p.name) }}</span>
+          {% if p.materials %}<span class="materials">{% for m in p.materials %}<span class="tag">{{ m }}</span>{% endfor %}</span>{% endif %}
+          <span class="card-sub">{{ p.articles | length }} {{ t('family.code') if p.articles | length == 1 else t('family.codes') }}</span>
+        </span>
+      </a>
+    </li>
+  {% endfor %}
+  </ul>
+</section>
 {% endblock %}

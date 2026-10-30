@@ -1,11 +1,24 @@
 {% extends "base.html" %}
 {% block main %}
-<nav class="breadcrumb"><a href="/{{ lang }}/">{{ t('breadcrumb.home') }}</a></nav>
-<h1>{{ text(line.name) }}</h1>
-<h2>{{ t('family.families') }}</h2>
-<ul class="family-list">
-{% for f in line.families %}
-  <li><a href="/{{ lang }}/{{ line.slug }}/{{ f.slug }}/">{{ text(f.name) }}</a> <span class="count">({{ f.products | length }})</span></li>
-{% endfor %}
-</ul>
+<section class="page-head">
+  <div class="wrap">
+    <nav class="breadcrumb" aria-label="Breadcrumb"><a href="/{{ lang }}/">{{ t('breadcrumb.home') }}</a></nav>
+    <p class="kicker">{{ t('line.kicker') }}</p>
+    <h1>{{ text(line.name) }}</h1>
+  </div>
+</section>
+<section class="wrap section">
+  <h2 class="section-title">{{ t('family.families') }}</h2>
+  <ul class="family-list card-grid">
+  {% for f in line.families %}
+    <li class="card">
+      <a href="/{{ lang }}/{{ line.slug }}/{{ f.slug }}/">
+        <span class="card-title">{{ text(f.name) }}</span>
+        <span class="count">({{ f.products | length }})</span>
+        <span class="card-sub">{% for p in f.products[:4] %}{{ text(p.name) }}{% if not loop.last %} · {% endif %}{% endfor %}{% if f.products | length > 4 %} …{% endif %}</span>
+      </a>
+    </li>
+  {% endfor %}
+  </ul>
+</section>
 {% endblock %}

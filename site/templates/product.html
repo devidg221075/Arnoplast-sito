@@ -1,58 +1,75 @@
 {% extends "base.html" %}
 {% block main %}
-<nav class="breadcrumb"><a href="/{{ lang }}/">{{ t('breadcrumb.home') }}</a> / <a href="/{{ lang }}/{{ line.slug }}/">{{ text(line.name) }}</a> / <a href="/{{ lang }}/{{ line.slug }}/{{ family.slug }}/">{{ text(family.name) }}</a></nav>
 <article class="product">
-  <h1>{{ text(product.name) }}</h1>
-  {% if product.materials %}
-  <ul class="materials" aria-label="{{ t('product.materials') }}">
-  {% for m in product.materials %}<li class="tag">{{ m }}</li>{% endfor %}
-  </ul>
-  {% endif %}
-  {% if image_url %}
-  <img class="product-image" src="{{ image_url }}" alt="{{ text(product.name) }}">
-  {% endif %}
-  {% if product.features %}
-  <h2>{{ t('product.features') }}</h2>
-  <ul class="features">{% for f in product.features %}<li>{{ f }}</li>{% endfor %}</ul>
-  {% endif %}
-  {% if product.dimensions %}
-  <h2>{{ t('product.dimensions') }}</h2>
-  <ul class="dimensions">{% for d in product.dimensions %}<li>{{ d }}</li>{% endfor %}</ul>
-  {% endif %}
-  {% if product.video_url %}
-  <p class="video-link"><a href="{{ product.video_url }}">{{ t('product.video') }}</a></p>
-  {% endif %}
-  <h2>{{ t('product.articles') }}</h2>
-  {% if product.articles %}
-  <table class="articles">
-    <thead>
-      <tr>
-        <th scope="col">{{ t('col.code') }}</th>
-        <th scope="col">{{ t('col.description') }}</th>
-        {% if show_conf %}<th scope="col">{{ t('col.conf') }}</th>{% endif %}
-        {% if show_imb %}<th scope="col">{{ t('col.imb') }}</th>{% endif %}
-        {% if show_pallet %}<th scope="col">{{ t('col.pallet') }}</th>{% endif %}
-        <th scope="col">{{ t('col.qty') }}</th>
-      </tr>
-    </thead>
-    <tbody>
-    {% for a in product.articles %}
-      <tr id="{{ a.code }}" class="kind-{{ a.kind }}">
-        <td class="code">{{ a.code }}</td>
-        <td>{{ text(a.description) }}{% if a.kind in ('optional', 'spare') %} <span class="badge badge-{{ a.kind }}">{{ t('kind.' ~ a.kind) }}</span>{% endif %}</td>
-        {% if show_conf %}<td>{{ a.conf if a.conf is not none else '-' }}</td>{% endif %}
-        {% if show_imb %}<td>{{ a.imb if a.imb is not none else '-' }}</td>{% endif %}
-        {% if show_pallet %}<td>{{ a.pallet if a.pallet is not none else '-' }}</td>{% endif %}
-        <td class="quote-cell">
-          <input type="number" min="1" step="1" max="99999" value="1" class="qty" aria-label="{{ t('qty.label') }} {{ a.code }}">
-          <button type="button" class="add-to-quote" data-code="{{ a.code }}" data-description="{{ text(a.description) }}">{{ t('action.add') }}</button>
-        </td>
-      </tr>
-    {% endfor %}
-    </tbody>
-  </table>
-  {% else %}
-  <p class="no-articles">{{ t('product.no_articles') }}</p>
-  {% endif %}
+  <div class="wrap product-top">
+    <div class="product-title">
+      <nav class="breadcrumb" aria-label="Breadcrumb"><a href="/{{ lang }}/">{{ t('breadcrumb.home') }}</a> / <a href="/{{ lang }}/{{ line.slug }}/">{{ text(line.name) }}</a> / <a href="/{{ lang }}/{{ line.slug }}/{{ family.slug }}/">{{ text(family.name) }}</a></nav>
+      <h1>{{ text(product.name) }}</h1>
+      {% if product.materials %}
+      <ul class="materials" aria-label="{{ t('product.materials') }}">
+      {% for m in product.materials %}<li class="tag">{{ m }}</li>{% endfor %}
+      </ul>
+      {% endif %}
+    </div>
+    {% if image_url %}
+    <figure class="product-media">
+      <img class="product-image" src="{{ image_url }}" alt="{{ text(product.name) }}"{% if image_size %} width="{{ image_size[0] }}" height="{{ image_size[1] }}"{% endif %} decoding="async" fetchpriority="high">
+    </figure>
+    {% endif %}
+    <div class="product-details">
+      {% if product.features %}
+      <h2>{{ t('product.features') }}</h2>
+      <ul class="features">{% for f in product.features %}<li>{{ f }}</li>{% endfor %}</ul>
+      {% endif %}
+      {% if product.dimensions %}
+      <h2>{{ t('product.dimensions') }}</h2>
+      <ul class="dimensions">{% for d in product.dimensions %}<li>{{ d }}</li>{% endfor %}</ul>
+      {% endif %}
+      {% if product.video_url %}
+      <p class="video-link"><a class="btn btn-ghost" href="{{ product.video_url }}">{{ t('product.video') }}</a></p>
+      {% endif %}
+    </div>
+  </div>
+  <section class="wrap articles-section">
+    <div class="articles-head">
+      <h2>{{ t('product.articles') }}</h2>
+      {% if product.articles %}<p class="hint">{{ t('product.code_hint') }}</p>{% endif %}
+    </div>
+    {% if product.articles %}
+    <div class="table-wrap">
+    <table class="articles">
+      <thead>
+        <tr>
+          <th scope="col" class="code">{{ t('col.code') }}</th>
+          <th scope="col">{{ t('col.description') }}</th>
+          {% if show_conf %}<th scope="col" class="num">{{ t('col.conf') }}</th>{% endif %}
+          {% if show_imb %}<th scope="col" class="num">{{ t('col.imb') }}</th>{% endif %}
+          {% if show_pallet %}<th scope="col" class="num">{{ t('col.pallet') }}</th>{% endif %}
+          <th scope="col" class="quote-cell">{{ t('col.qty') }}</th>
+        </tr>
+      </thead>
+      <tbody>
+      {% for a in product.articles %}
+        <tr id="{{ a.code }}" class="kind-{{ a.kind }}">
+          <td class="code">{{ a.code }}</td>
+          <td class="desc">{{ text(a.description) }}{% if a.kind in ('optional', 'spare') %} <span class="badge badge-{{ a.kind }}">{{ t('kind.' ~ a.kind) }}</span>{% endif %}</td>
+          {% if show_conf %}<td class="num">{{ a.conf if a.conf is not none else '-' }}</td>{% endif %}
+          {% if show_imb %}<td class="num">{{ a.imb if a.imb is not none else '-' }}</td>{% endif %}
+          {% if show_pallet %}<td class="num">{{ a.pallet if a.pallet is not none else '-' }}</td>{% endif %}
+          <td class="quote-cell">
+            <div class="add-row">
+              <input type="number" min="1" step="1" max="99999" value="1" inputmode="numeric" class="qty" aria-label="{{ t('qty.label') }} {{ a.code }}">
+              <button type="button" class="add-to-quote" data-code="{{ a.code }}" data-description="{{ text(a.description) }}" data-added="{{ t('action.added') }}"><span class="btn-label">{{ t('action.add') }}</span></button>
+            </div>
+          </td>
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+    </div>
+    {% else %}
+    <p class="no-articles">{{ t('product.no_articles') }}</p>
+    {% endif %}
+  </section>
 </article>
 {% endblock %}

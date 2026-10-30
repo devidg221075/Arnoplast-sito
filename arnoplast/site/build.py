@@ -58,6 +58,41 @@ def _write(path: Path, html: str, written: list[Path]) -> None:
     written.append(path)
 
 
+def _image_url(prod) -> str | None:
+    """URL dell'immagine prodotto se il file esiste (altrimenti None)."""
+    if prod.image and (DATA_DIR / prod.image).is_file():
+        return f"/{prod.image}"
+    return None
+
+
+def _image_size(path: Path) -> tuple[int, int] | None:
+    """Larghezza e altezza di un JPEG (marcatore SOF) o PNG, senza dipendenze; None se ignoto."""
+    try:
+        data = path.read_bytes()
+    except OSError:
+        return None
+    if data[:8] == b"\x89PNG\r\n\x1a\n" and len(data) >= 24:
+        return int.from_bytes(data[16:20], "big"), int.from_bytes(data[20:24], "big")
+    if data[:2] != b"\xff\xd8":
+        return None
+    i = 2
+    while i + 9 < len(data):
+        if data[i] != 0xFF:
+            i += 1
+            continue
+        marker = data[i + 1]
+        if marker in (0xD8, 0x01) or 0xD0 <= marker <= 0xD7 or marker == 0xFF:
+            i += 1 if marker == 0xFF else 2
+            continue
+        seg = int.from_bytes(data[i + 2:i + 4], "big")
+        if marker in (0xC0, 0xC1, 0xC2, 0xC3, 0xC5, 0xC6, 0xC7, 0xC9, 0xCA, 0xCB, 0xCD, 0xCE, 0xCF):
+            h = int.from_bytes(data[i + 5:i + 7], "big")
+            w = int.from_bytes(data[i + 7:i + 9], "big")
+            return (w, h) if w and h else None
+        i += 2 + seg
+    return None
+
+
 def build_site(c: Catalog, out: Path, lang: str = "it") -> list[Path]:
     out = Path(out)
     env = _env(lang)
@@ -75,17 +110,19 @@ def build_site(c: Catalog, out: Path, lang: str = "it") -> list[Path]:
         render("line.html", base / line.slug, line=line, title=text(line.name, lang))
         for fam in line.families:
             render("family.html", base / line.slug / fam.slug, line=line, family=fam,
-                   title=text(fam.name, lang))
+                   title=text(fam.name, lang),
+                   thumbs={p.slug: _image_url(p) for p in fam.products})
             for prod in fam.products:
                 url = f"/{lang}/{line.slug}/{fam.slug}/{prod.slug}/"
                 arts = prod.articles
-                has_image = bool(prod.image) and (DATA_DIR / prod.image).is_file()
+                has_image = _image_url(prod) is not None
                 render("product.html", base / line.slug / fam.slug / prod.slug,
                        line=line, family=fam, product=prod, title=text(prod.name, lang),
                        show_conf=any(a.conf is not None for a in arts),
                        show_imb=any(a.imb is not None for a in arts),
                        show_pallet=any(a.pallet is not None for a in arts),
-                       image_url=f"/{prod.image}" if has_image else None)
+                       image_url=f"/{prod.image}" if has_image else None,
+                       image_size=_image_size(DATA_DIR / prod.image) if has_image else None)
                 if has_image:
                     dest = out / prod.image
                     dest.parent.mkdir(parents=True, exist_ok=True)

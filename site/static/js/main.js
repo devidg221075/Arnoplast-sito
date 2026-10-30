@@ -1,2 +1,426 @@
-// Comportamento del sito (lista richiesta, ricerca): Task 9.
-export {};
+// Comportamento del prototipo: lista richiesta, contatori, modulo, ricerca, menu mobile.
+// ES module senza dipendenze. Tutto l'accesso a localStorage passa da quote.js (load/save).
+import { addItem, setQty, removeItem, isValidQty, load, save, emailBody } from './quote.js';
+import { buildIndex, search } from './search.js';
+
+const QTY_MAX = 99999;
+const LANG = document.documentElement.lang || 'it';
+// Testi dell'interfaccia generati da JS (italiano; le traduzioni arrivano con WordPress).
+const MSG = {
+  qtyInvalid: `Quantità non valida: inserisci un numero intero da 1 a ${QTY_MAX}.`,
+  added: (code, qty) => `${code} aggiunto alla richiesta (quantità ${qty}).`,
+  removed: (code) => `${code} rimosso dalla richiesta.`,
+  qtyUpdated: (code, qty) => `Quantità di ${code} aggiornata a ${qty}.`,
+  qtyLabel: 'Q.tà',
+  qtyAria: (code) => `Quantità ${code}`,
+  remove: (code) => `Rimuovi ${code}`,
+  emptyList: 'La lista è vuota: aggiungi almeno un articolo dalle schede prodotto prima di inviare.',
+  name: 'Inserisci nome e cognome.',
+  email: 'Inserisci un indirizzo email valido.',
+  privacy: "Per inviare la richiesta devi accettare l'informativa privacy.",
+  fix: 'Controlla i campi evidenziati:',
+  thanks: 'Grazie! Si è aperto il tuo programma di posta con la richiesta già compilata: invia il messaggio per completarla. La lista resta salvata.',
+  noResults: 'Nessun risultato.',
+};
+
+// localStorage può non esistere o lanciare (modalità privata, cookie bloccati): quote.js lo gestisce.
+let storage = null;
+try { storage = window.localStorage; } catch { storage = null; }
+
+const $ = (sel, root = document) => root.querySelector(sel);
+const $$ = (sel, root = document) => Array.from(root.querySelectorAll(sel));
+
+let list = load(storage);
+
+function announce(text) {
+  const live = $('#live');
+  if (!live) return;
+  live.textContent = '';
+  // Ritardo minimo: i lettori di schermo annunciano anche un testo ripetuto.
+  requestAnimationFrame(() => { live.textContent = text; });
+}
+
+/** Interpreta una quantità digitata: intero 1..QTY_MAX, altrimenti null. */
+function parseQty(value) {
+  const s = String(value ?? '').trim();
+  if (!/^\d+$/.test(s)) return null;
+  const n = Number(s);
+  return isValidQty(n) && n <= QTY_MAX ? n : null;
+}
+
+function updateCounters(bump = false) {
+  const n = String(list.length);
+  for (const el of $$('.quote-count')) {
+    el.textContent = n;
+    if (bump) {
+      el.classList.remove('bump');
+      void el.offsetWidth; // riavvia l'animazione
+      el.classList.add('bump');
+    }
+  }
+}
+
+function commit(next, { bump = false } = {}) {
+  list = next;
+  save(storage, list);
+  updateCounters(bump);
+}
+
+/* ---------- Pulsanti "Aggiungi alla richiesta" ---------- */
+function rowMessage(btn, text) {
+  const wrap = btn.parentElement;
+  let msg = wrap.querySelector('.qty-msg');
+  if (!msg) {
+    msg = document.createElement('span');
+    msg.className = 'qty-msg';
+    msg.setAttribute('role', 'status');
+    msg.setAttribute('aria-live', 'polite');
+    wrap.appendChild(msg);
+  }
+  msg.textContent = text;
+  return msg;
+}
+
+function siblingQty(btn) {
+  return btn.parentElement ? btn.parentElement.querySelector('.qty') : null;
+}
+
+function onAdd(btn) {
+  const input = siblingQty(btn);
+  const qty = input ? parseQty(input.value) : 1;
+  if (qty === null) {
+    if (input) {
+      input.setAttribute('aria-invalid', 'true');
+      input.focus();
+    }
+    const msg = rowMessage(btn, MSG.qtyInvalid);
+    if (input) input.setAttribute('aria-describedby', msg.id || (msg.id = `msg-${Math.random().toString(36).slice(2, 8)}`));
+    return;
+  }
+  if (input) {
+    input.removeAttribute('aria-invalid');
+    input.value = String(qty);
+  }
+  rowMessage(btn, '');
+  const code = btn.dataset.code || '';
+  commit(addItem(list, { code, description: btn.dataset.description || '', qty }), { bump: true });
+  btn.classList.add('is-added');
+  clearTimeout(btn._addedTimer);
+  btn._addedTimer = setTimeout(() => btn.classList.remove('is-added'), 1600);
+  announce(MSG.added(code, qty));
+}
+
+document.addEventListener('click', (e) => {
+  const btn = e.target.closest && e.target.closest('.add-to-quote');
+  if (btn) onAdd(btn);
+});
+document.addEventListener('input', (e) => {
+  const input = e.target;
+  if (!(input instanceof HTMLInputElement) || !input.classList.contains('qty')) return;
+  if (input.getAttribute('aria-invalid') === 'true' && parseQty(input.value) !== null) {
+    input.removeAttribute('aria-invalid');
+    const msg = input.parentElement && input.parentElement.querySelector('.qty-msg');
+    if (msg) msg.textContent = '';
+  }
+});
+document.addEventListener('keydown', (e) => {
+  // Invio nel campo quantità della tabella = aggiungi.
+  const input = e.target;
+  if (e.key === 'Enter' && input instanceof HTMLInputElement && input.classList.contains('qty') && !input.closest('#quote-list')) {
+    const btn = input.parentElement && input.parentElement.querySelector('.add-to-quote');
+    if (btn) { e.preventDefault(); onAdd(btn); }
+  }
+});
+
+/* ---------- Pagina richiesta ---------- */
+const listEl = $('#quote-list');
+const emptyEl = $('#quote-empty');
+
+function renderQuote() {
+  if (!listEl) return;
+  listEl.textContent = '';
+  if (emptyEl) emptyEl.hidden = list.length > 0;
+  if (!list.length) return;
+  const ul = document.createElement('ul');
+  ul.className = 'quote-lines';
+  for (const item of list) {
+    const li = document.createElement('li');
+    li.className = 'quote-line';
+    li.dataset.code = item.code;
+
+    const code = document.createElement('span');
+    code.className = 'ql-code';
+    code.textContent = item.code;
+
+    const desc = document.createElement('span');
+    desc.className = 'ql-desc';
+    desc.textContent = item.description;
+
+    const qtyWrap = document.createElement('label');
+    qtyWrap.className = 'ql-qty';
+    const qtyText = document.createElement('span');
+    qtyText.setAttribute('aria-hidden', 'true');
+    qtyText.textContent = MSG.qtyLabel;
+    const qty = document.createElement('input');
+    qty.type = 'number';
+    qty.className = 'qty';
+    qty.min = '1';
+    qty.max = String(QTY_MAX);
+    qty.step = '1';
+    qty.inputMode = 'numeric';
+    qty.value = String(item.qty);
+    qty.setAttribute('aria-label', MSG.qtyAria(item.code));
+    qty.addEventListener('change', () => {
+      const n = parseQty(qty.value);
+      if (n === null) {
+        // Valore non valido: torna all'ultimo valore salvato.
+        const cur = list.find((i) => i.code === item.code);
+        qty.value = String(cur ? cur.qty : item.qty);
+        announce(MSG.qtyInvalid);
+        return;
+      }
+      commit(setQty(list, item.code, n));
+      qty.value = String(n);
+      announce(MSG.qtyUpdated(item.code, n));
+    });
+    qtyWrap.append(qtyText, qty);
+
+    const rm = document.createElement('button');
+    rm.type = 'button';
+    rm.className = 'ql-remove';
+    rm.setAttribute('aria-label', MSG.remove(item.code));
+    const x = document.createElement('span');
+    x.setAttribute('aria-hidden', 'true');
+    x.textContent = '\u00d7';
+    rm.appendChild(x);
+    rm.addEventListener('click', () => {
+      const lis = $$('.quote-line', listEl);
+      const idx = lis.indexOf(li);
+      commit(removeItem(list, item.code));
+      renderQuote();
+      announce(MSG.removed(item.code));
+      // Sposta il fuoco su un elemento sensato dopo la rimozione.
+      const next = $$('.ql-remove', listEl)[Math.min(idx, list.length - 1)];
+      if (next) next.focus();
+      else if (emptyEl) { emptyEl.tabIndex = -1; emptyEl.focus(); }
+    });
+
+    li.append(code, desc, qtyWrap, rm);
+    ul.appendChild(li);
+  }
+  listEl.appendChild(ul);
+}
+
+/* ---------- Modulo ---------- */
+const form = $('#quote-form');
+
+function formMessage(html, ok = false) {
+  const box = $('#form-message');
+  if (!box) return;
+  box.className = `form-message${ok ? ' ok' : ''}`;
+  box.replaceChildren();
+  if (Array.isArray(html)) {
+    const p = document.createElement('p');
+    p.style.margin = '0 0 .4em';
+    p.textContent = html[0];
+    const ul = document.createElement('ul');
+    ul.style.margin = '0';
+    ul.style.paddingLeft = '1.2em';
+    for (const t of html.slice(1)) {
+      const li = document.createElement('li');
+      li.textContent = t;
+      ul.appendChild(li);
+    }
+    box.append(p, ul);
+  } else {
+    box.textContent = html;
+  }
+  box.hidden = false;
+  box.focus({ preventScroll: true });
+  box.scrollIntoView({ block: 'nearest', behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
+}
+
+if (form) {
+  const field = (name) => form.elements.namedItem(name);
+  form.addEventListener('input', (e) => {
+    if (e.target.getAttribute && e.target.getAttribute('aria-invalid') === 'true' && e.target.checkValidity()) {
+      e.target.removeAttribute('aria-invalid');
+    }
+  });
+  form.addEventListener('change', (e) => {
+    if (e.target.type === 'checkbox' && e.target.checked) e.target.removeAttribute('aria-invalid');
+  });
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    if (storage) list = load(storage); // riallinea con eventuali modifiche da altre schede
+    const errors = [];
+    let firstBad = null;
+    const check = (el, ok, msg) => {
+      if (!el) return;
+      if (ok) { el.removeAttribute('aria-invalid'); return; }
+      el.setAttribute('aria-invalid', 'true');
+      errors.push(msg);
+      firstBad = firstBad || el;
+    };
+    const name = field('name');
+    const email = field('email');
+    const privacy = field('privacy');
+    if (name) name.value = name.value.trim();
+    if (email) email.value = email.value.trim();
+    check(name, name && name.checkValidity(), MSG.name);
+    check(email, email && email.checkValidity() && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.value), MSG.email);
+    check(privacy, privacy && privacy.checked, MSG.privacy);
+    if (!list.length) {
+      errors.unshift(MSG.emptyList);
+    }
+    if (errors.length) {
+      formMessage(errors.length === 1 ? errors[0] : [MSG.fix, ...errors]);
+      if (firstBad) firstBad.focus({ preventScroll: true });
+      return;
+    }
+    const data = {};
+    for (const k of ['name', 'company', 'email', 'phone', 'country', 'notes']) {
+      const el = field(k);
+      data[k] = el ? el.value : '';
+    }
+    // PROTOTIPO: l'invio vero (email a info@arnoplast.it + copia al cliente, lato server)
+    // arriva con WordPress. Qui apriamo il programma di posta con un link mailto precompilato.
+    const href = 'mailto:info@arnoplast.it?subject=Richiesta%20di%20preventivo&body='
+      + encodeURIComponent(emailBody(list, data));
+    window.location.href = href;
+    formMessage(MSG.thanks, true);
+    // La lista resta salvata dopo l'invio.
+  });
+}
+
+/* ---------- Sincronizzazione tra schede ---------- */
+window.addEventListener('storage', (e) => {
+  if (e.key !== null && e.key !== 'arnoplast.quote.v1') return;
+  list = load(storage);
+  updateCounters();
+  renderQuote();
+});
+
+/* ---------- Ricerca ---------- */
+const searchInput = $('#site-search');
+const results = $('#search-results');
+let index = null;
+let indexState = 'idle'; // idle | loading | ready | failed
+
+let indexPromise = null;
+function loadIndex() {
+  if (!indexPromise) {
+    indexState = 'loading';
+    indexPromise = fetch(`/${encodeURIComponent(LANG)}/search-index.json`, { credentials: 'same-origin' })
+      .then((r) => (r.ok ? r.json() : Promise.reject(new Error(String(r.status)))))
+      .then((data) => { index = buildIndex(data); indexState = 'ready'; })
+      .catch(() => { indexState = 'failed'; index = null; }); // ricerca disattivata in silenzio
+  }
+  return indexPromise;
+}
+
+function closeResults() {
+  if (!results) return;
+  results.textContent = '';
+  if (searchInput) searchInput.setAttribute('aria-expanded', 'false');
+}
+
+function links() { return results ? $$('a', results) : []; }
+
+// Frecce: il fuoco si sposta sui link dei risultati (link veri, nessun ruolo ARIA da simulare).
+function moveFocus(step) {
+  const items = links();
+  if (!items.length) return;
+  const cur = items.indexOf(document.activeElement);
+  const next = cur === -1 ? (step > 0 ? 0 : items.length - 1) : cur + step;
+  if (next < 0 || next >= items.length) { searchInput.focus(); return; }
+  items[next].focus();
+}
+
+function renderResults() {
+  if (!searchInput || !results || indexState !== 'ready') return;
+  const q = searchInput.value;
+  if (q.trim().length < 2) { closeResults(); return; }
+  let found = [];
+  try { found = search(index, q, 8); } catch { found = []; }
+  results.textContent = '';
+  searchInput.setAttribute('aria-expanded', 'true');
+  if (!found.length) {
+    const p = document.createElement('p');
+    p.className = 'r-empty';
+    p.textContent = MSG.noResults;
+    results.appendChild(p);
+    return;
+  }
+  const ul = document.createElement('ul');
+  for (const a of found) {
+    const li = document.createElement('li');
+    const link = document.createElement('a');
+    link.href = a.url;
+    const c = document.createElement('span');
+    c.className = 'r-code';
+    c.textContent = a.code;
+    const d = document.createElement('span');
+    d.className = 'r-desc';
+    d.textContent = a.description;
+    link.append(c, d);
+    li.appendChild(link);
+    ul.appendChild(li);
+  }
+  results.appendChild(ul);
+}
+
+if (searchInput && results) {
+  searchInput.setAttribute('aria-expanded', 'false');
+  const ensure = () => loadIndex().then(renderResults);
+  searchInput.addEventListener('focus', () => { loadIndex(); }); // carica l'indice al primo fuoco
+  searchInput.addEventListener('input', ensure);
+  const onKey = (e) => {
+    if (e.key === 'ArrowDown') { e.preventDefault(); moveFocus(1); }
+    else if (e.key === 'ArrowUp') { e.preventDefault(); moveFocus(-1); }
+    else if (e.key === 'Escape') {
+      if (results.childElementCount) { e.preventDefault(); closeResults(); searchInput.focus(); }
+      else if (e.target === searchInput) searchInput.value = '';
+    } else if (e.key === 'Enter' && e.target === searchInput) {
+      const first = links()[0];
+      if (first) { e.preventDefault(); window.location.href = first.href; }
+    }
+  };
+  searchInput.addEventListener('keydown', onKey);
+  results.addEventListener('keydown', onKey);
+  document.addEventListener('click', (e) => {
+    if (!e.target.closest || !e.target.closest('.site-search')) closeResults();
+  });
+  document.addEventListener('focusin', (e) => {
+    if (!e.target.closest || !e.target.closest('.site-search')) closeResults();
+  });
+}
+
+/* ---------- Menu mobile ---------- */
+const toggle = $('.menu-toggle');
+const nav = $('#site-menu');
+if (toggle && nav) {
+  const setOpen = (open) => {
+    toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+    nav.classList.toggle('open', open);
+  };
+  toggle.addEventListener('click', () => setOpen(toggle.getAttribute('aria-expanded') !== 'true'));
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && toggle.getAttribute('aria-expanded') === 'true') { setOpen(false); toggle.focus(); }
+  });
+  document.addEventListener('click', (e) => {
+    if (toggle.getAttribute('aria-expanded') === 'true' && !e.target.closest('.site-header')) setOpen(false);
+  });
+}
+
+// Voce di menu corrente (le pagine di catalogo ricadono su "Prodotti").
+{
+  const here = location.pathname;
+  const items = $$('.menu a').map((a) => [a, new URL(a.href, location.href).pathname]);
+  const match = items.find(([, p]) => p !== `/${LANG}/` && here.startsWith(p))
+    || items.find(([, p]) => p === `/${LANG}/` && here.startsWith(p) && here !== p);
+  if (match) match[0].setAttribute('aria-current', 'page');
+}
+
+updateCounters();
+renderQuote();
