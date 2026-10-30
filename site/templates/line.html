@@ -7,6 +7,9 @@
     <h1>{{ text(line.name) }}</h1>
   </div>
 </section>
+{% if pdf %}
+<p class="wrap"><a class="btn btn-ghost" href="{{ pdf.url }}">{{ t('line.download') }} (PDF, {{ pdf.mb }} MB)</a></p>
+{% endif %}
 <section class="wrap section">
   <h2 class="section-title">{{ t('family.families') }}</h2>
   <ul class="family-list card-grid">

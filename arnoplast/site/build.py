@@ -9,6 +9,7 @@ from jinja2 import Environment, FileSystemLoader, select_autoescape
 
 from arnoplast.catalog import Catalog, load_catalog, text
 from arnoplast.site.i18n import t
+from arnoplast.site.redirects import load_redirects, netlify_rules
 
 ROOT = Path(__file__).resolve().parent.parent.parent
 DATA_DIR = ROOT / "data"
@@ -33,6 +34,14 @@ CONTACTS = {
 
 # Informativa privacy esistente; la fase WordPress puo' cambiarla qui.
 PRIVACY_URL = "https://www.arnoplast.it/privacy-policy-arno-plast"
+
+# PDF dei cataloghi: slug linea -> (file sorgente, nome pubblicato)
+CATALOG_PDFS = {
+    "agricoltura": ("agricoltura-it.pdf", "catalogo-agricoltura-2026-it.pdf"),
+    "garden": ("garden-it.pdf", "catalogo-garden-2026-it.pdf"),
+    "olive": ("olive-it.pdf", "catalogo-raccolta-olive-2025-it.pdf"),
+}
+SOURCE_DIR = ROOT / "content" / "source"
 
 SECTIONS = ["richiesta-preventivo", "contatti", "azienda", "applicazioni", "video", "area-riservata"]
 
@@ -93,8 +102,9 @@ def _image_size(path: Path) -> tuple[int, int] | None:
     return None
 
 
-def build_site(c: Catalog, out: Path, lang: str = "it") -> list[Path]:
+def build_site(c: Catalog, out: Path, lang: str = "it", sources: Path | None = None) -> list[Path]:
     out = Path(out)
+    sources = SOURCE_DIR if sources is None else Path(sources)
     env = _env(lang)
     written: list[Path] = []
     base = out / lang
@@ -107,7 +117,15 @@ def build_site(c: Catalog, out: Path, lang: str = "it") -> list[Path]:
 
     search: list[dict] = []
     for line in c.lines:
-        render("line.html", base / line.slug, line=line, title=text(line.name, lang))
+        pdf = None
+        if line.slug in CATALOG_PDFS:
+            src_name, pub_name = CATALOG_PDFS[line.slug]
+            if (sources / src_name).is_file():
+                (out / "downloads").mkdir(parents=True, exist_ok=True)
+                shutil.copyfile(sources / src_name, out / "downloads" / pub_name)
+                mb = f"{(sources / src_name).stat().st_size / 1e6:.1f}".replace(".", ",")
+                pdf = {"url": f"/downloads/{pub_name}", "mb": mb}
+        render("line.html", base / line.slug, line=line, title=text(line.name, lang), pdf=pdf)
         for fam in line.families:
             render("family.html", base / line.slug / fam.slug, line=line, family=fam,
                    title=text(fam.name, lang),
@@ -154,13 +172,30 @@ def build_site(c: Catalog, out: Path, lang: str = "it") -> list[Path]:
     static = SITE_DIR / "static"
     if static.is_dir():
         shutil.copytree(static, out / "static", dirs_exist_ok=True)
+
+    redirects = DATA_DIR / "redirects.csv"
+    if redirects.is_file():
+        shutil.copyfile(redirects, out / "redirects.csv")
+        (out / "_redirects").write_text(netlify_rules(load_redirects(redirects)), encoding="utf-8")
     return written
 
 
-def main() -> None:
-    c = load_catalog(DATA_DIR / "catalog.json")
-    out = ROOT / "dist"
-    written = build_site(c, out)
+def clean_dir(out: Path) -> None:
+    """Svuota e ricrea `out`; rifiuta percorsi pericolosi (radice del repo o suoi antenati, /, home, cartelle con .git)."""
+    out = Path(out).resolve()
+    if (out == Path("/") or out == Path.home().resolve() or out == ROOT or out in ROOT.parents
+            or (out / ".git").exists()):
+        raise ValueError(f"rifiuto di cancellare {out}")
+    if out.exists():
+        shutil.rmtree(out)
+    out.mkdir(parents=True)
+
+
+def main(out: Path | None = None, sources: Path | None = None, catalog_path: Path | None = None) -> None:
+    c = load_catalog(catalog_path or DATA_DIR / "catalog.json")
+    out = Path(out) if out else ROOT / "dist"
+    clean_dir(out)
+    written = build_site(c, out, sources=sources)
     print(f"{len(written)} pagine scritte in {out}")
 
 

@@ -63,6 +63,7 @@ STRINGS = {
         "home.families_count": "famiglie",
         "home.family_count": "famiglia",
         "line.kicker": "Linea",
+        "line.download": "Scarica il catalogo",
         "family.kicker": "Famiglia",
         "product.code_hint": "Quantità in confezioni. Aggiungi i codici alla richiesta di preventivo.",
         "page.contacts": "Contatti",

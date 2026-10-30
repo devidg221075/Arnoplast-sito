@@ -1,9 +1,11 @@
 import json
 import re
+
+import pytest
 from pathlib import Path
 
 from arnoplast.catalog import Article, Catalog, Family, Line, Product, load_catalog
-from arnoplast.site.build import build_site
+from arnoplast.site.build import build_site, clean_dir, main as build_main
 from arnoplast.site.i18n import t
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -138,3 +140,54 @@ def test_real_catalog_internal_links_resolve(tmp_path):
             if not p.is_file():
                 missing.append((f.relative_to(tmp_path).as_posix(), m.group(1)))
     assert not missing, missing[:5]
+
+
+def _pdf_sources(tmp_path, size=2_500_000):
+    src = tmp_path / "src"
+    src.mkdir()
+    (src / "agricoltura-it.pdf").write_bytes(b"%PDF" + b"0" * (size - 4))
+    return src
+
+
+def test_line_page_links_to_catalog_pdf_when_present(tmp_path):
+    src = _pdf_sources(tmp_path)
+    out = tmp_path / "out"
+    build_site(cat(prod()), out, sources=src)
+    html = (out / "it" / "agricoltura" / "index.html").read_text(encoding="utf-8")
+    assert 'href="/downloads/catalogo-agricoltura-2026-it.pdf"' in html
+    assert "Scarica il catalogo (PDF, 2,5 MB)" in html
+    assert (out / "downloads" / "catalogo-agricoltura-2026-it.pdf").is_file()
+
+
+def test_line_page_has_no_download_link_without_pdf(tmp_path):
+    out = tmp_path / "out"
+    build_site(cat(prod()), out, sources=tmp_path / "vuota")
+    html = (out / "it" / "agricoltura" / "index.html").read_text(encoding="utf-8")
+    assert "Scarica il catalogo" not in html and "/downloads/" not in html
+    assert not (out / "downloads").exists()
+
+
+def test_build_writes_redirects_files(tmp_path):
+    build_site(cat(prod()), tmp_path, sources=tmp_path / "vuota")
+    assert (tmp_path / "redirects.csv").is_file()
+    rules = (tmp_path / "_redirects").read_text(encoding="utf-8")
+    assert "/catalogo-agricoltura-professionale /it/agricoltura/ 301\n" in rules
+
+
+def test_clean_build_removes_stale_files(tmp_path):
+    out = tmp_path / "dist"
+    out.mkdir()
+    (out / "vecchia.html").write_text("x")
+    build_main(out=out, sources=tmp_path / "vuota", catalog_path=ROOT / "data" / "catalog.json")
+    assert not (out / "vecchia.html").exists()
+    assert (out / "it" / "index.html").is_file()
+
+
+def test_clean_build_refuses_dangerous_paths(tmp_path):
+    for bad in (ROOT, Path("/"), Path.home(), ROOT.parent):
+        with pytest.raises(ValueError):
+            clean_dir(bad)
+    (tmp_path / ".git").mkdir()
+    with pytest.raises(ValueError):
+        clean_dir(tmp_path)
+    assert (tmp_path / ".git").exists()
