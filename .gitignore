@@ -1,0 +1,6 @@
+dist/
+__pycache__/
+data/images/
+.pytest_cache/
+node_modules/
+.superpowers/
