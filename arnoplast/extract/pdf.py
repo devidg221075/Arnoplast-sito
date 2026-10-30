@@ -7,6 +7,8 @@ import subprocess
 from dataclasses import dataclass
 from pathlib import Path
 
+from arnoplast.extract.articles import strip_controls
+
 # A4 in punti PDF (tutti e tre i cataloghi)
 PAGE_W = 596
 PAGE_H = 842
@@ -43,14 +45,14 @@ def page_text(pdf: Path, page: int, box: tuple[float, float] | None = None,
     """Testo di una pagina (`pdftotext -layout`, o `-raw`), eventualmente ritagliato in y."""
     mode = "-raw" if raw else "-layout"
     cmd = ["pdftotext", mode, "-f", str(page), "-l", str(page), *_crop_args(box), str(pdf), "-"]
-    return subprocess.run(cmd, check=True, capture_output=True, text=True).stdout
+    return strip_controls(subprocess.run(cmd, check=True, capture_output=True, text=True).stdout)
 
 
 def page_words(pdf: Path, page: int) -> list[Word]:
     """Parole con bounding box (`pdftotext -bbox`), in punti."""
     cmd = ["pdftotext", "-bbox", "-f", str(page), "-l", str(page), str(pdf), "-"]
     out = subprocess.run(cmd, check=True, capture_output=True, text=True).stdout
-    return [Word(html.unescape(m.group(5)), *map(float, m.groups()[:4]))
+    return [Word(strip_controls(html.unescape(m.group(5))), *map(float, m.groups()[:4]))
             for m in _WORD_RE.finditer(out)]
 
 

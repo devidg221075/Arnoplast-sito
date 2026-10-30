@@ -3305,6 +3305,36 @@
               ]
             },
             {
+              "slug": "elastico-premontato",
+              "name": {
+                "it": "Elastico Premontato"
+              },
+              "materials": [
+                "PET"
+              ],
+              "features": [
+                "ideale per tensionare di teli e reti",
+                "corda elastica 8 mm nera PET",
+                "tutte le misure disponibili a richiesta",
+                "fornibile con moschettoni in plastica o metallici"
+              ],
+              "dimensions": [],
+              "image": "images/agricoltura/elastico-premontato.jpg",
+              "video_url": null,
+              "articles": [
+                {
+                  "code": "1902-02…",
+                  "description": {
+                    "it": "ELASTICO PREMONTATO CON DUE MOSCHETTONI (VARIE MISURE A RICHIESTA)"
+                  },
+                  "conf": null,
+                  "imb": 100,
+                  "pallet": 2400,
+                  "kind": "article"
+                }
+              ]
+            },
+            {
               "slug": "pallina-con-elastico",
               "name": {
                 "it": "Pallina con Elastico"
@@ -7714,6 +7744,36 @@
                   "kind": "article"
                 },
                 {
+                  "code": "1424-0124",
+                  "description": {
+                    "it": "BOBINA 1,2 KG (PESO INDICATIVO) DIAM. 2,4MM - 230MT"
+                  },
+                  "conf": 1,
+                  "imb": 4,
+                  "pallet": null,
+                  "kind": "article"
+                },
+                {
+                  "code": "1424-0130",
+                  "description": {
+                    "it": "BOBINA 1,2 KG (PESO INDICATIVO) DIAM. 3,0MM - 155MT"
+                  },
+                  "conf": 1,
+                  "imb": 4,
+                  "pallet": null,
+                  "kind": "article"
+                },
+                {
+                  "code": "1424-0133",
+                  "description": {
+                    "it": "BOBINA 1,2 KG (PESO INDICATIVO) DIAM. 3,3MM - 108MT"
+                  },
+                  "conf": 1,
+                  "imb": 4,
+                  "pallet": null,
+                  "kind": "article"
+                },
+                {
                   "code": "1424-0139",
                   "description": {
                     "it": "BOBINA 1,2 KG (PESO INDICATIVO) DIAM. 3,9MM - 75MT"
@@ -7797,6 +7857,16 @@
                   "code": "1412-0135",
                   "description": {
                     "it": "DISPENSER 35 MT. DIAM. 3,5 SEGHETTATO"
+                  },
+                  "conf": 1,
+                  "imb": 12,
+                  "pallet": null,
+                  "kind": "article"
+                },
+                {
+                  "code": "1412-0140",
+                  "description": {
+                    "it": "DISPENSER 30 MT. DIAM. 4,0 SEGHETTATO"
                   },
                   "conf": 1,
                   "imb": 12,
@@ -10502,6 +10572,47 @@
                   },
                   "conf": 1,
                   "imb": 15,
+                  "pallet": null,
+                  "kind": "article"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "slug": "espositori",
+          "name": {
+            "it": "Espositori"
+          },
+          "products": [
+            {
+              "slug": "espositori",
+              "name": {
+                "it": "Espositori"
+              },
+              "materials": [],
+              "features": [],
+              "dimensions": [],
+              "image": "images/garden/espositori.jpg",
+              "video_url": null,
+              "articles": [
+                {
+                  "code": "5703-0002",
+                  "description": {
+                    "it": "ESPOSITORE DA BANCO 4 GANCI"
+                  },
+                  "conf": null,
+                  "imb": 1,
+                  "pallet": null,
+                  "kind": "article"
+                },
+                {
+                  "code": "5703-0003",
+                  "description": {
+                    "it": "ESPOSITORE VERTICALE 16 GANCI"
+                  },
+                  "conf": null,
+                  "imb": 1,
                   "pallet": null,
                   "kind": "article"
                 }

@@ -153,3 +153,52 @@ def test_olive_heading_line_before_code_with_description():
         ("2801-0202", "Agevolatore MARTINO ECO motore in alto Asta fissa in alluminio", 2),
         ("2801-0403", "Agevolatore Oleo Carbon n.2 pettini in carbonio", 2),
     ]
+
+
+def test_ean_row_code_alone_description_wrapped_around():
+    # garden p.24: descrizione sopra e sotto la riga del codice
+    from arnoplast.extract.articles import parse_ean_rows
+    text = "\n".join([
+        "       COD. EAN        ART.                         DESCRIZIONE                                     CONF.        BOX",
+        "",
+        "     8025721034013               BOBINA 1,2 KG (PESO INDICATIVO) DIAM. 2,4MM -",
+        "                     1424-0124                                                                          1         4",
+        "                                 230MT",
+        "     8025721034020               BOBINA 1,2 KG (PESO INDICATIVO) DIAM. 3,0MM -",
+        "                     1424-0130                                                                          1         4",
+        "                                 155MT",
+        "     8025721034044   1424-0139   BOBINA 1,2 KG (PESO INDICATIVO) DIAM. 3,9MM - 75MT                     1         4",
+    ])
+    rows = parse_ean_rows(text)
+    assert [(a.code, a.description["it"], a.conf, a.imb) for a in rows] == [
+        ("1424-0124", "BOBINA 1,2 KG (PESO INDICATIVO) DIAM. 2,4MM - 230MT", 1, 4),
+        ("1424-0130", "BOBINA 1,2 KG (PESO INDICATIVO) DIAM. 3,0MM - 155MT", 1, 4),
+        ("1424-0139", "BOBINA 1,2 KG (PESO INDICATIVO) DIAM. 3,9MM - 75MT", 1, 4),
+    ]
+
+
+def test_ean_row_with_control_character_before_code():
+    # garden p.25: pdftotext emette un BEL (\x07) prima del codice
+    from arnoplast.extract.articles import parse_ean_rows
+    text = "\n".join([
+        "  COD. EAN        ART.                     DESCRIZIONE                        CONF.               BOX",
+        "8025721033283   \x071412-0140    DISPENSER 30 MT. DIAM. 4,0 SEGHETTATO                         1               12",
+    ])
+    rows = parse_ean_rows(text)
+    assert [(a.code, a.description["it"], a.conf, a.imb) for a in rows] == [
+        ("1412-0140", "DISPENSER 30 MT. DIAM. 4,0 SEGHETTATO", 1, 12)]
+
+
+def test_wildcard_code_row_kept():
+    # agricoltura p.51: codice stampato "1902-02…" (varie misure, non ordinabile)
+    text = "\n".join([
+        "      COD.                     DESCRIZIONE                    CONF.      IMB.   PALLET",
+        "                   ELASTICO PREMONTATO CON",
+        "      1902-02…     DUE MOSCHETTONI (VARIE MISURE A                 -       100     2400",
+        "                   RICHIESTA)",
+        "        2025",
+    ])
+    a = one(text)
+    assert a.code == "1902-02…"
+    assert a.description == {"it": "ELASTICO PREMONTATO CON DUE MOSCHETTONI (VARIE MISURE A RICHIESTA)"}
+    assert (a.conf, a.imb, a.pallet) == (None, 100, 2400)

@@ -6,7 +6,17 @@ import re
 from arnoplast.catalog import Article
 
 HEADER_RE = re.compile(r"\bCOD\.?\s+DESCRIZIONE\b", re.IGNORECASE)
-CODE_RE = re.compile(r"^\s*(\d{4}-\d{4}[A-Z]{0,3})(?=\s|$)")
+# codice articolo; la seconda forma ("1902-02…", agricoltura p.51) è un codice
+# "jolly" stampato per prodotti a misura: NON è ordinabile così com'è, viene
+# tenuto per non perdere il prodotto ed è segnalato da `suspect_rows`.
+CODE_RE = re.compile(r"^\s*(\d{4}-\d{4}[A-Z]{0,3}|\d{4}-\d{1,3}…)(?=\s|$)")
+WILDCARD = "…"
+# caratteri di controllo che pdftotext a volte emette (es. BEL \x07 a garden p.25)
+CONTROL_RE = re.compile(r"[\x00-\x08\x0b\x0e-\x1f\x7f]")
+
+
+def strip_controls(text: str) -> str:
+    return CONTROL_RE.sub("", text)
 COLUMN_RE = re.compile(r"^(?:(\d+)\s*(?:pz\.?)?|-)$", re.IGNORECASE)
 GAP_RE = re.compile(r"\s{2,}")
 # tolleranza (colonne) per riconoscere una riga di continuazione della descrizione
@@ -56,7 +66,7 @@ def _num(tok: str) -> int | None:
 
 
 def parse_article_rows(text: str) -> list[Article]:
-    lines = text.splitlines()
+    lines = strip_controls(text).splitlines()
     out: list[Article] = []
     i = 0
     used = 0  # righe prima di questo indice già assegnate a un articolo
@@ -130,7 +140,9 @@ def parse_ean_rows(text: str) -> list[Article]:
     out: list[Article] = []
     names: list[str] | None = None
     spare = False
-    for line in text.splitlines():
+    lines = strip_controls(text).splitlines()
+    used = 0  # righe prima di questo indice già assegnate a un articolo
+    for i, line in enumerate(lines):
         if EAN_HEADER_RE.search(line):
             spare = "RICAMBIO" in line.upper()
             names = re.findall(r"\b(CONF|BOX)\b", line.upper())
@@ -144,13 +156,34 @@ def parse_ean_rows(text: str) -> list[Article]:
         nums: list[int | None] = []
         while chunks and NUM_TOKEN_RE.match(chunks[-1]):
             nums.insert(0, _num(chunks.pop()))
-        desc = _clean(" ".join(chunks))
+        desc = " ".join(chunks)
+        if not desc and nums:
+            # codice da solo sulla riga (garden p.24): descrizione sulla riga
+            # sopra (dopo l'EAN) e sulle righe contigue sotto
+            parts = []
+            if i - 1 >= used and _ean_desc_line(lines[i - 1]):
+                parts.append(_EAN_PREFIX_RE.sub("", lines[i - 1]).strip())
+            j = i + 1
+            while j < len(lines) and _ean_desc_line(lines[j]) and not _EAN_PREFIX_RE.match(lines[j]):
+                parts.append(GAP_RE.split(lines[j].strip())[0])
+                j += 1
+            used = j
+            desc = " ".join(parts)
+        desc = _clean(desc)
         if not desc:
             continue
         cols = dict(zip(names[-len(nums):] if nums else [], nums))
         kind = "spare" if spare else _kind(desc)
         out.append(Article(m.group(2), {"it": desc}, cols.get("CONF"), cols.get("BOX"), None, kind))
     return out
+
+
+_EAN_PREFIX_RE = re.compile(r"^\s*\d{12,13}\s+")
+
+
+def _ean_desc_line(line: str) -> bool:
+    """Riga di sola descrizione in una tabella Garden (niente codice né intestazione)."""
+    return bool(line.strip()) and not EAN_ROW_RE.match(line) and not EAN_HEADER_RE.search(line)
 
 
 def parse_raw_rows(text: str, ncols: int) -> list[Article]:
@@ -160,7 +193,7 @@ def parse_raw_rows(text: str, ncols: int) -> list[Article]:
     solo, descrizione su una o più righe e numeri su una riga a sé. Serve a
     recuperare righe che `-layout` mescola con le etichette dei disegni.
     """
-    lines = [l.strip() for l in text.splitlines()]
+    lines = [l.strip() for l in strip_controls(text).splitlines()]
     out: list[Article] = []
     i = 0
     while i < len(lines):

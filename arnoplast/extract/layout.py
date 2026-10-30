@@ -31,7 +31,9 @@ FAMILIES: dict[str, list[tuple[int, str]]] = {
         (40, "Abbigliamento"),
         (44, "Accessori"),
         (50, "Ancoraggi"),
-        (56, "Espositori"),
+        # l'indice del catalogo dice pag. 56, ma nel PDF la pagina "ESPOSITORI"
+        # (con la sua tabella 5703-…) è la 55: vale il PDF
+        (55, "Espositori"),
     ],
     # volantino di 12 pagine: una sola famiglia
     "olive": [

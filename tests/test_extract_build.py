@@ -197,3 +197,56 @@ def test_table_order_preserved_with_repeated_codes(catalog):
     p = _product(catalog, "agricoltura", "Stop.net - Stop Net 2")
     assert [a.code for a in p.articles] == [
         "1802-0405", "1802-0401", "1802-0803", "1802-0407", "1802-0401", "1702-0806"]
+
+
+# --- copertura dei codici (fix round 1) ---------------------------------------
+
+def test_uncovered_codes_with_fake_pages():
+    from arnoplast.catalog import Article, Catalog, Family, Line, Product
+    from arnoplast.extract.build import uncovered_codes
+    prod = Product("p", {"it": "P"}, [], [], [], None, None,
+                   [Article("1807-1351", {"it": "x"}, 1, 1, 1, "article")])
+    cat = Catalog([Line("agricoltura", {"it": "A"}, "red", [Family("f", {"it": "F"}, [prod])])])
+    pages = {"a.pdf": ["1807-1351 Coprip\n8025721010802   \x071807-1310GZ Viteria", "nulla 1975 - 2025"]}
+    got = uncovered_codes(cat, {"agricoltura": Path("a.pdf")},
+                          pages=lambda pdf: pages[Path(pdf).name])
+    assert got == [("agricoltura", 1, "1807-1310GZ")]
+
+
+@needs_pdfs
+def test_no_code_in_pdfs_is_missing_from_catalog(catalog):
+    from arnoplast.extract.build import uncovered_codes
+    assert uncovered_codes(catalog, SOURCES) == []
+
+
+@needs_pdfs
+def test_garden_wrapped_and_control_char_rows(catalog):
+    velox = {a.code: a for a in _product(
+        catalog, "garden", "Filo Super Professionale Highlander Velox").articles}
+    for code, mt in [("1424-0124", "230MT"), ("1424-0130", "155MT"), ("1424-0133", "108MT")]:
+        a = velox[code]
+        assert (a.conf, a.imb) == (1, 4) and a.description["it"].endswith(mt)
+    raptor = {a.code: a for a in _product(
+        catalog, "garden", "Filo Super Professionale Highlander Raptor").articles}
+    a = raptor["1412-0140"]
+    assert (a.description["it"], a.conf, a.imb) == ("DISPENSER 30 MT. DIAM. 4,0 SEGHETTATO", 1, 12)
+
+
+@needs_pdfs
+def test_espositori_family(catalog):
+    garden = next(l for l in catalog.lines if l.slug == "garden")
+    fam = next(f for f in garden.families if f.slug == "espositori")
+    assert [p.name["it"] for p in fam.products] == ["Espositori"]
+    by_code = {a.code: a for a in fam.products[0].articles}
+    assert by_code["5703-0002"].imb == 1 and by_code["5703-0003"].imb == 1
+    # pag. 50-54 restano in Ancoraggi
+    anc = next(f for f in garden.families if f.slug == "ancoraggi")
+    assert "Clips per Serre" in [p.name["it"] for p in anc.products]
+
+
+@needs_pdfs
+def test_elastico_premontato_wildcard_kept_and_flagged(catalog):
+    p = _product(catalog, "agricoltura", "Elastico Premontato")
+    assert [(a.code, a.conf, a.imb, a.pallet) for a in p.articles] == [
+        ("1902-02…", None, 100, 2400)]
+    assert ("Elastico Premontato", "1902-02…") in suspect_rows(catalog)

@@ -15,6 +15,7 @@ from __future__ import annotations
 import re
 import sys
 import unicodedata
+from collections.abc import Callable
 from dataclasses import dataclass, field
 from pathlib import Path
 
@@ -22,7 +23,7 @@ from arnoplast.catalog import (
     MATERIALS, Article, Catalog, Family, Line, Product, save_catalog, validate,
 )
 from arnoplast.extract.articles import (
-    CODE_RE, EAN_HEADER_RE, HEADER_RE, parse_article_rows, parse_ean_rows, parse_raw_rows,
+    WILDCARD, strip_controls, CODE_RE, EAN_HEADER_RE, HEADER_RE, parse_article_rows, parse_ean_rows, parse_raw_rows,
 )
 from arnoplast.extract.layout import FAMILIES, LINES, SOURCE_DIR, family_for
 from arnoplast.extract.pdf import PAGE_H, Word, page_count, page_image, page_text, page_words
@@ -103,6 +104,15 @@ def find_titles(words: list[Word], line: str) -> list[Title]:
             rows[-1].append(w)
         else:
             rows.append([w])
+    if not rows:
+        # pagina senza titoli prodotto (es. garden p.55 "ESPOSITORI", 47 pt):
+        # l'intestazione di pagina, cioè la riga più grande nei primi 100 pt,
+        # fa da titolo dell'intera pagina; se non ci sono articoli, la fascia
+        # viene comunque scartata
+        top = [w for w in words if w.y0 < 100 and w.height >= 30]
+        if top:
+            hmax = max(w.height for w in top)
+            rows = [[w for w in top if abs(w.height - hmax) <= TITLE_TOL]]
     titles = []
     for row in rows:
         row.sort(key=lambda w: w.x0)
@@ -337,10 +347,39 @@ def build_catalog(sources: dict[str, Path], images_dir: Path | None = None) -> C
 
 
 def suspect_rows(catalog: Catalog) -> list[tuple[str, str]]:
-    """(nome prodotto, codice) delle righe senza alcun valore CONF./IMB./PALLET leggibile."""
+    """(nome prodotto, codice) delle righe da rivedere: nessun valore CONF./IMB./PALLET
+    leggibile, oppure codice "jolly" non ordinabile (es. "1902-02…")."""
     return [(p.name["it"], a.code)
             for l in catalog.lines for f in l.families for p in f.products
-            for a in p.articles if _all_none(a)]
+            for a in p.articles if _all_none(a) or WILDCARD in a.code]
+
+
+FULL_CODE_RE = re.compile(r"(?<![\d-])(\d{4}-\d{4}[A-Z]{0,3})(?![A-Za-z\d])")
+
+
+def _pdf_pages(pdf: Path) -> list[str]:
+    return [page_text(pdf, n) for n in range(1, page_count(pdf) + 1)]
+
+
+def uncovered_codes(catalog: Catalog, sources: dict[str, Path],
+                    pages: Callable[[Path], list[str]] | None = None
+                    ) -> list[tuple[str, int, str]]:
+    """(chiave PDF, pagina, codice) di ogni codice completo presente nel testo
+    di una pagina sorgente ma assente dalla linea corrispondente del catalogo.
+
+    `pages` (pdf -> testo per pagina) serve ai test; di default pdftotext.
+    """
+    pages = pages or _pdf_pages
+    out: list[tuple[str, int, str]] = []
+    for key, pdf in sources.items():
+        line = next((l for l in catalog.lines if l.slug == key), None)
+        have = {a.code for f in (line.families if line else []) for p in f.products
+                for a in p.articles}
+        for n, txt in enumerate(pages(Path(pdf)), 1):
+            for code in dict.fromkeys(FULL_CODE_RE.findall(strip_controls(txt))):
+                if code not in have:
+                    out.append((key, n, code))
+    return out
 
 
 def main() -> int:
@@ -355,6 +394,8 @@ def main() -> int:
               f"{sum(len(p.articles) for p in prods)} articoli")
     for name, code in suspect_rows(catalog):
         print(f"SOSPETTA: {name} {code}")
+    for key, page, code in uncovered_codes(catalog, SOURCES):
+        print(f"NON COPERTO: {key} p.{page} {code}")
     return 1 if errors else 0
 
 
