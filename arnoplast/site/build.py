@@ -43,6 +43,19 @@ CATALOG_PDFS = {
 }
 SOURCE_DIR = ROOT / "content" / "source"
 
+# Legenda materiali dei cataloghi (sigla -> nome), nell'ordine della legenda.
+MATERIALS = {"PP": "Polipropilene", "PA": "Poliammide", "PE": "Polietilene", "PET": "Poliestere",
+             "PVC": "Polivinilcloruro", "FV": "Fibra di vetro", "FE": "Ferro zincato", "AL": "Alluminio"}
+
+# Homepage: tre varianti di prototipo (A e' la predefinita, copiata su /it/).
+HOME_VARIANTS = ("a", "b", "c")
+HOME_IMG_DIR = SITE_DIR / "static" / "img" / "home"
+# Prodotti in primo piano (variante B): linea, famiglia, prodotto (None = pagina famiglia), foto.
+FEATURED = [("agricoltura", "copripalo", "copripalo-prisma", "prod-copripalo"),
+            ("garden", "testine", "testina-batti-e-vai-stilo", "prod-testina"),
+            ("olive", "agevolatori-e-macchine", None, "prod-agevolatore"),
+            ("garden", "lame", "lama-a-3-punte", "prod-lama")]
+
 SECTIONS = ["richiesta-preventivo", "contatti", "azienda", "applicazioni", "video", "area-riservata"]
 
 
@@ -102,6 +115,62 @@ def _image_size(path: Path) -> tuple[int, int] | None:
     return None
 
 
+def _webp_size(path: Path) -> tuple[int, int] | None:
+    """Larghezza e altezza di un file WebP (VP8, VP8L, VP8X)."""
+    d = path.read_bytes()[:30]
+    if d[:4] != b"RIFF" or d[8:12] != b"WEBP":
+        return None
+    kind = d[12:16]
+    if kind == b"VP8 ":
+        return int.from_bytes(d[26:28], "little") & 0x3FFF, int.from_bytes(d[28:30], "little") & 0x3FFF
+    if kind == b"VP8L":
+        b = int.from_bytes(d[21:25], "little")
+        return (b & 0x3FFF) + 1, ((b >> 14) & 0x3FFF) + 1
+    if kind == b"VP8X":
+        return int.from_bytes(d[24:27], "little") + 1, int.from_bytes(d[27:30], "little") + 1
+    return None
+
+
+def home_images(folder: Path = HOME_IMG_DIR) -> dict[str, dict]:
+    """Foto della home per nome: src (la piu' grande), srcset, larghezza e altezza intrinseche."""
+    found: dict[str, list[tuple[int, str, tuple[int, int]]]] = {}
+    for f in sorted(folder.glob("*.webp")) if folder.is_dir() else []:
+        name, _, w = f.stem.rpartition("-")
+        size = _webp_size(f)
+        if name and w.isdigit() and size:
+            found.setdefault(name, []).append((int(w), f"/static/img/home/{f.name}", size))
+    out = {}
+    for name, items in found.items():
+        items.sort()
+        out[name] = {"src": items[-1][1], "width": items[-1][2][0], "height": items[-1][2][1],
+                     "srcset": ", ".join(f"{u} {w}w" for w, u, _ in items)}
+    return out
+
+
+def home_context(c: Catalog, lang: str) -> dict:
+    """Dati comuni alle varianti della home, tutti calcolati dal catalogo."""
+    counts = {l.slug: sum(len(f.products) for f in l.families) for l in c.lines}
+    articles = [a for l in c.lines for f in l.families for p in f.products for a in p.articles]
+    used = {m for l in c.lines for f in l.families for p in f.products for m in p.materials}
+    stats = {"lines": len(c.lines), "families": sum(len(l.families) for l in c.lines),
+             "products": sum(counts.values()), "codes": len({a.code for a in articles})}
+    imgs = home_images()
+    featured = []
+    lines = {l.slug: l for l in c.lines}
+    for line_slug, fam_slug, prod_slug, img in FEATURED:
+        line = lines.get(line_slug)
+        fam = next((f for f in line.families if f.slug == fam_slug), None) if line else None
+        prod = next((p for p in fam.products if p.slug == prod_slug), None) if fam and prod_slug else None
+        if not fam or img not in imgs or (prod_slug and not prod):
+            continue
+        url = f"/{lang}/{line_slug}/{fam_slug}/" + (f"{prod_slug}/" if prod else "")
+        featured.append({"name": text((prod or fam).name, lang), "url": url, "img": img, "line": line,
+                         "materials": prod.materials if prod else []})
+    return {"lines": c.lines, "line": None, "counts": counts, "stats": stats, "imgs": imgs,
+            "featured": featured, "contacts": CONTACTS,
+            "materials": [(k, v) for k, v in MATERIALS.items() if k in used]}
+
+
 def build_site(c: Catalog, out: Path, lang: str = "it", sources: Path | None = None) -> list[Path]:
     out = Path(out)
     sources = SOURCE_DIR if sources is None else Path(sources)
@@ -112,8 +181,11 @@ def build_site(c: Catalog, out: Path, lang: str = "it", sources: Path | None = N
     def render(tpl: str, dest: Path, **ctx) -> None:
         _write(dest / "index.html", env.get_template(tpl).render(**ctx), written)
 
-    render("home.html", base, lines=c.lines, line=None,
-           counts={l.slug: sum(len(f.products) for f in l.families) for l in c.lines}, title=t("home.title", lang))
+    home = home_context(c, lang)
+    for v in HOME_VARIANTS:
+        render(f"home_{v}.html", base / f"home-{v}", title=t("home.title", lang), variant=v,
+               variant_switch=True, **home)
+    render("home_a.html", base, title=t("home.title", lang), variant="a", variant_switch=False, **home)
 
     search: list[dict] = []
     for line in c.lines:

@@ -1,0 +1,2 @@
+{# AIUTO DI PROTOTIPO: barra per confrontare le varianti della home. Togliere questo include per rimuoverla. #}
+<nav class="vswitch" aria-label="{{ t('hv.switch') }}">{% for v in ('a', 'b', 'c') %}<a href="/{{ lang }}/home-{{ v }}/"{% if v == variant %} aria-current="page"{% endif %}>{{ v | upper }}</a>{% endfor %}</nav>

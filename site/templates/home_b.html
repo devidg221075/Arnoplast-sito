@@ -1,0 +1,94 @@
+{% extends "base.html" %}
+{% import "_home.html" as h with context %}
+{# Variante B "Tecnica": chiara ed editoriale, ricerca per codice al centro, numeri dal catalogo. #}
+{% block head_extra %}{{ h.head('b') }}{% endblock %}
+{% block main %}
+<section class="b-hero">
+  <div class="wrap b-hero-in">
+    <div class="b-hero-text">
+      <p class="b-kicker"><span class="b-dot" aria-hidden="true"></span>{% for l in lines %}{{ text(l.name) }}{% if not loop.last %} · {% endif %}{% endfor %}</p>
+      <h1>Ogni accessorio ha il suo codice</h1>
+      <p class="b-lead">Cerca tra <span data-stat="codes">{{ stats.codes }}</span> codici di <span data-stat="products">{{ stats.products }}</span> prodotti, progettati e stampati a Rignano sull'Arno dal 1975.</p>
+      {{ h.code_search('b-search') }}
+      <p class="b-alt"><a href="#linee">Oppure sfoglia le linee <span aria-hidden="true">↓</span></a></p>
+    </div>
+    <figure class="b-draw">
+      {{ h.pic('disegno', 'Disegno tecnico quotato di un componente', '(min-width: 1024px) 520px, 100vw', '', True) }}
+      <figcaption><span>Fig. 01</span> Progettazione interna, dal disegno allo stampo</figcaption>
+    </figure>
+  </div>
+  <dl class="wrap b-stats">
+    <div><dt>linee</dt><dd data-stat="lines">{{ stats.lines }}</dd></div>
+    <div><dt>famiglie</dt><dd data-stat="families">{{ stats.families }}</dd></div>
+    <div><dt>prodotti</dt><dd data-stat="products">{{ stats.products }}</dd></div>
+    <div><dt>codici</dt><dd data-stat="codes">{{ stats.codes }}</dd></div>
+  </dl>
+</section>
+
+<section class="b-feat wrap" aria-labelledby="b-feat-t">
+  <div class="b-sec-head">
+    <span class="b-num" aria-hidden="true">01</span>
+    <h2 id="b-feat-t">In primo piano</h2>
+  </div>
+  <ul class="b-grid">
+  {% for f in featured %}
+    <li class="b-tile b-tile-{{ loop.index }}" data-accent="{{ f.line.accent }}">
+      <a href="{{ f.url }}">
+        <span class="b-tile-img">{{ h.pic(f.img, '', '(min-width: 1024px) 50vw, 100vw') }}</span>
+        <span class="b-tile-cap"><span class="b-tile-line">{{ text(f.line.name) }}</span><span class="b-tile-name">{{ f.name }}</span>{% if f.materials %}<span class="b-tile-mat">{{ f.materials | join(' · ') }}</span>{% endif %}<span class="b-arrow" aria-hidden="true">→</span></span>
+      </a>
+    </li>
+  {% endfor %}
+  </ul>
+</section>
+
+<section class="b-lines wrap" id="linee" aria-labelledby="b-lines-t">
+  <div class="b-sec-head">
+    <span class="b-num" aria-hidden="true">02</span>
+    <h2 id="b-lines-t">{{ t('home.lines') }}</h2>
+  </div>
+  <ul class="b-list">
+  {% for l in lines %}
+    <li data-accent="{{ l.accent }}"><a href="/{{ lang }}/{{ l.slug }}/">
+      <span class="b-li-idx" aria-hidden="true">0{{ loop.index }}</span>
+      <span class="b-li-main"><span class="b-li-name">{{ text(l.name) }}</span>{{ h.families(l, 'b-fams') }}</span>
+      <span class="b-li-meta">{{ h.meta(l) }}</span>
+      <span class="b-arrow" aria-hidden="true">→</span>
+    </a></li>
+  {% endfor %}
+  </ul>
+</section>
+
+<section class="b-mat wrap" aria-labelledby="b-mat-t">
+  <div class="b-sec-head">
+    <span class="b-num" aria-hidden="true">03</span>
+    <h2 id="b-mat-t">Materiali</h2>
+  </div>
+  <p class="b-note">La legenda dei cataloghi: ogni scheda prodotto indica il materiale con la sua sigla.</p>
+  <ul class="b-pills">
+  {% for code, name in materials %}
+    <li><span class="tag">{{ code }}</span> {{ name }}</li>
+  {% endfor %}
+  </ul>
+</section>
+
+<section class="b-steps wrap" aria-labelledby="b-steps-t">
+  <div class="b-sec-head">
+    <span class="b-num" aria-hidden="true">04</span>
+    <h2 id="b-steps-t">{{ t('hv.steps_title') }}</h2>
+  </div>
+  {{ h.steps('b-steps-list') }}
+  <a class="btn btn-primary" href="/{{ lang }}/richiesta-preventivo/">{{ t('hv.quote_cta') }} <span aria-hidden="true">→</span></a>
+</section>
+
+<section class="b-contact" aria-labelledby="b-contact-t">
+  <div class="wrap b-contact-in">
+    <div>
+      <h2 id="b-contact-t">{{ t('hv.contacts_title') }}</h2>
+      <p>{{ t('hv.contacts_text') }}</p>
+    </div>
+    {{ h.contact_list('b-dl') }}
+  </div>
+</section>
+{% if variant_switch %}{% include "variant_switch.html" %}{% endif %}
+{% endblock %}

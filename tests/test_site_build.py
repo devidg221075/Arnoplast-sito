@@ -111,7 +111,7 @@ def test_real_catalog_smoke(tmp_path):
     written = build_site(c, tmp_path)
     n_fam = sum(len(l.families) for l in c.lines)
     n_prod = sum(len(f.products) for l in c.lines for f in l.families)
-    assert len(written) == 1 + len(c.lines) + n_fam + n_prod + 6
+    assert len(written) == 1 + 3 + len(c.lines) + n_fam + n_prod + 6  # home + 3 varianti
     for f in written:
         low = f.read_text(encoding="utf-8").lower()
         for w in ("carrello", "€", "prezzo"):

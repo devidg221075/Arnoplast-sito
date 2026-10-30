@@ -1,0 +1,41 @@
+{# Macro condivise dalle varianti della homepage (home_a/b/c.html). #}
+{% macro head(v, hero=None) %}
+  <link rel="stylesheet" href="/static/css/home-{{ v }}.css">
+  {% if variant_switch %}
+  <meta name="robots" content="noindex">
+  {% endif %}
+{% endmacro %}
+
+{% macro pic(name, alt='', sizes='100vw', cls='', priority=False) %}
+{% set im = imgs[name] %}
+<img{% if cls %} class="{{ cls }}"{% endif %} src="{{ im.src }}" srcset="{{ im.srcset }}" sizes="{{ sizes }}" width="{{ im.width }}" height="{{ im.height }}" alt="{{ alt }}"{% if priority %} fetchpriority="high"{% else %} loading="lazy" decoding="async"{% endif %}>
+{% endmacro %}
+
+{# Ingresso ricerca: un'etichetta del campo #site-search nella testata (nessun JS in piu'). #}
+{% macro code_search(cls) %}
+<label for="site-search" class="{{ cls }}">
+  <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M10.5 3a7.5 7.5 0 0 1 5.9 12.1l4.8 4.8-1.4 1.4-4.8-4.8A7.5 7.5 0 1 1 10.5 3Zm0 2a5.5 5.5 0 1 0 0 11 5.5 5.5 0 0 0 0-11Z"/></svg>
+  <span class="cs-text"><b>{{ t('hv.search_cta') }}</b> {{ t('hv.search_sub') }} <span data-stat="codes">{{ stats.codes }}</span> {{ t('hv.codes') }}</span>
+  <span class="cs-key" aria-hidden="true">{{ t('search.placeholder') }}</span>
+</label>
+{% endmacro %}
+
+{% macro meta(l) %}<strong data-count="{{ l.slug }}">{{ counts[l.slug] }}</strong> {{ t('hv.products') }} · {{ l.families | length }} {{ t('hv.family') if l.families | length == 1 else t('hv.families') }}{% endmacro %}
+
+{% macro families(l, cls='fams') %}<ul class="{{ cls }}">{% for f in l.families %}<li>{{ text(f.name) }}</li>{% endfor %}</ul>{% endmacro %}
+
+{% macro steps(cls) %}
+<ol class="{{ cls }}">
+  {% for n in (1, 2, 3) %}
+  <li><span class="st-n" aria-hidden="true">0{{ n }}</span><h3>{{ t('hv.step%d' % n) }}</h3><p>{{ t('hv.step%d_text' % n) }}</p></li>
+  {% endfor %}
+</ol>
+{% endmacro %}
+
+{% macro contact_list(cls) %}
+<dl class="{{ cls }}">
+  <div><dt>{{ t('hv.call') }}</dt><dd><a href="tel:+390558347031">{{ contacts.phone }}</a></dd></div>
+  <div><dt>{{ t('hv.write') }}</dt><dd><a href="mailto:{{ contacts.email }}">{{ contacts.email }}</a></dd></div>
+  <div><dt>{{ t('hv.where') }}</dt><dd>{{ contacts.address }}</dd></div>
+</dl>
+{% endmacro %}

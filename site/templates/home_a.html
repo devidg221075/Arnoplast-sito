@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+{% import "_home.html" as h with context %}
+{# Variante A "Campo": foto a tutto schermo, linee come schede, filiera, passi del preventivo. #}
+{% block head_extra %}{{ h.head('a') }}{% endblock %}
+{% block main %}
+<section class="a-hero">
+  {{ h.pic('frutteto', 'Frutteto con impianto di rete antigrandine su pali', '(max-aspect-ratio: 1/1) 830px, 100vw', 'a-hero-img', True) }}
+  <div class="wrap a-hero-in">
+    <p class="a-kicker"><span class="flag" aria-hidden="true"></span>{{ t('home.kicker') }}</p>
+    <h1>Accessori in plastica per chi lavora la terra</h1>
+    <p class="a-lead">{{ t('home.tagline') }}</p>
+    <div class="a-ctas">
+      <a class="btn btn-primary" href="#linee">{{ t('hv.discover') }}</a>
+      <a class="btn a-btn-light" href="/{{ lang }}/richiesta-preventivo/">{{ t('hv.quote_cta') }}</a>
+    </div>
+    {{ h.code_search('a-search') }}
+  </div>
+  <ul class="wrap a-facts">
+    <li><b>1975</b> ARNOstampi sdf</li>
+    <li><b>1983</b> ARNOplast s.r.l.</li>
+    <li><b>Rignano sull'Arno</b> Firenze</li>
+    <li><b>Europa · Mediterraneo</b> e oltre oceano</li>
+  </ul>
+</section>
+
+<section class="a-lines wrap" id="linee" aria-labelledby="a-lines-t">
+  <div class="a-head">
+    <p class="a-eyebrow">{{ t('home.lines') }}</p>
+    <h2 id="a-lines-t">Tre linee per il campo, il giardino e l'oliveto</h2>
+  </div>
+  <ul class="a-cards">
+  {% for l in lines %}
+    <li class="a-card" data-accent="{{ l.accent }}">
+      <a href="/{{ lang }}/{{ l.slug }}/">
+        <span class="a-card-media">{{ h.pic('linea-' ~ l.slug, '', '(min-width: 1024px) 400px, (min-width: 600px) 50vw, 100vw') }}</span>
+        <span class="a-card-body">
+          <span class="a-idx" aria-hidden="true">0{{ loop.index }}</span>
+          <h3>{{ text(l.name) }}</h3>
+          <span class="a-meta">{{ h.meta(l) }}</span>
+          {{ h.families(l, 'a-fams') }}
+          <span class="a-more">{{ t('home.cta') }} <span aria-hidden="true">→</span></span>
+        </span>
+      </a>
+    </li>
+  {% endfor %}
+  </ul>
+</section>
+
+<section class="a-idea" aria-labelledby="a-idea-t">
+  <div class="wrap a-idea-in">
+    <div class="a-idea-text">
+      <p class="a-eyebrow">Made in Italy</p>
+      <h2 id="a-idea-t">{{ t('hv.idea_title') }}</h2>
+      <p>{{ t('hv.idea_text') }}</p>
+    </div>
+    <ol class="a-idea-photos">
+      {% for img, key, alt in (('progetto', 'hv.idea_1', 'Progettazione al computer di un articolo'), ('stampaggio', 'hv.idea_2', 'Pressa a iniezione nello stabilimento'), ('magazzino', 'hv.idea_3', 'Magazzino con scaffalature e pallet')) %}
+      <li><figure>{{ h.pic(img, alt, '(min-width: 1024px) 260px, (min-width: 600px) 33vw, 80vw') }}<figcaption><span aria-hidden="true">0{{ loop.index }}</span> {{ t(key) }}</figcaption></figure></li>
+      {% endfor %}
+    </ol>
+  </div>
+</section>
+
+<section class="a-steps" aria-labelledby="a-steps-t">
+  <div class="wrap">
+    <h2 id="a-steps-t">{{ t('hv.steps_title') }}</h2>
+    {{ h.steps('a-steps-list') }}
+    <a class="btn a-btn-dark" href="/{{ lang }}/richiesta-preventivo/">{{ t('hv.quote_cta') }} <span aria-hidden="true">→</span></a>
+  </div>
+</section>
+
+<section class="a-contact wrap" aria-labelledby="a-contact-t">
+  <div>
+    <h2 id="a-contact-t">{{ t('hv.contacts_title') }}</h2>
+    <p>{{ t('hv.contacts_text') }}</p>
+  </div>
+  {{ h.contact_list('a-dl') }}
+</section>
+{% if variant_switch %}{% include "variant_switch.html" %}{% endif %}
+{% endblock %}
