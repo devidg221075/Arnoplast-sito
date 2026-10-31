@@ -25,13 +25,19 @@ OUT = ROOT / "site" / "static" / "img" / "home"
 
 # Foto -> crop: parte della larghezza (da, a) tenuta nel ritaglio verticale per i telefoni;
 #         fuoco: (inizio, pieno, sigma) sfocatura del primo piano, da `inizio` a `pieno` dell'altezza (None: nessuna);
+#         widths: larghezze della foto larga al posto di WIDTHS;
 #         q: qualita' per larghezza al posto di QUALITY (i ritagli verticali sono l'LCP sui telefoni: leggeri).
 AGRI = {"crop": (0.47, 0.92), "fuoco": (0.58, 0.85, 6), "q": {420: 80, 840: 75, 1260: 76}}
+# Fogliame fitto su tutta la foto: primo piano sfocato e larghezze fino a 2000 px (oltre, il limite di 250 KB
+# costringerebbe a una qualita' troppo bassa).
+IMB = {"crop": (0.40, 0.84), "fuoco": (0.55, 0.9, 5), "q": {420: 80, 840: 76, 1260: 74}, "widths": (800, 1280, 1600, 2000)}
 PHOTOS = {
     "sede-giorno": {"crop": (0.45, 0.90)},   # insegna, finestre e porta
     "sede-notte": {"crop": (0.45, 0.90)},
     "agricoltura-giorno": AGRI,              # palo centrale a sinistra, luce dorata a destra
     "agricoltura-notte": AGRI,               # stesso ritaglio: il passaggio giorno/notte non sposta l'inquadratura
+    "imballaggi-giorno": IMB,                # corridoio sotto la rete, punto di fuga al centro del ritaglio
+    "imballaggi-notte": IMB,
 }
 WIDTHS = (800, 1280, 1600, 2000, 2560, 3200)
 PORTRAIT_WIDTHS = (420, 840, 1260)
@@ -70,7 +76,7 @@ def main(names) -> None:
         im = Image.open(SRC / f"{name}.jpg").convert("RGB")
         if cfg.get("fuoco"):
             im = defocus(im, *cfg["fuoco"])
-        save(im, name, WIDTHS, q)
+        save(im, name, cfg.get("widths", WIDTHS), q)
         save(im.crop((round(x0 * im.width), 0, round(x1 * im.width), im.height)), f"{name}-alto", PORTRAIT_WIDTHS, q)
 
 
