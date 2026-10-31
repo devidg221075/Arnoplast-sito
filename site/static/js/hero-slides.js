@@ -1,5 +1,6 @@
 // Carosello dell'hero della home: ruota la foto di sfondo e la didascalia (link alla sezione), titolo e testi
-// restano fissi. Script classico senza dipendenze (funziona anche da file://).
+// restano fissi; il titolo grande cambia con la foto (.hs-t, uno per slide, vuoto sulle fiere).
+// Script classico senza dipendenze (funziona anche da file://).
 // - Foto: solo la prima e' nel markup; le altre (data-src/data-srcset) si caricano dopo l'evento load, a browser
 //   inattivo, o subito al primo comando dell'utente. Di sera (19-7, ora locale; ?luce=notte|giorno per forzare)
 //   le slide con data-night-srcset usano la foto notturna, come l'hero di Azienda.
@@ -16,7 +17,7 @@
   var root = document.querySelector('[data-hs]');
   if (!root) return;
   var all = function (sel) { return [].slice.call(root.querySelectorAll(sel)); };
-  var pics = all('.hs-pic'), caps = all('.hs-cap'), dots = all('.hs-dot');
+  var pics = all('.hs-pic'), caps = all('.hs-cap'), dots = all('.hs-dot'), titles = all('.hs-t');
   var live = root.querySelector('.hs-caps');
   var pauseBtn = root.querySelector('.hs-pause');
   var curEl = root.querySelector('.hs-cur'), totEl = root.querySelector('.hs-tot');
@@ -33,9 +34,9 @@
     var end = c.getAttribute('data-fair-end');
     if (!end || end >= today) return;
     if (j === 0) firstGone = true;
-    [pics[j], c, dots[j]].forEach(function (el) { if (el && el.parentNode) el.parentNode.removeChild(el); });
+    [pics[j], c, dots[j], titles[j]].forEach(function (el) { if (el && el.parentNode) el.parentNode.removeChild(el); });
   });
-  pics = all('.hs-pic'); caps = all('.hs-cap'); dots = all('.hs-dot');
+  pics = all('.hs-pic'); caps = all('.hs-cap'); dots = all('.hs-dot'); titles = all('.hs-t');
   var n = Math.min(pics.length, caps.length);
   var of = root.getAttribute('data-of') || '/';
   caps.forEach(function (c, j) {
@@ -48,6 +49,7 @@
     pics[0].classList.add('is-active');
     pics[0].removeAttribute('aria-hidden');
     caps[0].classList.add('is-active');
+    if (titles[0]) titles[0].classList.add('is-active');
     if (dots[0]) dots[0].setAttribute('aria-current', 'true');
     load(0);
   }
@@ -100,6 +102,7 @@
     cur = i;
     // Didascalia e indicatore subito (risposta immediata al comando), foto quando e' pronta.
     caps.forEach(function (c, j) { c.classList.toggle('is-active', j === i); });
+    titles.forEach(function (c, j) { c.classList.toggle('is-active', j === i); });
     root.classList.toggle('is-fairslide', caps[i].classList.contains('hs-fair'));
     if (curEl) curEl.textContent = pad(i + 1);
     dots.forEach(function (d, j) { if (j === i) d.setAttribute('aria-current', 'true'); else d.removeAttribute('aria-current'); });

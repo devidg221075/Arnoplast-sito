@@ -66,16 +66,27 @@ def test_families_and_products_keep_compact_opening(site, rel):
     assert h.count('fetchpriority="high"') <= 1  # al piu' la foto del prodotto, mai una foto d'apertura
 
 
+def _split_ok(block):
+    full = re.search(r'<span class="sr-only">([^<]+)</span>', block).group(1)
+    split = re.search(r'<span class="hx-split[^"]*" aria-hidden="true"[^>]*>(.*)</span>$', block, re.S).group(1)
+    assert re.sub(r"<[^>]+>", "", split) == full
+    assert full.strip()
+
+
 @pytest.mark.parametrize("rel", HERO_PAGES)
 def test_split_title_stays_readable_for_screen_readers(site, rel):
     out, _ = site
     h = html(out, rel)
     assert h.count("<h1") == 1
     h1 = re.search(r"<h1[^>]*>(.*?)</h1>", h, re.S).group(1)
-    full = re.search(r'<span class="sr-only">([^<]+)</span>', h1).group(1)
-    split = re.search(r'<span class="hx-split[^"]*" aria-hidden="true"[^>]*>(.*)</span>$', h1, re.S).group(1)
-    assert re.sub(r"<[^>]+>", "", split) == full
-    assert full.strip()
+    if 'class="sr-only"' in h.split(h1)[0][-30:]:  # home: H1 per lettori di schermo + un titolo per slide (.hs-t)
+        assert h1.strip()
+        titles = re.findall(r'<p class="hx-title hs-t[^"]*">(.*?)</p>', h, re.S)
+        assert titles, "la home deve avere un titolo per ogni slide non-fiera"
+        for t_ in titles:
+            _split_ok(t_)
+        return
+    _split_ok(h1)
 
 
 def test_line_hero_numbers_come_from_catalog(site):

@@ -22,7 +22,13 @@
   </div>
   <div class="wrap a-hero-in hx-in">
     <p class="a-kicker"><span class="flag" aria-hidden="true"></span>{{ t('home.kicker') }}</p>
-    <h1 class="hx-title">{{ hx.split('Accessori in plastica per chi lavora la terra') }}</h1>
+    <h1 class="sr-only">Accessori in plastica per chi lavora la terra</h1>
+    <div class="hs-titles" id="hs-titles">
+    {% for s in slides %}
+      {% if s.fair or not s.title %}<p class="hx-title hs-t{{ ' is-active' if loop.first }}" aria-hidden="true" data-fair-end="{{ s.end if s.fair else '' }}"></p>
+      {% else %}<p class="hx-title hs-t{{ ' is-active' if loop.first }}">{{ hx.split(s.title) }}</p>{% endif %}
+    {% endfor %}
+    </div>
     <p class="a-lead">{{ t('home.tagline') }}</p>
     <div class="a-ctas">
       <a class="btn btn-primary" href="#linee">{{ t('hv.discover') }}</a>

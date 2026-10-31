@@ -648,7 +648,7 @@ def hero_slides(c: Catalog, lang: str, imgs: dict, stats: dict, fairs: list[dict
             label = t("page.company", lang)
             nums = [("lines", stats["lines"], t("hv.lines", lang)), ("codes", stats["codes"], t("hv.codes", lang))]
         slides.append({"key": key, "fair": False, "href": f"/{lang}/{key}/", "label": label, "aria": label,
-                       "nums": nums, "hero": hero})
+                       "title": t(f"hs.title.{key}", lang), "nums": nums, "hero": hero})
     return slides
 
 

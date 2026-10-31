@@ -194,3 +194,9 @@ html:not(.js) .hs-caps, html:not(.js) .hs-ctrl { display: none; }
   .hs .a-kicker, .hs .a-lead, .hs .a-ctas, .hs .a-search, .hs .a-facts, .hs .hx-title { transition: opacity .5s var(--e), visibility 0s; }
   .js .hs.is-fairslide .a-kicker, .js .hs.is-fairslide .a-lead, .js .hs.is-fairslide .a-ctas, .js .hs.is-fairslide .a-search, .js .hs.is-fairslide .a-facts { transition: opacity .5s var(--e), visibility 0s .5s; }
 }
+
+/* Titolo grande per slide: uno per foto, sovrapposti; si vede solo quello della slide attiva (le fiere non ne hanno). */
+.hs-titles { display: grid; }
+.hs-t { grid-area: 1 / 1; visibility: hidden; }
+.hs-t.is-active { visibility: visible; }
+.js .hs-t:not(.is-active) .hx-c { animation: none; }
