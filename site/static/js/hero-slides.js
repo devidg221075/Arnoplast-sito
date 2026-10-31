@@ -7,20 +7,51 @@
 //   quindi pausa e ripresa ripartono da dove erano. Ferma al passaggio del mouse, col fuoco nel carosello,
 //   mentre si scrive nella ricerca o con la scheda nascosta; il pulsante pausa la ferma finche' non si riprende.
 // - Con prefers-reduced-motion: reduce nessuna rotazione automatica ne' movimento: comandi manuali attivi.
+// - Fiere: le slide con data-fair-end (AAAA-MM-GG) precedente a oggi (data locale di chi visita) si tolgono prima di
+//   avviare la rotazione, se il sito non e' stato ricostruito dopo la fine della fiera. Contatore ("01 / 06"),
+//   indicatori ed etichette "N di M" si rinumerano sulle slide rimaste; se cade la prima, si attiva la seguente e la
+//   sua foto si carica subito. Senza JS vale la build.
 (function () {
   'use strict';
   var root = document.querySelector('[data-hs]');
   if (!root) return;
-  var pics = [].slice.call(root.querySelectorAll('.hs-pic'));
-  var caps = [].slice.call(root.querySelectorAll('.hs-cap'));
-  var dots = [].slice.call(root.querySelectorAll('.hs-dot'));
+  var all = function (sel) { return [].slice.call(root.querySelectorAll(sel)); };
+  var pics = all('.hs-pic'), caps = all('.hs-cap'), dots = all('.hs-dot');
   var live = root.querySelector('.hs-caps');
   var pauseBtn = root.querySelector('.hs-pause');
-  var n = Math.min(pics.length, caps.length);
-  if (n < 2) return;
+  var curEl = root.querySelector('.hs-cur'), totEl = root.querySelector('.hs-tot');
+  var pad = function (x) { return (x < 10 ? '0' : '') + x; };
+  var now = new Date();
+  var today = now.getFullYear() + '-' + pad(now.getMonth() + 1) + '-' + pad(now.getDate());
 
-  var q = /[?&]luce=(notte|giorno)/.exec(location.search), hr = new Date().getHours();
+  var q = /[?&]luce=(notte|giorno)/.exec(location.search), hr = now.getHours();
   var night = q ? q[1] === 'notte' : hr >= 19 || hr < 7;
+
+  // --- Fiere finite: via foto, didascalia e indicatore della slide, poi rinumerazione.
+  var firstGone = false;
+  caps.forEach(function (c, j) {
+    var end = c.getAttribute('data-fair-end');
+    if (!end || end >= today) return;
+    if (j === 0) firstGone = true;
+    [pics[j], c, dots[j]].forEach(function (el) { if (el && el.parentNode) el.parentNode.removeChild(el); });
+  });
+  pics = all('.hs-pic'); caps = all('.hs-cap'); dots = all('.hs-dot');
+  var n = Math.min(pics.length, caps.length);
+  var of = root.getAttribute('data-of') || '/';
+  caps.forEach(function (c, j) {
+    var name = c.getAttribute('data-label') || '';
+    c.setAttribute('aria-label', (j + 1) + ' ' + of + ' ' + n + ': ' + name);
+    if (dots[j]) dots[j].setAttribute('aria-label', (j + 1) + ' ' + of + ' ' + n + ': ' + name);
+  });
+  if (totEl) totEl.textContent = pad(n);
+  if (firstGone && n) {
+    pics[0].classList.add('is-active');
+    pics[0].removeAttribute('aria-hidden');
+    caps[0].classList.add('is-active');
+    if (dots[0]) dots[0].setAttribute('aria-current', 'true');
+    load(0);
+  }
+  if (n < 2) return;
   var mq = window.matchMedia ? window.matchMedia('(prefers-reduced-motion: reduce)') : null;
   var calm = !!(mq && mq.matches);
   var cur = 0, paused = calm, holds = {}, leaveTimer = 0;
@@ -69,6 +100,7 @@
     cur = i;
     // Didascalia e indicatore subito (risposta immediata al comando), foto quando e' pronta.
     caps.forEach(function (c, j) { c.classList.toggle('is-active', j === i); });
+    if (curEl) curEl.textContent = pad(i + 1);
     dots.forEach(function (d, j) { if (j === i) d.setAttribute('aria-current', 'true'); else d.removeAttribute('aria-current'); });
     whenReady(i, function () {
       if (cur !== i) return;

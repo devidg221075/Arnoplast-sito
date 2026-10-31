@@ -147,6 +147,11 @@ HERO_SIZES = {"agricoltura": ("120vw", "100vw"), "azienda": ("120vw", "120vw"), 
 # subito): pagine di HEROES/NIGHT_HEROES. Per cambiare una foto o aggiungere la variante serale si toccano solo
 # quelle due tabelle (e tools/hero_images.py): pagina della linea e slide restano allineate.
 HERO_SLIDES = ["agricoltura", "garden", "olive", "azienda"]
+# Prima di queste, una slide per ogni fiera futura (data/fiere.json), dalla piu' vicina: foto della fiera
+# (content/photos/fiere -> <id>-hero-<w>.webp, sizes 120vw) o fondo grafico senza immagine. Ogni slide fiera porta
+# data-fair-end: hero-slides.js toglie quelle gia' finite se il sito non e' stato ricostruito.
+FAIR_HERO_SIZES = "120vw"
+FAIR_HERO_SHORT = 140  # descrizione nella slide: frasi intere entro questa lunghezza (2-3 righe nel pannello)
 
 def menu_items(lang: str) -> list[dict]:
     """Menu principale (ordine deciso dal cliente). Voce con `children`: sottomenu a tendina (desktop) o a fisarmonica
@@ -197,7 +202,10 @@ MONTHS = ["gennaio", "febbraio", "marzo", "aprile", "maggio", "giugno", "luglio"
 FAIR_FIELDS = ("id", "nome", "luogo", "paese", "data_inizio", "data_fine", "anno", "periodo", "stand", "testo",
                "fonte_url_sito_vecchio")
 # Campi facoltativi: foto (file in content/photos/fiere), descrizione per le schede, sito ufficiale (solo https).
-FAIR_OPTIONAL = ("immagine", "descrizione_breve", "link")
+FAIR_OPTIONAL = ("immagine", "descrizione_breve", "link", "punto_focale")
+# Punto focale della foto nella slide dell'hero (object-position CSS): una o due parole chiave o percentuali.
+FAIR_FOCAL = re.compile(r"^(?:left|right|top|bottom|center|\d{1,3}(?:\.\d+)?%)(?: (?:left|right|top|bottom|center|"
+                        r"\d{1,3}(?:\.\d+)?%))?$")
 FAIR_ID = re.compile(r"^[a-z0-9]+(?:-[a-z0-9]+)*$")
 SHORT_MAX = 170  # descrizione breve ricavata dal testo: frasi intere entro questa lunghezza
 
@@ -232,6 +240,9 @@ def load_fairs(path: Path | None = None) -> list[dict]:
         link = f.get("link") or ""
         if link and not re.match(r"^https://[^\s/]+\.[^\s]+$", link):
             raise bad(f, f"link non valido: {link!r} (solo indirizzi https://)")
+        focal = f.get("punto_focale") or ""
+        if focal and not FAIR_FOCAL.match(focal):
+            raise bad(f, f"punto_focale non valido: {focal!r} (es. \"center\", \"30% 50%\", \"left top\")")
         img = f.get("immagine") or ""
         if img and (Path(img).name != img or not (FI.SRC_DIR / img).is_file()):
             raise bad(f, f"immagine {img!r} non trovata in {FI.SRC_DIR}")
@@ -283,11 +294,33 @@ def fair_photos(fairs: list[dict], make: bool = True) -> dict[str, dict]:
     content/photos/fiere (per rigenerarli: tools/fiere_images.py)."""
     for f in fairs:
         src = FI.source_for(f, FI.SRC_DIR)
-        if make and src is not None and not FI.outputs(f["id"], FI.OUT_DIR):
-            made = FI.make(src, f["id"], FI.OUT_DIR)
-            print(f"Foto fiera {f['id']}: generati {len(made)} WebP in {FI.OUT_DIR} (da versionare)", file=sys.stderr)
+        if make and src is not None:
+            for have, maker in ((FI.outputs, FI.make), (FI.hero_outputs, FI.make_hero)):
+                if not have(f["id"], FI.OUT_DIR):
+                    made = maker(src, f["id"], FI.OUT_DIR)
+                    print(f"Foto fiera {f['id']}: generati {len(made)} WebP in {FI.OUT_DIR} (da versionare)",
+                          file=sys.stderr)
     imgs = home_images(FI.OUT_DIR, FI.URL_PREFIX)
     return {f["id"]: imgs[f["id"]] for f in fairs if f["id"] in imgs}
+
+
+def fair_hero_photos(fairs: list[dict]) -> dict[str, dict]:
+    """Foto per la slide dell'hero della home (<id>-hero-<w>.webp) per id; generate da fair_photos."""
+    imgs = home_images(FI.OUT_DIR, FI.URL_PREFIX)
+    return {f["id"]: imgs[f"{f['id']}-{FI.HERO}"] for f in fairs if f"{f['id']}-{FI.HERO}" in imgs}
+
+
+def fair_days(f: dict) -> str:
+    """Numeri grandi del fondo grafico della slide: "10–14" (stesso mese), "30.11–3.12", "10"; senza date l'anno."""
+    if not f["data_inizio"]:
+        return str(f["anno"])
+    a = date.fromisoformat(f["data_inizio"])
+    b = date.fromisoformat(f["data_fine"]) if f["data_fine"] else a
+    if a == b:
+        return str(a.day)
+    if (a.year, a.month) == (b.year, b.month):
+        return f"{a.day}–{b.day}"
+    return f"{a.day}.{a.month}–{b.day}.{b.month}"
 
 
 def split_fairs(fairs: list[dict], today: date,
@@ -574,11 +607,33 @@ def _hero(key: str, imgs: dict) -> dict | None:
     return hero
 
 
-def hero_slides(c: Catalog, lang: str, imgs: dict, stats: dict) -> list[dict]:
-    """Slide del carosello della home (HERO_SLIDES): foto, link alla pagina, etichetta e una riga di numeri
-    calcolati dal catalogo. Le pagine senza foto sono saltate."""
-    lines = {l.slug: l for l in c.lines}
+def fair_slides(lang: str, today: date | None = None, fairs: list[dict] | None = None) -> list[dict]:
+    """Slide delle fiere future alla data di build (tutte, dalla piu' vicina): etichetta, link alla scheda nella
+    pagina Fiere, date, luogo, descrizione breve (mai inventata: fair_short), fine ISO e foto (None = fondo grafico).
+    Il sito ufficiale (`link`) resta nella pagina Fiere."""
+    fairs = load_fairs() if fairs is None else fairs
+    photos = fair_photos(fairs)
+    heroes = fair_hero_photos(fairs)
     slides = []
+    for f in split_fairs(fairs, build_date() if today is None else today, photos)[0]:
+        img = heroes.get(f["id"])
+        slides.append({
+            "key": f"fiera-{f['id']}", "fair": True, "href": f"/{lang}/fiere/#{f['id']}", "label": f["nome"],
+            "aria": f"{t('hs.fair', lang)}: {f['nome']}", "nums": [],
+            "id": f["id"], "dates": f["date_label"], "start": f["data_inizio"], "end": f["end_iso"],
+            "place": f["place"], "short": fair_short(f, FAIR_HERO_SHORT), "days": fair_days(f),
+            # Nessun ritaglio verticale: sui telefoni la foto larga e' inquadrata da object-position (punto_focale).
+            "hero": {"img": img, "alt": "", "sizes": FAIR_HERO_SIZES, "focal": f.get("punto_focale") or "center",
+                     "portrait": None, "night": None, "night_portrait": None, "portrait_sizes": None}
+            if img else None})
+    return slides
+
+
+def hero_slides(c: Catalog, lang: str, imgs: dict, stats: dict, fairs: list[dict] | None = None) -> list[dict]:
+    """Slide del carosello della home: prima le fiere future (fair_slides), poi HERO_SLIDES con foto, link alla
+    pagina, etichetta e una riga di numeri calcolati dal catalogo. Le pagine senza foto sono saltate."""
+    lines = {l.slug: l for l in c.lines}
+    slides = fair_slides(lang, fairs=fairs)
     for key in HERO_SLIDES:
         hero = _hero(key, imgs)
         if hero is None:
@@ -592,7 +647,8 @@ def hero_slides(c: Catalog, lang: str, imgs: dict, stats: dict) -> list[dict]:
         else:  # Azienda: l'intero catalogo
             label = t("page.company", lang)
             nums = [("lines", stats["lines"], t("hv.lines", lang)), ("codes", stats["codes"], t("hv.codes", lang))]
-        slides.append({"key": key, "href": f"/{lang}/{key}/", "label": label, "nums": nums, "hero": hero})
+        slides.append({"key": key, "fair": False, "href": f"/{lang}/{key}/", "label": label, "aria": label,
+                       "nums": nums, "hero": hero})
     return slides
 
 
@@ -609,8 +665,8 @@ def home_context(c: Catalog, lang: str) -> dict:
 
 def upcoming_fairs(limit: int | None = None) -> list[dict]:
     """Prossime fiere alla data di build, dalla piu' vicina, con date leggibili, luogo, descrizione breve (`short`),
-    fine ISO (`end_iso`), sito (`link`) e foto (`img`, None = scheda tipografica). Pronta per la futura slide
-    "fiere" del carosello della home (non ancora usata dalla home)."""
+    fine ISO (`end_iso`), sito (`link`) e foto (`img`, None = scheda tipografica). Le slide della home usano
+    fair_slides."""
     fairs = load_fairs()
     return split_fairs(fairs, build_date(), fair_photos(fairs))[0][:limit]
 

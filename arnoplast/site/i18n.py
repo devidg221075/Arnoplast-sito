@@ -185,6 +185,9 @@ STRINGS = {
         "hs.dots": "Scegli la foto",
         "hs.pause": "Ferma la rotazione delle foto",
         "hs.play": "Riprendi la rotazione delle foto",
+        "hs.fair": "Fiera",
+        "hs.fair_kicker": "Ci trovi a",
+        "hs.fair_more": "Scopri",
     },
 }
 

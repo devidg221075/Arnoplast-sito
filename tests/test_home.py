@@ -14,7 +14,10 @@ ROOT = Path(__file__).resolve().parent.parent
 def site(tmp_path_factory):
     out = tmp_path_factory.mktemp("site")
     c = load_catalog(ROOT / "data" / "catalog.json")
-    build_site(c, out)
+    # Data senza fiere future: la prima slide della home e' la foto di Agricoltura (fiere: test_hero_fairs.py).
+    with pytest.MonkeyPatch.context() as mp:
+        mp.setenv("ARNO_BUILD_DATE", "2026-12-01")
+        build_site(c, out)
     return out, c
 
 

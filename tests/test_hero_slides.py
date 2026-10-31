@@ -1,4 +1,5 @@
-"""Carosello dell'hero della home: struttura, foto rinviate, giorno/notte, numeri dal catalogo, accessibilita'."""
+"""Carosello dell'hero della home: struttura, foto rinviate, giorno/notte, numeri dal catalogo, accessibilita'.
+Qui la build e' a una data senza fiere future (solo le 4 sezioni); le slide delle fiere sono in test_hero_fairs.py."""
 import re
 from pathlib import Path
 
@@ -15,11 +16,16 @@ JS = ROOT / "site" / "static" / "js" / "hero-slides.js"
 LIMIT = 250 * 1024
 
 
+NO_FAIRS = "2026-12-01"  # dopo l'ultima fiera di data/fiere.json
+
+
 @pytest.fixture(scope="module")
 def site(tmp_path_factory):
     out = tmp_path_factory.mktemp("site")
     c = load_catalog(ROOT / "data" / "catalog.json")
-    build_site(c, out)
+    with pytest.MonkeyPatch.context() as mp:
+        mp.setenv("ARNO_BUILD_DATE", NO_FAIRS)
+        build_site(c, out)
     return out, c, (out / "it" / "index.html").read_text(encoding="utf-8")
 
 
@@ -46,10 +52,12 @@ def test_four_slides_in_order_with_links_to_sections(site):
     for i, (cap, key, label) in enumerate(zip(cs, HERO_SLIDES, labels), 1):
         assert f'aria-roledescription="slide" aria-label="{i} di 4: {label}"' in cap, cap
         assert f'<a class="hs-more" href="/it/{key}/">' in cap
-        assert f"</span>{label}</p>" in cap
+        assert f'<p class="hs-label">{label}</p>' in cap and f'data-label="{label}"' in cap
     assert 'is-active' in cs[0] and not any('is-active' in x.split(">")[0] for x in cs[1:])
     hs = hero(h)
     assert 'aria-roledescription="carousel"' in hs and 'id="hs-caps" aria-live="off"' in hs
+    assert 'data-of="di"' in hs and "data-fair-end" not in hs
+    assert '<p class="hs-count" aria-hidden="true"><b class="hs-cur">01</b> / <span class="hs-tot">04</span></p>' in hs
     # Senza JS: i link a tutte le sezioni restano visibili (noscript), i comandi no (home.css).
     nos = re.search(r"<noscript>(.*?)</noscript>", hs, re.S).group(1)
     assert re.findall(r'href="([^"]+)"', nos) == [f"/it/{k}/" for k in HERO_SLIDES]

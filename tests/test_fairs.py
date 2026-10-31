@@ -157,7 +157,7 @@ def test_photo_card(tmp_path, monkeypatch, photo_dirs):
     assert 'width="1200" height="800"' in imgs[0] and 'alt=""' in imgs[0] and "loading" not in imgs[0]
     assert 'loading="lazy"' in imgs[1] and 'width="900" height="700"' in imgs[1]  # mai oltre i pixel nativi
     assert '<a class="fr-ext" href="https://www.eima.it/" target="_blank" rel="noopener noreferrer">' in nxt
-    for f in webp.glob("*.webp"):
+    for f in FI.outputs("eima-2026", webp) + FI.outputs("interpoma-2026", webp):  # schede (hero: test_hero_fairs)
         assert f.stat().st_size <= 150 * 1024, f
     # La build genera solo le foto mancanti: una seconda build non le riscrive.
     before = {f: f.stat().st_mtime_ns for f in webp.glob("*.webp")}

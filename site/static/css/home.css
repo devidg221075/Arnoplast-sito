@@ -112,10 +112,9 @@
 .hs-pic.is-leaving { opacity: 1; transition: none; }
 .hs-bar { margin-top: 18px; max-width: 560px; padding-top: 12px; border-top: 1px solid rgba(255, 255, 255, .2); }
 .hs-caps { display: grid; }
-.hs-cap { grid-area: 1 / 1; display: flex; flex-wrap: wrap; align-items: baseline; gap: 2px 14px; visibility: hidden; opacity: 0; }
+.hs-cap { grid-area: 1 / 1; align-self: end; display: flex; flex-wrap: wrap; align-items: baseline; gap: 2px 14px; visibility: hidden; opacity: 0; }
 .hs-cap.is-active { visibility: visible; opacity: 1; }
 .hs-label { margin: 0; font-size: .8rem; font-weight: 800; letter-spacing: .16em; text-transform: uppercase; }
-.hs-idx { margin-right: 8px; color: var(--yellow); font-variant-numeric: tabular-nums; }
 .hs-nums { margin: 0; font-size: .88rem; color: #dcdce0; }
 .hs-nums b { color: var(--white); font-weight: 800; }
 .hs-more { margin-left: auto; padding: 8px 0 3px; border-bottom: 2px solid var(--yellow); color: var(--white); font-size: .78rem; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; text-decoration: none; }
@@ -133,6 +132,36 @@
 .hs-fill { background: var(--yellow); transform: scaleX(0); transform-origin: left; }
 .hs-dot[aria-current] .hs-fill { transform: none; }
 .hs-dot:hover::before { background: rgba(255, 255, 255, .7); }
+.hs-count { flex: none; margin: 0 6px 0 10px; font-size: .78rem; font-weight: 700; letter-spacing: .08em; color: #c9c9cf; font-variant-numeric: tabular-nums; }
+.hs-count b { color: var(--yellow); font-weight: 800; }
+/* Slide fiera: didascalia "Ci trovi a" con nome, date, luogo, descrizione (max 3 righe) e "Scopri"; foto della fiera
+   inquadrata da --fp (punto_focale) con velo per la leggibilita', o fondo grafico senza immagine (nessuna richiesta). */
+.hs-fair { display: block; }
+.hs-fair .hs-label { color: var(--yellow); }
+.hs-fname { margin: 4px 0 2px; font-size: clamp(1.4rem, 5vw, 1.75rem); font-weight: 900; line-height: 1.02; letter-spacing: -.02em; }
+.hs-fmeta { margin: 0; font-size: .88rem; color: #dcdce0; }
+.hs-fmeta time, .hs-fmeta b { color: var(--white); font-weight: 800; }
+.hs-fdesc { margin: 6px 0 0; font-size: .85rem; line-height: 1.4; color: #c9c9cf; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 3; overflow: hidden; }
+.hs-fair .hs-more { display: inline-block; margin-top: 4px; }
+@media (max-width: 1023.98px) {
+  /* Telefono e tablet: "Scopri" sulla riga di "Ci trovi a", per non allungare l'hero. */
+  .hs-fair { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; column-gap: 14px; }
+  .hs-fair > * { grid-column: 1 / -1; }
+  .hs-fair .hs-label { grid-column: 1; grid-row: 1; }
+  .hs-fair .hs-more { grid-column: 2; grid-row: 1; margin: 0; }
+}
+.hs-fp .hx-img { object-position: var(--fp, 50% 50%); }
+.hs-fp::after { content: ""; position: absolute; inset: 0; background: rgba(11, 11, 12, .25); }
+.hs-poster { position: relative; overflow: hidden; background: repeating-linear-gradient(-72deg, rgba(255, 255, 255, .04) 0 1px, transparent 1px 22px), radial-gradient(110% 80% at 85% 10%, #2a2a31 0%, var(--black) 70%); }
+.hs-poster::before, .hs-poster::after { content: ""; position: absolute; top: -20%; height: 140%; transform: skewX(-18deg); }
+.hs-poster::before { right: -9%; width: 26%; background: var(--red); }
+.hs-poster::after { right: 19%; width: 1.4%; background: rgba(227, 7, 19, .55); }
+.hs-p-days { position: absolute; top: 4%; right: 4%; font-size: clamp(7rem, 30vw, 26rem); font-weight: 900; line-height: .8; letter-spacing: -.06em; color: rgba(255, 255, 255, .07); white-space: nowrap; }
+@media (max-width: 599.98px) {
+  .hs-poster::before { right: -42%; width: 60%; }
+  .hs-poster::after { right: 26%; width: 2%; }
+  .hs-p-days { top: 2.5%; font-size: 9rem; }
+}
 .hs-links { list-style: none; display: flex; flex-wrap: wrap; gap: 8px; margin: 0; padding: 0; }
 .hs-links a { display: inline-block; padding: 8px 14px; border: 1px solid rgba(255, 255, 255, .45); border-radius: 999px; color: var(--white); font-size: .82rem; font-weight: 700; text-decoration: none; }
 html:not(.js) .hs-caps, html:not(.js) .hs-ctrl { display: none; }

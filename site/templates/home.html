@@ -5,14 +5,16 @@
 {% block head_extra %}{{ h.head() }}{% endblock %}
 {% block main %}
 {# Hero a carosello: titolo, testi, pulsanti e ricerca fissi; ruotano la foto di sfondo e la didascalia con il link
-   alla sezione (HERO_SLIDES in build.py). Solo la prima foto e' nel markup come <img>; le altre sono dati che
-   hero-slides.js carica dopo l'evento load. Senza JS: prima foto e link a tutte le sezioni (noscript). #}
-<section class="a-hero hs" aria-roledescription="carousel" aria-label="{{ t('hs.label') }}" data-hs>
+   alla sezione. Prima le fiere future (dalla piu' vicina: foto della fiera o fondo grafico, data-fair-end per la
+   scadenza in pagina), poi HERO_SLIDES (build.py). Solo la prima foto e' nel markup come <img>; le altre sono dati
+   che hero-slides.js carica dopo l'evento load. Senza JS: prima slide e link a tutte le slide (noscript). #}
+<section class="a-hero hs" aria-roledescription="carousel" aria-label="{{ t('hs.label') }}" data-hs data-of="{{ t('hs.of') }}">
   <div class="hx-media" data-parallax>
   {% for s in slides %}
     {% set hr = s.hero %}
-    <div class="hs-pic{{ ' is-active' if loop.first }}"{% if not loop.first %} aria-hidden="true"{% endif %}>
-    {% if loop.first %}{{ hx.picture(hr.img, hr.alt, hr.portrait, 'a-hero-img hx-img', hr.sizes, hr.night, hr.night_portrait, hr.portrait_sizes) }}
+    <div class="hs-pic{{ ' hs-fp' if s.fair and hr }}{{ ' hs-fpost' if s.fair and not hr }}{{ ' is-active' if loop.first }}"{% if s.fair and hr %} style="--fp: {{ hr.focal }}"{% endif %}{% if not loop.first %} aria-hidden="true"{% endif %}>
+    {% if s.fair and not hr %}<div class="hs-poster hx-img" aria-hidden="true"><span class="hs-p-days">{{ s.days }}</span></div>
+    {% elif loop.first %}{{ hx.picture(hr.img, hr.alt, hr.portrait, 'a-hero-img hx-img', hr.sizes, hr.night, hr.night_portrait, hr.portrait_sizes) }}
     {% else %}{{ hx.deferred_picture(hr.img, hr.alt, hr.portrait, 'a-hero-img hx-img', hr.sizes, hr.night, hr.night_portrait, hr.portrait_sizes) }}
     {% endif %}
     </div>
@@ -30,18 +32,29 @@
     <div class="hs-bar">
       <div class="hs-caps" id="hs-caps" aria-live="off">
       {% for s in slides %}
-        <div class="hs-cap{{ ' is-active' if loop.first }}" role="group" aria-roledescription="slide" aria-label="{{ loop.index }} {{ t('hs.of') }} {{ loop.length }}: {{ s.label }}">
-          <p class="hs-label"><span class="hs-idx" aria-hidden="true">0{{ loop.index }}</span>{{ s.label }}</p>
+        {% if s.fair %}
+        <div class="hs-cap hs-fair{{ ' is-active' if loop.first }}" role="group" aria-roledescription="slide" aria-label="{{ loop.index }} {{ t('hs.of') }} {{ loop.length }}: {{ s.aria }}" data-label="{{ s.aria }}" data-fair-end="{{ s.end }}">
+          <p class="hs-label">{{ t('hs.fair_kicker') }}</p>
+          <p class="hs-fname">{{ s.label }}</p>
+          <p class="hs-fmeta">{% if s.start %}<time datetime="{{ s.start }}">{{ s.dates }}</time>{% else %}<b>{{ s.dates }}</b>{% endif %}{% if s.place %} · {{ s.place }}{% endif %}</p>
+          {% if s.short %}<p class="hs-fdesc">{{ s.short }}</p>{% endif %}
+          <a class="hs-more" href="{{ s.href }}">{{ t('hs.fair_more') }}<span class="sr-only"> {{ s.label }}</span> <span aria-hidden="true">→</span></a>
+        </div>
+        {% else %}
+        <div class="hs-cap{{ ' is-active' if loop.first }}" role="group" aria-roledescription="slide" aria-label="{{ loop.index }} {{ t('hs.of') }} {{ loop.length }}: {{ s.aria }}" data-label="{{ s.aria }}">
+          <p class="hs-label">{{ s.label }}</p>
           <p class="hs-nums">{% for k, n, w in s.nums %}<b data-slide-stat="{{ s.key }}-{{ k }}">{{ n }}</b> {{ w }}{% if not loop.last %} · {% endif %}{% endfor %}</p>
           <a class="hs-more" href="{{ s.href }}">{{ t('hs.more') }}<span class="sr-only"> {{ s.label }}</span> <span aria-hidden="true">→</span></a>
         </div>
+        {% endif %}
       {% endfor %}
       </div>
       <div class="hs-ctrl">
+        <p class="hs-count" aria-hidden="true"><b class="hs-cur">01</b> / <span class="hs-tot">{{ '%02d' % slides | length }}</span></p>
         <button type="button" class="hs-btn hs-prev" aria-controls="hs-caps" aria-label="{{ t('hs.prev') }}"><svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M15.4 5.4 14 4l-8 8 8 8 1.4-1.4L8.8 12z"/></svg></button>
         <div class="hs-dots" role="group" aria-label="{{ t('hs.dots') }}">
         {% for s in slides %}
-          <button type="button" class="hs-dot" aria-controls="hs-caps" aria-label="{{ loop.index }} {{ t('hs.of') }} {{ loop.length }}: {{ s.label }}"{% if loop.first %} aria-current="true"{% endif %}><span class="hs-fill"></span></button>
+          <button type="button" class="hs-dot" aria-controls="hs-caps" aria-label="{{ loop.index }} {{ t('hs.of') }} {{ loop.length }}: {{ s.aria }}"{% if loop.first %} aria-current="true"{% endif %}><span class="hs-fill"></span></button>
         {% endfor %}
         </div>
         <button type="button" class="hs-btn hs-next" aria-controls="hs-caps" aria-label="{{ t('hs.next') }}"><svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M8.6 18.6 10 20l8-8-8-8-1.4 1.4 6.6 6.6z"/></svg></button>
