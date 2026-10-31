@@ -75,7 +75,7 @@ chi non ha Python):
 Crea la cartella e il relativo `.zip`, con link relativi e JS in un solo script;
 il sito in `dist/` non cambia.
 
-Hero a tutto schermo (home, linee, Azienda) e animazioni: `site/static/css/motion.css` e lo script classico
+Hero a tutto schermo (home, linee, Azienda, Imballaggi) e animazioni: `site/static/css/motion.css` e lo script classico
 `site/static/js/anim.js` (ingressi allo scroll, contatori, parallasse di riserva, transizioni tra pagine);
 con `prefers-reduced-motion: reduce` o senza JS il contenuto e' subito visibile e fermo.
 
@@ -120,3 +120,44 @@ Sostituire la foto di una slide (per esempio Garden con una foto ad alta risoluz
    ("120vw", "100vw")`; poi togliere con `git rm` le foto vecchie non piu' usate (e da `tools/home_images.py`).
 
 Aggiungere una slide: una voce in `HERO_SLIDES` con la chiave della pagina (deve avere un hero in `HEROES`).
+
+## Struttura del sito: menu, lingua, footer
+
+Menu principale (ordine deciso dal cliente): Home · Azienda (Chi siamo, Imballaggi) · Fiere · Prodotti (Agricoltura,
+Garden, Raccolta olive, Cataloghi e download) · Galleria · Video e Tutorial · Contatti; a destra il selettore IT | EN
+e il link "Area riservata" (lucchetto). Voci e indirizzi: `menu_items()` in `arnoplast/site/build.py`; testi in
+`arnoplast/site/i18n.py`. La voce attiva e' calcolata in build (`nav_state()`): `aria-current="page"` sulla pagina,
+`aria-current="true"` sulla sezione (famiglie e prodotti ricadono sulla loro linea) e `is-active` sul genitore.
+
+- Stile: `site/static/css/nav.css` (tutte le pagine; `main.css` resta sotto i 30 KB). Comportamento:
+  `site/static/js/nav.js`, script classico che la build accoda ad `anim.js` pubblicato (una richiesta in meno).
+- Desktop: tendine al passaggio del mouse, al clic e da tastiera (Invio/Spazio, frecce, Home/Fine, Esc chiude e
+  torna al pulsante; il fuoco che esce chiude). Telefono: pannello con voci a fisarmonica, la sezione corrente
+  parte aperta. Senza JS: telefono con tutte le voci aperte, desktop con tendine al passaggio del mouse e al fuoco.
+- `/it/applicazioni/` non esiste piu': rimando a `/it/galleria/` (pagina con meta refresh e riga in `_redirects`).
+
+Lingua: `/en/` e' per ora una sola pagina "English version coming soon" (noindex, fuori dalla sitemap) con header e
+footer italiani. I template hanno gia' `lang` e un blocco `alternates` in `base.html` per i `hreflang`.
+
+Footer (`site/templates/_footer.html`): logo, dati societari da `CONTACTS` (build.py, unica fonte anche per
+Contatti, home e avvisi della richiesta), telefoni `tel:`, email, social (`SOCIAL`) e app (`APPS`) in nuova scheda
+con icone SVG in linea, menu "light" a una riga (primo livello + Area riservata, Privacy policy = `PRIVACY_URL`,
+Cookie = `/it/cookie/`, segnaposto) e "© <anno> ARNOplast". L'anno e le fiere usano la data di build: oggi, o
+`ARNO_BUILD_DATE=AAAA-MM-GG` (test e anteprime).
+
+### Fiere (`data/fiere.json`)
+
+Una voce per fiera: `id` (unico), `nome`, `luogo`, `paese`, `data_inizio` e `data_fine` (ISO `AAAA-MM-GG`), `anno`,
+`periodo` (testo da mostrare se le date esatte non sono note, es. "Febbraio 2021"), `stand`, `testo` (breve,
+fedele alla fonte) e `fonte_url_sito_vecchio`. Campo non noto = stringa vuota: mai inventare. Per aggiungere una
+fiera basta una nuova voce e rilanciare la build: finche' `data_fine` non e' passata compare in "Prossime fiere"
+(dalla piu' vicina); poi passa da sola in "Fiere passate", nell'anno giusto (dalla piu' recente). La build si ferma
+con un errore chiaro per campi mancanti, `id` ripetuti o date non valide. Pagina: `site/templates/fairs.html`.
+
+### Imballaggi
+
+`/it/azienda/imballaggi/`: hero giorno/notte con le foto del cliente (`imballaggi-giorno`/`-notte` in
+`tools/hero_images.py`, `HEROES`/`NIGHT_HEROES` in build.py; larghezze fino a 2000 px e primo piano sfocato per
+restare sotto i 250 KB). Il testo non esiste ancora: si scrive in `data/imballaggi.json` (`"paragrafi": ["...", ...]`)
+senza toccare i template; finche' l'elenco e' vuoto la pagina mostra "Contenuto in arrivo" con i link a Contatti e
+alla richiesta di preventivo.
