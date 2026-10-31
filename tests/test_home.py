@@ -203,3 +203,11 @@ def test_gallery_page_lists_photos_with_lightbox(site):
 def test_hero_titles_share_the_same_heavy_weight():
     css = (Path(__file__).resolve().parent.parent / "site" / "static" / "css" / "motion.css").read_text(encoding="utf-8")
     assert re.search(r"\.hx-title \{ font-weight: 900;", css)
+
+
+def test_catalog_flipbook_pages(site):
+    out, _ = site
+    for slug, n in (("agricoltura", 72), ("garden", 56), ("olive", 12)):
+        h = (out / "it" / "cataloghi" / slug / "index.html").read_text(encoding="utf-8")
+        assert f'data-n="{n}"' in h and h.count("<li><img") == n and "flipbook.js" in h
+        assert f"/it/cataloghi/{slug}/" in (out / "it" / "cataloghi" / "index.html").read_text(encoding="utf-8")

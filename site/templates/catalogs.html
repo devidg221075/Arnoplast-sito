@@ -16,7 +16,8 @@
       <p class="cat-kind">{{ t('cat.catalog') }} {{ p.year }}</p>
       <h2>{{ p.name }}</h2>
       <p class="cat-size">PDF · {{ p.mb }} MB</p>
-      <p class="co-btns"><a class="btn btn-primary" href="{{ p.url }}" download>{{ t('cat.download') }}<span class="sr-only"> {{ p.name }} {{ p.year }}</span></a>
+      <p class="co-btns"><a class="btn btn-primary" href="/{{ lang }}/cataloghi/{{ p.slug }}/">{{ t('cat.browse') }}<span class="sr-only"> {{ p.name }} {{ p.year }}</span></a>
+      <a class="btn btn-ghost" href="{{ p.url }}" download>{{ t('cat.download') }}<span class="sr-only"> {{ p.name }} {{ p.year }}</span></a>
       <a class="btn btn-ghost" href="/{{ lang }}/{{ p.slug }}/">{{ t('cat.see_line') }}<span class="sr-only">: {{ p.name }}</span></a></p>
     </li>
   {% endfor %}

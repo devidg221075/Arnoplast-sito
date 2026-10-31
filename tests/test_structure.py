@@ -342,7 +342,7 @@ def test_fairs_page(site):
 
 def test_catalogs_page(site):
     h = html(site, "it/cataloghi")
-    pdfs = re.findall(r'<a class="btn btn-primary" href="(/downloads/[^"]+\.pdf)" download>', h)
+    pdfs = re.findall(r'<a class="btn btn-ghost" href="(/downloads/[^"]+\.pdf)" download>', h)
     assert pdfs == [f"/downloads/{pub}" for _, pub in B.CATALOG_PDFS.values()]
     for url in pdfs:
         f = site / url.lstrip("/")

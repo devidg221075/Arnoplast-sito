@@ -802,6 +802,18 @@ def build_site(c: Catalog, out: Path, lang: str = "it", sources: Path | None = N
                          "mb": f"{f.stat().st_size / 1e6:.1f}".replace(".", ",")})
     render("catalogs.html", base / "cataloghi", line=None, title=t("page.catalogs", lang), pdfs=pdfs,
            description="Cataloghi ARNOplast in PDF da scaricare (Agricoltura, Garden, Raccolta olive) e app ARNOplast.")
+    book = json.loads((DATA_DIR / "cataloghi.json").read_text(encoding="utf-8")) if (DATA_DIR / "cataloghi.json").is_file() else {}
+    for p in pdfs:
+        b = book.get(p["slug"])
+        if not b:
+            continue
+        for i in range(1, b["pagine"] + 1):
+            if not (ROOT / "site" / "static" / "img" / "cataloghi" / p["slug"] / f"{i:03d}.webp").is_file():
+                raise ValueError(f"data/cataloghi.json: manca la pagina {i} di {p['slug']}; rilanciare tools/catalog_pages.py")
+        render("flipbook.html", base / "cataloghi" / p["slug"], line=None, slug=p["slug"], n=b["pagine"], w=b["w"], h=b["h"],
+               title=f"{t('cat.catalog', lang)} {p['name']} {p['year']}", pdf_url=p["url"],
+               base=f"/static/img/cataloghi/{p['slug']}/",
+               description=f"Sfoglia online il {t('cat.catalog', lang).lower()} ARNOplast {p['name']} {p['year']}.")
     render("gallery.html", base / "galleria", line=None, title=t("page.gallery", lang), photos=load_gallery(),
            description=t("gallery.lead", lang))
     render("page.html", base / "video", line=None, title=t("page.videos", lang), kind="placeholder")

@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block head_extra %}<link rel="stylesheet" href="/static/css/flipbook.css"><script src="/static/js/flipbook.js" defer></script>{% endblock %}
+{% block main %}
+{# Sfogliatore del catalogo: le pagine sono immagini WebP (tools/catalog_pages.py). Senza JS: elenco verticale di tutte le
+   pagine; con flipbook.js: doppia pagina su schermo largo, pagina singola su telefono, miniature, tastiera, swipe, schermo intero. #}
+<section class="page-head">
+  <div class="wrap">
+    <nav class="breadcrumb" aria-label="Breadcrumb"><a href="/{{ lang }}/">{{ t('breadcrumb.home') }}</a> <span aria-hidden="true">/</span> <a href="/{{ lang }}/cataloghi/">{{ t('page.catalogs') }}</a></nav>
+    <h1>{{ title }}</h1>
+    <p class="co-btns"><a class="btn btn-primary" href="{{ pdf_url }}" download>{{ t('cat.download') }}<span class="sr-only"> {{ title }}</span></a>
+    <a class="btn btn-ghost" href="/{{ lang }}/{{ slug }}/">{{ t('cat.see_line') }}</a></p>
+  </div>
+</section>
+<section class="wrap section fb-wrap">
+  <div class="fb" data-flip data-n="{{ n }}" data-base="{{ base }}" data-ratio="{{ '%.4f' % (w / h) }}"
+       data-l-prev="{{ t('flip.prev') }}" data-l-next="{{ t('flip.next') }}" data-l-pages="{{ t('flip.pages') }}" data-l-of="{{ t('hs.of') }}"
+       data-l-thumbs="{{ t('flip.thumbs') }}" data-l-full="{{ t('flip.full') }}" data-l-go="{{ t('flip.go') }}" data-l-page="{{ t('flip.page') }}">
+    <ol class="fb-list">
+    {% for i in range(1, n + 1) %}
+      <li><img src="{{ base }}{{ '%03d' % i }}.webp" width="{{ w }}" height="{{ h }}" alt="{{ title }}, {{ t('flip.page') }} {{ i }}" loading="lazy" decoding="async"></li>
+    {% endfor %}
+    </ol>
+  </div>
+</section>
+{% endblock %}
