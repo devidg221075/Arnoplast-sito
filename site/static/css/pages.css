@@ -29,11 +29,27 @@
 
 /* Fiere */
 .fr-cards { list-style: none; margin: 0; padding: 0; display: grid; gap: 18px; }
-.fr-card { display: flex; flex-direction: column; padding: 26px 24px; border-radius: var(--r); background: var(--black); color: var(--white); border-top: 6px solid var(--red); }
-.fr-card h3 { font-size: clamp(1.5rem, 4vw, 2.1rem); margin-bottom: 14px; }
-.fr-text { color: #d6d6db; font-size: .95rem; }
-.fr-cta { margin-top: auto; align-self: flex-start; font-weight: 800; font-size: .8rem; letter-spacing: .08em; text-transform: uppercase; color: var(--white); }
-.fr-cta:hover { color: var(--yellow); }
+.fr-card { display: flex; flex-direction: column; background: var(--white); border: 1px solid var(--line); border-radius: var(--r); overflow: hidden; }
+.fr-card[hidden], .fr-cards[hidden], .notice[hidden] { display: none; }
+.fr-card:target { outline: 3px solid var(--red); outline-offset: 3px; }
+/* Anteprima 16:10: foto ritagliata (object-fit) o locandina tipografica; filo rosso in basso come le schede linea. */
+.fr-media { position: relative; display: block; aspect-ratio: 16 / 10; overflow: hidden; background: var(--black); }
+.fr-media::after { content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 6px; background: var(--red); }
+.fr-media img { width: 100%; height: 100%; object-fit: cover; }
+.fr-poster { container-type: inline-size; display: flex; flex-direction: column; justify-content: flex-end; gap: 6px; padding: 22px 24px 28px; color: var(--white); isolation: isolate;
+  background: repeating-linear-gradient(-72deg, rgba(255, 255, 255, .045) 0 1px, transparent 1px 18px), radial-gradient(120% 90% at 0% 100%, #24242a 0%, var(--black) 70%); }
+.fr-poster::before { content: ""; position: absolute; z-index: -1; top: -20%; right: -16%; width: 34%; height: 140%; background: var(--red); transform: skewX(-18deg); }
+.fr-p-date { align-self: flex-start; margin-bottom: auto; padding: 5px 10px; background: var(--white); color: var(--black); font-size: .74rem; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; }
+.fr-p-name { max-width: 74%; font-size: clamp(1.5rem, 8.6cqi, 2.6rem); font-weight: 900; line-height: .92; letter-spacing: -.035em; text-transform: uppercase; overflow-wrap: break-word; hyphens: manual; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 3; overflow: hidden; }
+.fr-p-place { font-size: .78rem; font-weight: 800; letter-spacing: .16em; text-transform: uppercase; color: #c9c9cf; }
+.fr-body { display: flex; flex-direction: column; flex: 1; padding: 22px 22px 24px; }
+.fr-card h3 { font-size: clamp(1.4rem, 3.6vw, 1.9rem); margin-bottom: 14px; }
+.fr-card .fr-meta dt { opacity: 1; color: var(--muted); }
+.fr-text { color: var(--muted); font-size: .95rem; }
+.fr-actions { margin: auto 0 0; padding-top: 8px; display: flex; flex-wrap: wrap; gap: 10px 22px; }
+.fr-cta, .fr-ext { display: inline-flex; align-items: center; gap: 6px; min-height: 32px; font-weight: 800; font-size: .78rem; letter-spacing: .08em; text-transform: uppercase; color: var(--red-dark); text-decoration: none; border-bottom: 2px solid var(--red); }
+.fr-ext { color: var(--ink); border-bottom-color: var(--line); }
+.fr-cta:hover, .fr-ext:hover { color: var(--ink); border-bottom-color: var(--ink); }
 .fr-meta { display: grid; gap: 6px; margin: 0 0 14px; font-size: .95rem; }
 .fr-meta div { display: flex; gap: 10px; }
 .fr-meta dt { flex: 0 0 4.5em; font-size: .72rem; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; line-height: 1.9; opacity: .75; }
@@ -79,7 +95,8 @@
   .co-today { margin-left: 13rem; }
   .co-today .co-timeline { margin-left: 0; }
   .fr-cards, .cat-list { grid-template-columns: repeat(3, 1fr); }
-  .fr-card, .cat-item { padding: 32px 30px; }
+  .cat-item { padding: 32px 30px; }
+  .fr-body { padding: 26px 28px 28px; }
 }
 
 /* Imballaggi: introduzione e tabella a schede (colore = tipo di raccolta) */

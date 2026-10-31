@@ -7,6 +7,15 @@
   {% if f.stand %}<div><dt>{{ t('fairs.stand') }}</dt><dd>{{ f.stand }}</dd></div>{% endif %}
 </dl>
 {% endmacro %}
+{# Anteprima della fiera: foto (alt vuoto, nome e luogo sono gia' nel testo della scheda) o, senza foto, una
+   locandina tipografica delle stesse dimensioni (16:10), solo decorativa. #}
+{% macro media(f, eager) %}
+{% if f.img %}
+<span class="fr-media"><img src="{{ f.img.src }}" srcset="{{ f.img.srcset }}" sizes="(min-width: 1240px) 380px, (min-width: 1024px) 30vw, (min-width: 700px) 46vw, calc(100vw - 32px)" width="{{ f.img.width }}" height="{{ f.img.height }}" alt=""{% if not eager %} loading="lazy"{% endif %} decoding="async"></span>
+{% else %}
+<span class="fr-media fr-poster" aria-hidden="true"><span class="fr-p-date">{{ f.date_label }}</span><span class="fr-p-name">{{ f.nome }}</span>{% if f.luogo %}<span class="fr-p-place">{{ f.luogo }}</span>{% endif %}</span>
+{% endif %}
+{% endmacro %}
 
 {% block main %}
 <section class="page-head">
@@ -20,18 +29,25 @@
 <section class="wrap section" id="prossime" aria-labelledby="fr-next-t">
   <h2 class="section-title" id="fr-next-t">{{ t('fairs.upcoming') }}</h2>
   {% if upcoming %}
-  <ul class="fr-cards" data-reveal="stagger">
+  <ul class="fr-cards" data-reveal="stagger" data-fairs data-fairs-none="fr-none">
   {% for f in upcoming %}
-    <li class="fr-card" id="{{ f.id }}">
-      <h3>{{ f.nome }}</h3>
-      {{ meta(f) }}
-      {% if f.testo %}<p class="fr-text">{{ f.testo }}</p>{% endif %}
-      <a class="fr-cta" href="/{{ lang }}/contatti/">{{ t('fairs.meet') }} <span aria-hidden="true">→</span></a>
+    <li class="fr-card" id="{{ f.id }}" data-fair-end="{{ f.end_iso }}">
+      {{ media(f, loop.first) }}
+      <div class="fr-body">
+        <h3>{{ f.nome }}</h3>
+        {{ meta(f) }}
+        {% if f.testo %}<p class="fr-text">{{ f.testo }}</p>{% endif %}
+        <p class="fr-actions">
+          <a class="fr-cta" href="/{{ lang }}/contatti/">{{ t('fairs.meet') }} <span aria-hidden="true">→</span></a>
+          {% if f.link %}<a class="fr-ext" href="{{ f.link }}" target="_blank" rel="noopener noreferrer">{{ t('fairs.site') }}<span class="sr-only"> {{ f.nome }} ({{ t('fairs.new_tab') }})</span> <span aria-hidden="true">↗</span></a>{% endif %}
+        </p>
+      </div>
     </li>
   {% endfor %}
   </ul>
+  <p class="notice" id="fr-none" hidden>{{ t('fairs.none') }}</p>
   {% else %}
-  <p class="notice">{{ t('fairs.none') }}</p>
+  <p class="notice" id="fr-none">{{ t('fairs.none') }}</p>
   {% endif %}
 </section>
 <section class="fr-openday" aria-labelledby="fr-od-t">

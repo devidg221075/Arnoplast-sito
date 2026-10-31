@@ -15,6 +15,7 @@ from jinja2 import Environment, FileSystemLoader, select_autoescape
 from markupsafe import Markup
 
 from arnoplast.catalog import Catalog, load_catalog, text
+from arnoplast.site import fair_images as FI
 from arnoplast.site.i18n import t
 from arnoplast.site.redirects import load_redirects, netlify_rules
 
@@ -195,23 +196,45 @@ MONTHS = ["gennaio", "febbraio", "marzo", "aprile", "maggio", "giugno", "luglio"
           "novembre", "dicembre"]
 FAIR_FIELDS = ("id", "nome", "luogo", "paese", "data_inizio", "data_fine", "anno", "periodo", "stand", "testo",
                "fonte_url_sito_vecchio")
+# Campi facoltativi: foto (file in content/photos/fiere), descrizione per le schede, sito ufficiale (solo https).
+FAIR_OPTIONAL = ("immagine", "descrizione_breve", "link")
+FAIR_ID = re.compile(r"^[a-z0-9]+(?:-[a-z0-9]+)*$")
+SHORT_MAX = 170  # descrizione breve ricavata dal testo: frasi intere entro questa lunghezza
 
 
 def load_fairs(path: Path | None = None) -> list[dict]:
-    """data/fiere.json -> lista di fiere. Errore chiaro per campi mancanti, id doppi o date non ISO."""
+    """data/fiere.json -> lista di fiere. Errore chiaro per campi mancanti, id doppi o non validi, date non ISO o
+    incoerenti (fine prima dell'inizio), link non https, foto indicata ma assente in content/photos/fiere."""
     path = DATA_DIR / "fiere.json" if path is None else Path(path)
     fairs = json.loads(path.read_text(encoding="utf-8"))["fiere"] if path.is_file() else []
     seen = set()
+
+    def bad(f: dict, why: str) -> ValueError:
+        return ValueError(f"data/fiere.json: {f.get('id')!r} {why}")
+
     for f in fairs:
         missing = [k for k in FAIR_FIELDS if k not in f]
         if missing:
-            raise ValueError(f"data/fiere.json: {f.get('id')!r} senza {', '.join(missing)}")
+            raise bad(f, f"senza {', '.join(missing)}")
+        if not FAIR_ID.match(str(f["id"])):
+            raise bad(f, "id non valido: solo minuscole, cifre e trattini (es. eima-2026)")
         if f["id"] in seen:
             raise ValueError(f"data/fiere.json: id ripetuto {f['id']!r}")
         seen.add(f["id"])
         for k in ("data_inizio", "data_fine"):
             if f[k]:
-                date.fromisoformat(f[k])
+                try:
+                    date.fromisoformat(f[k])
+                except ValueError:
+                    raise bad(f, f"{k} non valida: {f[k]!r} (formato AAAA-MM-GG)") from None
+        if f["data_inizio"] and f["data_fine"] and f["data_fine"] < f["data_inizio"]:
+            raise bad(f, f"data_fine {f['data_fine']} precedente a data_inizio {f['data_inizio']}")
+        link = f.get("link") or ""
+        if link and not re.match(r"^https://[^\s/]+\.[^\s]+$", link):
+            raise bad(f, f"link non valido: {link!r} (solo indirizzi https://)")
+        img = f.get("immagine") or ""
+        if img and (Path(img).name != img or not (FI.SRC_DIR / img).is_file()):
+            raise bad(f, f"immagine {img!r} non trovata in {FI.SRC_DIR}")
     return fairs
 
 
@@ -230,6 +253,24 @@ def fair_dates(f: dict) -> str:
     return f"{a.day} {MONTHS[a.month - 1]} {a.year} – {b.day} {MONTHS[b.month - 1]} {b.year}"
 
 
+def fair_short(f: dict, limit: int = SHORT_MAX) -> str:
+    """Descrizione per le schede: `descrizione_breve`, o la prima frase di `testo` se finisce entro `limit` caratteri
+    (o tutto il testo, se e' breve e senza frasi). Altrimenti taglio all'ultima parola intera con "…". Mai parole
+    aggiunte: si toglie soltanto."""
+    if (f.get("descrizione_breve") or "").strip():
+        return " ".join(f["descrizione_breve"].split())
+    s = " ".join((f.get("testo") or "").split())
+    ends = [m.end() for m in re.finditer(r"(?<![.])[.!?](?=\s+[A-ZÀ-ÖØ-Þ\"«“]|$)", s)]
+    if ends and ends[0] <= limit:
+        return s[:ends[0]]
+    if len(s) <= limit and not s.endswith(("…", "...")):
+        return s
+    cut = s[:limit].rstrip(" .…")
+    if len(cut) < len(s.rstrip(" .…")) and " " in cut:
+        cut = cut[:cut.rfind(" ")]
+    return cut.rstrip(" ,;:-–(") + "…"
+
+
 def _fair_end(f: dict) -> date:
     for k in ("data_fine", "data_inizio"):
         if f[k]:
@@ -237,10 +278,27 @@ def _fair_end(f: dict) -> date:
     return date(int(f["anno"]), 12, 31)  # senza date: conta solo l'anno
 
 
-def split_fairs(fairs: list[dict], today: date) -> tuple[list[dict], list[tuple[int, list[dict]]]]:
+def fair_photos(fairs: list[dict], make: bool = True) -> dict[str, dict]:
+    """Foto di anteprima per id (src, srcset, width, height). Con `make`, genera i WebP che mancano dalle foto in
+    content/photos/fiere (per rigenerarli: tools/fiere_images.py)."""
+    for f in fairs:
+        src = FI.source_for(f, FI.SRC_DIR)
+        if make and src is not None and not FI.outputs(f["id"], FI.OUT_DIR):
+            made = FI.make(src, f["id"], FI.OUT_DIR)
+            print(f"Foto fiera {f['id']}: generati {len(made)} WebP in {FI.OUT_DIR} (da versionare)", file=sys.stderr)
+    imgs = home_images(FI.OUT_DIR, FI.URL_PREFIX)
+    return {f["id"]: imgs[f["id"]] for f in fairs if f["id"] in imgs}
+
+
+def split_fairs(fairs: list[dict], today: date,
+                photos: dict | None = None) -> tuple[list[dict], list[tuple[int, list[dict]]]]:
     """(prossime, passate per anno). Passata = fine (o inizio, o 31/12 dell'anno) precedente a `today`. Prossime dalla
-    piu' vicina; passate dalla piu' recente, raggruppate per anno decrescente."""
-    view = [dict(f, date_label=fair_dates(f), end=_fair_end(f)) for f in fairs]
+    piu' vicina; passate dalla piu' recente, raggruppate per anno decrescente. Ogni fiera riceve anche le date
+    leggibili, la fine ISO (per lo script che nasconde le schede scadute), luogo, descrizione breve e foto."""
+    photos = photos or {}
+    view = [dict(f, date_label=fair_dates(f), end=_fair_end(f), end_iso=_fair_end(f).isoformat(),
+                 place=", ".join(x for x in (f["luogo"], f["paese"]) if x), short=fair_short(f),
+                 link=f.get("link") or "", img=photos.get(f["id"])) for f in fairs]
     upcoming = sorted((f for f in view if f["end"] >= today), key=lambda f: (f["data_inizio"] or "9999", f["id"]))
     past = sorted((f for f in view if f["end"] < today), key=lambda f: (f["end"], f["id"]), reverse=True)
     years: dict[int, list[dict]] = {}
@@ -485,14 +543,15 @@ def _webp_size(path: Path) -> tuple[int, int] | None:
     return None
 
 
-def home_images(folder: Path = HOME_IMG_DIR) -> dict[str, dict]:
-    """Foto della home per nome: src (la piu' grande), srcset, larghezza e altezza intrinseche."""
+def home_images(folder: Path = HOME_IMG_DIR, prefix: str = "/static/img/home/") -> dict[str, dict]:
+    """Foto della home (o di un'altra cartella di WebP <nome>-<larghezza>) per nome: src (la piu' grande), srcset,
+    larghezza e altezza intrinseche."""
     found: dict[str, list[tuple[int, str, tuple[int, int]]]] = {}
     for f in sorted(folder.glob("*.webp")) if folder.is_dir() else []:
         name, _, w = f.stem.rpartition("-")
         size = _webp_size(f)
         if name and w.isdigit() and size:
-            found.setdefault(name, []).append((int(w), f"/static/img/home/{f.name}", size))
+            found.setdefault(name, []).append((int(w), f"{prefix}{f.name}", size))
     out = {}
     for name, items in found.items():
         items.sort()
@@ -546,6 +605,14 @@ def home_context(c: Catalog, lang: str) -> dict:
     imgs = home_images()
     return {"lines": c.lines, "line": None, "counts": counts, "stats": stats, "imgs": imgs,
             "slides": hero_slides(c, lang, imgs, stats), "contacts": CONTACTS}
+
+
+def upcoming_fairs(limit: int | None = None) -> list[dict]:
+    """Prossime fiere alla data di build, dalla piu' vicina, con date leggibili, luogo, descrizione breve (`short`),
+    fine ISO (`end_iso`), sito (`link`) e foto (`img`, None = scheda tipografica). Pronta per la futura slide
+    "fiere" del carosello della home (non ancora usata dalla home)."""
+    fairs = load_fairs()
+    return split_fairs(fairs, build_date(), fair_photos(fairs))[0][:limit]
 
 
 def build_site(c: Catalog, out: Path, lang: str = "it", sources: Path | None = None,
@@ -653,8 +720,8 @@ def build_site(c: Catalog, out: Path, lang: str = "it", sources: Path | None = N
     render("packaging.html", base / "azienda" / "imballaggi", line=None, title=pack["titolo"], pack=pack,
            hero=_hero("imballaggi", imgs),
            description=re.sub(r"\*\*", "", " ".join(pack["paragrafi"]))[:200] or f"{pack['titolo']} - {CONTACTS['name']}, Rignano sull'Arno.")
-    today = build_date()
-    upcoming, past = split_fairs(load_fairs(), today)
+    fairs = load_fairs()
+    upcoming, past = split_fairs(fairs, build_date(), fair_photos(fairs))
     render("fairs.html", base / "fiere", line=None, title=t("page.fairs", lang), upcoming=upcoming, past=past,
            description="Le fiere a cui partecipa ARNOplast: prossimi appuntamenti e archivio delle fiere passate.")
     pdfs = []
@@ -694,10 +761,13 @@ def build_site(c: Catalog, out: Path, lang: str = "it", sources: Path | None = N
         shutil.copytree(static, out / "static", dirs_exist_ok=True)
         # Menu (nav.js) in coda ad anim.js: entrambi script classici in ogni pagina; separati costavano una
         # connessione in piu' prima delle immagini (LCP delle famiglie peggiore di ~300 ms in Fast 3G).
+        # In mezzo fairs.js (nasconde le schede delle fiere gia' finite se il sito non e' stato ricostruito).
         js = out / "static" / "js"
         if (js / "nav.js").is_file():
-            (js / "anim.js").write_text((static / "js" / "anim.js").read_text(encoding="utf-8").rstrip() + "\n;\n"
-                                        + (static / "js" / "nav.js").read_text(encoding="utf-8"), encoding="utf-8")
+            parts = [(static / "js" / n).read_text(encoding="utf-8").rstrip() + "\n;\n"
+                     for n in ("anim.js", "fairs.js") if (static / "js" / n).is_file()]
+            (js / "anim.js").write_text("".join(parts) + (static / "js" / "nav.js").read_text(encoding="utf-8"),
+                                        encoding="utf-8")
 
     redirects = DATA_DIR / "redirects.csv"
     if redirects.is_file():

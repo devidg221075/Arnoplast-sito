@@ -1,5 +1,5 @@
 {
-  "_nota": "Fiere: le date sono ISO (AAAA-MM-GG). Una fiera con data_fine precedente alla data di build passa da sola in 'Fiere passate'. Campi vuoti = dato non noto (non inventare). Vedi README, sezione Fiere.",
+  "_nota": "Fiere: una voce per fiera. Obbligatori: id (unico, minuscole-cifre-trattini, es. eima-2026), nome, luogo, paese, data_inizio e data_fine (ISO AAAA-MM-GG, fine >= inizio), anno, periodo, stand, testo, fonte_url_sito_vecchio. Facoltativi: immagine (nome del file in content/photos/fiere/, es. eima-2026.jpg: la build genera i WebP), descrizione_breve (testo delle schede; se manca si usa la prima frase di testo), link (sito ufficiale della fiera, solo https://). Una fiera con data_fine precedente alla data di build passa da sola in Fiere passate. Campi vuoti = dato non noto (non inventare). Vedi README, sezione Fiere.",
   "fiere": [
     {
       "id": "interpoma-2026",
