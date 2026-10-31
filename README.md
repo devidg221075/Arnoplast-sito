@@ -147,12 +147,35 @@ Cookie = `/it/cookie/`, segnaposto) e "© <anno> ARNOplast". L'anno e le fiere u
 
 ### Fiere (`data/fiere.json`)
 
-Una voce per fiera: `id` (unico), `nome`, `luogo`, `paese`, `data_inizio` e `data_fine` (ISO `AAAA-MM-GG`), `anno`,
-`periodo` (testo da mostrare se le date esatte non sono note, es. "Febbraio 2021"), `stand`, `testo` (breve,
-fedele alla fonte) e `fonte_url_sito_vecchio`. Campo non noto = stringa vuota: mai inventare. Per aggiungere una
-fiera basta una nuova voce e rilanciare la build: finche' `data_fine` non e' passata compare in "Prossime fiere"
-(dalla piu' vicina); poi passa da sola in "Fiere passate", nell'anno giusto (dalla piu' recente). La build si ferma
-con un errore chiaro per campi mancanti, `id` ripetuti o date non valide. Pagina: `site/templates/fairs.html`.
+Una voce per fiera: `id` (unico; minuscole, cifre e trattini, es. `eima-2026`: e' anche l'ancora `/it/fiere/#<id>`),
+`nome`, `luogo`, `paese`, `data_inizio` e `data_fine` (ISO `AAAA-MM-GG`, fine >= inizio), `anno`, `periodo` (testo da
+mostrare se le date esatte non sono note, es. "Febbraio 2021"), `stand`, `testo` (breve, fedele alla fonte) e
+`fonte_url_sito_vecchio`. Campi facoltativi:
+
+- `immagine`: nome del file della foto in `content/photos/fiere/` (es. `"eima-2026.jpg"`; senza il campo vale
+  `<id>.jpg|.jpeg|.png|.webp` se c'e'). La build genera da sola i WebP mancanti in `site/static/img/fiere/`
+  (`<id>-480/800/1200.webp`, mai oltre la risoluzione nativa, qualita' 82, ogni file <= 150 KB; da versionare).
+  Per rigenerarli dopo aver sostituito una foto: `python tools/fiere_images.py <id>`. Senza foto la scheda mostra una
+  locandina tipografica (fondo scuro con il motivo rosso del marchio, date, nome, citta') delle stesse dimensioni;
+- `descrizione_breve`: testo per le schede (anteprima, futura slide della home). Se manca si usa la prima frase di
+  `testo` entro 170 caratteri, o il testo tagliato all'ultima parola intera con "…" (mai parole aggiunte);
+- `link`: sito ufficiale della fiera, solo `https://` (nuova scheda, `rel="noopener noreferrer"`).
+
+Campo non noto = stringa vuota: mai inventare. Per aggiungere una fiera basta una nuova voce (piu' l'eventuale foto in
+`content/photos/fiere/`) e rilanciare la build: finche' `data_fine` non e' passata compare in "Prossime fiere"
+(dalla piu' vicina, con foto o locandina, date, luogo, stand, testo, "Scrivici" e sito della fiera); poi passa da sola in
+"Fiere passate", nell'anno giusto (dalla piu' recente). La build si ferma con un errore chiaro per campi mancanti, `id`
+ripetuti o non validi, date non valide o incoerenti, link non https, foto indicata ma assente. Pagina:
+`site/templates/fairs.html`, stile in `site/static/css/pages.css`.
+
+Scadenza: il sito e' statico, quindi il passaggio fra le passate avviene alla build. Sul hosting statico serve una
+**ricostruzione giornaliera programmata** (es. ogni notte `python -m arnoplast.site.build` e pubblicazione); in WordPress
+sara' automatico (query sulle date). Nel frattempo le schede portano `data-fair-end="AAAA-MM-GG"` e
+`site/static/js/fairs.js` (script classico che la build accoda ad `anim.js`, tra animazioni e menu: nessuna richiesta
+in piu') nasconde con `hidden` quelle gia' finite secondo la data locale di chi visita; se non ne resta nessuna mostra
+"Nessuna fiera in programma al momento.". Non sposta nulla fra le passate (lo fa la build successiva). Senza JS vale la
+build. Per la home: `upcoming_fairs(limite)` in `arnoplast/site/build.py` restituisce le prossime fiere ordinate per
+data, con descrizione breve, foto e fine ISO (dati pronti per una slide del carosello, non ancora usata).
 
 ### Imballaggi
 
