@@ -67,16 +67,31 @@ MATERIALS = {"PP": "Polipropilene", "PA": "Poliammide", "PE": "Polietilene", "PE
 
 HOME_IMG_DIR = SITE_DIR / "static" / "img" / "home"
 
-# Hero a tutto schermo (foto dei cataloghi, in site/static/img/home): pagina -> (foto, ritaglio verticale, alt).
+# Hero a tutto schermo (in site/static/img/home): pagina -> (foto, ritaglio verticale, alt). Garden e Olive vengono
+# dai cataloghi PDF (tools/home_images.py); Agricoltura e Azienda dalle foto originali del cliente (tools/hero_images.py).
 HEROES = {
-    "agricoltura": ("tunnel", "tunnel-alto", "Filari di frutteto sotto la rete antigrandine"),
+    "agricoltura": ("agricoltura-giorno", "agricoltura-giorno-alto", "Frutteto coperto dalla rete antigrandine tesa sui pali"),
     "garden": ("prato", "prato-alto", "Prato e alberi in una giornata di sole"),
     "olive": ("oliveto", "oliveto-alto", "Raccolta delle olive con l'abbacchiatore"),
     "azienda": ("sede-giorno", "sede-giorno-alto", "La sede ARNOplast a Rignano sull'Arno"),
 }
 
-# Variante serale dell'hero (dalle 19 alle 7 ora locale): pagina -> (foto, ritaglio verticale).
-NIGHT_HEROES = {"azienda": ("sede-notte", "sede-notte-alto")}
+# Variante serale dell'hero (dalle 19 alle 7 ora locale): pagina -> (foto, ritaglio verticale). Facoltativa: senza,
+# la foto diurna resta anche di sera.
+NIGHT_HEROES = {
+    "agricoltura": ("agricoltura-notte", "agricoltura-notte-alto"),
+    "azienda": ("sede-notte", "sede-notte-alto"),
+}
+
+# Attributo sizes delle foto ad alta risoluzione: (foto larga, ritaglio verticale). 120vw lascia margine al lento
+# zoom (Ken Burns, fino a 1,14x); il ritaglio verticale a 100vw sceglie la versione da 840 px sui telefoni a 2x
+# (e' l'LCP su rete mobile). Le altre pagine usano 100vw.
+HERO_SIZES = {"agricoltura": ("120vw", "100vw"), "azienda": ("120vw", "120vw")}
+
+# Carosello dell'hero della home, in quest'ordine (la prima slide e' l'identita' della home e l'unica foto caricata
+# subito): pagine di HEROES/NIGHT_HEROES. Per cambiare una foto o aggiungere la variante serale si toccano solo
+# quelle due tabelle (e tools/hero_images.py): pagina della linea e slide restano allineate.
+HERO_SLIDES = ["agricoltura", "garden", "olive", "azienda"]
 
 SECTIONS = ["richiesta-preventivo", "contatti", "azienda", "applicazioni", "video", "area-riservata"]
 
@@ -318,11 +333,35 @@ def _hero(key: str, imgs: dict) -> dict | None:
     name, portrait, alt = HEROES[key]
     if name not in imgs:
         return None
-    hero = {"img": imgs[name], "portrait": imgs.get(portrait) if portrait else None, "alt": alt}
+    sizes, portrait_sizes = HERO_SIZES.get(key, ("100vw", None))
+    hero = {"img": imgs[name], "portrait": imgs.get(portrait) if portrait else None, "alt": alt,
+            "sizes": sizes, "portrait_sizes": portrait_sizes}
     night = NIGHT_HEROES.get(key)  # variante serale, scelta in pagina dall'ora di chi visita
     if night and night[0] in imgs:
         hero["night"], hero["night_portrait"] = imgs[night[0]], imgs.get(night[1])
     return hero
+
+
+def hero_slides(c: Catalog, lang: str, imgs: dict, stats: dict) -> list[dict]:
+    """Slide del carosello della home (HERO_SLIDES): foto, link alla pagina, etichetta e una riga di numeri
+    calcolati dal catalogo. Le pagine senza foto sono saltate."""
+    lines = {l.slug: l for l in c.lines}
+    slides = []
+    for key in HERO_SLIDES:
+        hero = _hero(key, imgs)
+        if hero is None:
+            continue
+        if key in lines:
+            l = lines[key]
+            nf, np_ = len(l.families), sum(len(f.products) for f in l.families)
+            label = text(l.name, lang)
+            nums = [("families", nf, t("hv.family" if nf == 1 else "hv.families", lang)),
+                    ("products", np_, t("hv.products", lang))]
+        else:  # Azienda: l'intero catalogo
+            label = t("page.company", lang)
+            nums = [("lines", stats["lines"], t("hv.lines", lang)), ("codes", stats["codes"], t("hv.codes", lang))]
+        slides.append({"key": key, "href": f"/{lang}/{key}/", "label": label, "nums": nums, "hero": hero})
+    return slides
 
 
 def home_context(c: Catalog, lang: str) -> dict:
@@ -331,8 +370,9 @@ def home_context(c: Catalog, lang: str) -> dict:
     articles = [a for l in c.lines for f in l.families for p in f.products for a in p.articles]
     stats = {"lines": len(c.lines), "families": sum(len(l.families) for l in c.lines),
              "products": sum(counts.values()), "codes": len({a.code for a in articles})}
-    return {"lines": c.lines, "line": None, "counts": counts, "stats": stats, "imgs": home_images(),
-            "contacts": CONTACTS}
+    imgs = home_images()
+    return {"lines": c.lines, "line": None, "counts": counts, "stats": stats, "imgs": imgs,
+            "slides": hero_slides(c, lang, imgs, stats), "contacts": CONTACTS}
 
 
 def build_site(c: Catalog, out: Path, lang: str = "it", sources: Path | None = None,

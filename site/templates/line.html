@@ -4,8 +4,8 @@
 {% block main %}
 {% set nf = line_stats.families %}
 {% if hero %}
-<section class="hx hx-line">
-  <div class="hx-media" data-parallax>{{ hx.picture(hero.img, hero.alt, hero.portrait) }}</div>
+<section class="hx hx-line hx-{{ line.slug }}">
+  <div class="hx-media" data-parallax>{{ hx.picture(hero.img, hero.alt, hero.portrait, sizes=hero.sizes, night=hero.night, night_portrait=hero.night_portrait, portrait_sizes=hero.portrait_sizes) }}</div>
   <div class="wrap hx-in">
     <nav class="breadcrumb hx-crumb" aria-label="Breadcrumb"><a href="/{{ lang }}/">{{ t('breadcrumb.home') }}</a></nav>
     <p class="hx-kicker"><span class="hx-idx" aria-hidden="true">0{{ line_index }}</span>{{ t('line.kicker') }}</p>

@@ -118,6 +118,14 @@ STRINGS = {
         "hv.call": "Chiamaci",
         "hv.where": "Dove siamo",
         "hv.reach": "Venduti in tutta Europa, nel Mediterraneo e oltre oceano",
+        "hs.label": "Le sezioni del sito",
+        "hs.of": "di",
+        "hs.more": "Scopri",
+        "hs.prev": "Foto precedente",
+        "hs.next": "Foto successiva",
+        "hs.dots": "Scegli la foto",
+        "hs.pause": "Ferma la rotazione delle foto",
+        "hs.play": "Riprendi la rotazione delle foto",
     },
 }
 

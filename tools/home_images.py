@@ -13,7 +13,7 @@ OUT = ROOT/'site/static/img/home'; OUT.mkdir(parents=True, exist_ok=True)
 SRC = ROOT/'content/source'
 def pdfimages(pdf, page, prefix):
     subprocess.run(['pdfimages', '-f', str(page), '-l', str(page), '-all', '-p', str(SRC/pdf), str(prefix)], check=True)
-for pg in (1, 2, 3, 4, 5, 8, 26): pdfimages('agricoltura-it.pdf', pg, RAW/'agr')
+for pg in (4, 5, 8): pdfimages('agricoltura-it.pdf', pg, RAW/'agr')
 for pg in (1, 4, 5): pdfimages('garden-it.pdf', pg, RAW/'gar')
 for pg in (3, 11): pdfimages('olive-it.pdf', pg, RAW/'oli')
 subprocess.run(['convert', str(RAW/'oli-003-001.jp2'), str(RAW/'oli-p3.jpg')], check=True)
@@ -25,15 +25,8 @@ def save(im, name, widths, q=72):
         f = OUT/f'{name}-{w}.webp'; r.save(f, 'WEBP', quality=q, method=6)
         print(f.name, r.size, f.stat().st_size)
 def crop_rel(im, box): return im.crop(box)
-# Hero home: copertina agricoltura p.1 (+ ritaglio verticale per i telefoni, a grandezza nativa)
-f = Image.open(RAW/'agr-001-001.jpg').convert('RGB'); save(f, 'frutteto', [480, 830])
-save(f.crop((300, 0, 300 + 424, 565)), 'frutteto-alto', [424], q=64)
-# Hero linea Agricoltura: p.26 (apertura sezione), tunnel di rete antigrandine
-t = Image.open(RAW/'agr-026-000.jpg').convert('RGB'); save(t.crop((0, 380, 1008, 1100)), 'tunnel', [560, 1008], q=66)
-# ritaglio verticale per i telefoni: leggero (e' l'LCP su rete lenta), lieve antirumore
+# Hero della home (carosello) e della linea Agricoltura: foto originali del cliente, vedi tools/hero_images.py
 from PIL import ImageFilter
-ta = t.crop((0, 120, 1008, 1424)); ta = ta.resize((420, round(ta.height*420/ta.width)), Image.LANCZOS)
-save(ta.filter(ImageFilter.GaussianBlur(.5)), 'tunnel-alto', [420], q=45)
 # Hero linea Garden: copertina garden p.1, prato e alberi
 g = Image.open(RAW/'gar-001-001.jpg').convert('RGB'); save(g, 'prato', [480, 830])
 save(g.crop((240, 0, 240 + 416, 555)), 'prato-alto', [416], q=64)
@@ -45,7 +38,7 @@ for w, q in ((640, 50), (1100, 45)):
     save(ol.resize((w, round(ol.height*w/ol.width)), Image.LANCZOS).filter(ImageFilter.GaussianBlur(.6)), 'oliveto', [w], q=q)
 op = Image.open(RAW/'oli-p3.jpg').convert('RGB').crop((0, 160, 1243, 1759))
 save(op.resize((420, round(op.height*420/op.width)), Image.LANCZOS).filter(ImageFilter.MedianFilter(3)), 'oliveto-alto', [420], q=42)
-# La sede (hero di Azienda) viene dalle foto originali del cliente, giorno e notte: vedi tools/sede_images.py
+# La sede (hero di Azienda) viene dalle foto originali del cliente, giorno e notte: vedi tools/hero_images.py
 # Filiera: p.4 progettazione CAD, p.5 stampaggio e magazzino
 save(Image.open(RAW/'agr-004-002.jpg').convert('RGB'), 'progetto', [545])
 save(Image.open(RAW/'agr-005-004.jpg').convert('RGB'), 'stampaggio', [508])

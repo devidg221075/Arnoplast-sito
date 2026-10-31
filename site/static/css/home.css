@@ -103,3 +103,52 @@
   .a-contact { grid-template-columns: 1fr 1fr; gap: 56px; padding-top: 104px; padding-bottom: 112px; }
 }
 @media (hover: none) { .a-card a:hover { transform: none; } }
+
+/* Carosello dell'hero (hero-slides.js): foto di sfondo a dissolvenza con Ken Burns, didascalia con link alla
+   sezione, comandi (precedente, indicatori con avanzamento, successiva, pausa). Testi e pulsanti restano fissi. */
+.hs { touch-action: pan-y; }
+.hs-pic { position: absolute; inset: 0; opacity: 0; }
+.hs-pic.is-active { opacity: 1; z-index: 1; }
+.hs-pic.is-leaving { opacity: 1; transition: none; }
+.hs-bar { margin-top: 18px; max-width: 560px; padding-top: 12px; border-top: 1px solid rgba(255, 255, 255, .2); }
+.hs-caps { display: grid; }
+.hs-cap { grid-area: 1 / 1; display: flex; flex-wrap: wrap; align-items: baseline; gap: 2px 14px; visibility: hidden; opacity: 0; }
+.hs-cap.is-active { visibility: visible; opacity: 1; }
+.hs-label { margin: 0; font-size: .8rem; font-weight: 800; letter-spacing: .16em; text-transform: uppercase; }
+.hs-idx { margin-right: 8px; color: var(--yellow); font-variant-numeric: tabular-nums; }
+.hs-nums { margin: 0; font-size: .88rem; color: #dcdce0; }
+.hs-nums b { color: var(--white); font-weight: 800; }
+.hs-more { margin-left: auto; padding: 8px 0 3px; border-bottom: 2px solid var(--yellow); color: var(--white); font-size: .78rem; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; text-decoration: none; }
+.hs-more:hover { color: var(--yellow); }
+.hs-ctrl { display: flex; align-items: center; gap: 2px; margin: 6px -10px 0; }
+.hs-btn { flex: none; display: grid; place-items: center; width: 44px; height: 44px; padding: 0; border: 0; border-radius: 50%; background: none; color: var(--white); cursor: pointer; }
+.hs-btn:hover { background: rgba(255, 255, 255, .16); }
+.hs-btn[hidden] { display: none; }
+.hs-btn svg { fill: currentColor; }
+.hs-pause .hs-i-play, .hs-pause.is-paused .hs-i-pause { display: none; }
+.hs-pause.is-paused .hs-i-play { display: block; }
+.hs-dots { display: flex; flex: 1; gap: 6px; min-width: 0; padding: 0 6px; }
+.hs-dot { position: relative; flex: 1; max-width: 64px; height: 44px; padding: 0; border: 0; background: none; cursor: pointer; }
+.hs-dot::before, .hs-fill { content: ""; position: absolute; left: 0; right: 0; top: 50%; height: 3px; margin-top: -1.5px; border-radius: 2px; background: rgba(255, 255, 255, .38); }
+.hs-fill { background: var(--yellow); transform: scaleX(0); transform-origin: left; }
+.hs-dot[aria-current] .hs-fill { transform: none; }
+.hs-dot:hover::before { background: rgba(255, 255, 255, .7); }
+.hs-links { list-style: none; display: flex; flex-wrap: wrap; gap: 8px; margin: 0; padding: 0; }
+.hs-links a { display: inline-block; padding: 8px 14px; border: 1px solid rgba(255, 255, 255, .45); border-radius: 999px; color: var(--white); font-size: .82rem; font-weight: 700; text-decoration: none; }
+html:not(.js) .hs-caps, html:not(.js) .hs-ctrl { display: none; }
+@media (prefers-reduced-motion: no-preference) {
+  .hs-pic { transition: opacity 1.2s var(--e); }
+  .hs-cap { transition: opacity .5s, visibility 0s .5s; }
+  .hs-cap.is-active { transition: opacity .6s .2s, visibility 0s; }
+  .hs-pic .hx-img { animation-duration: 14s; }
+  .js .hs-pic:not(.is-active):not(.is-leaving) .hx-img { animation: none; }
+  .hs.is-playing .hs-dot[aria-current] .hs-fill { animation: hs-prog 6.5s linear both; }
+  .hs.is-held .hs-dot[aria-current] .hs-fill { animation-play-state: paused; }
+}
+@keyframes hs-prog { from { transform: scaleX(0); } to { transform: none; } }
+@media (min-width: 1024px) {
+  .a-hero-in { display: grid; grid-template-columns: minmax(0, 1fr) minmax(320px, 380px); column-gap: 48px; }
+  .a-hero-in > * { grid-column: 1; }
+  .hs-bar { grid-column: 2; grid-row: 1 / span 5; align-self: end; margin: 0; padding: 18px 22px 8px; border: 1px solid rgba(255, 255, 255, .16); border-radius: var(--r); background: rgba(11, 11, 12, .5); -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); }
+  .hs-label { font-size: .9rem; }
+}
