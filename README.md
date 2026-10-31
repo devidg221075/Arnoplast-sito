@@ -95,8 +95,10 @@ Lo script in linea di `site/templates/_hero.html` sceglie prima che la foto si c
 ### Carosello dell'hero della home
 
 Titolo, sottotitolo, pulsanti, ricerca e i quattro dati restano fissi; ruotano la foto di sfondo e una didascalia
-(nome della sezione, numeri calcolati dal catalogo, link "Scopri"). Slide e ordine: `HERO_SLIDES` in
-`arnoplast/site/build.py` (oggi Agricoltura, Garden, Raccolta olive, Azienda); foto, ritaglio verticale e testo
+(nome della sezione, numeri calcolati dal catalogo, link "Scopri"). Prima di tutto vengono le **fiere future** (vedi
+"Fiere nell'hero della home" qui sotto), poi le sezioni di `HERO_SLIDES` in `arnoplast/site/build.py` (Agricoltura,
+Garden, Raccolta olive, Azienda); finite le fiere la prima slide torna Agricoltura. Contatore ("01 / 06"), indicatori
+ed etichette "N di M" seguono il numero di slide. foto, ritaglio verticale e testo
 alternativo vengono da `HEROES`, la variante serale da `NIGHT_HEROES`, gli attributi `sizes` da `HERO_SIZES`: la
 pagina della sezione e la slide usano sempre la stessa foto. Codice: `site/static/js/hero-slides.js` (script
 classico, solo sulla home) e la sezione "Carosello" di `site/static/css/home.css`.
@@ -108,7 +110,7 @@ classico, solo sulla home) e la sezione "Carosello" di `site/static/css/home.css
   avanzamento, pulsante pausa/riprendi, frecce da tastiera col fuoco nel carosello, swipe sui telefoni. Si ferma
   col mouse sopra, col fuoco dentro, mentre si scrive nella ricerca e con la scheda nascosta. `aria-live` e' "off"
   durante la rotazione e "polite" in pausa. Con `prefers-reduced-motion: reduce` nessuna rotazione ne' movimento
-  (comandi manuali attivi). Senza JS: la prima foto e i link alle quattro sezioni.
+  (comandi manuali attivi). Senza JS: la prima slide e i link a tutte le slide (fiere comprese).
 
 Sostituire la foto di una slide (per esempio Garden con una foto ad alta risoluzione):
 
@@ -120,6 +122,40 @@ Sostituire la foto di una slide (per esempio Garden con una foto ad alta risoluz
    ("120vw", "100vw")`; poi togliere con `git rm` le foto vecchie non piu' usate (e da `tools/home_images.py`).
 
 Aggiungere una slide: una voce in `HERO_SLIDES` con la chiave della pagina (deve avere un hero in `HEROES`).
+
+#### Fiere nell'hero della home
+
+Ogni fiera futura di `data/fiere.json` (fine non ancora passata alla data di build) e' una slide, prima delle sezioni,
+dalla piu' vicina (data di inizio crescente), senza limite di numero. Sfondo: la foto della fiera a tutto schermo
+(object-fit: cover, velo scuro per la leggibilita'; sui telefoni nessun ritaglio verticale, l'inquadratura viene dal
+campo facoltativo `punto_focale`, valore CSS `object-position` come `"center"` (predefinito), `"30% 50%"`, `"left top"`)
+oppure, finche' la foto non c'e', un fondo grafico in CSS (nero, fascia obliqua rossa del marchio, giorni della fiera in
+grande a basso contrasto: nessuna immagine ne' richiesta). Nel pannello: "Ci trovi a", nome, date, luogo e paese,
+descrizione breve (`descrizione_breve`, o la prima frase di `testo` entro 140 caratteri come nella pagina Fiere: mai
+inventata) e "Scopri" verso `/it/fiere/#<id>`; il sito ufficiale (`link`) resta solo nella pagina Fiere. Etichette in
+`arnoplast/site/i18n.py` (`hs.fair_kicker`, `hs.fair_more`, `hs.fair`). Dati: `fair_slides()` in build.py.
+
+Aggiungere una fiera (il cliente avvisa per ogni nuova partecipazione):
+
+1. una voce in `data/fiere.json` (campi in "Fiere" qui sotto);
+2. la foto del cliente in `content/photos/fiere/<id>.jpg` (o il nome nel campo `immagine`), se c'e' gia';
+3. `python tools/fiere_images.py <id>`: scrive in `site/static/img/fiere/` le versioni delle schede e quelle dell'hero
+   `<id>-hero-800/1280/1600/2000/2560.webp` (mai oltre la risoluzione nativa, qualita' 82 che scende da sola fino a
+   stare sotto i 250 KB; se una larghezza non ci sta nemmeno cosi' viene saltata con un avviso). La build genera da
+   sola quelle che mancano; i WebP vanno versionati;
+4. `python -m arnoplast.site.build` e pubblicazione. La foto arrivata dopo si aggiunge con i passi 2-4: la slide passa
+   da sola dal fondo grafico alla foto.
+
+Prestazioni: come per le altre slide, solo la prima e' nel markup come immagine vera (`fetchpriority="high"`,
+`sizes="120vw"`, dimensioni); se la prima e' una fiera senza foto non c'e' nessuna immagine prioritaria (il fondo e'
+CSS) e tutte le foto arrivano dopo l'evento `load`.
+
+Scadenza: alla build le fiere finite spariscono dall'hero (e passano fra le "Fiere passate"), quindi serve la
+**ricostruzione giornaliera** descritta sotto. Se il sito pubblicato non e' stato ricostruito, ogni slide fiera porta
+`data-fair-end="AAAA-MM-GG"` e `hero-slides.js`, prima di avviare la rotazione, toglie quelle con fine precedente a oggi
+(data locale di chi visita): contatore, indicatori ed etichette si rinumerano, e se cade la prima si attiva la seguente
+caricandone subito la foto. Senza JS vale la build. Verifica: `tools/check_behaviour.js` sposta l'orologio del browser
+(31/10/2026: EIMA e Interpoma + 4 sezioni; 20/11: Interpoma + 4; 1/12: solo le 4 sezioni, prima Agricoltura).
 
 ## Struttura del sito: menu, lingua, footer
 
@@ -154,12 +190,15 @@ mostrare se le date esatte non sono note, es. "Febbraio 2021"), `stand`, `testo`
 
 - `immagine`: nome del file della foto in `content/photos/fiere/` (es. `"eima-2026.jpg"`; senza il campo vale
   `<id>.jpg|.jpeg|.png|.webp` se c'e'). La build genera da sola i WebP mancanti in `site/static/img/fiere/`
-  (`<id>-480/800/1200.webp`, mai oltre la risoluzione nativa, qualita' 82, ogni file <= 150 KB; da versionare).
+  (`<id>-480/800/1200.webp`, mai oltre la risoluzione nativa, qualita' 82, ogni file <= 150 KB; piu' le versioni per
+  l'hero della home `<id>-hero-<larghezza>.webp`, vedi sopra; da versionare).
   Per rigenerarli dopo aver sostituito una foto: `python tools/fiere_images.py <id>`. Senza foto la scheda mostra una
   locandina tipografica (fondo scuro con il motivo rosso del marchio, date, nome, citta') delle stesse dimensioni;
 - `descrizione_breve`: testo per le schede (anteprima, futura slide della home). Se manca si usa la prima frase di
   `testo` entro 170 caratteri, o il testo tagliato all'ultima parola intera con "…" (mai parole aggiunte);
-- `link`: sito ufficiale della fiera, solo `https://` (nuova scheda, `rel="noopener noreferrer"`).
+- `link`: sito ufficiale della fiera, solo `https://` (nuova scheda, `rel="noopener noreferrer"`);
+- `punto_focale`: inquadratura della foto nella slide dell'hero (`object-position`, es. `"30% 50%"`; predefinito
+  `"center"`).
 
 Campo non noto = stringa vuota: mai inventare. Per aggiungere una fiera basta una nuova voce (piu' l'eventuale foto in
 `content/photos/fiere/`) e rilanciare la build: finche' `data_fine` non e' passata compare in "Prossime fiere"
@@ -174,8 +213,7 @@ sara' automatico (query sulle date). Nel frattempo le schede portano `data-fair-
 `site/static/js/fairs.js` (script classico che la build accoda ad `anim.js`, tra animazioni e menu: nessuna richiesta
 in piu') nasconde con `hidden` quelle gia' finite secondo la data locale di chi visita; se non ne resta nessuna mostra
 "Nessuna fiera in programma al momento.". Non sposta nulla fra le passate (lo fa la build successiva). Senza JS vale la
-build. Per la home: `upcoming_fairs(limite)` in `arnoplast/site/build.py` restituisce le prossime fiere ordinate per
-data, con descrizione breve, foto e fine ISO (dati pronti per una slide del carosello, non ancora usata).
+build. Per la home: le slide dell'hero (vedi "Fiere nell'hero della home"), che portano anch'esse `data-fair-end`.
 
 ### Imballaggi
 
