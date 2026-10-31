@@ -3,8 +3,9 @@
 Uso: python tools/offline_site.py <cartella-uscita>   (crea anche <cartella-uscita>.zip)
 
 Il sito vero usa link assoluti (/it/...) e moduli JS, che dal disco (file://) non funzionano. Qui, solo nella
-copia: link resi relativi con index.html esplicito, i tre moduli JS uniti in uno script classico e l'indice
-di ricerca caricato come script. Il sito generato da arnoplast.site.build non cambia.
+copia: link resi relativi con index.html esplicito (anche i rimandi meta refresh), i tre moduli JS uniti in uno
+script classico e l'indice di ricerca caricato come script. Il menu (nav.js) e le animazioni sono gia' script
+classici e restano come sono. Il sito generato da arnoplast.site.build non cambia.
 """
 import json
 import os
@@ -20,6 +21,7 @@ from arnoplast.site.build import main as build  # noqa: E402
 JS = ROOT / "site" / "static" / "js"
 REF = re.compile(r'((?:href|src|action)=")(/[^"]*)(")')
 SRCSET = re.compile(r'(srcset=")([^"]*)(")')
+REFRESH = re.compile(r'(content="0; url=)(/[^"]*)(")')
 CSS_URL = re.compile(r'url\((["\']?)(/[^)"\']+)\1\)')
 
 
@@ -78,6 +80,7 @@ def main(out: Path) -> None:
                               f'<script src="{root}{lang}/search-index.js" defer></script>'
                               f'<script src="{root}static/js/bundle.js" defer></script>')
         h = REF.sub(lambda m: m.group(1) + local(m.group(2), out, here) + m.group(3), h)
+        h = REFRESH.sub(lambda m: m.group(1) + local(m.group(2), out, here) + m.group(3), h)
         h = SRCSET.sub(lambda m: m.group(1) + ", ".join(
             (local(p.split()[0], out, here) + " " + " ".join(p.split()[1:])).strip() if p.strip().startswith("/")
             else p.strip() for p in m.group(2).split(",")) + m.group(3), h)

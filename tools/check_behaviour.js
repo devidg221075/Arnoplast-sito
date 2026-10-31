@@ -412,6 +412,80 @@ ok(at(await hs(r1), 1) && await r1.evaluate(() => [...document.querySelectorAll(
   'movimento ridotto: "successiva" funziona, nessuna animazione');
 await calm2.close();
 
+// --- Menu principale: sottomenu (mouse e tastiera, 1440 px), fisarmonica (390 px), lingua, pagine nuove.
+const navCtx = await browser.newContext({ viewport: { width: 1440, height: 900 } });
+const n1 = await navCtx.newPage();
+watch(n1);
+await n1.goto(BASE + '/it/fiere/', { waitUntil: 'load' });
+const prodLi = n1.locator('.has-sub', { has: n1.locator('.menu-btn', { hasText: 'Prodotti' }) });
+const prodSub = prodLi.locator('.sub');
+ok(await prodSub.isHidden(), 'sottomenu Prodotti chiuso all\'apertura');
+await prodLi.locator('.menu-btn').hover();
+await n1.waitForTimeout(250);
+ok(await prodSub.isVisible() && (await prodSub.locator('a').allTextContents()).join('|') === 'Agricoltura|Garden|Raccolta olive|Cataloghi e download', 'mouse sopra Prodotti: tendina con le 4 voci');
+await n1.mouse.move(700, 600);
+await n1.waitForTimeout(250);
+ok(await prodSub.isHidden(), 'mouse fuori: tendina chiusa');
+// Tastiera: Tab fino ad Azienda, Invio apre, freccia giu' tra le voci, Esc chiude e torna al pulsante.
+const azBtn = n1.locator('.menu-btn', { hasText: 'Azienda' });
+await azBtn.focus();
+await n1.keyboard.press('Enter');
+ok((await azBtn.getAttribute('aria-expanded')) === 'true' && await n1.locator('#' + await azBtn.getAttribute('aria-controls')).isVisible(), 'tastiera: Invio apre Azienda (aria-expanded=true)');
+await n1.keyboard.press('ArrowDown');
+ok(await n1.evaluate(() => document.activeElement.textContent.trim()) === 'Chi siamo', 'tastiera: freccia giu\' sulla prima voce');
+await n1.keyboard.press('ArrowDown');
+ok(await n1.evaluate(() => document.activeElement.textContent.trim()) === 'Imballaggi', 'tastiera: freccia giu\' sulla seconda voce');
+await n1.keyboard.press('Escape');
+ok((await azBtn.getAttribute('aria-expanded')) === 'false' && await n1.evaluate(() => document.activeElement.textContent.trim()) === 'Azienda', 'tastiera: Esc chiude e torna al pulsante');
+await n1.keyboard.press('ArrowDown');
+await n1.keyboard.press('Enter');
+await n1.waitForURL(/\/it\/azienda\/$/);
+ok(true, 'tastiera: freccia giu\' + Invio apre Chi siamo');
+ok(await n1.locator('.menu a[aria-current="page"]').textContent() === 'Chi siamo' && await n1.locator('.has-sub.is-active .menu-btn').textContent() === 'Azienda', 'voce attiva: Chi siamo nel sottomenu Azienda');
+const azShown = await n1.evaluate(() => getComputedStyle(document.querySelector('.has-sub.is-active > .menu-btn')).boxShadow);
+ok(/inset/.test(azShown), 'voce attiva evidenziata (sottolineatura rossa)');
+// Fuoco visibile sul pulsante del sottomenu.
+await azBtn.focus();
+await n1.keyboard.press('Shift+Tab'); await n1.keyboard.press('Tab');
+ok(await n1.evaluate(() => getComputedStyle(document.activeElement).outlineStyle !== 'none'), 'fuoco visibile sulle voci di menu');
+// Selettore di lingua: EN porta alla pagina "coming soon" (noindex), IT torna all'italiano.
+await n1.locator('.lang a[hreflang="en"]').click();
+await n1.waitForURL(/\/en\/$/);
+ok(/coming soon/i.test(await n1.locator('h1').textContent()) && (await n1.locator('meta[name="robots"]').getAttribute('content')) === 'noindex'
+  && (await n1.locator('.lang a[aria-current]').getAttribute('hreflang')) === 'en', 'lingua: EN apre /en/ (noindex, EN attivo)');
+await n1.locator('.lang a[hreflang="it"]').click();
+await n1.waitForURL(/\/it\/$/);
+ok(true, 'lingua: IT torna alla home italiana');
+for (const path of ['/it/azienda/', '/it/azienda/imballaggi/', '/it/fiere/', '/it/cataloghi/', '/en/']) {
+  await n1.goto(BASE + path, { waitUntil: 'load' });
+  ok(await n1.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth), `1440 px ${path}: nessun overflow orizzontale`);
+}
+await navCtx.close();
+
+const mobCtx = await browser.newContext({ viewport: { width: 390, height: 844 } });
+const m1 = await mobCtx.newPage();
+watch(m1);
+await m1.goto(BASE + '/it/agricoltura/copripalo/', { waitUntil: 'load' });
+await m1.locator('.menu-toggle').click();
+const mProd = m1.locator('.menu-btn', { hasText: 'Prodotti' });
+const mAz = m1.locator('.menu-btn', { hasText: 'Azienda' });
+ok((await mProd.getAttribute('aria-expanded')) === 'true' && await m1.locator('.sub a[aria-current="true"]').isVisible(), '390 px: la sezione corrente (Prodotti > Agricoltura) parte aperta');
+ok((await mAz.getAttribute('aria-expanded')) === 'false' && await m1.locator('#' + await mAz.getAttribute('aria-controls')).isHidden(), '390 px: Azienda chiusa');
+await mAz.click();
+ok((await mAz.getAttribute('aria-expanded')) === 'true' && await m1.locator('#' + await mAz.getAttribute('aria-controls') + ' a').first().isVisible(), '390 px: tocco su Azienda apre le sottovoci (fisarmonica)');
+await mAz.click();
+ok((await mAz.getAttribute('aria-expanded')) === 'false', '390 px: secondo tocco richiude');
+ok(await m1.locator('.lang a[hreflang="en"]').isVisible() && await m1.locator('.reserved-link').isVisible(), '390 px: lingua e Area riservata nel pannello');
+await m1.keyboard.press('Escape');
+ok((await m1.locator('.menu-toggle').getAttribute('aria-expanded')) === 'false', '390 px: Esc chiude il pannello');
+for (const path of ['/it/azienda/', '/it/azienda/imballaggi/?luce=notte', '/it/fiere/', '/it/cataloghi/', '/en/']) {
+  await m1.goto(BASE + path, { waitUntil: 'load' });
+  ok(await m1.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth), `390 px ${path}: nessun overflow orizzontale`);
+}
+await m1.goto(BASE + '/it/azienda/imballaggi/?luce=notte', { waitUntil: 'load' });
+ok(/imballaggi-notte-alto/.test(await m1.locator('img[fetchpriority="high"]').evaluate((i) => i.currentSrc)), '390 px imballaggi ?luce=notte: ritaglio verticale notturno');
+await mobCtx.close();
+
 const foreign = requests.filter((u) => new URL(u).origin !== origin);
 ok(foreign.length === 0, `nessuna richiesta esterna (${requests.length} richieste, ${new Set(requests).size} URL distinti)`);
 // Messaggio di Chromium (non un errore JS) quando lo script naviga mentre una transizione tra pagine e' in corso.
