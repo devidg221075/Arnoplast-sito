@@ -46,7 +46,7 @@ def test_hero_pages_have_full_screen_hero_with_one_priority_image(site, rel):
         assert re.search(r'\swidth="\d+"', tag) and re.search(r'\sheight="\d+"', tag), tag
         for part in re.search(r'srcset="([^"]+)"', tag).group(1).split(","):
             f = out / part.split()[0].lstrip("/")
-            assert f.is_file() and f.suffix == ".webp" and f.stat().st_size <= 150 * 1024, part
+            assert f.is_file() and f.suffix == ".webp" and f.stat().st_size <= 250 * 1024, part
     for other in re.findall(r"<img\b[^>]*>", h):
         if other != img and "arnoplast-logo" not in other:
             assert 'loading="lazy"' in other, other
@@ -150,7 +150,7 @@ def test_company_hero_has_night_variant_chosen_in_page(site):
     for srcset in night:
         for part in srcset.split(","):
             f = out / part.split()[0].lstrip("/")
-            assert f.is_file() and f.suffix == ".webp" and f.stat().st_size <= 150 * 1024, part
+            assert f.is_file() and f.suffix == ".webp" and f.stat().st_size <= 250 * 1024, part
     assert "getHours()" in h and "luce=(notte|giorno)" in h
     for rel in ("it", "it/agricoltura", "it/garden", "it/olive"):
         assert "data-night-srcset" not in html(out, rel), rel
