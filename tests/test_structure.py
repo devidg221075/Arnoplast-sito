@@ -307,6 +307,14 @@ def test_bad_fairs_file_is_a_clear_error(tmp_path):
         B.load_fairs(f)
 
 
+def test_home_hero_first_slide_is_eima_with_the_client_photo(site):
+    """Stato reale: la prima slide dell'hero e' EIMA, con la foto del cliente e la priorita' alta sull'immagine."""
+    h = html(site, "it")
+    first = re.findall(r'<img[^>]*fetchpriority="high"[^>]*>', h)
+    assert len(first) == 1 and "eima-2026-hero-" in first[0]
+    assert 'data-fair-end="2026-11-14"' in h and 'data-fair-end="2026-11-27"' in h
+
+
 def test_fairs_page(site):
     h = html(site, "it/fiere")
     assert '<section class="page-head">' in h and 'class="hx ' not in h  # hero compatto
@@ -318,7 +326,10 @@ def test_fairs_page(site):
     assert years == sorted(years, reverse=True) and years[0] == 2026 and years[-1] == 2014
     assert "<details>" in past and "Padiglione 8, Stand A15" in past and "Hall 34 stand D2" in past
     assert "Open Day" in h and "Struttura aperta alle visite del pubblico — in arrivo." in h
-    assert "<img" not in re.search(r'<main id="main">(.*)</main>', h, re.S).group(1)
+    # Le due prossime fiere hanno la foto del cliente (content/photos/fiere): schede con immagine, senza fallback tipografico.
+    assert nxt.count("<img") == 2 and "eima-2026-480.webp" in nxt and "interpoma-2026-480.webp" in nxt
+    past_imgs = re.search(r'id="passate".*?</section>', h, re.S).group(0)
+    assert "<img" not in past_imgs
 
 
 # --- Cataloghi, segnaposto, redirect, sitemap ----------------------------------------------------------

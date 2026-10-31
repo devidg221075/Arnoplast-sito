@@ -1,6 +1,7 @@
 """Slide delle fiere future nell'hero della home: contesto (solo future, tutte, dalla piu' vicina), markup (una sola
 slide iniziale, data-fair-end, link alla scheda, niente testo inventato, escape), fondo grafico senza foto, foto della
 fiera (versioni hero, sizes, dimensioni, peso), build con data futura = 4 slide, tools/fiere_images.py."""
+import json
 import re
 from pathlib import Path
 
@@ -33,6 +34,14 @@ def photo_dirs(tmp_path, monkeypatch):
     src.mkdir()
     monkeypatch.setattr(FI, "SRC_DIR", src)
     monkeypatch.setattr(FI, "OUT_DIR", out)
+    # I dati reali ora hanno le foto (content/photos/fiere): i test sul "stato senza foto" leggono una copia senza `immagine`.
+    real = json.loads((B.DATA_DIR / "fiere.json").read_text(encoding="utf-8"))
+    for f in real["fiere"]:
+        f.pop("immagine", None)
+    nophoto = tmp_path / "fiere-senza-foto.json"
+    nophoto.write_text(json.dumps(real, ensure_ascii=False), encoding="utf-8")
+    orig = B.load_fairs
+    monkeypatch.setattr(B, "load_fairs", lambda path=None: orig(nophoto if path is None else path))
     return src, out
 
 
