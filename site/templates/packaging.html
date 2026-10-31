@@ -25,11 +25,29 @@
   </div>
 </section>
 {% endif %}
-{# Il testo della pagina viene da data/imballaggi.json ("paragrafi"): finche' e' vuoto resta il blocco "in arrivo". #}
-{% if pack.paragrafi %}
-<section class="wrap section prose pk-text">
-  {% for p in pack.paragrafi %}<p{% if loop.first %} class="lead"{% endif %}>{{ p }}</p>{% endfor %}
+{# Testo e tabella vengono da data/imballaggi.json: finche' sono vuoti resta il blocco "in arrivo". #}
+{% if pack.paragrafi or pack.tabella %}
+<section class="wrap section pk-intro">
+  {% if pack.sezione %}<h2 class="pk-h" data-reveal>{{ pack.sezione }}</h2>{% endif %}
+  <div class="prose pk-text" data-reveal>
+    {% for p in pack.paragrafi %}<p{% if loop.first %} class="lead"{% endif %}>{{ p | rich }}</p>{% endfor %}
+  </div>
 </section>
+{% if pack.tabella %}
+<section class="wrap section pk-table" aria-labelledby="pk-tab">
+  <h2 id="pk-tab" class="sr-only">{{ pack.sezione or title }}</h2>
+  <ul class="pk-grid" data-reveal="stagger">
+    {% for r in pack.tabella %}
+    <li class="pk-card pk-{{ r.tipo }}">
+      <h3 class="pk-name">{{ r.imballaggio }}</h3>
+      <p class="pk-code"><span class="sr-only">Codice materiale: </span>{{ r.codice }}</p>
+      <p class="pk-coll">{{ r.raccolta }}</p>
+    </li>
+    {% endfor %}
+  </ul>
+  {% if pack.nota %}<p class="pk-note">{{ pack.nota }}</p>{% endif %}
+</section>
+{% endif %}
 {% else %}
 <section class="wrap section">
   <div class="soon" data-reveal>

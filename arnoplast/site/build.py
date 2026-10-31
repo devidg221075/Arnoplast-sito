@@ -12,6 +12,7 @@ from pathlib import Path
 from urllib.parse import quote
 
 from jinja2 import Environment, FileSystemLoader, select_autoescape
+from markupsafe import Markup
 
 from arnoplast.catalog import Catalog, load_catalog, text
 from arnoplast.site.i18n import t
@@ -248,17 +249,35 @@ def split_fairs(fairs: list[dict], today: date) -> tuple[list[dict], list[tuple[
     return upcoming, sorted(years.items(), reverse=True)
 
 
+# Tipo di raccolta -> classe della scheda nella tabella degli imballaggi (colore).
+PACK_KINDS = {"raccolta carta": "carta", "raccolta plastica": "plastica", "indifferenziata": "indif",
+              "raccolta isola ecologica": "isola"}
+
+
 def load_packaging(path: Path | None = None) -> dict:
-    """data/imballaggi.json: titolo e paragrafi della pagina Imballaggi (vuoti finche' il cliente non da' il testo)."""
+    """data/imballaggi.json: testo e tabella della pagina Imballaggi (vuoti: la pagina mostra "contenuto in arrivo").
+
+    Nei paragrafi `**parola**` diventa grassetto (filtro `rich`); ogni riga della tabella riceve `tipo`, dalla raccolta.
+    """
     path = DATA_DIR / "imballaggi.json" if path is None else Path(path)
     data = json.loads(path.read_text(encoding="utf-8")) if path.is_file() else {}
-    return {"titolo": data.get("titolo") or "Imballaggi", "paragrafi": [p for p in data.get("paragrafi", []) if p.strip()]}
+    rows = [{**r, "tipo": PACK_KINDS.get(r.get("raccolta", "").strip().lower(), "altro")}
+            for r in data.get("tabella", []) if r.get("imballaggio", "").strip()]
+    return {"titolo": data.get("titolo") or "Imballaggi", "sezione": data.get("sezione") or "",
+            "paragrafi": [p for p in data.get("paragrafi", []) if p.strip()], "tabella": rows,
+            "nota": data.get("nota") or ""}
+
+
+def rich(s: str) -> Markup:
+    """Testo del cliente con `**grassetto**`: tutto il resto e' escapato."""
+    return Markup(re.sub(r"\*\*(.+?)\*\*", r"<strong>\1</strong>", str(escape(s))))
 
 
 def _env(lang: str) -> Environment:
     env = Environment(loader=FileSystemLoader(SITE_DIR / "templates"),
                       autoescape=select_autoescape(["html"], default=True),
                       trim_blocks=True, lstrip_blocks=True)
+    env.filters["rich"] = rich
     env.globals.update(lang=lang, contacts=CONTACTS, t=lambda k: t(k, lang), text=lambda d: text(d, lang),
                        menu=menu_items(lang), nav_state=lambda path: nav_state(path, lang), social=SOCIAL, apps=APPS,
                        privacy_url=PRIVACY_URL, year=build_date().year, maps_url=MAPS_URL)
@@ -633,7 +652,7 @@ def build_site(c: Catalog, out: Path, lang: str = "it", sources: Path | None = N
     pack = load_packaging()
     render("packaging.html", base / "azienda" / "imballaggi", line=None, title=pack["titolo"], pack=pack,
            hero=_hero("imballaggi", imgs),
-           description=" ".join(pack["paragrafi"])[:200] or f"{pack['titolo']} - {CONTACTS['name']}, Rignano sull'Arno.")
+           description=re.sub(r"\*\*", "", " ".join(pack["paragrafi"]))[:200] or f"{pack['titolo']} - {CONTACTS['name']}, Rignano sull'Arno.")
     today = build_date()
     upcoming, past = split_fairs(load_fairs(), today)
     render("fairs.html", base / "fiere", line=None, title=t("page.fairs", lang), upcoming=upcoming, past=past,

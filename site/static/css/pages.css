@@ -81,3 +81,20 @@
   .fr-cards, .cat-list { grid-template-columns: repeat(3, 1fr); }
   .fr-card, .cat-item { padding: 32px 30px; }
 }
+
+/* Imballaggi: introduzione e tabella a schede (colore = tipo di raccolta) */
+.pk-intro { max-width: 860px; }
+.pk-h { margin-bottom: .6em; }
+.pk-text p { max-width: 70ch; }
+.pk-text strong { color: var(--black); }
+.pk-grid { list-style: none; margin: 0; padding: 0; display: grid; gap: 14px; grid-template-columns: repeat(auto-fill, minmax(min(100%, 240px), 1fr)); }
+.pk-card { position: relative; padding: 18px 18px 16px 22px; background: var(--white); border: 1px solid var(--line, #e3e3e6); border-radius: var(--r); overflow: hidden; }
+.pk-card::before { content: ""; position: absolute; inset: 0 auto 0 0; width: 6px; background: var(--pk, #8a8a92); }
+.pk-name { font-size: 1.05rem; line-height: 1.25; margin: 0 0 .5em; text-transform: none; }
+.pk-code { display: inline-block; margin: 0 0 .6em; padding: 2px 10px; font-weight: 800; letter-spacing: .04em; background: var(--black); color: var(--white); border-radius: 999px; font-size: .85rem; }
+.pk-coll { margin: 0; font-weight: 600; }
+.pk-carta { --pk: #1f6fd1; }
+.pk-plastica { --pk: #f0c000; }
+.pk-indif { --pk: #6b6b73; }
+.pk-isola { --pk: #2f8f3a; }
+.pk-note { margin-top: 22px; font-weight: 700; }

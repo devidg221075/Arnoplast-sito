@@ -1,5 +1,83 @@
 {
-  "_nota": "Testo della pagina Imballaggi (/it/azienda/imballaggi/). Il cliente scrive qui i paragrafi, uno per riga dell'elenco: finche' l'elenco e' vuoto la pagina mostra il blocco 'Contenuto in arrivo'. Non serve toccare i template.",
+  "_nota": "Pagina Imballaggi (/it/azienda/imballaggi/). Testo e tabella riportati fedelmente da https://www.arnoplast.it/imballaggi (pagina salvata dal cliente il 31/10/2026). Nei paragrafi **parola** diventa grassetto. 'raccolta' decide il colore della scheda: 'Raccolta Carta', 'Raccolta Plastica', 'Indifferenziata', 'Raccolta Isola Ecologica'.",
   "titolo": "Imballaggi",
-  "paragrafi": []
+  "sezione": "I nostri imballaggi",
+  "paragrafi": [
+    "Il decreto legislativo 3 settembre 2020, n. 116 dispone che tutti gli imballaggi siano “opportunamente etichettati secondo le modalità stabilite dalle norme tecniche UNI applicabili e in conformità alle determinazioni adottate dalla Commissione dell’Unione europea”.",
+    "L’**etichettatura ambientale** consiste nell’identificare tutti gli imballaggi immessi sul mercato italiano, per indicarne la **composizione**, facilitarne la **raccolta**, il **riutilizzo**, il **recupero**, il **riciclo** e il **corretto smaltimento** da parte del consumatore.",
+    "Secondo la normativa, l’etichetta deve essere apposta direttamente sull’imballaggio, tramite i canali digitali (App, Qr code, siti web), su documenti di trasporto, libretti d’istruzione o pannelli informativi nel punto vendita. I nostri imballaggi sono così definiti come da tabella sotto riportata."
+  ],
+  "tabella": [
+    {
+      "imballaggio": "Scatola Cartone",
+      "codice": "PAP 20",
+      "raccolta": "Raccolta Carta"
+    },
+    {
+      "imballaggio": "Etichetta Adesiva",
+      "codice": "PAP 20",
+      "raccolta": "Indifferenziata"
+    },
+    {
+      "imballaggio": "Nastro adesivo",
+      "codice": "PP 5",
+      "raccolta": "Raccolta Plastica"
+    },
+    {
+      "imballaggio": "Sacchetti Polietilene",
+      "codice": "LDPE 4",
+      "raccolta": "Raccolta Plastica"
+    },
+    {
+      "imballaggio": "Film estensibile",
+      "codice": "LDPE 4",
+      "raccolta": "Raccolta Plastica"
+    },
+    {
+      "imballaggio": "Bancale Plastica",
+      "codice": "HDPE 2",
+      "raccolta": "Raccolta Plastica"
+    },
+    {
+      "imballaggio": "Confezione Dispenser",
+      "codice": "SBC 7",
+      "raccolta": "Raccolta Plastica"
+    },
+    {
+      "imballaggio": "Confezione Telaietto",
+      "codice": "LLDPE 4",
+      "raccolta": "Raccolta Plastica"
+    },
+    {
+      "imballaggio": "Fascette",
+      "codice": "PA 7",
+      "raccolta": "Raccolta Plastica"
+    },
+    {
+      "imballaggio": "Rocche Plastica",
+      "codice": "PS 6",
+      "raccolta": "Raccolta Plastica"
+    },
+    {
+      "imballaggio": "Bancale Legno",
+      "codice": "FOR 50",
+      "raccolta": "Raccolta Isola Ecologica"
+    },
+    {
+      "imballaggio": "Flange e Tubi Cartoni Rocche",
+      "codice": "PAP 21",
+      "raccolta": "Raccolta Carta"
+    },
+    {
+      "imballaggio": "Capsule Polistirolo",
+      "codice": "PS 6",
+      "raccolta": "Raccolta Plastica"
+    },
+    {
+      "imballaggio": "Rocche Plastica",
+      "codice": "PP 5",
+      "raccolta": "Raccolta Plastica"
+    }
+  ],
+  "nota": "Ricorda di verificare sempre le disposizioni del tuo Comune."
 }

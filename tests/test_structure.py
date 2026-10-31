@@ -201,7 +201,7 @@ def test_company_page_has_client_history_verbatim(site):
 
 # --- Imballaggi ------------------------------------------------------------------------------------------
 
-def test_packaging_page_hero_day_night_and_no_invented_text(site):
+def test_packaging_page_hero_day_night(site):
     h = html(site, "it/azienda/imballaggi")
     assert "<title>Imballaggi - ARNOplast</title>" in h
     img = re.findall(r'<img\b[^>]*fetchpriority="high"[^>]*>', h)
@@ -209,18 +209,45 @@ def test_packaging_page_hero_day_night_and_no_invented_text(site):
     night = re.findall(r'data-night-srcset="([^"]+)"', h)
     assert len(night) == 2 and all("imballaggi-notte" in n for n in night)
     assert "luce=(notte|giorno)" in h and "getHours()" in h
-    assert "Contenuto in arrivo" in h and 'href="/it/contatti/"' in h and 'href="/it/richiesta-preventivo/"' in h
-    # Nessun testo inventato: dopo l'hero solo il blocco "in arrivo" (titolo, avviso, pulsanti).
-    after = re.search(r"</section>\s*(.*)</main>", h, re.S).group(1)
-    texts = [re.sub(r"<[^>]+>", "", p).strip() for p in re.findall(r"<(?:p|h2)\b[^>]*>(.*?)</(?:p|h2)>", after, re.S)]
-    assert texts[:2] == ["Contenuto in arrivo", B.t("soon.text", "it")] and len(texts) == 3
-    assert B.load_packaging() == {"titolo": "Imballaggi", "paragrafi": []}
+
+
+def test_packaging_content_is_faithful_to_old_page(site):
+    """Testo e tabella sono quelli del sito vecchio (pagina salvata dal cliente), senza aggiunte."""
+    h = html(site, "it/azienda/imballaggi")
+    assert "Contenuto in arrivo" not in h
+    assert "<h2 class=\"pk-h\"" in h and "I nostri imballaggi" in h
+    assert "decreto legislativo 3 settembre 2020, n. 116" in h
+    assert "<strong>etichettatura ambientale</strong>" in h and "<strong>corretto smaltimento</strong>" in h
+    assert "tabella sotto riportata" in h and "Ricorda di verificare sempre le disposizioni del tuo Comune." in h
+    cards = re.findall(r'<li class="pk-card pk-(\w+)">\s*<h3 class="pk-name">([^<]+)</h3>.*?<p class="pk-code">.*?</span>([^<]+)</p>\s*<p class="pk-coll">([^<]+)</p>', h, re.S)
+    assert len(cards) == 14
+    got = {(n, c.strip(), r) for _, n, c, r in cards}
+    assert ("Scatola Cartone", "PAP 20", "Raccolta Carta") in got
+    assert ("Etichetta Adesiva", "PAP 20", "Indifferenziata") in got
+    assert ("Bancale Legno", "FOR 50", "Raccolta Isola Ecologica") in got
+    assert ("Flange e Tubi Cartoni Rocche", "PAP 21", "Raccolta Carta") in got
+    assert sorted({k for k, *_ in cards}) == ["carta", "indif", "isola", "plastica"]
+
+
+def test_packaging_empty_data_shows_coming_soon(tmp_path):
+    f = tmp_path / "vuoto.json"
+    f.write_text(json.dumps({"titolo": "Imballaggi", "paragrafi": []}), encoding="utf-8")
+    d = B.load_packaging(f)
+    assert d["paragrafi"] == [] and d["tabella"] == [] and d["sezione"] == ""
 
 
 def test_packaging_text_comes_from_data_file(tmp_path):
     f = tmp_path / "imb.json"
-    f.write_text(json.dumps({"titolo": "Imballaggi", "paragrafi": ["Primo.", " ", "Secondo."]}), encoding="utf-8")
-    assert B.load_packaging(f)["paragrafi"] == ["Primo.", "Secondo."]
+    f.write_text(json.dumps({"titolo": "Imballaggi", "paragrafi": ["Primo.", " ", "Secondo."],
+                             "tabella": [{"imballaggio": "Cassa", "codice": "FOR 50", "raccolta": "Raccolta Isola Ecologica"},
+                                         {"imballaggio": "Altro", "codice": "X", "raccolta": "Boh"}]}), encoding="utf-8")
+    d = B.load_packaging(f)
+    assert d["paragrafi"] == ["Primo.", "Secondo."]
+    assert [r["tipo"] for r in d["tabella"]] == ["isola", "altro"]
+
+
+def test_rich_escapes_everything_but_bold():
+    assert str(B.rich("a **b** <script>x</script> & c")) == "a <strong>b</strong> &lt;script&gt;x&lt;/script&gt; &amp; c"
 
 
 def test_packaging_webp_files_small():
