@@ -28,6 +28,7 @@ from arnoplast.extract.articles import (
 )
 from arnoplast.extract.layout import FAMILIES, LINES, SOURCE_DIR, family_for
 from arnoplast.extract.pdf import PAGE_H, Word, page_count, page_image, page_text, page_words
+from arnoplast.extract.photos import PHOTO_CHECKED, PHOTO_OVERRIDES, extract_photo
 
 ROOT = Path(__file__).resolve().parents[2]
 DATA_DIR = ROOT / "data"
@@ -296,7 +297,24 @@ class _Built:
     page: int
 
 
-def build_line(slug: str, pdf: Path, images_dir: Path | None = None) -> Line:
+def save_photos(photos: dict, path: Path) -> None:
+    """Manifest dei ritagli (versionato): per immagine prodotto, pagina, zona in pt,
+    risoluzione, pixel e motivo del controllo a mano (null se affidabile)."""
+    import json
+    path.write_text(json.dumps(dict(sorted(photos.items())), ensure_ascii=False, indent=1) + "\n",
+                    encoding="utf-8")
+
+
+def photo_path(image: str) -> str:
+    """Percorso (relativo a data/) della foto ritagliata di un prodotto, dal campo `image`."""
+    return str(Path(image).with_suffix(".photo.png").as_posix())
+
+
+def build_line(slug: str, pdf: Path, images_dir: Path | None = None,
+               photos: dict | None = None) -> Line:
+    """Linea di prodotti dal PDF. Con `images_dir` scrive anche le immagini: la fascia
+    della pagina (<slug>.jpg) e la foto ritagliata (<slug>.photo.png); in `photos`
+    (se dato) aggiunge, per percorso immagine, i dati del ritaglio (vedi photos.py)."""
     name, accent, _ = LINES[slug]
     families = {fname: Family(slugify(fname), {"it": fname}) for _, fname in FAMILIES[slug]}
     last: dict[str, _Built] = {}
@@ -334,6 +352,13 @@ def build_line(slug: str, pdf: Path, images_dir: Path | None = None) -> Line:
             image = f"images/{slug}/{pslug}.jpg"
             if images_dir is not None:
                 page_image(pdf, page, Path(images_dir) / slug / f"{pslug}.jpg", box)
+                ph = extract_photo(pdf, page, box, Path(images_dir) / slug / f"{pslug}.photo.png",
+                                   PHOTO_OVERRIDES.get((slug, pslug)), (slug, pslug) in PHOTO_CHECKED)
+                if photos is not None:
+                    photos[image] = ({"product": pname, **ph.to_json()} if ph else
+                                     {"product": pname, "page": page, "bbox": None, "dpi": None,
+                                      "size": None, "check": "nessuna foto del prodotto in pagina: "
+                                      "resta l'immagine della pagina del catalogo"})
             product = Product(pslug, {"it": pname}, find_materials(words, t), features, dims,
                               image, None, articles)
             fam.products.append(product)
@@ -341,9 +366,10 @@ def build_line(slug: str, pdf: Path, images_dir: Path | None = None) -> Line:
     return Line(slug, {"it": name}, accent, [f for f in families.values() if f.products])
 
 
-def build_catalog(sources: dict[str, Path], images_dir: Path | None = None) -> Catalog:
+def build_catalog(sources: dict[str, Path], images_dir: Path | None = None,
+                  photos: dict | None = None) -> Catalog:
     """Catalogo completo dai PDF (`sources`: agricoltura, garden, olive)."""
-    return Catalog([build_line(slug, Path(sources[slug]), images_dir)
+    return Catalog([build_line(slug, Path(sources[slug]), images_dir, photos)
                     for slug in LINES if slug in sources])
 
 
@@ -389,7 +415,8 @@ def main(argv: list[str] | None = None) -> int:
     Senza opzioni scrive data/catalog.generated.json (catalog.json, che puo'
     contenere correzioni manuali, non viene toccato). `--force` sovrascrive
     data/catalog.json e rigenera le immagini; `--images-only` rigenera solo
-    data/images/ senza scrivere nessun catalogo.
+    data/images/ (fasce di pagina e foto ritagliate) e data/photos.json, senza
+    scrivere nessun catalogo.
     """
     ap = argparse.ArgumentParser(prog="python -m arnoplast.extract.build",
                                  description=main.__doc__.split("\n\n")[0])
@@ -400,12 +427,19 @@ def main(argv: list[str] | None = None) -> int:
                       help="rigenera solo data/images/, senza scrivere cataloghi")
     args = ap.parse_args(argv)
     images = args.force or args.images_only
-    catalog = build_catalog(SOURCES, DATA_DIR / "images" if images else None)
+    photos: dict = {}
+    catalog = build_catalog(SOURCES, DATA_DIR / "images" if images else None, photos)
     errors = validate(catalog)
     for e in errors:
         print("ERRORE:", e, file=sys.stderr)
+    if images:
+        save_photos(photos, DATA_DIR / "photos.json")
+        for img, ph in photos.items():
+            if ph["check"]:
+                print(f"FOTO DA CONTROLLARE: {ph['product']} (p.{ph['page']}): {ph['check']}")
     if args.images_only:
-        print(f"immagini scritte in {DATA_DIR / 'images'} (cataloghi non toccati)")
+        print(f"immagini e foto scritte in {DATA_DIR / 'images'}, ritagli in {DATA_DIR / 'photos.json'} "
+              "(cataloghi non toccati)")
         return 1 if errors else 0
     target = DATA_DIR / ("catalog.json" if args.force else "catalog.generated.json")
     save_catalog(catalog, target)

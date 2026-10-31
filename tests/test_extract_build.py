@@ -1,4 +1,5 @@
 """Test dell'estrazione dai PDF reali (skippati se i PDF mancano)."""
+import json
 from pathlib import Path
 
 import pytest
@@ -268,8 +269,11 @@ def fake_main(tmp_path, monkeypatch):
     monkeypatch.setattr(b, "DATA_DIR", tmp_path)
     monkeypatch.setattr(b, "SOURCES", {})
 
-    def fake_build(sources, images_dir=None):
+    def fake_build(sources, images_dir=None, photos=None):
         calls.append(images_dir)
+        if images_dir is not None and photos is not None:
+            photos["images/l/p.jpg"] = {"product": "P", "page": 3, "bbox": [0, 0, 10, 10],
+                                        "dpi": 100, "size": [14, 14], "check": None}
         return _fake_catalog()
     monkeypatch.setattr(b, "build_catalog", fake_build)
     monkeypatch.setattr(b, "uncovered_codes", lambda *a, **k: [])
@@ -283,6 +287,7 @@ def test_main_default_writes_generated_and_keeps_manual_catalog(fake_main):
     assert (d / "catalog.json").read_text(encoding="utf-8") == "CORREZIONI MANUALI"
     assert (d / "catalog.generated.json").is_file()
     assert calls == [None]  # nessuna immagine
+    assert not (d / "photos.json").exists()
 
 
 def test_main_force_overwrites_catalog(fake_main):
@@ -300,3 +305,5 @@ def test_main_images_only_never_writes_catalogs(fake_main):
     assert (d / "catalog.json").read_text(encoding="utf-8") == "CORREZIONI MANUALI"
     assert not (d / "catalog.generated.json").exists()
     assert calls == [d / "images"]
+    photos = json.loads((d / "photos.json").read_text(encoding="utf-8"))
+    assert photos["images/l/p.jpg"]["page"] == 3

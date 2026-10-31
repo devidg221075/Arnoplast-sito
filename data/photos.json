@@ -1,0 +1,2658 @@
+{
+ "images/agricoltura/ago-cucirete.jpg": {
+  "product": "Ago Cucirete",
+  "page": 60,
+  "bbox": [
+   1.0,
+   304.0,
+   248.0,
+   515.0
+  ],
+  "dpi": 100,
+  "size": [
+   344,
+   294
+  ],
+  "check": null
+ },
+ "images/agricoltura/ancora-30.jpg": {
+  "product": "Ancora.30",
+  "page": 53,
+  "bbox": [
+   0.0,
+   321.0,
+   249.0,
+   526.0
+  ],
+  "dpi": 128,
+  "size": [
+   441,
+   364
+  ],
+  "check": null
+ },
+ "images/agricoltura/ancora-net.jpg": {
+  "product": "Ancora.net",
+  "page": 38,
+  "bbox": [
+   0.0,
+   498.0,
+   249.0,
+   669.0
+  ],
+  "dpi": 100,
+  "size": [
+   346,
+   237
+  ],
+  "check": null
+ },
+ "images/agricoltura/anello-ferma-rete-cavallotto.jpg": {
+  "product": "Anello Ferma Rete - Cavallotto",
+  "page": 67,
+  "bbox": [
+   31.0,
+   44.0,
+   222.0,
+   201.0
+  ],
+  "dpi": 101,
+  "size": [
+   223,
+   136
+  ],
+  "check": null
+ },
+ "images/agricoltura/angolare-per-paloni.jpg": {
+  "product": "Angolare per Paloni",
+  "page": 18,
+  "bbox": [
+   0.0,
+   68.0,
+   249.0,
+   313.0
+  ],
+  "dpi": 100,
+  "size": [
+   346,
+   340
+  ],
+  "check": null
+ },
+ "images/agricoltura/barretta-sostegno-165.jpg": {
+  "product": "Barretta Sostegno 165",
+  "page": 55,
+  "bbox": [
+   0.0,
+   61.0,
+   249.0,
+   228.0
+  ],
+  "dpi": 100,
+  "size": [
+   346,
+   232
+  ],
+  "check": null
+ },
+ "images/agricoltura/barretta-sostegno-300.jpg": {
+  "product": "Barretta Sostegno 300",
+  "page": 55,
+  "bbox": [
+   0.0,
+   341.0,
+   249.0,
+   507.0
+  ],
+  "dpi": 100,
+  "size": [
+   346,
+   232
+  ],
+  "check": null
+ },
+ "images/agricoltura/barretta-sostegno-500.jpg": {
+  "product": "Barretta Sostegno 500",
+  "page": 55,
+  "bbox": [
+   0.0,
+   588.0,
+   249.0,
+   754.0
+  ],
+  "dpi": 100,
+  "size": [
+   346,
+   232
+  ],
+  "check": null
+ },
+ "images/agricoltura/barretta-sostegno-75mm.jpg": {
+  "product": "Barretta Sostegno 75mm",
+  "page": 56,
+  "bbox": [
+   0.0,
+   575.0,
+   249.0,
+   747.0
+  ],
+  "dpi": 100,
+  "size": [
+   346,
+   240
+  ],
+  "check": null
+ },
+ "images/agricoltura/blocca-crociere.jpg": {
+  "product": "Blocca Crociere",
+  "page": 57,
+  "bbox": [
+   1.0,
+   568.0,
+   248.0,
+   680.0
+  ],
+  "dpi": 100,
+  "size": [
+   343,
+   157
+  ],
+  "check": null
+ },
+ "images/agricoltura/cavallotto-a-u-in-metallo.jpg": {
+  "product": "Cavallotto a “U” in Metallo",
+  "page": 67,
+  "bbox": [
+   22.0,
+   269.0,
+   202.0,
+   391.0
+  ],
+  "dpi": 120,
+  "size": [
+   282,
+   186
+  ],
+  "check": null
+ },
+ "images/agricoltura/chiodo-ferma-telo.jpg": {
+  "product": "Chiodo Ferma Telo",
+  "page": 60,
+  "bbox": [
+   0.0,
+   558.0,
+   249.0,
+   770.0
+  ],
+  "dpi": 100,
+  "size": [
+   346,
+   295
+  ],
+  "check": null
+ },
+ "images/agricoltura/clip-fermafune.jpg": {
+  "product": "Clip Fermafune",
+  "page": 52,
+  "bbox": [
+   124.0,
+   564.0,
+   249.0,
+   699.0
+  ],
+  "dpi": 101,
+  "size": [
+   168,
+   148
+  ],
+  "check": null
+ },
+ "images/agricoltura/clips-morsa-40.jpg": {
+  "product": "Clips Morsa 40",
+  "page": 46,
+  "bbox": [
+   0.0,
+   62.0,
+   249.0,
+   274.0
+  ],
+  "dpi": 100,
+  "size": [
+   346,
+   294
+  ],
+  "check": null
+ },
+ "images/agricoltura/clips-morsa-50.jpg": {
+  "product": "Clips Morsa 50",
+  "page": 43,
+  "bbox": [
+   0.0,
+   66.0,
+   248.0,
+   465.0
+  ],
+  "dpi": 100,
+  "size": [
+   345,
+   555
+  ],
+  "check": null
+ },
+ "images/agricoltura/clips-morsa-70.jpg": {
+  "product": "Clips Morsa 70",
+  "page": 42,
+  "bbox": [
+   0.0,
+   69.0,
+   249.0,
+   333.0
+  ],
+  "dpi": 100,
+  "size": [
+   346,
+   367
+  ],
+  "check": null
+ },
+ "images/agricoltura/clips-per-serre.jpg": {
+  "product": "Clips per Serre",
+  "page": 59,
+  "bbox": [
+   0.0,
+   560.0,
+   248.0,
+   767.0
+  ],
+  "dpi": 100,
+  "size": [
+   344,
+   286
+  ],
+  "check": null
+ },
+ "images/agricoltura/clips-per-tubo-irrigazione.jpg": {
+  "product": "Clips per Tubo Irrigazione",
+  "page": 58,
+  "bbox": [
+   0.0,
+   63.0,
+   250.0,
+   267.0
+  ],
+  "dpi": 100,
+  "size": [
+   348,
+   164
+  ],
+  "check": null
+ },
+ "images/agricoltura/colibri.jpg": {
+  "product": "Colibri",
+  "page": 53,
+  "bbox": [
+   0.0,
+   568.0,
+   248.0,
+   772.0
+  ],
+  "dpi": 100,
+  "size": [
+   346,
+   284
+  ],
+  "check": null
+ },
+ "images/agricoltura/coprimorsetto.jpg": {
+  "product": "Coprimorsetto",
+  "page": 67,
+  "bbox": [
+   0.0,
+   631.0,
+   248.0,
+   786.0
+  ],
+  "dpi": 100,
+  "size": [
+   345,
+   197
+  ],
+  "check": null
+ },
+ "images/agricoltura/copripalo-4-e-12-cm-con-croce.jpg": {
+  "product": "Copripalo 4 e 12 cm con Croce",
+  "page": 20,
+  "bbox": [
+   0.0,
+   65.0,
+   249.0,
+   497.0
+  ],
+  "dpi": 100,
+  "size": [
+   346,
+   600
+  ],
+  "check": null
+ },
+ "images/agricoltura/copripalo-aer.jpg": {
+  "product": "Copripalo Aer",
+  "page": 17,
+  "bbox": [
+   0.0,
+   432.0,
+   249.0,
+   689.0
+  ],
+  "dpi": 100,
+  "size": [
+   346,
+   357
+  ],
+  "check": null
+ },
+ "images/agricoltura/copripalo-champignon-e-basetta.jpg": {
+  "product": "Copripalo Champignon e Basetta",
+  "page": 24,
+  "bbox": [
+   0.0,
+   69.0,
+   249.0,
+   493.0
+  ],
+  "dpi": 100,
+  "size": [
+   346,
+   589
+  ],
+  "check": null
+ },
+ "images/agricoltura/copripalo-circolare.jpg": {
+  "product": "Copripalo Circolare",
+  "page": 21,
+  "bbox": [
+   0.0,
+   65.0,
+   249.0,
+   496.0
+  ],
+  "dpi": 100,
+  "size": [
+   346,
+   599
+  ],
+  "check": null
+ },
+ "images/agricoltura/copripalo-eco-5x5-6x6.jpg": {
+  "product": "Copripalo Eco 5x5 – 6x6",
+  "page": 16,
+  "bbox": [
+   0.0,
+   68.0,
+   249.0,
+   313.0
+  ],
+  "dpi": 100,
+  "size": [
+   346,
+   340
+  ],
+  "check": null
+ },
+ "images/agricoltura/copripalo-eco-7x7-9x9.jpg": {
+  "product": "Copripalo Eco 7x7 - 9x9",
+  "page": 16,
+  "bbox": [
+   0.0,
+   444.0,
+   249.0,
+   700.0
+  ],
+  "dpi": 100,
+  "size": [
+   346,
+   356
+  ],
+  "check": null
+ },
+ "images/agricoltura/copripalo-fg-40-50-60-65-80.jpg": {
+  "product": "Copripalo FG 40-50-60-65-80",
+  "page": 23,
+  "bbox": [
+   0.0,
+   67.0,
+   248.0,
+   493.0
+  ],
+  "dpi": 100,
+  "size": [
+   345,
+   592
+  ],
+  "check": null
+ },
+ "images/agricoltura/copripalo-fix.jpg": {
+  "product": "Copripalo Fix",
+  "page": 17,
+  "bbox": [
+   0.0,
+   68.0,
+   249.0,
+   291.0
+  ],
+  "dpi": 100,
+  "size": [
+   346,
+   310
+  ],
+  "check": null
+ },
+ "images/agricoltura/copripalo-latina-omega.jpg": {
+  "product": "Copripalo Latina Omega",
+  "page": 15,
+  "bbox": [
+   0.0,
+   66.0,
+   248.0,
+   353.0
+  ],
+  "dpi": 100,
+  "size": [
+   346,
+   400
+  ],
+  "check": null
+ },
+ "images/agricoltura/copripalo-latina.jpg": {
+  "product": "Copripalo Latina",
+  "page": 14,
+  "bbox": [
+   0.0,
+   68.0,
+   249.0,
+   313.0
+  ],
+  "dpi": 100,
+  "size": [
+   346,
+   340
+  ],
+  "check": null
+ },
+ "images/agricoltura/copripalo-monviso.jpg": {
+  "product": "Copripalo Monviso",
+  "page": 12,
+  "bbox": [
+   0.0,
+   62.0,
+   249.0,
+   422.0
+  ],
+  "dpi": 100,
+  "size": [
+   346,
+   500
+  ],
+  "check": null
+ },
+ "images/agricoltura/copripalo-prisma.jpg": {
+  "product": "Copripalo Prisma",
+  "page": 9,
+  "bbox": [
+   0.0,
+   58.0,
+   249.0,
+   446.0
+  ],
+  "dpi": 100,
+  "size": [
+   346,
+   539
+  ],
+  "check": null
+ },
+ "images/agricoltura/copripalo-qubo.jpg": {
+  "product": "Copripalo Qubo",
+  "page": 10,
+  "bbox": [
+   0.0,
+   61.0,
+   249.0,
+   421.0
+  ],
+  "dpi": 100,
+  "size": [
+   346,
+   501
+  ],
+  "check": null
+ },
+ "images/agricoltura/copripalo-reno-10x10.jpg": {
+  "product": "Copripalo Reno 10X10",
+  "page": 18,
+  "bbox": [
+   0.0,
+   438.0,
+   249.0,
+   714.0
+  ],
+  "dpi": 100,
+  "size": [
+   346,
+   383
+  ],
+  "check": null
+ },
+ "images/agricoltura/copripalo-reno.jpg": {
+  "product": "Copripalo Reno",
+  "page": 19,
+  "bbox": [
+   0.0,
+   63.0,
+   249.0,
+   493.0
+  ],
+  "dpi": 100,
+  "size": [
+   346,
+   597
+  ],
+  "check": null
+ },
+ "images/agricoltura/copripalo-sphera.jpg": {
+  "product": "Copripalo Sphera",
+  "page": 14,
+  "bbox": [
+   0.0,
+   445.0,
+   249.0,
+   701.0
+  ],
+  "dpi": 100,
+  "size": [
+   346,
+   356
+  ],
+  "check": null
+ },
+ "images/agricoltura/copripalo-testata.jpg": {
+  "product": "Copripalo Testata",
+  "page": 13,
+  "bbox": [
+   0.0,
+   68.0,
+   248.0,
+   460.0
+  ],
+  "dpi": 100,
+  "size": [
+   345,
+   545
+  ],
+  "check": null
+ },
+ "images/agricoltura/copripalo-universale.jpg": {
+  "product": "Copripalo Universale",
+  "page": 22,
+  "bbox": [
+   0.0,
+   68.0,
+   249.0,
+   494.0
+  ],
+  "dpi": 100,
+  "size": [
+   346,
+   592
+  ],
+  "check": null
+ },
+ "images/agricoltura/copripalo-zephiro.jpg": {
+  "product": "Copripalo Zephiro",
+  "page": 11,
+  "bbox": [
+   0.0,
+   61.0,
+   249.0,
+   424.0
+  ],
+  "dpi": 100,
+  "size": [
+   346,
+   504
+  ],
+  "check": null
+ },
+ "images/agricoltura/corda-elastica-8mm-pet.jpg": {
+  "product": "Corda Elastica 8mm PET",
+  "page": 51,
+  "bbox": [
+   0.0,
+   61.0,
+   251.0,
+   269.0
+  ],
+  "dpi": 100,
+  "size": [
+   349,
+   290
+  ],
+  "check": null
+ },
+ "images/agricoltura/cordino-pet.jpg": {
+  "product": "Cordino PET",
+  "page": 52,
+  "bbox": [
+   0.0,
+   329.0,
+   249.0,
+   528.0
+  ],
+  "dpi": 100,
+  "size": [
+   346,
+   277
+  ],
+  "check": null
+ },
+ "images/agricoltura/elastico-premontato.jpg": {
+  "product": "Elastico Premontato",
+  "page": 51,
+  "bbox": [
+   20.0,
+   312.0,
+   170.0,
+   515.0
+  ],
+  "dpi": 150,
+  "size": [
+   271,
+   397
+  ],
+  "check": null
+ },
+ "images/agricoltura/enokit.jpg": {
+  "product": "Enokit",
+  "page": 57,
+  "bbox": [
+   0.0,
+   64.0,
+   249.0,
+   265.0
+  ],
+  "dpi": 100,
+  "size": [
+   346,
+   280
+  ],
+  "check": null
+ },
+ "images/agricoltura/enolego.jpg": {
+  "product": "Enolego",
+  "page": 57,
+  "bbox": [
+   0.0,
+   303.0,
+   249.0,
+   523.0
+  ],
+  "dpi": 100,
+  "size": [
+   346,
+   307
+  ],
+  "check": null
+ },
+ "images/agricoltura/fascetta-guyot.jpg": {
+  "product": "Fascetta Guyot",
+  "page": 63,
+  "bbox": [
+   0.0,
+   316.0,
+   249.0,
+   526.0
+  ],
+  "dpi": 100,
+  "size": [
+   346,
+   292
+  ],
+  "check": null
+ },
+ "images/agricoltura/fascetta-lego.jpg": {
+  "product": "Fascetta Lego",
+  "page": 63,
+  "bbox": [
+   0.0,
+   62.0,
+   248.0,
+   246.0
+  ],
+  "dpi": 100,
+  "size": [
+   345,
+   256
+  ],
+  "check": null
+ },
+ "images/agricoltura/filo-in-poliestere.jpg": {
+  "product": "Filo in Poliestere",
+  "page": 64,
+  "bbox": [
+   36.0,
+   620.0,
+   209.0,
+   763.0
+  ],
+  "dpi": 100,
+  "size": [
+   172,
+   185
+  ],
+  "check": null
+ },
+ "images/agricoltura/gancio-a-c.jpg": {
+  "product": "Gancio a C",
+  "page": 60,
+  "bbox": [
+   0.0,
+   66.0,
+   249.0,
+   222.0
+  ],
+  "dpi": 100,
+  "size": [
+   346,
+   218
+  ],
+  "check": null
+ },
+ "images/agricoltura/gancio-amo.jpg": {
+  "product": "Gancio Amo",
+  "page": 52,
+  "bbox": [
+   0.0,
+   68.0,
+   140.0,
+   234.0
+  ],
+  "dpi": 119,
+  "size": [
+   231,
+   269
+  ],
+  "check": null
+ },
+ "images/agricoltura/gancio-b1-b2.jpg": {
+  "product": "Gancio B1 - B2",
+  "page": 64,
+  "bbox": [
+   0.0,
+   64.0,
+   249.0,
+   279.0
+  ],
+  "dpi": 100,
+  "size": [
+   346,
+   299
+  ],
+  "check": null
+ },
+ "images/agricoltura/gancio-doppio-2.jpg": {
+  "product": "Gancio Doppio",
+  "page": 58,
+  "bbox": [
+   0.0,
+   579.0,
+   204.0,
+   789.0
+  ],
+  "dpi": 100,
+  "size": [
+   283,
+   292
+  ],
+  "check": null
+ },
+ "images/agricoltura/gancio-doppio.jpg": {
+  "product": "Gancio Doppio",
+  "page": 56,
+  "bbox": [
+   0.0,
+   310.0,
+   249.0,
+   526.0
+  ],
+  "dpi": 100,
+  "size": [
+   346,
+   300
+  ],
+  "check": null
+ },
+ "images/agricoltura/gancio-farfalla.jpg": {
+  "product": "Gancio Farfalla",
+  "page": 47,
+  "bbox": [
+   0.0,
+   591.0,
+   248.0,
+   756.0
+  ],
+  "dpi": 100,
+  "size": [
+   296,
+   122
+  ],
+  "check": null
+ },
+ "images/agricoltura/gancio-per-occhielli-a-s.jpg": {
+  "product": "Gancio per Occhielli - a S",
+  "page": 61,
+  "bbox": [
+   120.0,
+   376.0,
+   239.0,
+   539.0
+  ],
+  "dpi": 151,
+  "size": [
+   175,
+   301
+  ],
+  "check": null
+ },
+ "images/agricoltura/gancio-rovescio-e-gancio-rovescio-xl.jpg": {
+  "product": "Gancio Rovescio e Gancio Rovescio XL",
+  "page": 59,
+  "bbox": [
+   1.0,
+   410.0,
+   248.0,
+   509.0
+  ],
+  "dpi": 151,
+  "size": [
+   395,
+   180
+  ],
+  "check": null
+ },
+ "images/agricoltura/gancio-rovescio-in-pvc.jpg": {
+  "product": "Gancio Rovescio in PVC",
+  "page": 59,
+  "bbox": [
+   1.0,
+   60.0,
+   248.0,
+   256.0
+  ],
+  "dpi": 151,
+  "size": [
+   368,
+   203
+  ],
+  "check": null
+ },
+ "images/agricoltura/gancio-singolo.jpg": {
+  "product": "Gancio Singolo",
+  "page": 56,
+  "bbox": [
+   0.0,
+   58.0,
+   249.0,
+   268.0
+  ],
+  "dpi": 100,
+  "size": [
+   346,
+   292
+  ],
+  "check": null
+ },
+ "images/agricoltura/gancio-tubo-irrigazione.jpg": {
+  "product": "Gancio Tubo Irrigazione",
+  "page": 58,
+  "bbox": [
+   0.0,
+   322.0,
+   204.0,
+   511.0
+  ],
+  "dpi": 100,
+  "size": [
+   283,
+   262
+  ],
+  "check": null
+ },
+ "images/agricoltura/gancio-vignola-s-in-ferro.jpg": {
+  "product": "Gancio Vignola - S in Ferro",
+  "page": 61,
+  "bbox": [
+   77.0,
+   110.0,
+   269.0,
+   235.0
+  ],
+  "dpi": 77,
+  "size": [
+   130,
+   172
+  ],
+  "check": null
+ },
+ "images/agricoltura/gancio-w.jpg": {
+  "product": "Gancio W",
+  "page": 63,
+  "bbox": [
+   0.0,
+   570.0,
+   249.0,
+   780.0
+  ],
+  "dpi": 100,
+  "size": [
+   346,
+   292
+  ],
+  "check": null
+ },
+ "images/agricoltura/ligatex.jpg": {
+  "product": "Ligatex",
+  "page": 65,
+  "bbox": [
+   0.0,
+   97.0,
+   248.0,
+   351.0
+  ],
+  "dpi": 100,
+  "size": [
+   333,
+   213
+  ],
+  "check": null
+ },
+ "images/agricoltura/morsa-100.jpg": {
+  "product": "Morsa 100",
+  "page": 41,
+  "bbox": [
+   0.0,
+   240.0,
+   249.0,
+   435.0
+  ],
+  "dpi": 100,
+  "size": [
+   346,
+   271
+  ],
+  "check": null
+ },
+ "images/agricoltura/morsetto-di-sicurezza-50.jpg": {
+  "product": "Morsetto di Sicurezza 50",
+  "page": 47,
+  "bbox": [
+   0.0,
+   328.0,
+   248.0,
+   493.0
+  ],
+  "dpi": 100,
+  "size": [
+   344,
+   230
+  ],
+  "check": null
+ },
+ "images/agricoltura/morsetto-di-sicurezza-70.jpg": {
+  "product": "Morsetto di Sicurezza 70",
+  "page": 47,
+  "bbox": [
+   0.0,
+   68.0,
+   248.0,
+   233.0
+  ],
+  "dpi": 100,
+  "size": [
+   345,
+   230
+  ],
+  "check": null
+ },
+ "images/agricoltura/morsetto-moschettone.jpg": {
+  "product": "Morsetto - Moschettone",
+  "page": 67,
+  "bbox": [
+   13.0,
+   473.0,
+   156.0,
+   580.0
+  ],
+  "dpi": 100,
+  "size": [
+   186,
+   117
+  ],
+  "check": null
+ },
+ "images/agricoltura/mosch-autobloccante-elefante.jpg": {
+  "product": "Mosch. Autobloccante Elefante",
+  "page": 49,
+  "bbox": [
+   0.0,
+   315.0,
+   243.0,
+   519.0
+  ],
+  "dpi": 150,
+  "size": [
+   214,
+   389
+  ],
+  "check": null
+ },
+ "images/agricoltura/mosch-per-premontaggio.jpg": {
+  "product": "Mosch. per Premontaggio",
+  "page": 50,
+  "bbox": [
+   0.0,
+   61.0,
+   249.0,
+   269.0
+  ],
+  "dpi": 150,
+  "size": [
+   203,
+   392
+  ],
+  "check": null
+ },
+ "images/agricoltura/mosch-premontaggio-elefante.jpg": {
+  "product": "Mosch. Premontaggio Elefante",
+  "page": 50,
+  "bbox": [
+   4.0,
+   309.0,
+   245.0,
+   519.0
+  ],
+  "dpi": 150,
+  "size": [
+   206,
+   379
+  ],
+  "check": null
+ },
+ "images/agricoltura/mosch-standard-metallico-e-rapid.jpg": {
+  "product": "Mosch. Standard, Metallico e Rapid",
+  "page": 50,
+  "bbox": [
+   5.0,
+   568.0,
+   235.0,
+   712.0
+  ],
+  "dpi": 70,
+  "size": [
+   218,
+   129
+  ],
+  "check": null
+ },
+ "images/agricoltura/moschettone-autobloccante.jpg": {
+  "product": "Moschettone Autobloccante",
+  "page": 49,
+  "bbox": [
+   0.0,
+   60.0,
+   249.0,
+   268.0
+  ],
+  "dpi": 150,
+  "size": [
+   192,
+   408
+  ],
+  "check": null
+ },
+ "images/agricoltura/moschettone-ovale-e-ursus.jpg": {
+  "product": "Moschettone Ovale e Ursus",
+  "page": 40,
+  "bbox": [
+   0.0,
+   427.0,
+   250.0,
+   622.0
+  ],
+  "dpi": 100,
+  "size": [
+   347,
+   271
+  ],
+  "check": null
+ },
+ "images/agricoltura/new-stop-net.jpg": {
+  "product": "New Stop.net",
+  "page": 39,
+  "bbox": [
+   32.0,
+   68.0,
+   215.0,
+   198.0
+  ],
+  "dpi": 71,
+  "size": [
+   157,
+   116
+  ],
+  "check": "foto a bassa risoluzione (71 ppi)"
+ },
+ "images/agricoltura/pallina-con-elastico.jpg": {
+  "product": "Pallina con Elastico",
+  "page": 51,
+  "bbox": [
+   21.0,
+   564.0,
+   215.0,
+   758.0
+  ],
+  "dpi": 150,
+  "size": [
+   244,
+   389
+  ],
+  "check": null
+ },
+ "images/agricoltura/pinza-omega.jpg": {
+  "product": "Pinza Omega",
+  "page": 46,
+  "bbox": [
+   0.0,
+   437.0,
+   249.0,
+   647.0
+  ],
+  "dpi": 100,
+  "size": [
+   346,
+   292
+  ],
+  "check": null
+ },
+ "images/agricoltura/placchetta-12-punte-e-mega.jpg": {
+  "product": "Placchetta 12 Punte e Mega",
+  "page": 34,
+  "bbox": [
+   0.0,
+   67.0,
+   249.0,
+   238.0
+  ],
+  "dpi": 100,
+  "size": [
+   346,
+   238
+  ],
+  "check": null
+ },
+ "images/agricoltura/placchetta-2-punte.jpg": {
+  "product": "Placchetta 2 Punte",
+  "page": 36,
+  "bbox": [
+   0.0,
+   61.0,
+   249.0,
+   249.0
+  ],
+  "dpi": 100,
+  "size": [
+   346,
+   262
+  ],
+  "check": null
+ },
+ "images/agricoltura/placchetta-accoppiateli.jpg": {
+  "product": "Placchetta Accoppiateli",
+  "page": 38,
+  "bbox": [
+   0.0,
+   64.0,
+   249.0,
+   295.0
+  ],
+  "dpi": 100,
+  "size": [
+   346,
+   321
+  ],
+  "check": null
+ },
+ "images/agricoltura/placchetta-ad-anello.jpg": {
+  "product": "Placchetta ad Anello",
+  "page": 37,
+  "bbox": [
+   0.0,
+   455.0,
+   249.0,
+   626.0
+  ],
+  "dpi": 100,
+  "size": [
+   346,
+   238
+  ],
+  "check": null
+ },
+ "images/agricoltura/placchetta-agropettine.jpg": {
+  "product": "Placchetta Agropettine",
+  "page": 32,
+  "bbox": [
+   0.0,
+   437.0,
+   249.0,
+   625.0
+  ],
+  "dpi": 100,
+  "size": [
+   346,
+   262
+  ],
+  "check": null
+ },
+ "images/agricoltura/placchetta-ancorplack-2.jpg": {
+  "product": "Placchetta Ancorplack 2",
+  "page": 35,
+  "bbox": [
+   0.0,
+   450.0,
+   248.0,
+   638.0
+  ],
+  "dpi": 100,
+  "size": [
+   346,
+   262
+  ],
+  "check": null
+ },
+ "images/agricoltura/placchetta-ancorplack.jpg": {
+  "product": "Placchetta Ancorplack",
+  "page": 35,
+  "bbox": [
+   0.0,
+   61.0,
+   249.0,
+   249.0
+  ],
+  "dpi": 100,
+  "size": [
+   346,
+   262
+  ],
+  "check": null
+ },
+ "images/agricoltura/placchetta-h.jpg": {
+  "product": "Placchetta H",
+  "page": 37,
+  "bbox": [
+   0.0,
+   64.0,
+   249.0,
+   248.0
+  ],
+  "dpi": 100,
+  "size": [
+   346,
+   236
+  ],
+  "check": null
+ },
+ "images/agricoltura/placchetta-k4-k10.jpg": {
+  "product": "Placchetta K4 - K10",
+  "page": 36,
+  "bbox": [
+   0.0,
+   448.0,
+   249.0,
+   619.0
+  ],
+  "dpi": 100,
+  "size": [
+   346,
+   238
+  ],
+  "check": null
+ },
+ "images/agricoltura/placchetta-magnum.jpg": {
+  "product": "Placchetta Magnum",
+  "page": 34,
+  "bbox": [
+   0.0,
+   450.0,
+   249.0,
+   645.0
+  ],
+  "dpi": 100,
+  "size": [
+   346,
+   271
+  ],
+  "check": null
+ },
+ "images/agricoltura/placchetta-new-resia.jpg": {
+  "product": "Placchetta New Resia",
+  "page": 29,
+  "bbox": [
+   0.0,
+   461.0,
+   249.0,
+   650.0
+  ],
+  "dpi": 100,
+  "size": [
+   346,
+   262
+  ],
+  "check": null
+ },
+ "images/agricoltura/placchetta-new-riva.jpg": {
+  "product": "Placchetta New Riva",
+  "page": 28,
+  "bbox": [
+   0.0,
+   462.0,
+   249.0,
+   651.0
+  ],
+  "dpi": 100,
+  "size": [
+   347,
+   262
+  ],
+  "check": null
+ },
+ "images/agricoltura/placchetta-new-rolle.jpg": {
+  "product": "Placchetta New Rolle",
+  "page": 31,
+  "bbox": [
+   0.0,
+   434.0,
+   249.0,
+   622.0
+  ],
+  "dpi": 100,
+  "size": [
+   346,
+   262
+  ],
+  "check": null
+ },
+ "images/agricoltura/placchetta-nina.jpg": {
+  "product": "Placchetta Niña",
+  "page": 33,
+  "bbox": [
+   0.0,
+   439.0,
+   249.0,
+   642.0
+  ],
+  "dpi": 100,
+  "size": [
+   346,
+   282
+  ],
+  "check": null
+ },
+ "images/agricoltura/placchetta-rania.jpg": {
+  "product": "Placchetta Rania",
+  "page": 27,
+  "bbox": [
+   0.0,
+   463.0,
+   249.0,
+   666.0
+  ],
+  "dpi": 100,
+  "size": [
+   346,
+   283
+  ],
+  "check": null
+ },
+ "images/agricoltura/placchetta-resia.jpg": {
+  "product": "Placchetta Resia",
+  "page": 29,
+  "bbox": [
+   0.0,
+   67.0,
+   248.0,
+   255.0
+  ],
+  "dpi": 100,
+  "size": [
+   345,
+   244
+  ],
+  "check": null
+ },
+ "images/agricoltura/placchetta-riva-riva-jr.jpg": {
+  "product": "Placchetta Riva - Riva JR.",
+  "page": 28,
+  "bbox": [
+   0.0,
+   68.0,
+   249.0,
+   256.0
+  ],
+  "dpi": 100,
+  "size": [
+   347,
+   245
+  ],
+  "check": null
+ },
+ "images/agricoltura/placchetta-rolle-2.jpg": {
+  "product": "Placchetta Rolle 2",
+  "page": 32,
+  "bbox": [
+   0.0,
+   61.0,
+   249.0,
+   249.0
+  ],
+  "dpi": 100,
+  "size": [
+   347,
+   262
+  ],
+  "check": null
+ },
+ "images/agricoltura/placchetta-rolle.jpg": {
+  "product": "Placchetta Rolle",
+  "page": 31,
+  "bbox": [
+   0.0,
+   61.0,
+   248.0,
+   265.0
+  ],
+  "dpi": 100,
+  "size": [
+   346,
+   284
+  ],
+  "check": null
+ },
+ "images/agricoltura/placchetta-roma.jpg": {
+  "product": "Placchetta Roma",
+  "page": 27,
+  "bbox": [
+   0.0,
+   68.0,
+   249.0,
+   264.0
+  ],
+  "dpi": 100,
+  "size": [
+   346,
+   273
+  ],
+  "check": null
+ },
+ "images/agricoltura/placchetta-start.jpg": {
+  "product": "Placchetta Start",
+  "page": 30,
+  "bbox": [
+   0.0,
+   67.0,
+   248.0,
+   293.0
+  ],
+  "dpi": 100,
+  "size": [
+   345,
+   314
+  ],
+  "check": null
+ },
+ "images/agricoltura/ricambi-e-viterie.jpg": {
+  "product": "Ricambi e Viterie",
+  "page": 68,
+  "bbox": null,
+  "dpi": null,
+  "size": null,
+  "check": "nessuna foto del prodotto in pagina: resta l'immagine della pagina del catalogo"
+ },
+ "images/agricoltura/rondella-antistrappo.jpg": {
+  "product": "Rondella Antistrappo",
+  "page": 61,
+  "bbox": [
+   33.0,
+   647.0,
+   216.0,
+   757.0
+  ],
+  "dpi": 100,
+  "size": [
+   108,
+   126
+  ],
+  "check": null
+ },
+ "images/agricoltura/spider.jpg": {
+  "product": "Spider",
+  "page": 53,
+  "bbox": [
+   0.0,
+   68.0,
+   249.0,
+   273.0
+  ],
+  "dpi": 100,
+  "size": [
+   347,
+   285
+  ],
+  "check": null
+ },
+ "images/agricoltura/stop-film-50.jpg": {
+  "product": "Stop.film 50",
+  "page": 45,
+  "bbox": [
+   0.0,
+   68.0,
+   248.0,
+   344.0
+  ],
+  "dpi": 100,
+  "size": [
+   345,
+   384
+  ],
+  "check": null
+ },
+ "images/agricoltura/stop-film-70.jpg": {
+  "product": "Stop.film 70",
+  "page": 44,
+  "bbox": [
+   0.0,
+   61.0,
+   249.0,
+   348.0
+  ],
+  "dpi": 100,
+  "size": [
+   346,
+   399
+  ],
+  "check": null
+ },
+ "images/agricoltura/stop-net-stop-net-2.jpg": {
+  "product": "Stop.net - Stop Net 2",
+  "page": 39,
+  "bbox": [
+   0.0,
+   411.0,
+   258.0,
+   541.0
+  ],
+  "dpi": 96,
+  "size": [
+   357,
+   209
+  ],
+  "check": null
+ },
+ "images/agricoltura/tubetto-pvc.jpg": {
+  "product": "Tubetto PVC",
+  "page": 64,
+  "bbox": [
+   12.0,
+   405.0,
+   119.0,
+   538.0
+  ],
+  "dpi": 100,
+  "size": [
+   133,
+   159
+  ],
+  "check": null
+ },
+ "images/garden/ancorplack.jpg": {
+  "product": "Ancorplack",
+  "page": 51,
+  "bbox": [
+   42.0,
+   498.0,
+   366.0,
+   703.0
+  ],
+  "dpi": 100,
+  "size": [
+   450,
+   285
+  ],
+  "check": null
+ },
+ "images/garden/chiodi-ferma-telo.jpg": {
+  "product": "Chiodi Ferma Telo",
+  "page": 53,
+  "bbox": [
+   131.0,
+   65.0,
+   226.0,
+   235.0
+  ],
+  "dpi": 100,
+  "size": [
+   111,
+   219
+  ],
+  "check": null
+ },
+ "images/garden/chiodo-cuci-rete.jpg": {
+  "product": "Chiodo Cuci-rete",
+  "page": 53,
+  "bbox": [
+   72.0,
+   507.0,
+   286.0,
+   650.0
+  ],
+  "dpi": 100,
+  "size": [
+   297,
+   199
+  ],
+  "check": null
+ },
+ "images/garden/clips-per-serre.jpg": {
+  "product": "Clips per Serre",
+  "page": 54,
+  "bbox": [
+   221.0,
+   89.0,
+   519.0,
+   288.0
+  ],
+  "dpi": 100,
+  "size": [
+   414,
+   276
+  ],
+  "check": null
+ },
+ "images/garden/coppia-conica-coppetta-disco.jpg": {
+  "product": "Coppia Conica - Coppetta - Disco",
+  "page": 49,
+  "bbox": [
+   71.0,
+   102.0,
+   258.0,
+   226.0
+  ],
+  "dpi": 100,
+  "size": [
+   244,
+   155
+  ],
+  "check": null
+ },
+ "images/garden/disco-a4.jpg": {
+  "product": "Disco A4",
+  "page": 33,
+  "bbox": [
+   303.0,
+   112.0,
+   573.0,
+   316.0
+  ],
+  "dpi": 150,
+  "size": [
+   489,
+   365
+  ],
+  "check": null
+ },
+ "images/garden/disco-widia-tsumura-40d.jpg": {
+  "product": "Disco Widia Tsumura 40D",
+  "page": 32,
+  "bbox": [
+   96.0,
+   109.0,
+   500.0,
+   359.0
+  ],
+  "dpi": 100,
+  "size": [
+   491,
+   310
+  ],
+  "check": null
+ },
+ "images/garden/disco-widia-tungsteno.jpg": {
+  "product": "Disco Widia & Tungsteno",
+  "page": 31,
+  "bbox": [
+   315.0,
+   112.0,
+   554.0,
+   284.0
+  ],
+  "dpi": 101,
+  "size": [
+   322,
+   216
+  ],
+  "check": null
+ },
+ "images/garden/elmetto-boscaiolo.jpg": {
+  "product": "Elmetto Boscaiolo",
+  "page": 37,
+  "bbox": [
+   17.0,
+   76.0,
+   306.0,
+   354.0
+  ],
+  "dpi": 100,
+  "size": [
+   334,
+   368
+  ],
+  "check": null
+ },
+ "images/garden/espositori.jpg": {
+  "product": "Espositori",
+  "page": 55,
+  "bbox": [
+   321.0,
+   88.0,
+   546.0,
+   426.0
+  ],
+  "dpi": 100,
+  "size": [
+   313,
+   470
+  ],
+  "check": null
+ },
+ "images/garden/filo-per-spollonatrice.jpg": {
+  "product": "Filo per Spollonatrice",
+  "page": 46,
+  "bbox": [
+   248.0,
+   465.0,
+   413.0,
+   680.0
+  ],
+  "dpi": 100,
+  "size": [
+   207,
+   248
+  ],
+  "check": null
+ },
+ "images/garden/filo-professionale-arancio.jpg": {
+  "product": "Filo Professionale Arancio",
+  "page": 27,
+  "bbox": [
+   283.0,
+   58.0,
+   520.0,
+   330.0
+  ],
+  "dpi": 100,
+  "size": [
+   315,
+   337
+  ],
+  "check": null
+ },
+ "images/garden/filo-super-professionale-highlander-duplex.jpg": {
+  "product": "Filo Super Professionale Highlander Duplex",
+  "page": 26,
+  "bbox": [
+   295.0,
+   77.0,
+   511.0,
+   286.0
+  ],
+  "dpi": 100,
+  "size": [
+   224,
+   266
+  ],
+  "check": null
+ },
+ "images/garden/filo-super-professionale-highlander-raptor.jpg": {
+  "product": "Filo Super Professionale Highlander Raptor",
+  "page": 25,
+  "bbox": [
+   262.0,
+   76.0,
+   488.0,
+   278.0
+  ],
+  "dpi": 100,
+  "size": [
+   236,
+   258
+  ],
+  "check": null
+ },
+ "images/garden/filo-super-professionale-highlander-velox.jpg": {
+  "product": "Filo Super Professionale Highlander Velox",
+  "page": 24,
+  "bbox": [
+   265.0,
+   76.0,
+   450.0,
+   278.0
+  ],
+  "dpi": 100,
+  "size": [
+   247,
+   264
+  ],
+  "check": null
+ },
+ "images/garden/filo-super-professionale-highlander.jpg": {
+  "product": "Filo Super Professionale Highlander",
+  "page": 23,
+  "bbox": [
+   151.0,
+   50.0,
+   324.0,
+   249.0
+  ],
+  "dpi": 100,
+  "size": [
+   232,
+   249
+  ],
+  "check": null
+ },
+ "images/garden/fune-avviamento-e-parasassi.jpg": {
+  "product": "Fune Avviamento e Parasassi",
+  "page": 46,
+  "bbox": [
+   121.0,
+   78.0,
+   286.0,
+   238.0
+  ],
+  "dpi": 100,
+  "size": [
+   183,
+   200
+  ],
+  "check": null
+ },
+ "images/garden/grasso.jpg": {
+  "product": "Grasso",
+  "page": 49,
+  "bbox": [
+   73.0,
+   506.0,
+   282.0,
+   748.0
+  ],
+  "dpi": 100,
+  "size": [
+   240,
+   320
+  ],
+  "check": null
+ },
+ "images/garden/grembiule-imperbeabile.jpg": {
+  "product": "Grembiule Imperbeabile",
+  "page": 42,
+  "bbox": [
+   46.0,
+   82.0,
+   229.0,
+   382.0
+  ],
+  "dpi": 100,
+  "size": [
+   254,
+   417
+  ],
+  "check": null
+ },
+ "images/garden/inserti-maschio-femmina-per-testine.jpg": {
+  "product": "Inserti Maschio & Femmina per Testine",
+  "page": 48,
+  "bbox": null,
+  "dpi": null,
+  "size": null,
+  "check": "nessuna foto del prodotto in pagina: resta l'immagine della pagina del catalogo"
+ },
+ "images/garden/lama-a-3-punte.jpg": {
+  "product": "Lama a 3 Punte",
+  "page": 35,
+  "bbox": [
+   195.0,
+   70.0,
+   569.0,
+   321.0
+  ],
+  "dpi": 150,
+  "size": [
+   502,
+   402
+  ],
+  "check": null
+ },
+ "images/garden/lama-dritta.jpg": {
+  "product": "Lama Dritta",
+  "page": 34,
+  "bbox": [
+   77.0,
+   499.0,
+   413.0,
+   698.0
+  ],
+  "dpi": 150,
+  "size": [
+   577,
+   268
+  ],
+  "check": null
+ },
+ "images/garden/lama-per-rovi-con-alette.jpg": {
+  "product": "Lama per Rovi con Alette",
+  "page": 35,
+  "bbox": [
+   70.0,
+   458.0,
+   336.0,
+   585.0
+  ],
+  "dpi": 100,
+  "size": [
+   323,
+   172
+  ],
+  "check": null
+ },
+ "images/garden/lama-romboidale.jpg": {
+  "product": "Lama Romboidale",
+  "page": 34,
+  "bbox": [
+   162.0,
+   193.0,
+   435.0,
+   333.0
+  ],
+  "dpi": 100,
+  "size": [
+   329,
+   142
+  ],
+  "check": null
+ },
+ "images/garden/olio-catena-motosega.jpg": {
+  "product": "Olio Catena Motosega",
+  "page": 45,
+  "bbox": [
+   41.0,
+   443.0,
+   210.0,
+   698.0
+  ],
+  "dpi": 100,
+  "size": [
+   208,
+   301
+  ],
+  "check": null
+ },
+ "images/garden/olio-miscela.jpg": {
+  "product": "Olio Miscela",
+  "page": 45,
+  "bbox": [
+   54.0,
+   103.0,
+   207.0,
+   270.0
+  ],
+  "dpi": 100,
+  "size": [
+   144,
+   207
+  ],
+  "check": null
+ },
+ "images/garden/pantalone-impermeabile-taglia-unica.jpg": {
+  "product": "Pantalone Impermeabile (taglia unica)",
+  "page": 41,
+  "bbox": [
+   27.0,
+   449.0,
+   225.0,
+   727.0
+  ],
+  "dpi": 100,
+  "size": [
+   195,
+   373
+  ],
+  "check": null
+ },
+ "images/garden/parastinco.jpg": {
+  "product": "Parastinco",
+  "page": 43,
+  "bbox": [
+   0.0,
+   130.0,
+   377.0,
+   712.0
+  ],
+  "dpi": 100,
+  "size": [
+   453,
+   785
+  ],
+  "check": null
+ },
+ "images/garden/piastrina-12-punte.jpg": {
+  "product": "Piastrina 12 Punte",
+  "page": 52,
+  "bbox": [
+   177.0,
+   513.0,
+   525.0,
+   718.0
+  ],
+  "dpi": 100,
+  "size": [
+   484,
+   285
+  ],
+  "check": null
+ },
+ "images/garden/piastrina-a-2-punte.jpg": {
+  "product": "Piastrina a 2 Punte",
+  "page": 51,
+  "bbox": [
+   41.0,
+   90.0,
+   368.0,
+   297.0
+  ],
+  "dpi": 100,
+  "size": [
+   455,
+   288
+  ],
+  "check": null
+ },
+ "images/garden/piastrina-nina.jpg": {
+  "product": "Piastrina Niña",
+  "page": 52,
+  "bbox": [
+   185.0,
+   138.0,
+   509.0,
+   343.0
+  ],
+  "dpi": 100,
+  "size": [
+   450,
+   285
+  ],
+  "check": null
+ },
+ "images/garden/scatola-dadi-viti.jpg": {
+  "product": "Scatola Dadi & Viti",
+  "page": 47,
+  "bbox": [
+   154.0,
+   441.0,
+   442.0,
+   618.0
+  ],
+  "dpi": 100,
+  "size": [
+   230,
+   240
+  ],
+  "check": null
+ },
+ "images/garden/scatola-kit-inserti-per-testine-arno-plast.jpg": {
+  "product": "Scatola Kit Inserti per Testine Arno Plast",
+  "page": 48,
+  "bbox": [
+   101.0,
+   81.0,
+   444.0,
+   318.0
+  ],
+  "dpi": 100,
+  "size": [
+   265,
+   278
+  ],
+  "check": null
+ },
+ "images/garden/spazzola-in-metallo.jpg": {
+  "product": "Spazzola in Metallo",
+  "page": 33,
+  "bbox": [
+   124.0,
+   462.0,
+   422.0,
+   723.0
+  ],
+  "dpi": 100,
+  "size": [
+   368,
+   325
+  ],
+  "check": null
+ },
+ "images/garden/testina-andromeda.jpg": {
+  "product": "Testina Andromeda",
+  "page": 31,
+  "bbox": [
+   340.0,
+   484.0,
+   529.0,
+   668.0
+  ],
+  "dpi": 100,
+  "size": [
+   222,
+   232
+  ],
+  "check": null
+ },
+ "images/garden/testina-batti-e-vai-alluminio-coppa-folle-eco.jpg": {
+  "product": "Testina Batti e Vai Alluminio Coppa Folle Eco",
+  "page": 20,
+  "bbox": [
+   39.0,
+   90.0,
+   595.0,
+   405.0
+  ],
+  "dpi": 100,
+  "size": [
+   683,
+   390
+  ],
+  "check": null
+ },
+ "images/garden/testina-batti-e-vai-alluminio-coppa-folle.jpg": {
+  "product": "Testina Batti e Vai Alluminio Coppa Folle",
+  "page": 19,
+  "bbox": [
+   0.0,
+   91.0,
+   553.0,
+   439.0
+  ],
+  "dpi": 100,
+  "size": [
+   714,
+   390
+  ],
+  "check": null
+ },
+ "images/garden/testina-batti-e-vai-eco.jpg": {
+  "product": "Testina Batti e Vai Eco",
+  "page": 11,
+  "bbox": [
+   85.0,
+   114.0,
+   596.0,
+   472.0
+  ],
+  "dpi": 100,
+  "size": [
+   560,
+   350
+  ],
+  "check": null
+ },
+ "images/garden/testina-batti-e-vai-elektra.jpg": {
+  "product": "Testina \"Batti e Vai\" Elektra",
+  "page": 15,
+  "bbox": [
+   46.0,
+   0.0,
+   596.0,
+   423.0
+  ],
+  "dpi": 100,
+  "size": [
+   671,
+   305
+  ],
+  "check": null
+ },
+ "images/garden/testina-batti-e-vai-sirio-coppa-folle.jpg": {
+  "product": "Testina Batti e Vai Sirio Coppa Folle",
+  "page": 9,
+  "bbox": [
+   99.0,
+   118.0,
+   596.0,
+   467.0
+  ],
+  "dpi": 100,
+  "size": [
+   641,
+   449
+  ],
+  "check": null
+ },
+ "images/garden/testina-batti-e-vai-stilo.jpg": {
+  "product": "Testina Batti e Vai Stilo",
+  "page": 10,
+  "bbox": [
+   0.0,
+   84.0,
+   540.0,
+   460.0
+  ],
+  "dpi": 100,
+  "size": [
+   624,
+   491
+  ],
+  "check": null
+ },
+ "images/garden/testina-mach-1.jpg": {
+  "product": "Testina Mach 1",
+  "page": 14,
+  "bbox": [
+   0.0,
+   107.0,
+   476.0,
+   441.0
+  ],
+  "dpi": 100,
+  "size": [
+   634,
+   366
+  ],
+  "check": null
+ },
+ "images/garden/testina-mach-3.jpg": {
+  "product": "Testina Mach 3",
+  "page": 13,
+  "bbox": [
+   91.0,
+   75.0,
+   596.0,
+   440.0
+  ],
+  "dpi": 100,
+  "size": [
+   684,
+   397
+  ],
+  "check": null
+ },
+ "images/garden/testina-mach-5.jpg": {
+  "product": "Testina Mach 5",
+  "page": 12,
+  "bbox": [
+   0.0,
+   83.0,
+   525.0,
+   448.0
+  ],
+  "dpi": 100,
+  "size": [
+   712,
+   399
+  ],
+  "check": null
+ },
+ "images/garden/testina-multifilo-ufo-alluminio.jpg": {
+  "product": "Testina Multifilo Ufo Alluminio",
+  "page": 17,
+  "bbox": [
+   0.0,
+   156.0,
+   496.0,
+   486.0
+  ],
+  "dpi": 100,
+  "size": [
+   681,
+   364
+  ],
+  "check": null
+ },
+ "images/garden/testina-multifilo-ufo-ufo-lite.jpg": {
+  "product": "Testina Multifilo Ufo - Ufo Lite",
+  "page": 18,
+  "bbox": [
+   139.0,
+   158.0,
+   596.0,
+   481.0
+  ],
+  "dpi": 100,
+  "size": [
+   623,
+   410
+  ],
+  "check": null
+ },
+ "images/garden/testina-semiautomatica-diamante.jpg": {
+  "product": "Testina Semiautomatica Diamante",
+  "page": 21,
+  "bbox": [
+   200.0,
+   150.0,
+   596.0,
+   410.0
+  ],
+  "dpi": 150,
+  "size": [
+   824,
+   542
+  ],
+  "check": null
+ },
+ "images/garden/testina-vega-multifilo.jpg": {
+  "product": "Testina Vega Multifilo",
+  "page": 16,
+  "bbox": [
+   0.0,
+   92.0,
+   547.0,
+   466.0
+  ],
+  "dpi": 100,
+  "size": [
+   681,
+   478
+  ],
+  "check": null
+ },
+ "images/garden/tracolla-per-decespugliatore.jpg": {
+  "product": "Tracolla per Decespugliatore",
+  "page": 47,
+  "bbox": [
+   43.0,
+   86.0,
+   208.0,
+   218.0
+  ],
+  "dpi": 100,
+  "size": [
+   229,
+   184
+  ],
+  "check": null
+ },
+ "images/garden/tritatutto.jpg": {
+  "product": "Tritatutto",
+  "page": 32,
+  "bbox": [
+   125.0,
+   459.0,
+   471.0,
+   675.0
+  ],
+  "dpi": 100,
+  "size": [
+   357,
+   245
+  ],
+  "check": null
+ },
+ "images/garden/tubetto-pvc.jpg": {
+  "product": "Tubetto PVC",
+  "page": 54,
+  "bbox": [
+   202.0,
+   468.0,
+   393.0,
+   697.0
+  ],
+  "dpi": 100,
+  "size": [
+   222,
+   267
+  ],
+  "check": null
+ },
+ "images/garden/visiera-protettiva-fusion.jpg": {
+  "product": "Visiera Protettiva Fusion",
+  "page": 37,
+  "bbox": [
+   24.0,
+   454.0,
+   321.0,
+   709.0
+  ],
+  "dpi": 100,
+  "size": [
+   277,
+   324
+  ],
+  "check": null
+ },
+ "images/garden/visiera-protettiva-professionale-in-policarbonato.jpg": {
+  "product": "Visiera Protettiva Professionale in Policarbonato",
+  "page": 38,
+  "bbox": [
+   269.0,
+   460.0,
+   497.0,
+   742.0
+  ],
+  "dpi": 100,
+  "size": [
+   253,
+   373
+  ],
+  "check": null
+ },
+ "images/garden/visiera-protettiva-professionale-in-rete-metallica.jpg": {
+  "product": "Visiera Protettiva Professionale in Rete Metallica",
+  "page": 38,
+  "bbox": [
+   269.0,
+   68.0,
+   495.0,
+   347.0
+  ],
+  "dpi": 100,
+  "size": [
+   264,
+   380
+  ],
+  "check": null
+ },
+ "images/garden/visiera-protettiva-standard-in-policarbonato.jpg": {
+  "product": "Visiera Protettiva Standard in Policarbonato",
+  "page": 39,
+  "bbox": [
+   81.0,
+   470.0,
+   307.0,
+   742.0
+  ],
+  "dpi": 100,
+  "size": [
+   290,
+   349
+  ],
+  "check": null
+ },
+ "images/garden/visiera-protettiva-standard-in-rete-metallica.jpg": {
+  "product": "Visiera Protettiva Standard in Rete Metallica",
+  "page": 39,
+  "bbox": [
+   83.0,
+   79.0,
+   312.0,
+   337.0
+  ],
+  "dpi": 100,
+  "size": [
+   267,
+   330
+  ],
+  "check": null
+ },
+ "images/olive/chiodi-cuci-rete.jpg": {
+  "product": "Chiodi Cuci-rete",
+  "page": 10,
+  "bbox": [
+   1.0,
+   68.0,
+   242.0,
+   279.0
+  ],
+  "dpi": 150,
+  "size": [
+   502,
+   440
+  ],
+  "check": null
+ },
+ "images/olive/chiodi-ferma-telo.jpg": {
+  "product": "Chiodi Ferma-telo",
+  "page": 10,
+  "bbox": [
+   0.0,
+   434.0,
+   242.0,
+   646.0
+  ],
+  "dpi": 150,
+  "size": [
+   504,
+   442
+  ],
+  "check": null
+ },
+ "images/olive/excelso.jpg": {
+  "product": "Excelso",
+  "page": 4,
+  "bbox": [
+   61.0,
+   92.0,
+   180.0,
+   474.0
+  ],
+  "dpi": 181,
+  "size": [
+   268,
+   952
+  ],
+  "check": null
+ },
+ "images/olive/martino-eco.jpg": {
+  "product": "Martino Eco",
+  "page": 6,
+  "bbox": [
+   15.0,
+   85.0,
+   223.0,
+   486.0
+  ],
+  "dpi": 167,
+  "size": [
+   217,
+   834
+  ],
+  "check": null
+ },
+ "images/olive/martino-light.jpg": {
+  "product": "Martino Light",
+  "page": 5,
+  "bbox": [
+   27.0,
+   78.0,
+   217.0,
+   476.0
+  ],
+  "dpi": 177,
+  "size": [
+   370,
+   924
+  ],
+  "check": null
+ },
+ "images/olive/oleo-carbon.jpg": {
+  "product": "Oleo Carbon",
+  "page": 7,
+  "bbox": [
+   48.0,
+   74.0,
+   193.0,
+   480.0
+  ],
+  "dpi": 171,
+  "size": [
+   294,
+   963
+  ],
+  "check": null
+ },
+ "images/olive/oleo-luxor.jpg": {
+  "product": "Oleo Luxor",
+  "page": 8,
+  "bbox": [
+   0.0,
+   94.0,
+   249.0,
+   470.0
+  ],
+  "dpi": 150,
+  "size": [
+   400,
+   892
+  ],
+  "check": null
+ },
+ "images/olive/rastrello.jpg": {
+  "product": "Rastrello",
+  "page": 9,
+  "bbox": [
+   28.0,
+   72.0,
+   214.0,
+   481.0
+  ],
+  "dpi": 151,
+  "size": [
+   349,
+   848
+  ],
+  "check": null
+ },
+ "images/olive/reti-per-olive.jpg": {
+  "product": "Reti per Olive",
+  "page": 11,
+  "bbox": [
+   0.0,
+   68.0,
+   596.0,
+   441.0
+  ],
+  "dpi": 150,
+  "size": [
+   1242,
+   778
+  ],
+  "check": null
+ }
+}
