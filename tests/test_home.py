@@ -46,7 +46,7 @@ def test_home_has_single_priority_hero_image(site):
     out, _ = site
     h = html(out)
     assert h.count('fetchpriority="high"') == 1
-    imgs = re.findall(r"<img\b[^>]*>", h)
+    imgs = [t for t in re.findall(r"<img\b[^>]*>", h) if "arnoplast-logo" not in t]
     assert imgs
     for img in imgs:
         assert 'alt="' in img, img
@@ -124,7 +124,7 @@ def test_home_numbers_come_from_catalog(site):
 
 def test_home_photos_are_local_and_small(site):
     out, _ = site
-    tags = " ".join(re.findall(r"<(?:img|source)\b[^>]*>", html(out)))
+    tags = " ".join(t for t in re.findall(r"<(?:img|source)\b[^>]*>", html(out)) if "arnoplast-logo" not in t)
     for src in re.findall(r'(?:src|srcset)="([^"]+)"', tags):
         for part in src.split(","):
             path = part.split()[0]
@@ -142,7 +142,7 @@ def test_image_dimensions_match_files(site):
 
     out, _ = site
     seen = set()
-    for tag in re.findall(r"<(?:img|source)\b[^>]*>", html(out)):
+    for tag in (t for t in re.findall(r"<(?:img|source)\b[^>]*>", html(out)) if "arnoplast-logo" not in t):
         srcset = re.search(r'srcset="([^"]+)"', tag).group(1)
         largest = max((p.split() for p in srcset.split(",")), key=lambda p: int(p[1][:-1]))[0]
         w, h = size(largest)

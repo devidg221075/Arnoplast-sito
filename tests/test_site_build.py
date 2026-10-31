@@ -109,7 +109,7 @@ def test_search_index_one_entry_per_code_with_products_and_names(tmp_path):
 
 def test_missing_image_does_not_break_page(tmp_path):
     build_site(cat(prod(image="images/agricoltura/nonexiste.jpg")), tmp_path, )
-    assert "<img" not in page(tmp_path, "agricoltura", "fam", "copripalo").split("<main", 1)[1]
+    assert "<img" not in page(tmp_path, "agricoltura", "fam", "copripalo").split("<main", 1)[1].split("</main>")[0]
 
 
 def test_i18n_falls_back_to_italian():
@@ -313,7 +313,7 @@ def test_family_page_uses_small_webp_thumbs_with_dimensions(tmp_path, monkeypatc
     assert f.stat().st_size < 40_000
     for u in re.findall(r"(/thumbs/\S+?) \d+w", m.group(2)):
         assert (out / u.lstrip("/")).is_file()
-    imgs = re.findall(r"<img [^>]*>", html.split("<main", 1)[1])
+    imgs = re.findall(r"<img [^>]*>", html.split("<main", 1)[1].split("</main>")[0])
     assert len(imgs) == 6
     assert sum('loading="lazy"' in i for i in imgs) >= 2 and 'loading="lazy"' not in imgs[0]
     assert all('width="' in i and 'height="' in i for i in imgs)

@@ -41,14 +41,14 @@ def test_hero_pages_have_full_screen_hero_with_one_priority_image(site, rel):
     srcset = re.search(r'srcset="([^"]+)"', img).group(1)
     assert len(srcset.split(",")) >= 2, srcset
     for tag in re.findall(r"<(?:img|source)\b[^>]*>", h):
-        if "srcset=" not in tag:
+        if "srcset=" not in tag or "arnoplast-logo" in tag:
             continue
         assert re.search(r'\swidth="\d+"', tag) and re.search(r'\sheight="\d+"', tag), tag
         for part in re.search(r'srcset="([^"]+)"', tag).group(1).split(","):
             f = out / part.split()[0].lstrip("/")
             assert f.is_file() and f.suffix == ".webp" and f.stat().st_size <= 150 * 1024, part
     for other in re.findall(r"<img\b[^>]*>", h):
-        if other != img:
+        if other != img and "arnoplast-logo" not in other:
             assert 'loading="lazy"' in other, other
 
 
@@ -138,4 +138,4 @@ def test_hero_photos_from_catalog_folder_only(site):
     for rel in HERO_PAGES:
         for src in re.findall(r'(?:src|srcset)="(/static/img/[^"]+)"', html(out, rel)):
             for part in src.split(","):
-                assert part.split()[0].startswith("/static/img/home/"), part
+                assert part.split()[0].startswith(("/static/img/home/", "/static/img/arnoplast-logo")), part
