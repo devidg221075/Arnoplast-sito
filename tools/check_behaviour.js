@@ -210,7 +210,7 @@ ok(/info@arnoplast\.it/.test(await page.locator('#form-message').textContent()) 
 // Telefono (390 px): nessuno scroll orizzontale e bottone visibile, su famiglie, prodotti e preventivo.
 const noOverflow = () => page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth);
 for (const path of ['/it/agricoltura/copripalo/', '/it/agricoltura/copripalo/copripalo-prisma/', '/it/agricoltura/copripalo/copripalo-qubo/',
-  '/it/agricoltura/moschettoni-e-tiranti/colibri/', '/it/garden/testine/', QUOTE]) {
+  '/it/agricoltura/moschettoni-e-tiranti/colibri/', '/it/garden/testine/', QUOTE, '/it/', '/it/agricoltura/', '/it/garden/', '/it/olive/', '/it/azienda/']) {
   await page.goto(BASE + path, { waitUntil: 'networkidle' });
   ok(await noOverflow(), `390 px ${path}: nessun overflow orizzontale`);
   if (path.includes('copripalo-')) {
@@ -219,6 +219,31 @@ for (const path of ['/it/agricoltura/copripalo/', '/it/agricoltura/copripalo/cop
   }
 }
 
+// Animazioni: dopo lo scorrimento tutto e' visibile e i contatori arrivano al valore della pagina.
+const allShown = (pg) => pg.evaluate(() => [...document.querySelectorAll('[data-reveal], [data-reveal="stagger"] > *, .hx-c, .hx-in > *')]
+  .every((el) => parseFloat(getComputedStyle(el).opacity) > 0.99 && !el.classList.contains('rv-wait')));
+const scrollAll = (pg) => pg.evaluate(async () => { for (let y = 0; y <= document.body.scrollHeight; y += 300) { window.scrollTo(0, y); await new Promise((r) => setTimeout(r, 60)); } });
+for (const path of ['/it/', '/it/agricoltura/', '/it/azienda/']) {
+  const want = [...(await (await fetch(BASE + path)).text()).matchAll(/data-countup>(\d+)</g)].map((m) => m[1]);
+  await page.goto(BASE + path, { waitUntil: 'networkidle' });
+  await scrollAll(page);
+  await page.waitForTimeout(3500);
+  const got = await page.evaluate(() => [...document.querySelectorAll('[data-countup]')].map((e) => e.textContent));
+  ok(await allShown(page), `${path}: dopo lo scorrimento tutti i blocchi animati sono visibili`);
+  ok(JSON.stringify(want) === JSON.stringify(got), `${path}: contatori al valore della pagina (${got.join(', ')})`);
+  ok(await page.evaluate(() => document.querySelectorAll('img[fetchpriority="high"]').length === 1), `${path}: una sola immagine prioritaria`);
+}
+// Movimento ridotto: nessuna animazione, contenuto visibile subito senza scorrere.
+const calm = await browser.newContext({ viewport: { width: 390, height: 844 }, reducedMotion: 'reduce' });
+const p3 = await calm.newPage();
+for (const path of ['/it/', '/it/garden/', '/it/azienda/']) {
+  await p3.goto(BASE + path, { waitUntil: 'networkidle' });
+  const still = await p3.evaluate(() => [...document.querySelectorAll('.hx-img, .hx-c, [data-parallax], [data-reveal] > *')]
+    .every((el) => getComputedStyle(el).animationName === 'none' && getComputedStyle(el).transform === 'none'));
+  ok(still && await allShown(p3), `movimento ridotto ${path}: nessuna animazione, tutto visibile`);
+}
+await calm.close();
+
 // Senza JavaScript: avviso con mailto e telefono, nessun modulo inerte.
 const nojs = await browser.newContext({ viewport: { width: 390, height: 844 }, javaScriptEnabled: false });
 const p2 = await nojs.newPage();
@@ -226,11 +251,17 @@ await p2.goto(BASE + PRODUCT);
 ok(await p2.locator('.noscript-note a[href^="mailto:info@arnoplast.it"]').isVisible() && !(await p2.locator('.add-row').first().isVisible()), 'senza JS (prodotto): avviso mailto, nessun bottone inerte');
 await p2.goto(BASE + QUOTE);
 ok(await p2.locator('.noscript-note a[href^="mailto:info@arnoplast.it"]').isVisible() && !(await p2.locator('#quote-form').isVisible()), 'senza JS (preventivo): avviso mailto, modulo nascosto');
+for (const path of ['/it/', '/it/olive/', '/it/azienda/']) {
+  await p2.goto(BASE + path);
+  await p2.waitForTimeout(1200);
+  ok(await allShown(p2), `senza JS ${path}: hero e sezioni visibili`);
+}
 await nojs.close();
 
 const foreign = requests.filter((u) => new URL(u).origin !== origin);
 ok(foreign.length === 0, `nessuna richiesta esterna (${requests.length} richieste, ${new Set(requests).size} URL distinti)`);
-const errs = errors.filter((e) => !/search-index\.json|ERR_FAILED/.test(e));
+// Messaggio di Chromium (non un errore JS) quando lo script naviga mentre una transizione tra pagine e' in corso.
+const errs = errors.filter((e) => !/search-index\.json|ERR_FAILED|^Transition was aborted because of invalid state/.test(e));
 ok(errs.length === 0, `nessun errore in console${errs.length ? ': ' + errs.join(' | ') : ''}`);
 if (process.env.SHOW_URLS) console.log([...new Set(requests)].map((u) => u.replace(origin, '')).sort().join('\n'));
 
