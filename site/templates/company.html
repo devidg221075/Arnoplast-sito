@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% import "_hero.html" as hx with context %}
+
+{% block main %}
+{% if hero %}
+<section class="hx hx-company">
+  <div class="hx-media" data-parallax>{{ hx.picture(hero.img, hero.alt, hero.portrait) }}</div>
+  <div class="wrap hx-in">
+    <nav class="breadcrumb hx-crumb" aria-label="Breadcrumb"><a href="/{{ lang }}/">{{ t('breadcrumb.home') }}</a></nav>
+    <p class="hx-kicker"><span class="flag" aria-hidden="true"></span>{{ t('home.kicker') }}</p>
+    <h1 class="hx-title">{{ hx.split(title, letters=True) }}</h1>
+    <p class="hx-lead">{{ t('home.tagline') }}</p>
+    <div class="hx-ctas">
+      <a class="btn btn-primary" href="/{{ lang }}/contatti/">{{ t('page.contacts') }} <span class="btn-arrow" aria-hidden="true">→</span></a>
+      <a class="btn hx-btn-glass" href="/{{ lang }}/richiesta-preventivo/">{{ t('hv.quote_cta') }}</a>
+    </div>
+  </div>
+  {{ hx.cue() }}
+</section>
+{% else %}
+<section class="page-head">
+  <div class="wrap">
+    <nav class="breadcrumb" aria-label="Breadcrumb"><a href="/{{ lang }}/">{{ t('breadcrumb.home') }}</a></nav>
+    <h1>{{ title }}</h1>
+  </div>
+</section>
+{% endif %}
+<section class="wrap section co-story" id="storia" aria-labelledby="co-story-t">
+  <h2 class="section-title" id="co-story-t" data-reveal>{{ t('home.kicker') }}</h2>
+  <ol class="co-timeline" data-reveal="stagger">
+  {% for p in paragraphs %}<li><p>{{ p }}</p></li>{% endfor %}
+  </ol>
+</section>
+{% if imgs and 'progetto' in imgs %}
+<section class="co-chain" aria-labelledby="co-chain-t">
+  <div class="wrap co-chain-head" data-reveal>
+    <h2 id="co-chain-t">{{ t('hv.idea_title') }}</h2>
+    <p>{{ t('hv.idea_text') }}</p>
+  </div>
+  <ol class="wrap co-photos" data-reveal="stagger">
+    {% for img, key, alt in (('progetto', 'hv.idea_1', 'Progettazione al computer di un articolo'), ('stampaggio', 'hv.idea_2', 'Pressa a iniezione nello stabilimento'), ('magazzino', 'hv.idea_3', 'Magazzino con scaffalature e pallet')) %}
+    {% set im = imgs[img] %}
+    <li><figure><span class="co-ph" data-parallax="0.06"><img src="{{ im.src }}" srcset="{{ im.srcset }}" sizes="(min-width: 1024px) 380px, (min-width: 600px) 33vw, 100vw" width="{{ im.width }}" height="{{ im.height }}" alt="{{ alt }}" loading="lazy" decoding="async"></span><figcaption><span aria-hidden="true">0{{ loop.index }}</span> {{ t(key) }}</figcaption></figure></li>
+    {% endfor %}
+  </ol>
+</section>
+{% endif %}
+{% endblock %}

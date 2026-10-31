@@ -7,9 +7,7 @@
   </div>
 </section>
 <div class="wrap section prose">
-{% if kind == 'company' %}
-  {% for p in paragraphs %}<p>{{ p }}</p>{% endfor %}
-{% elif kind == 'contacts' %}
+{% if kind == 'contacts' %}
   <address class="contact-card">
     <p><strong>{{ contacts.name }}</strong></p>
     <p>{{ t('contacts.address') }}: {{ contacts.address }}</p>

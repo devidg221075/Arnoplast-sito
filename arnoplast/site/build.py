@@ -60,6 +60,14 @@ MATERIALS = {"PP": "Polipropilene", "PA": "Poliammide", "PE": "Polietilene", "PE
 
 HOME_IMG_DIR = SITE_DIR / "static" / "img" / "home"
 
+# Hero a tutto schermo (foto dei cataloghi, in site/static/img/home): pagina -> (foto, ritaglio verticale, alt).
+HEROES = {
+    "agricoltura": ("tunnel", "tunnel-alto", "Filari di frutteto sotto la rete antigrandine"),
+    "garden": ("prato", "prato-alto", "Prato e alberi in una giornata di sole"),
+    "olive": ("oliveto", "oliveto-alto", "Raccolta delle olive con l'abbacchiatore"),
+    "azienda": ("sede", "sede-alto", "La sede ARNOplast a Rignano sull'Arno"),
+}
+
 SECTIONS = ["richiesta-preventivo", "contatti", "azienda", "applicazioni", "video", "area-riservata"]
 
 
@@ -210,6 +218,14 @@ def home_images(folder: Path = HOME_IMG_DIR) -> dict[str, dict]:
     return out
 
 
+def _hero(key: str, imgs: dict) -> dict | None:
+    """Foto dell'hero di una pagina (None se i file mancano: la pagina mostra l'apertura compatta)."""
+    name, portrait, alt = HEROES[key]
+    if name not in imgs:
+        return None
+    return {"img": imgs[name], "portrait": imgs.get(portrait) if portrait else None, "alt": alt}
+
+
 def home_context(c: Catalog, lang: str) -> dict:
     """Dati della home, tutti calcolati dal catalogo."""
     counts = {l.slug: sum(len(f.products) for f in l.families) for l in c.lines}
@@ -227,6 +243,7 @@ def build_site(c: Catalog, out: Path, lang: str = "it", sources: Path | None = N
     written: list[Path] = []
     base = out / lang
     urls: list[str] = []
+    imgs = home_images()
 
     def render(tpl: str, dest: Path, description: str | None = None, **ctx) -> None:
         rel = dest.relative_to(out).as_posix()
@@ -251,7 +268,10 @@ def build_site(c: Catalog, out: Path, lang: str = "it", sources: Path | None = N
                 mb = f"{(sources / src_name).stat().st_size / 1e6:.1f}".replace(".", ",")
                 pdf = {"url": f"/downloads/{pub_name}", "mb": mb}
         n_prod = sum(len(f.products) for f in line.families)
+        n_codes = len({a.code for f in line.families for p in f.products for a in p.articles})
         render("line.html", base / line.slug, line=line, title=text(line.name, lang), pdf=pdf,
+               hero=_hero(line.slug, imgs), line_index=c.lines.index(line) + 1,
+               line_stats={"families": len(line.families), "products": n_prod, "codes": n_codes},
                description=f"{text(line.name, lang)}: {len(line.families)} famiglie e {n_prod} prodotti "
                            "del catalogo ARNOplast.")
         for fam in line.families:
@@ -300,8 +320,9 @@ def build_site(c: Catalog, out: Path, lang: str = "it", sources: Path | None = N
     render("page.html", base / "contatti", line=None, title=t("page.contacts", lang),
            description=f"{CONTACTS['name']}, {CONTACTS['address']}. Tel. {CONTACTS['phone']}, {CONTACTS['email']}.",
            kind="contacts", contacts=CONTACTS)
-    render("page.html", base / "azienda", line=None, title=t("page.company", lang),
-           description=" ".join(COMPANY_HISTORY[:2]), kind="company", paragraphs=COMPANY_HISTORY)
+    render("company.html", base / "azienda", line=None, title=t("page.company", lang),
+           description=" ".join(COMPANY_HISTORY[:2]), paragraphs=COMPANY_HISTORY,
+           hero=_hero("azienda", imgs), imgs=imgs)
     render("page.html", base / "applicazioni", line=None, title=t("page.applications", lang),
            kind="placeholder")
     render("page.html", base / "video", line=None, title=t("page.videos", lang),

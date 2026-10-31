@@ -1,5 +1,28 @@
 {% extends "base.html" %}
+{% import "_hero.html" as hx with context %}
+
 {% block main %}
+{% set nf = line_stats.families %}
+{% if hero %}
+<section class="hx hx-line">
+  <div class="hx-media" data-parallax>{{ hx.picture(hero.img, hero.alt, hero.portrait) }}</div>
+  <div class="wrap hx-in">
+    <nav class="breadcrumb hx-crumb" aria-label="Breadcrumb"><a href="/{{ lang }}/">{{ t('breadcrumb.home') }}</a></nav>
+    <p class="hx-kicker"><span class="hx-idx" aria-hidden="true">0{{ line_index }}</span>{{ t('line.kicker') }}</p>
+    <h1 class="hx-title">{{ hx.split(text(line.name), letters=True) }}</h1>
+    <ul class="hx-stats">
+      <li><b data-countup>{{ nf }}</b> {{ t('hv.family') if nf == 1 else t('hv.families') }}</li>
+      <li><b data-countup>{{ line_stats.products }}</b> {{ t('hv.products') }}</li>
+      <li><b data-countup>{{ line_stats.codes }}</b> {{ t('hv.codes') }}</li>
+    </ul>
+    <div class="hx-ctas">
+      <a class="btn btn-primary" href="#famiglie">{{ t('hv.discover') }} <span class="btn-arrow" aria-hidden="true">↓</span></a>
+      {% if pdf %}<a class="btn hx-btn-glass" href="{{ pdf.url }}">{{ t('line.download') }} (PDF, {{ pdf.mb }} MB)</a>{% endif %}
+    </div>
+  </div>
+  {{ hx.cue() }}
+</section>
+{% else %}
 <section class="page-head">
   <div class="wrap">
     <nav class="breadcrumb" aria-label="Breadcrumb"><a href="/{{ lang }}/">{{ t('breadcrumb.home') }}</a></nav>
@@ -10,9 +33,10 @@
 {% if pdf %}
 <p class="wrap"><a class="btn btn-ghost" href="{{ pdf.url }}">{{ t('line.download') }} (PDF, {{ pdf.mb }} MB)</a></p>
 {% endif %}
-<section class="wrap section">
-  <h2 class="section-title">{{ t('family.families') }}</h2>
-  <ul class="family-list card-grid">
+{% endif %}
+<section class="wrap section" id="famiglie">
+  <h2 class="section-title" data-reveal>{{ t('family.families') }}</h2>
+  <ul class="family-list card-grid" data-reveal="stagger">
   {% for f in line.families %}
     <li class="card">
       <a href="/{{ lang }}/{{ line.slug }}/{{ f.slug }}/">

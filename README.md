@@ -56,5 +56,9 @@ chi non ha Python):
 Crea la cartella e il relativo `.zip`, con link relativi e JS in un solo script;
 il sito in `dist/` non cambia.
 
-Le foto della home (gia' in `site/static/img/home/`) si rigenerano con
+Hero a tutto schermo (home, linee, Azienda) e animazioni: `site/static/css/motion.css` e lo script classico
+`site/static/js/anim.js` (ingressi allo scroll, contatori, parallasse di riserva, transizioni tra pagine);
+con `prefers-reduced-motion: reduce` o senza JS il contenuto e' subito visibile e fermo.
+
+Le foto della home e degli hero (gia' in `site/static/img/home/`) si rigenerano con
 `python tools/home_images.py <cartella-temporanea>` (poppler, ImageMagick, Pillow con WebP).
