@@ -1,0 +1,49 @@
+{
+ "foto": [
+  {
+   "id": "001",
+   "w": 1400,
+   "h": 492,
+   "tw": 560,
+   "th": 197,
+   "alt": "Accessori ARNOplast su un impianto realizzato",
+   "origine": "000-DSC3562.jpg"
+  },
+  {
+   "id": "002",
+   "w": 1200,
+   "h": 1200,
+   "tw": 560,
+   "th": 560,
+   "alt": "Accessori ARNOplast su un impianto realizzato",
+   "origine": "001-cile-2.jpg"
+  },
+  {
+   "id": "003",
+   "w": 1200,
+   "h": 1200,
+   "tw": 560,
+   "th": 560,
+   "alt": "Accessori ARNOplast su un impianto realizzato",
+   "origine": "003-20170505_151815.jpg"
+  },
+  {
+   "id": "004",
+   "w": 1050,
+   "h": 1400,
+   "tw": 420,
+   "th": 560,
+   "alt": "Accessori ARNOplast su un impianto realizzato",
+   "origine": "004-IMG-20180426-WA0036.jpg"
+  },
+  {
+   "id": "005",
+   "w": 1200,
+   "h": 675,
+   "tw": 560,
+   "th": 315,
+   "alt": "Accessori ARNOplast su un impianto realizzato",
+   "origine": "005-246.jpg"
+  }
+ ]
+}

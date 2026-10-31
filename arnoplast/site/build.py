@@ -210,6 +210,18 @@ FAIR_ID = re.compile(r"^[a-z0-9]+(?:-[a-z0-9]+)*$")
 SHORT_MAX = 170  # descrizione breve ricavata dal testo: frasi intere entro questa lunghezza
 
 
+def load_gallery(path: Path | None = None) -> list[dict]:
+    """data/galleria.json (scritto da tools/galleria_images.py) -> foto della Galleria. Errore chiaro se manca un file."""
+    path = DATA_DIR / "galleria.json" if path is None else Path(path)
+    photos = json.loads(path.read_text(encoding="utf-8"))["foto"] if path.is_file() else []
+    for ph in photos:
+        for suffix in ("", "-t"):
+            f = ROOT / "site" / "static" / "img" / "galleria" / f"{ph['id']}{suffix}.webp"
+            if not f.is_file():
+                raise ValueError(f"data/galleria.json: manca {f.name}; rilanciare tools/galleria_images.py")
+    return photos
+
+
 def load_fairs(path: Path | None = None) -> list[dict]:
     """data/fiere.json -> lista di fiere. Errore chiaro per campi mancanti, id doppi o non validi, date non ISO o
     incoerenti (fine prima dell'inizio), link non https, foto indicata ma assente in content/photos/fiere."""
@@ -790,7 +802,8 @@ def build_site(c: Catalog, out: Path, lang: str = "it", sources: Path | None = N
                          "mb": f"{f.stat().st_size / 1e6:.1f}".replace(".", ",")})
     render("catalogs.html", base / "cataloghi", line=None, title=t("page.catalogs", lang), pdfs=pdfs,
            description="Cataloghi ARNOplast in PDF da scaricare (Agricoltura, Garden, Raccolta olive) e app ARNOplast.")
-    render("page.html", base / "galleria", line=None, title=t("page.gallery", lang), kind="placeholder")
+    render("gallery.html", base / "galleria", line=None, title=t("page.gallery", lang), photos=load_gallery(),
+           description=t("gallery.lead", lang))
     render("page.html", base / "video", line=None, title=t("page.videos", lang), kind="placeholder")
     render("page.html", base / "area-riservata", line=None, title=t("page.reserved", lang), kind="reserved")
     render("page.html", base / "cookie", line=None, title=t("page.cookie", lang), kind="cookie")

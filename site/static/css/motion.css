@@ -97,7 +97,7 @@
 .hx-kicker::after { content: ""; width: 48px; height: 2px; background: var(--accent); }
 .hx-kicker .flag { margin-right: -4px; }
 .hx-idx { padding: 3px 9px; border: 1px solid rgba(255, 255, 255, .55); border-radius: 999px; letter-spacing: .08em; font-variant-numeric: tabular-nums; }
-.hx-title { font-size: clamp(2.4rem, 15vw, 9rem); line-height: .86; letter-spacing: -.045em; text-transform: uppercase; margin: 0 0 .32em; max-width: 12ch; text-shadow: 0 2px 30px rgba(0, 0, 0, .35); }
+.hx-title { font-weight: 900; font-size: clamp(2.4rem, 15vw, 9rem); line-height: .86; letter-spacing: -.045em; text-transform: uppercase; margin: 0 0 .32em; max-width: 12ch; text-shadow: 0 2px 30px rgba(0, 0, 0, .35); }
 .hx-title .hx-split { font-size: min(1em, calc((100vw - 2 * var(--gut)) / (var(--len, 8) * .72))); }
 .hx-lead { font-size: clamp(1.05rem, 2.2vw, 1.3rem); line-height: 1.45; max-width: 44ch; color: #ececf0; margin: 0 0 28px; }
 .hx-stats { list-style: none; display: flex; flex-wrap: wrap; gap: 12px 0; margin: 0 0 30px; padding: 0; }

@@ -186,3 +186,20 @@ def test_social_section_loads_facebook_only_after_click(site):
         assert url in h.split('id="a-social-t"')[1].split("</section>")[0], url
     js = (Path(__file__).resolve().parent.parent / "site" / "static" / "js" / "social.js").read_text(encoding="utf-8")
     assert "createElement('iframe')" in js and "preventDefault" in js
+
+
+def test_gallery_page_lists_photos_with_lightbox(site):
+    out, _ = site
+    h = (out / "it" / "galleria" / "index.html").read_text(encoding="utf-8")
+    from arnoplast.site.build import load_gallery
+    photos = load_gallery()
+    assert photos and h.count('class="gl-item"') == len(photos)
+    assert "gallery.js" in h and "gallery.css" in h and "in preparazione" not in h
+    for ph in photos:
+        assert (out / "static" / "img" / "galleria" / f"{ph['id']}.webp").is_file() or \
+            (Path(__file__).resolve().parent.parent / "site" / "static" / "img" / "galleria" / f"{ph['id']}.webp").is_file()
+
+
+def test_hero_titles_share_the_same_heavy_weight():
+    css = (Path(__file__).resolve().parent.parent / "site" / "static" / "css" / "motion.css").read_text(encoding="utf-8")
+    assert re.search(r"\.hx-title \{ font-weight: 900;", css)

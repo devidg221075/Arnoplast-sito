@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block head_extra %}<link rel="stylesheet" href="/static/css/gallery.css"><script src="/static/js/gallery.js" defer></script>{% endblock %}
+{% block main %}
+{# Galleria degli impianti realizzati (data/galleria.json). Ogni anteprima e' un link alla foto grande: senza JS si apre
+   da sola; con gallery.js si ingrandisce in un <dialog> con frecce, tastiera e swipe. #}
+<section class="page-head">
+  <div class="wrap">
+    <nav class="breadcrumb" aria-label="Breadcrumb"><a href="/{{ lang }}/">{{ t('breadcrumb.home') }}</a></nav>
+    <h1>{{ title }}</h1>
+    <p class="gl-lead">{{ t('gallery.lead') }} <span class="gl-count">{{ photos | length }} {{ t('gallery.count') }}</span></p>
+  </div>
+</section>
+<section class="wrap section gl" aria-label="{{ title }}">
+  <ul class="gl-grid" data-gallery data-close="{{ t('gallery.close') }}" data-prev="{{ t('gallery.prev') }}" data-next="{{ t('gallery.next') }}" data-of="{{ t('hs.of') }}">
+  {% for ph in photos %}
+    <li class="gl-item" style="--r: {{ '%.4f' % (ph.tw / ph.th) }}">
+      <a href="/static/img/galleria/{{ ph.id }}.webp" data-w="{{ ph.w }}" data-h="{{ ph.h }}" aria-label="{{ t('gallery.open') }} ({{ loop.index }} {{ t('hs.of') }} {{ loop.length }})">
+        <img src="/static/img/galleria/{{ ph.id }}-t.webp" width="{{ ph.tw }}" height="{{ ph.th }}" alt="{{ ph.alt }}" loading="lazy" decoding="async">
+      </a>
+    </li>
+  {% endfor %}
+  </ul>
+</section>
+{% endblock %}
