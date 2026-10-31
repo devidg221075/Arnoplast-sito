@@ -1,0 +1,16 @@
+{# Hero a tutto schermo (home, linee, azienda): foto con ritaglio verticale per i telefoni e titolo animato. #}
+
+{# Una sola <img> per hero (fetchpriority alta, mai lazy); <source> verticale solo per i telefoni in verticale. #}
+{% macro picture(im, alt, portrait=None, cls='hx-img', sizes='100vw') %}
+<picture>
+  {% if portrait %}<source media="(max-width: 600px) and (max-aspect-ratio: 4/5)" srcset="{{ portrait.srcset }}" sizes="100vw" width="{{ portrait.width }}" height="{{ portrait.height }}">{% endif %}
+  <img class="{{ cls }}" src="{{ im.src }}" srcset="{{ im.srcset }}" sizes="{{ sizes }}" width="{{ im.width }}" height="{{ im.height }}" alt="{{ alt }}" fetchpriority="high" decoding="async">
+</picture>
+{% endmacro %}
+
+{# Titolo spezzato in parole (o lettere) per l'ingresso animato: il testo intero resta per i lettori di schermo,
+   i pezzi sono aria-hidden. Senza JS o con movimento ridotto il titolo e' subito visibile. #}
+{% macro split(s, letters=False) %}{% set ns = namespace(i=0) %}<span class="sr-only">{{ s }}</span><span class="hx-split{{ ' hx-letters' if letters }}" aria-hidden="true" style="--len:{{ s.split(' ') | map('length') | max }}">{% for w in s.split(' ') %}<span class="hx-w">{% if letters %}{% for ch in w %}<span class="hx-c" style="--i:{{ ns.i }}">{{ ch }}</span>{% set ns.i = ns.i + 1 %}{% endfor %}{% else %}<span class="hx-c" style="--i:{{ ns.i }}">{{ w }}</span>{% set ns.i = ns.i + 1 %}{% endif %}</span>{% if not loop.last %} {% endif %}{% endfor %}</span>{% endmacro %}
+
+{# Indicatore di scorrimento (decorativo). #}
+{% macro cue() %}<span class="hx-cue" aria-hidden="true"><span></span></span>{% endmacro %}

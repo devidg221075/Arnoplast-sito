@@ -9,10 +9,12 @@
   {% endif %}
   {% if canonical %}<link rel="canonical" href="{{ canonical }}">
   {% endif %}
-  <script>document.documentElement.classList.add('js')</script>
+  <script>document.documentElement.classList.add('js');addEventListener('pagereveal',function(e){var v=e.viewTransition;if(v)[v.ready,v.finished,v.updateCallbackDone].forEach(function(p){p&&p.catch(function(){})})})</script>
   <noscript><style>.quote-count{display:none}</style></noscript>
   <link rel="stylesheet" href="/static/css/main.css">
+  <link rel="stylesheet" href="/static/css/motion.css">
   <script type="module" src="/static/js/main.js"></script>
+  <script src="/static/js/anim.js" defer></script>
   {% block head_extra %}{% endblock %}
 </head>
 <body{% if line %} data-line="{{ line.slug }}" data-accent="{{ line.accent }}"{% endif %}{% block body_attrs %}{% endblock %}>

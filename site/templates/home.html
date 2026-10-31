@@ -1,13 +1,14 @@
 {% extends "base.html" %}
 {% import "_home.html" as h with context %}
+{% import "_hero.html" as hx with context %}
 {# Homepage "Campo": foto a tutto schermo, linee come schede, filiera, passi del preventivo. #}
 {% block head_extra %}{{ h.head() }}{% endblock %}
 {% block main %}
 <section class="a-hero">
-  {{ h.pic('frutteto', 'Frutteto con impianto di rete antigrandine su pali', '(max-aspect-ratio: 1/1) 830px, 100vw', 'a-hero-img', True) }}
-  <div class="wrap a-hero-in">
+  <div class="hx-media" data-parallax>{{ hx.picture(imgs['frutteto'], 'Frutteto con impianto di rete antigrandine su pali', imgs.get('frutteto-alto'), 'a-hero-img hx-img', '(max-aspect-ratio: 1/1) 830px, 100vw') }}</div>
+  <div class="wrap a-hero-in hx-in">
     <p class="a-kicker"><span class="flag" aria-hidden="true"></span>{{ t('home.kicker') }}</p>
-    <h1>Accessori in plastica per chi lavora la terra</h1>
+    <h1 class="hx-title">{{ hx.split('Accessori in plastica per chi lavora la terra') }}</h1>
     <p class="a-lead">{{ t('home.tagline') }}</p>
     <div class="a-ctas">
       <a class="btn btn-primary" href="#linee">{{ t('hv.discover') }}</a>
@@ -24,11 +25,11 @@
 </section>
 
 <section class="a-lines wrap" id="linee" aria-labelledby="a-lines-t">
-  <div class="a-head">
+  <div class="a-head" data-reveal>
     <p class="a-eyebrow">{{ t('home.lines') }}</p>
     <h2 id="a-lines-t">Tre linee per il campo, il giardino e l'oliveto</h2>
   </div>
-  <ul class="a-cards">
+  <ul class="a-cards" data-reveal="stagger">
   {% for l in lines %}
     <li class="a-card" data-accent="{{ l.accent }}">
       <a href="/{{ lang }}/{{ l.slug }}/">
@@ -48,12 +49,12 @@
 
 <section class="a-idea" aria-labelledby="a-idea-t">
   <div class="wrap a-idea-in">
-    <div class="a-idea-text">
+    <div class="a-idea-text" data-reveal>
       <p class="a-eyebrow">Made in Italy</p>
       <h2 id="a-idea-t">{{ t('hv.idea_title') }}</h2>
       <p>{{ t('hv.idea_text') }}</p>
     </div>
-    <ol class="a-idea-photos">
+    <ol class="a-idea-photos" data-reveal="stagger">
       {% for img, key, alt in (('progetto', 'hv.idea_1', 'Progettazione al computer di un articolo'), ('stampaggio', 'hv.idea_2', 'Pressa a iniezione nello stabilimento'), ('magazzino', 'hv.idea_3', 'Magazzino con scaffalature e pallet')) %}
       <li><figure>{{ h.pic(img, alt, '(min-width: 1024px) 260px, (min-width: 600px) 33vw, 80vw') }}<figcaption><span aria-hidden="true">0{{ loop.index }}</span> {{ t(key) }}</figcaption></figure></li>
       {% endfor %}
@@ -63,14 +64,14 @@
 
 <section class="a-steps" aria-labelledby="a-steps-t">
   <div class="wrap">
-    <h2 id="a-steps-t">{{ t('hv.steps_title') }}</h2>
+    <h2 id="a-steps-t" data-reveal>{{ t('hv.steps_title') }}</h2>
     {{ h.steps('a-steps-list') }}
     <a class="btn a-btn-dark" href="/{{ lang }}/richiesta-preventivo/">{{ t('hv.quote_cta') }} <span aria-hidden="true">→</span></a>
   </div>
 </section>
 
 <section class="a-contact wrap" aria-labelledby="a-contact-t">
-  <div>
+  <div data-reveal>
     <h2 id="a-contact-t">{{ t('hv.contacts_title') }}</h2>
     <p>{{ t('hv.contacts_text') }}</p>
   </div>

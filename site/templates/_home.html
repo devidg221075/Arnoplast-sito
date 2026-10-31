@@ -12,17 +12,17 @@
 {% macro code_search(cls) %}
 <label for="site-search" class="{{ cls }}">
   <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M10.5 3a7.5 7.5 0 0 1 5.9 12.1l4.8 4.8-1.4 1.4-4.8-4.8A7.5 7.5 0 1 1 10.5 3Zm0 2a5.5 5.5 0 1 0 0 11 5.5 5.5 0 0 0 0-11Z"/></svg>
-  <span class="cs-text"><b>{{ t('hv.search_cta') }}</b> {{ t('hv.search_sub') }} <span data-stat="codes">{{ stats.codes }}</span> {{ t('hv.codes') }}</span>
+  <span class="cs-text"><b>{{ t('hv.search_cta') }}</b> {{ t('hv.search_sub') }} <span data-stat="codes" data-countup>{{ stats.codes }}</span> {{ t('hv.codes') }}</span>
   <span class="cs-key" aria-hidden="true">{{ t('search.placeholder') }}</span>
 </label>
 {% endmacro %}
 
-{% macro meta(l) %}<strong data-count="{{ l.slug }}">{{ counts[l.slug] }}</strong> {{ t('hv.products') }} · {{ l.families | length }} {{ t('hv.family') if l.families | length == 1 else t('hv.families') }}{% endmacro %}
+{% macro meta(l) %}<strong data-count="{{ l.slug }}" data-countup>{{ counts[l.slug] }}</strong> {{ t('hv.products') }} · {{ l.families | length }} {{ t('hv.family') if l.families | length == 1 else t('hv.families') }}{% endmacro %}
 
 {% macro families(l, cls='fams') %}<ul class="{{ cls }}">{% for f in l.families %}<li>{{ text(f.name) }}</li>{% endfor %}</ul>{% endmacro %}
 
 {% macro steps(cls) %}
-<ol class="{{ cls }}">
+<ol class="{{ cls }}" data-reveal="stagger">
   {% for n in (1, 2, 3) %}
   <li><span class="st-n" aria-hidden="true">0{{ n }}</span><h3>{{ t('hv.step%d' % n) }}</h3><p>{{ t('hv.step%d_text' % n) }}</p></li>
   {% endfor %}
