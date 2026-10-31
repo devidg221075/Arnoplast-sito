@@ -139,3 +139,18 @@ def test_hero_photos_from_catalog_folder_only(site):
         for src in re.findall(r'(?:src|srcset)="(/static/img/[^"]+)"', html(out, rel)):
             for part in src.split(","):
                 assert part.split()[0].startswith(("/static/img/home/", "/static/img/arnoplast-logo")), part
+
+
+def test_company_hero_has_night_variant_chosen_in_page(site):
+    out, _ = site
+    h = html(out, "it/azienda")
+    assert 'src="/static/img/home/sede-giorno-' in h and "sede-notte" not in re.search(r"<img\b[^>]*fetchpriority[^>]*>", h).group(0).split("data-night-srcset")[0]
+    night = re.findall(r'data-night-srcset="([^"]+)"', h)
+    assert len(night) == 2 and all("sede-notte" in n for n in night)  # foto larga + ritaglio per i telefoni
+    for srcset in night:
+        for part in srcset.split(","):
+            f = out / part.split()[0].lstrip("/")
+            assert f.is_file() and f.suffix == ".webp" and f.stat().st_size <= 150 * 1024, part
+    assert "getHours()" in h and "luce=(notte|giorno)" in h
+    for rel in ("it", "it/agricoltura", "it/garden", "it/olive"):
+        assert "data-night-srcset" not in html(out, rel), rel

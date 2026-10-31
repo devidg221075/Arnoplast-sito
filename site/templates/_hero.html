@@ -1,11 +1,14 @@
 {# Hero a tutto schermo (home, linee, azienda): foto con ritaglio verticale per i telefoni e titolo animato. #}
 
 {# Una sola <img> per hero (fetchpriority alta, mai lazy); <source> verticale solo per i telefoni in verticale. #}
-{% macro picture(im, alt, portrait=None, cls='hx-img', sizes='100vw') %}
+{# Con night/night_portrait la foto serale (19-7, ora del visitatore) sostituisce quella diurna prima del
+   caricamento; ?luce=notte o ?luce=giorno nell'indirizzo forza la scelta. Senza JS resta la foto diurna. #}
+{% macro picture(im, alt, portrait=None, cls='hx-img', sizes='100vw', night=None, night_portrait=None) %}
 <picture>
-  {% if portrait %}<source media="(max-width: 600px) and (max-aspect-ratio: 4/5)" srcset="{{ portrait.srcset }}" sizes="100vw" width="{{ portrait.width }}" height="{{ portrait.height }}">{% endif %}
-  <img class="{{ cls }}" src="{{ im.src }}" srcset="{{ im.srcset }}" sizes="{{ sizes }}" width="{{ im.width }}" height="{{ im.height }}" alt="{{ alt }}" fetchpriority="high" decoding="async">
+  {% if portrait %}<source media="(max-width: 600px) and (max-aspect-ratio: 4/5)" srcset="{{ portrait.srcset }}"{% if night_portrait %} data-night-srcset="{{ night_portrait.srcset }}"{% endif %} sizes="100vw" width="{{ portrait.width }}" height="{{ portrait.height }}">{% endif %}
+  <img class="{{ cls }}" src="{{ im.src }}" srcset="{{ im.srcset }}"{% if night %} data-night-srcset="{{ night.srcset }}"{% endif %} sizes="{{ sizes }}" width="{{ im.width }}" height="{{ im.height }}" alt="{{ alt }}" fetchpriority="high" decoding="async">
 </picture>
+{% if night %}<script>(function(){var q=/[?&]luce=(notte|giorno)/.exec(location.search),h=new Date().getHours();if(!(q?q[1]=='notte':h>=19||h<7))return;var p=document.currentScript.previousElementSibling;[].forEach.call(p.querySelectorAll('[data-night-srcset]'),function(e){e.srcset=e.dataset.nightSrcset})})()</script>{% endif %}
 {% endmacro %}
 
 {# Titolo spezzato in parole (o lettere) per l'ingresso animato: il testo intero resta per i lettori di schermo,

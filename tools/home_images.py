@@ -45,11 +45,7 @@ for w, q in ((640, 50), (1100, 45)):
     save(ol.resize((w, round(ol.height*w/ol.width)), Image.LANCZOS).filter(ImageFilter.GaussianBlur(.6)), 'oliveto', [w], q=q)
 op = Image.open(RAW/'oli-p3.jpg').convert('RGB').crop((0, 160, 1243, 1759))
 save(op.resize((420, round(op.height*420/op.width)), Image.LANCZOS).filter(ImageFilter.MedianFilter(3)), 'oliveto-alto', [420], q=42)
-# Sede (pagina Azienda): p.2 + p.3 (foto unica a doppia pagina)
-a = Image.open(RAW/'agr-002-000.jpg').convert('RGB'); b = Image.open(RAW/'agr-003-000.jpg').convert('RGB')
-sede = Image.new('RGB', (a.width+b.width, a.height)); sede.paste(a,(0,0)); sede.paste(b,(a.width,0))
-sede.save(S/'sede_full.png'); save(sede.crop((0, 120, sede.width, 120+760)), 'sede', [640, 1214])
-save(sede.crop((140, 0, 140 + 900, 1173)), 'sede-alto', [480], q=62)  # verticale per i telefoni, sullo spigolo dell'edificio
+# La sede (hero di Azienda) viene dalle foto originali del cliente, giorno e notte: vedi tools/sede_images.py
 # Filiera: p.4 progettazione CAD, p.5 stampaggio e magazzino
 save(Image.open(RAW/'agr-004-002.jpg').convert('RGB'), 'progetto', [545])
 save(Image.open(RAW/'agr-005-004.jpg').convert('RGB'), 'stampaggio', [508])

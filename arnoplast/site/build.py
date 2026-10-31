@@ -72,8 +72,11 @@ HEROES = {
     "agricoltura": ("tunnel", "tunnel-alto", "Filari di frutteto sotto la rete antigrandine"),
     "garden": ("prato", "prato-alto", "Prato e alberi in una giornata di sole"),
     "olive": ("oliveto", "oliveto-alto", "Raccolta delle olive con l'abbacchiatore"),
-    "azienda": ("sede", "sede-alto", "La sede ARNOplast a Rignano sull'Arno"),
+    "azienda": ("sede-giorno", "sede-giorno-alto", "La sede ARNOplast a Rignano sull'Arno"),
 }
+
+# Variante serale dell'hero (dalle 19 alle 7 ora locale): pagina -> (foto, ritaglio verticale).
+NIGHT_HEROES = {"azienda": ("sede-notte", "sede-notte-alto")}
 
 SECTIONS = ["richiesta-preventivo", "contatti", "azienda", "applicazioni", "video", "area-riservata"]
 
@@ -315,7 +318,11 @@ def _hero(key: str, imgs: dict) -> dict | None:
     name, portrait, alt = HEROES[key]
     if name not in imgs:
         return None
-    return {"img": imgs[name], "portrait": imgs.get(portrait) if portrait else None, "alt": alt}
+    hero = {"img": imgs[name], "portrait": imgs.get(portrait) if portrait else None, "alt": alt}
+    night = NIGHT_HEROES.get(key)  # variante serale, scelta in pagina dall'ora di chi visita
+    if night and night[0] in imgs:
+        hero["night"], hero["night_portrait"] = imgs[night[0]], imgs.get(night[1])
+    return hero
 
 
 def home_context(c: Catalog, lang: str) -> dict:
