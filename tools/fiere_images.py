@@ -4,7 +4,8 @@ Uso: python tools/fiere_images.py [id ...]      (senza id: tutte le fiere di dat
 
 Legge content/photos/fiere/<immagine> (campo `immagine` della fiera, oppure <id>.jpg|.jpeg|.png|.webp) e scrive in
 site/static/img/fiere/ i WebP <id>-480, <id>-800, <id>-1200 (mai oltre la risoluzione nativa, proporzioni conservate,
-qualita' 82, ogni file <= 150 KB). La build genera da sola le foto che mancano; questo script serve a rigenerarle,
+qualita' 82, ogni file <= 150 KB) per le schede, e le versioni per la slide dell'hero della home <id>-hero-800,
+-1280, -1600, -2000, -2560 (stesse regole, ogni file <= 250 KB: la qualita' scende da sola se serve). La build genera da sola le foto che mancano; questo script serve a rigenerarle,
 per esempio dopo aver sostituito una foto. Richiede Pillow con WebP.
 """
 import sys
@@ -29,7 +30,7 @@ def main(ids: list[str]) -> int:
             if ids:
                 print(f"{fid}: nessuna foto in {FI.SRC_DIR}", file=sys.stderr)
             continue
-        for f in FI.make(src, fid):
+        for f in FI.make(src, fid) + FI.make_hero(src, fid):
             print(f"{f.relative_to(ROOT)}  {f.stat().st_size // 1024} KB")
         done += 1
     print(f"{done} fiere con foto")
