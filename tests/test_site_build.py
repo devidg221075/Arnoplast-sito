@@ -37,7 +37,8 @@ def test_builds_product_page_at_short_url(tmp_path):
     assert (tmp_path / "it" / "index.html").exists()
     assert (tmp_path / "it" / "agricoltura" / "index.html").exists()
     assert (tmp_path / "it" / "agricoltura" / "fam" / "index.html").exists()
-    for s in ["richiesta-preventivo", "contatti", "azienda", "applicazioni", "video", "area-riservata"]:
+    for s in ["richiesta-preventivo", "contatti", "azienda", "azienda/imballaggi", "fiere", "cataloghi", "galleria",
+              "video", "area-riservata", "cookie", "applicazioni"]:
         assert (tmp_path / "it" / s / "index.html").exists()
     assert (tmp_path / "it" / "search-index.json").exists()
     assert 'data-line="agricoltura"' in page(tmp_path, "agricoltura", "fam", "copripalo")
@@ -123,7 +124,7 @@ def test_real_catalog_smoke(tmp_path):
     written = build_site(c, tmp_path)
     n_fam = sum(len(l.families) for l in c.lines)
     n_prod = sum(len(f.products) for l in c.lines for f in l.families)
-    assert len(written) == 1 + len(c.lines) + n_fam + n_prod + 6  # home
+    assert len(written) == 1 + len(c.lines) + n_fam + n_prod + 12  # home + pagine di servizio, /en/ e il rimando /it/applicazioni/
     for f in written:
         low = f.read_text(encoding="utf-8").lower()
         for w in ("carrello", "€", "prezzo"):
@@ -327,7 +328,7 @@ def test_noscript_alternative_on_product_and_quote_pages(tmp_path):
                  (tmp_path / "it" / "richiesta-preventivo" / "index.html").read_text(encoding="utf-8")):
         ns = re.findall(r"<noscript>(.*?)</noscript>", html, re.S)
         joined = " ".join(ns)
-        assert 'href="mailto:info@arnoplast.it' in joined and "+39 055 8347031" in joined
+        assert 'href="mailto:info@arnoplast.it' in joined and "+39 055 83 47 031" in joined
     q = (tmp_path / "it" / "richiesta-preventivo" / "index.html").read_text(encoding="utf-8")
     assert 'action="#"' not in q
 
