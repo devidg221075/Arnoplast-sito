@@ -4,7 +4,7 @@
 {% block main %}
 {% if hero %}
 <section class="hx hx-company">
-  <div class="hx-media" data-parallax>{{ hx.picture(hero.img, hero.alt, hero.portrait, night=hero.night, night_portrait=hero.night_portrait) }}</div>
+  <div class="hx-media" data-parallax>{{ hx.picture(hero.img, hero.alt, hero.portrait, sizes='120vw', night=hero.night, night_portrait=hero.night_portrait) }}</div>
   <div class="wrap hx-in">
     <nav class="breadcrumb hx-crumb" aria-label="Breadcrumb"><a href="/{{ lang }}/">{{ t('breadcrumb.home') }}</a></nav>
     <p class="hx-kicker"><span class="flag" aria-hidden="true"></span>{{ t('home.kicker') }}</p>

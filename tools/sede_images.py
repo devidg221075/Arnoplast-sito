@@ -13,6 +13,8 @@ SRC = ROOT / "content" / "photos"
 OUT = ROOT / "site" / "static" / "img" / "home"
 PORTRAIT_X = (900, 1800)  # su una foto larga 2000 px: insegna, finestre e porta
 
+QUALITY = {800: 86, 2000: 86}  # le altre larghezze a 88: la facciata liscia e il cielo mostrano subito i blocchi
+
 OUT.mkdir(parents=True, exist_ok=True)
 for name in ("giorno", "notte"):
     im = Image.open(SRC / f"sede-{name}.jpg").convert("RGB")
@@ -24,5 +26,5 @@ for name in ("giorno", "notte"):
             w = min(w, img.width)
             r = img.resize((w, round(img.height * w / img.width)), Image.LANCZOS) if w < img.width else img
             f = OUT / f"{stem}-{w}.webp"
-            r.save(f, "WEBP", quality=72, method=6)
+            r.save(f, "WEBP", quality=QUALITY.get(w, 88), method=6)
             print(f.name, r.size, f.stat().st_size)
