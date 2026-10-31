@@ -219,6 +219,26 @@ for (const path of ['/it/agricoltura/copripalo/', '/it/agricoltura/copripalo/cop
   }
 }
 
+// Schede prodotto (famiglia): foto caricate, scheda intera cliccabile, link video sopra la scheda.
+await page.goto(BASE + '/it/agricoltura/copripalo/', { waitUntil: 'networkidle' });
+await page.evaluate(async () => { for (let y = 0; y <= document.body.scrollHeight; y += 400) { window.scrollTo(0, y); await new Promise((r) => setTimeout(r, 50)); } });
+await page.waitForTimeout(600);
+const cardImgs = await page.$$eval('.pcard img', (els) => els.map((i) => ({ ok: i.complete && i.naturalWidth > 0, alt: i.alt, w: i.naturalWidth, src: i.currentSrc })));
+ok(cardImgs.length === 20 && cardImgs.every((i) => i.ok && i.alt), `schede: ${cardImgs.length} foto caricate, tutte con alt`);
+ok(cardImgs.every((i) => /\/photos\//.test(i.src)), 'schede: foto ritagliate (non la pagina del catalogo)');
+const vid = page.locator('.pcard-video').first();
+await vid.scrollIntoViewIfNeeded();
+const vb = await vid.boundingBox();
+ok(await page.evaluate(([x, y]) => !!document.elementFromPoint(x, y).closest('.pcard-video'), [vb.x + vb.width / 2, vb.y + vb.height / 2])
+  && (await vid.getAttribute('target')) === '_blank' && /noopener/.test(await vid.getAttribute('rel')), 'schede: link video cliccabile sopra la scheda, nuova scheda con noopener');
+const meta = page.locator('.pcard-meta').nth(3);
+await meta.scrollIntoViewIfNeeded();
+const mb = await meta.boundingBox();
+await page.mouse.click(mb.x + 10, mb.y + mb.height / 2); // il clic arriva al link esteso sulla scheda
+await page.waitForURL(/copripalo-monviso\/$/);
+ok(true, 'schede: clic sul corpo della scheda apre la pagina prodotto');
+ok(await page.locator('.product-videos .video-link').count() === 2 && await page.locator('img.product-photo').evaluate((i) => i.complete && i.naturalWidth > 0), 'Monviso: foto ritagliata e 2 link video');
+
 // Animazioni: dopo lo scorrimento tutto e' visibile e i contatori arrivano al valore della pagina.
 const allShown = (pg) => pg.evaluate(() => [...document.querySelectorAll('[data-reveal], [data-reveal="stagger"] > *, .hx-c, .hx-in > *')]
   .every((el) => parseFloat(getComputedStyle(el).opacity) > 0.99 && !el.classList.contains('rv-wait')));

@@ -1,4 +1,4 @@
-// Uso: python -m arnoplast.site.build && (cd dist && python3 -m http.server 8000) & node tools/check_perf.js [http://localhost:8000]
+// Uso: python -m arnoplast.site.build && (cd dist && python3 -m http.server 8000) & node tools/check_perf.js [http://localhost:8000] [/altra/pagina/ ...]
 // Misura peso, richieste, DCL/load, LCP e CLS in emulazione mobile (390x844, CPU 4x, Fast 3G). Report: esce sempre con 0.
 import { createRequire } from 'node:module';
 import { execSync } from 'node:child_process';
@@ -6,7 +6,7 @@ import { execSync } from 'node:child_process';
 const require = createRequire(import.meta.url);
 const { chromium } = require('playwright');
 const BASE = (process.argv[2] || 'http://localhost:8000').replace(/\/$/, '');
-const PAGES = ['/it/', '/it/agricoltura/', '/it/olive/', '/it/azienda/', '/it/agricoltura/copripalo/', '/it/agricoltura/copripalo/copripalo-prisma/'];
+const PAGES = ['/it/', '/it/agricoltura/', '/it/olive/', '/it/azienda/', '/it/agricoltura/copripalo/', '/it/agricoltura/copripalo/copripalo-prisma/', ...process.argv.slice(3)];
 const kb = (n) => (n / 1024).toFixed(1);
 const kind = (type, url) => (type === 'Document' ? 'html' : type === 'Stylesheet' ? 'css' : type === 'Script' ? 'js' : type === 'Image' || /\.(jpe?g|png|webp|svg)(\?|$)/.test(url) ? 'img' : 'altro');
 
