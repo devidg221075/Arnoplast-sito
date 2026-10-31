@@ -313,6 +313,12 @@ def test_home_hero_first_slide_is_eima_with_the_client_photo(site):
     first = re.findall(r'<img[^>]*fetchpriority="high"[^>]*>', h)
     assert len(first) == 1 and "eima-2026-hero-" in first[0]
     assert 'data-fair-end="2026-11-14"' in h and 'data-fair-end="2026-11-27"' in h
+    # Slide fiera "pulita": il markup parte gia' con la classe, cosi' il titolo fisso non lampeggia sopra la foto.
+    assert re.search(r'<section class="a-hero hs is-fairslide"', h)
+    css = (ROOT / "site/static/css/home.css").read_text(encoding="utf-8")
+    assert ".js .hs.is-fairslide .a-ctas" in css and ".js .hs.is-fairslide .hx-title" in css
+    js = (ROOT / "site/static/js/hero-slides.js").read_text(encoding="utf-8")
+    assert js.count("is-fairslide") >= 2
 
 
 def test_fairs_page(site):

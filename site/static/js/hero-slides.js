@@ -100,6 +100,7 @@
     cur = i;
     // Didascalia e indicatore subito (risposta immediata al comando), foto quando e' pronta.
     caps.forEach(function (c, j) { c.classList.toggle('is-active', j === i); });
+    root.classList.toggle('is-fairslide', caps[i].classList.contains('hs-fair'));
     if (curEl) curEl.textContent = pad(i + 1);
     dots.forEach(function (d, j) { if (j === i) d.setAttribute('aria-current', 'true'); else d.removeAttribute('aria-current'); });
     whenReady(i, function () {
@@ -164,5 +165,6 @@
   document.addEventListener('visibilitychange', function () { hold('hidden', document.hidden); });
 
   root.classList.add('hs-on');
+  root.classList.toggle('is-fairslide', !!(caps[cur] && caps[cur].classList.contains('hs-fair')));
   sync();
 })();

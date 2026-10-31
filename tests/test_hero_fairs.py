@@ -62,7 +62,7 @@ def home(tmp_path, monkeypatch, day, fairs=None):
 
 
 def hero(h):
-    return h[h.index('<section class="a-hero hs"'):h.index('<ul class="wrap a-facts">')]
+    return h[h.index('<section class="a-hero hs'):h.index('<ul class="wrap a-facts">')]
 
 
 def pics(h):

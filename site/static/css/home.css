@@ -181,3 +181,16 @@ html:not(.js) .hs-caps, html:not(.js) .hs-ctrl { display: none; }
   .hs-bar { grid-column: 2; grid-row: 1 / span 5; align-self: end; margin: 0; padding: 18px 22px 8px; border: 1px solid rgba(255, 255, 255, .16); border-radius: var(--r); background: rgba(11, 11, 12, .5); -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); }
   .hs-label { font-size: .9rem; }
 }
+
+/* Slide delle fiere "pulite": la foto della fiera (con il suo logo e le sue scritte) resta luminosa; titolo fisso, pulsanti,
+   ricerca e dati si dissolvono (restano nel layout, quindi niente salti). Titolo: resta nell'albero di accessibilita';
+   il resto esce anche dall'ordine del focus. Solo con JS (classe .js sull'html, messa prima del primo disegno): senza JS
+   resta tutto visibile. */
+.js .hs.is-fairslide .a-kicker, .js .hs.is-fairslide .a-lead, .js .hs.is-fairslide .a-ctas, .js .hs.is-fairslide .a-search, .js .hs.is-fairslide .a-facts { opacity: 0; visibility: hidden; }
+.js .hs.is-fairslide .hx-title { opacity: 0; pointer-events: none; }
+.js .hs.is-fairslide::before { background: linear-gradient(0deg, rgba(11, 11, 12, .85) 0, rgba(11, 11, 12, .4) 24%, transparent 50%), linear-gradient(180deg, rgba(11, 11, 12, .3) 0, transparent 22%); }
+.js .hs.is-fairslide .hs-fp::after { background: transparent; }
+@media (prefers-reduced-motion: no-preference) {
+  .hs .a-kicker, .hs .a-lead, .hs .a-ctas, .hs .a-search, .hs .a-facts, .hs .hx-title { transition: opacity .5s var(--e), visibility 0s; }
+  .js .hs.is-fairslide .a-kicker, .js .hs.is-fairslide .a-lead, .js .hs.is-fairslide .a-ctas, .js .hs.is-fairslide .a-search, .js .hs.is-fairslide .a-facts { transition: opacity .5s var(--e), visibility 0s .5s; }
+}

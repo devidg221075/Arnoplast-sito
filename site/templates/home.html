@@ -8,7 +8,7 @@
    alla sezione. Prima le fiere future (dalla piu' vicina: foto della fiera o fondo grafico, data-fair-end per la
    scadenza in pagina), poi HERO_SLIDES (build.py). Solo la prima foto e' nel markup come <img>; le altre sono dati
    che hero-slides.js carica dopo l'evento load. Senza JS: prima slide e link a tutte le slide (noscript). #}
-<section class="a-hero hs" aria-roledescription="carousel" aria-label="{{ t('hs.label') }}" data-hs data-of="{{ t('hs.of') }}">
+<section class="a-hero hs{{ ' is-fairslide' if slides[0].fair }}" aria-roledescription="carousel" aria-label="{{ t('hs.label') }}" data-hs data-of="{{ t('hs.of') }}">
   <div class="hx-media" data-parallax>
   {% for s in slides %}
     {% set hr = s.hero %}

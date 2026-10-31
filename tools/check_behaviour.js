@@ -240,7 +240,9 @@ ok(true, 'schede: clic sul corpo della scheda apre la pagina prodotto');
 ok(await page.locator('.product-videos .video-link').count() === 2 && await page.locator('img.product-photo').evaluate((i) => i.complete && i.naturalWidth > 0), 'Monviso: foto ritagliata e 2 link video');
 
 // Animazioni: dopo lo scorrimento tutto e' visibile e i contatori arrivano al valore della pagina.
+// Con una slide fiera attiva titolo, pulsanti e ricerca dell'hero sono nascosti apposta ("slide pulita"): non contano.
 const allShown = (pg) => pg.evaluate(() => [...document.querySelectorAll('[data-reveal], [data-reveal="stagger"] > *, .hx-c, .hx-in > *')]
+  .filter((el) => !(document.querySelector('.hs.is-fairslide') && el.closest('.a-hero-in') && !el.closest('.hs-bar') && !el.matches('.hs-bar')))
   .every((el) => parseFloat(getComputedStyle(el).opacity) > 0.99 && !el.classList.contains('rv-wait')));
 const scrollAll = (pg) => pg.evaluate(async () => { for (let y = 0; y <= document.body.scrollHeight; y += 300) { window.scrollTo(0, y); await new Promise((r) => setTimeout(r, 60)); } });
 for (const path of ['/it/', '/it/agricoltura/', '/it/azienda/']) {
@@ -364,14 +366,19 @@ st = await hs(d1);
 ok(at(st, 0) && st.live === 'polite' && /Riprendi/.test(pausedLabel), `carosello: in pausa resta sulla slide 1 per 8 s (aria-live=${st.live}, pulsante "${pausedLabel}")`);
 await d1.locator('.hs-pause').click();
 // Ricerca in uso: la rotazione si ferma mentre si scrive, poi la ricerca funziona.
+// Le slide delle fiere sono pulite (ricerca nascosta): si passa a una slide normale.
+await d1.locator('.hs-dot').nth(2).click();
+await d1.waitForTimeout(800);
 await d1.locator('label[for="site-search"]:not(.sr-only)').first().click();
 await d1.mouse.move(700, 40);
 await d1.keyboard.type('prisma', { delay: 120 });
 await d1.waitForTimeout(7500);
-ok(at(await hs(d1), 0), 'carosello: nessun cambio di slide mentre si scrive nella ricerca');
+ok(at(await hs(d1), 2), 'carosello: nessun cambio di slide mentre si scrive nella ricerca');
 await d1.waitForSelector('#search-results a');
 ok(await d1.locator('#search-results a').count() > 0, 'home 1440: ricerca dalla home con risultati');
 await d1.keyboard.press('Escape');
+await d1.locator('.hs-dot').nth(0).click();
+await d1.waitForTimeout(800);
 // Mouse sopra il carosello: pausa temporanea.
 await d1.evaluate(() => document.activeElement.blur());
 await d1.mouse.move(1100, 500);
@@ -460,10 +467,20 @@ await calm2.close();
       };
     });
     if (r.img0 !== 'poster') r.loaded = await pg.locator('.hs-pic').first().locator('img').evaluate((i) => i.complete && i.naturalWidth > 0);
+    // Slide fiera "pulita": sulle fiere il titolo fisso, i pulsanti e i dati si dissolvono; sulle altre tornano.
+    const clean = () => pg.evaluate(() => {
+      const root = document.querySelector('.hs');
+      const vis = (sel) => getComputedStyle(document.querySelector(sel)).visibility;
+      return { fair: root.classList.contains('is-fairslide'), cta: vis('.a-ctas'), facts: vis('.a-facts') };
+    });
+    r.clean0 = await clean();
+    r.active0Fair = await pg.evaluate(() => document.querySelector('.hs-cap.is-active').classList.contains('hs-fair'));
     // La rotazione riparte dalle slide rimaste: "successiva" va alla seconda, il contatore segue.
     await pg.locator('.hs-next').click();
-    await pg.waitForTimeout(500);
+    await pg.waitForTimeout(700);
     r.next = await pg.locator('.hs-count').textContent();
+    r.clean1 = await clean();
+    r.active1Fair = await pg.evaluate(() => document.querySelector('.hs-cap.is-active').classList.contains('hs-fair'));
     await ctx.close();
     return r;
   };
@@ -476,6 +493,10 @@ await calm2.close();
       ok(r.n === want && r.pics === want && r.dots === want && r.count === `01 / ${pad(want)}` && labelsOk && r.active === 0 && r.pic0 && r.dot0
         && (r.img0 === 'poster' || (r.img0 && r.loaded)) && r.next.trim() === `02 / ${pad(want)}` && !r.overflow,
         `hero fiere ${label} ${iso} ${w} px: ${r.n} slide (attese ${want}), contatore "${r.count}", prima "${r.labels[0]}", successiva "${r.next.trim()}"`);
+      ok(r.clean0.fair === r.active0Fair && r.clean1.fair === r.active1Fair
+        && (!r.clean0.fair || (r.clean0.cta === 'hidden' && r.clean0.facts === 'hidden'))
+        && (r.clean0.fair || r.clean0.cta === 'visible') && (r.clean1.fair || r.clean1.cta === 'visible'),
+        `hero fiere ${label} ${iso} ${w} px: slide fiera pulita solo sulle fiere (prima: ${r.clean0.fair}, seconda: ${r.clean1.fair})`);
       if (iso === '2026-12-01') ok(/Agricoltura$/.test(r.labels[0]) && r.loaded, `hero fiere ${label} ${w} px: prima slide Agricoltura con la foto caricata subito`);
     }
   }
