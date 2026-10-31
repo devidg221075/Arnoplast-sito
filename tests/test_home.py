@@ -172,3 +172,17 @@ def test_image_dimensions_match_files(site):
     for g in garden:
         assert (out / g.lstrip("/")).stat().st_size <= 90 * 1024
         assert size(g) == (960, 640)
+
+
+def test_social_section_loads_facebook_only_after_click(site):
+    out, _ = site
+    h = (out / "it" / "index.html").read_text(encoding="utf-8")
+    assert 'id="a-social-t"' in h and "I nostri post social" in h
+    assert "social.js" in h
+    # nessun iframe e nessuna richiesta a terzi nel markup: l'indirizzo e' un dato letto dallo script al clic
+    assert "<iframe" not in h and ' src="https://www.facebook.com' not in h
+    assert "data-fb-src=\"https://www.facebook.com/plugins/page.php?href=https%3A%2F%2Fwww.facebook.com%2Farnoplast" in h
+    for url in ("facebook.com/arnoplast", "linkedin.com/company/arnoplast-s-r-l", "instagram.com/arnoplast"):
+        assert url in h.split('id="a-social-t"')[1].split("</section>")[0], url
+    js = (Path(__file__).resolve().parent.parent / "site" / "static" / "js" / "social.js").read_text(encoding="utf-8")
+    assert "createElement('iframe')" in js and "preventDefault" in js

@@ -122,6 +122,26 @@
   </div>
 </section>
 
+<section class="a-social wrap" aria-labelledby="a-social-t">
+  <div class="so-text" data-reveal>
+    <p class="a-eyebrow">{{ t('so.eyebrow') }}</p>
+    <h2 id="a-social-t">{{ t('so.title') }}</h2>
+    <p>{{ t('so.text') }}</p>
+    <ul class="so-links">
+    {% for name, url, icon in social %}
+      <li><a class="btn so-btn" href="{{ url }}" target="_blank" rel="noopener">{{ name }}<span class="sr-only"> ({{ t('footer.new_tab') }})</span> <span aria-hidden="true">→</span></a></li>
+    {% endfor %}
+    </ul>
+  </div>
+  <div class="so-feed" data-reveal>
+    <div class="so-box" data-fb-box data-fb-src="https://www.facebook.com/plugins/page.php?href=https%3A%2F%2Fwww.facebook.com%2Farnoplast&amp;tabs=timeline&amp;width=500&amp;height=640&amp;small_header=true&amp;adapt_container_width=true&amp;hide_cover=false&amp;show_facepile=false" data-fb-title="{{ t('so.frame') }}">
+      <p class="so-name">Facebook · ARNOplast</p>
+      <p class="so-note">{{ t('so.privacy') }}</p>
+      <a class="btn btn-primary" href="https://www.facebook.com/arnoplast" target="_blank" rel="noopener" data-fb-load>{{ t('so.load') }}</a>
+    </div>
+  </div>
+</section>
+
 <section class="a-contact wrap" aria-labelledby="a-contact-t">
   <div data-reveal>
     <h2 id="a-contact-t">{{ t('hv.contacts_title') }}</h2>
