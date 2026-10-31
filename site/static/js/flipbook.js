@@ -4,7 +4,10 @@
   'use strict';
   var box = document.querySelector('[data-flip]');
   if (!box) return;
-  var n = +box.getAttribute('data-n'), base = box.getAttribute('data-base');
+  var n = +box.getAttribute('data-n');
+  // Cartella delle pagine ricavata dalla prima immagine dell'elenco (funziona anche con percorsi relativi, da file://).
+  var firstImg = box.querySelector('.fb-list img');
+  var base = firstImg ? firstImg.getAttribute('src').replace(/[^\/]*$/, '') : box.getAttribute('data-base');
   var L = function (k) { return box.getAttribute('data-l-' + k) || ''; };
   var alts = [].map.call(box.querySelectorAll('.fb-list img'), function (i) { return i.alt; });
   var wide = window.matchMedia ? window.matchMedia('(min-width: 900px)') : { matches: false };

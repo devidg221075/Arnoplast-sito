@@ -211,3 +211,8 @@ def test_catalog_flipbook_pages(site):
         h = (out / "it" / "cataloghi" / slug / "index.html").read_text(encoding="utf-8")
         assert f'data-n="{n}"' in h and h.count("<li><img") == n and "flipbook.js" in h
         assert f"/it/cataloghi/{slug}/" in (out / "it" / "cataloghi" / "index.html").read_text(encoding="utf-8")
+
+
+def test_flipbook_base_comes_from_the_page_images():
+    js = (Path(__file__).resolve().parent.parent / "site" / "static" / "js" / "flipbook.js").read_text(encoding="utf-8")
+    assert ".fb-list img" in js and "getAttribute('src')" in js  # percorsi relativi anche da file://
