@@ -25,11 +25,10 @@
     <h1 class="sr-only">Accessori in plastica per chi lavora la terra</h1>
     <div class="hs-titles" id="hs-titles">
     {% for s in slides %}
-      {% if s.fair or not s.title %}<p class="hx-title hs-t{{ ' is-active' if loop.first }}" aria-hidden="true" data-fair-end="{{ s.end if s.fair else '' }}"></p>
-      {% else %}<p class="hx-title hs-t{{ ' is-active' if loop.first }}">{{ hx.split(s.title) }}</p>{% endif %}
+      {% if s.fair or not s.title %}<div class="hs-t{{ ' is-active' if loop.first }}" aria-hidden="true" data-fair-end="{{ s.end if s.fair else '' }}"></div>
+      {% else %}<div class="hs-t{{ ' is-active' if loop.first }}"><p class="hx-title">{{ hx.split(s.title) }}</p><p class="a-lead">{{ s.lead }}</p></div>{% endif %}
     {% endfor %}
     </div>
-    <p class="a-lead">{{ t('home.tagline') }}</p>
     <div class="a-ctas">
       <a class="btn btn-primary" href="#linee">{{ t('hv.discover') }}</a>
       <a class="btn a-btn-light" href="/{{ lang }}/richiesta-preventivo/">{{ t('hv.quote_cta') }}</a>

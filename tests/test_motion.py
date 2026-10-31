@@ -81,7 +81,7 @@ def test_split_title_stays_readable_for_screen_readers(site, rel):
     h1 = re.search(r"<h1[^>]*>(.*?)</h1>", h, re.S).group(1)
     if 'class="sr-only"' in h.split(h1)[0][-30:]:  # home: H1 per lettori di schermo + un titolo per slide (.hs-t)
         assert h1.strip()
-        titles = re.findall(r'<p class="hx-title hs-t[^"]*">(.*?)</p>', h, re.S)
+        titles = re.findall(r'<div class="hs-t[^"]*"><p class="hx-title">(.*?)</p>', h, re.S)
         assert titles, "la home deve avere un titolo per ogni slide non-fiera"
         for t_ in titles:
             _split_ok(t_)
