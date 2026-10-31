@@ -20,7 +20,7 @@ Controlli nel browser (richiedono Playwright con Chromium e un server che
 serva la cartella costruita, vedi "Build"):
 
     node tools/check_behaviour.js http://localhost:8000   # lista richiesta, modulo, ricerca, 390 px, senza JS
-    node tools/check_perf.js http://localhost:8000        # peso, LCP e CLS in emulazione mobile
+    node tools/check_perf.js http://localhost:8000 [/altra/pagina/ ...]  # peso, LCP e CLS in emulazione mobile
 
 ## Dati del catalogo
 
@@ -33,8 +33,24 @@ non lo sovrascrive mai senza `--force`. Il risultato "grezzo" va in
 `data/catalog.generated.json` per un confronto. Le immagini prodotto in
 `data/images/` (non versionate) si generano solo con `--images-only` o `--force`:
 senza questo passo il sito viene costruito senza foto (la build lo segnala su
-stderr). Richiede poppler (`pdftotext`, `pdftoppm`, `pdfinfo`) e i PDF in
-`content/source/`. `python -m arnoplast.extract.report` scrive `data/review.html`
+stderr). Richiede poppler (`pdftotext`, `pdftoppm`, `pdfinfo`, `pdftohtml`) e i PDF in
+`content/source/`.
+
+Foto prodotto: lo stesso passo (`--images-only` o `--force`) scrive anche, accanto a ogni
+`<slug>.jpg` (la fascia di pagina del catalogo), `<slug>.photo.png`, la sola foto del prodotto
+ritagliata ai pixel nativi (`arnoplast/extract/photos.py`: immagine incorporata piu' grande della
+fascia, letta con `pdftohtml -xml`, orientata come in pagina, fondo quasi bianco portato a bianco).
+I dati di ogni ritaglio (pagina, zona in pt, risoluzione, eventuale motivo di controllo) vanno in
+`data/photos.json`, versionato; le correzioni fatte a occhio sul foglio di contatto stanno in
+`PHOTO_OVERRIDES`/`PHOTO_CHECKED` di `photos.py`. I prodotti con foto da controllare compaiono nel
+report (`data/review.html`, "Foto da controllare"). Le foto non sono versionate: come le
+miniature, la build del sito le converte in WebP (`dist/photos/`, larghezze 360/640 mai oltre i
+pixel nativi) e, se mancano, ricade sulla miniatura della pagina del catalogo.
+
+Video: `data/videos.json` ("linea/famiglia/prodotto" -> link YouTube letti dai QR code dei
+cataloghi) e' letto dalla build e non tocca `catalog.json`; un eventuale `video_url` del catalogo
+si aggiunge senza doppioni. Una chiave che non corrisponde a un prodotto ferma la build con un
+errore. Nel sito ci sono solo link (nuova scheda), nessun embed: nessuna richiesta esterna. `python -m arnoplast.extract.report` scrive `data/review.html`
 (controllo dei dati, con la sezione "Codice ripetuto con dati diversi").
 
 ## Build
@@ -42,8 +58,11 @@ stderr). Richiede poppler (`pdftotext`, `pdftoppm`, `pdfinfo`) e i PDF in
     python -m arnoplast.site.build
 
 Scrive il sito statico in `dist/` (non versionata; la build accetta come
-destinazione solo `dist/` o cartelle fuori dal repo). Include miniature WebP
-(Pillow), `robots.txt` e `sitemap.xml`. I link sono assoluti (`/it/...`): il sito
+destinazione solo `dist/` o cartelle fuori dal repo). Include foto e miniature WebP
+(Pillow), `robots.txt` e `sitemap.xml`. Le pagine famiglia sono griglie di schede prodotto
+(foto, nome, sigle materiale, codici, video; stile in `site/static/css/cards.css`, caricato solo
+li'); la pagina prodotto mostra la foto ritagliata e il link "Pagina del catalogo" alla pagina
+intera, con tabelle e disegni tecnici. I link sono assoluti (`/it/...`): il sito
 va servito dalla radice di un dominio, ad esempio:
 
     (cd dist && python3 -m http.server 8000)
