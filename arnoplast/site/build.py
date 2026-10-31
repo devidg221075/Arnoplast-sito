@@ -2,11 +2,14 @@
 from __future__ import annotations
 
 import json
+import os
 import re
 import shutil
 import sys
+from datetime import date
 from html import escape
 from pathlib import Path
+from urllib.parse import quote
 
 from jinja2 import Environment, FileSystemLoader, select_autoescape
 
@@ -18,22 +21,70 @@ ROOT = Path(__file__).resolve().parent.parent.parent
 DATA_DIR = ROOT / "data"
 SITE_DIR = ROOT / "site"
 
-COMPANY_HISTORY = [
-    "Nel 1975 nasce ARNOstampi sdf, officina di stampaggio di materie plastiche.",
-    "Nel 1983 l'attività diventa ARNOplast s.r.l.",
-    "A metà degli anni Ottanta inizia la produzione di accessori per l'agricoltura professionale, destinati soprattutto al Sud Italia.",
-    "Alla fine degli anni Novanta nasce la gamma a marchio proprio per agricoltura e giardinaggio, insieme alla società di distribuzione ARNOcommerciale s.r.l.",
-    "Oggi la sede e gli stabilimenti si trovano a Rignano sull'Arno, vicino a Firenze, e lavorano insieme a una squadra di terzisti toscani. I prodotti sono venduti in tutta Europa, nel Mediterraneo e in alcuni paesi d'oltremare.",
-]
+# Storia aziendale: testi del cliente dalla home del sito vecchio ("Da dove siamo nati / Arno Plast - La storia" e
+# "Cosa facciamo e dove vogliamo andare / Arno Plast - Oggi"), riportati senza modifiche. Tappa -> (etichetta, testo).
+COMPANY_STORY = {
+    "kicker": "Da dove siamo nati",
+    "title": "Arno Plast - La storia",
+    "steps": [
+        ("1975", "ARNOplast s.r.l. nasce nel 1975 come ARNOstampi sdf. Nei primi anni l’azienda si focalizza sulla "
+                 "progettazione e sulla costruzione di stampi per iniezione e soffiaggio di materie plastiche."),
+        ("1983", "Nel 1983 la nuova denominazione ARNOplast s.r.l. contraddistingue il primo allineamento strategico "
+                 "che l’azienda implementa con la volontà di fornire alla clientela un servizio completo, dalla "
+                 "progettazione al prodotto finito."),
+        ("Anni Ottanta", "A metà anni Ottanta inizia anche una limitata produzione di accessori a proprio marchio per "
+                         "agricoltura professionale rivolti in prevalenza al mercato dell’Italia meridionale."),
+        ("Anni Novanta", "Alla fine degli anni Novanta, l’impresa, intuendo le difficoltà cui sarebbe andata incontro "
+                         "di lì a poco la subfornitura, mette in atto una seconda svolta strategica e decide di trarre "
+                         "il massimo dalle proprie capacità innovative presentando una gamma di prodotti a proprio "
+                         "marchio per agricoltura e giardinaggio; di questo periodo anche la creazione di una società "
+                         "dedita esclusivamente al processo di distribuzione, la ARNO commerciale s.r.l.."),
+    ],
+    "today_kicker": "Cosa facciamo e dove vogliamo andare",
+    "today_title": "Arno Plast - Oggi",
+    "today": ("Oggi", "Oggi ARNOplast – con sede e stabilimenti produttivi a Rignano sull’Arno, non lontano da Firenze, "
+                      "assieme ad una squadra di conto terzisti in Toscana – collegata ad ARNO commerciale ha "
+                      "conquistato una posizione nel mercato italiano dei sistemi per il giardinaggio e l’agricoltura "
+                      "ed è arrivata a commercializzare i propri prodotti in tutta Europa, nel Bacino del Mediterraneo "
+                      "e in alcuni Paesi oltre oceano."),
+    "source": "https://www.arnoplast.it/",
+}
 
+# Dati societari (dal sito vecchio, pagina Contatti e piè di pagina). Usati da footer, Contatti, home, preventivo.
 CONTACTS = {
-    "name": "ARNO Commerciale s.r.l.",
-    "address": "Via G. di Vittorio, 37, 50067 Rignano sull'Arno (FI) - ITALY",
-    "phone": "+39 055 8347031/3",
-    "fax": "+39 055 8347016",
+    "name": "ARNO PLAST S.r.l.",
+    "street": "Via Comunale dell'Isola 65/B/C/D",
+    "city": "50067 Rignano sull'Arno (FI)",
+    "country": "ITALY",
+    "address": "Via Comunale dell'Isola 65/B/C/D, 50067 Rignano sull'Arno (FI) - ITALY",
+    "phones": [("+39 055 83 47 031", "+390558347031"), ("+39 055 83 47 033", "+390558347033")],
+    "phone": "+39 055 83 47 031",
+    "phone_tel": "+390558347031",
     "email": "info@arnoplast.it",
+    "vat": "01987190483",
+    "rea": "FI355293",
+    "capital": "49.580,00 i.v.",
     "web": "www.arnoplast.it",
 }
+# Indirizzo su Google Maps: solo un link esterno (nessuna mappa incorporata, nessuna richiesta a terzi).
+MAPS_URL = "https://www.google.com/maps/search/?api=1&query=" + quote(
+    "ARNO PLAST, Via Comunale dell'Isola 65, 50067 Rignano sull'Arno FI")
+SOCIAL = [
+    ("Facebook", "https://www.facebook.com/arnoplast", "facebook"),
+    ("LinkedIn", "https://it.linkedin.com/company/arnoplast-s-r-l", "linkedin"),
+    ("Instagram", "https://www.instagram.com/arnoplast/", "instagram"),
+]
+APPS = [
+    ("App Store", "https://apps.apple.com/it/app/arno-plast/id1534894744", "apple"),
+    ("Google Play", "https://play.google.com/store/apps/details?id=com.arnoplast.keyidea&hl=it&gl=IT", "play"),
+]
+
+
+def build_date() -> date:
+    """Data di build: oggi, o ARNO_BUILD_DATE (AAAA-MM-GG) per i test e le anteprime. Decide fiere passate e anno."""
+    env = os.environ.get("ARNO_BUILD_DATE", "").strip()
+    return date.fromisoformat(env) if env else date.today()
+
 
 # Dominio di produzione: serve ai canonical e alla sitemap (la fase WordPress puo' cambiarlo qui).
 SITE_URL = "https://www.arnoplast.it"
@@ -74,6 +125,7 @@ HEROES = {
     "garden": ("prato", "prato-alto", "Prato e alberi in una giornata di sole"),
     "olive": ("oliveto", "oliveto-alto", "Raccolta delle olive con l'abbacchiatore"),
     "azienda": ("sede-giorno", "sede-giorno-alto", "La sede ARNOplast a Rignano sull'Arno"),
+    "imballaggi": ("imballaggi-giorno", "imballaggi-giorno-alto", "Filari di un frutteto sotto la rete di protezione"),
 }
 
 # Variante serale dell'hero (dalle 19 alle 7 ora locale): pagina -> (foto, ritaglio verticale). Facoltativa: senza,
@@ -81,19 +133,126 @@ HEROES = {
 NIGHT_HEROES = {
     "agricoltura": ("agricoltura-notte", "agricoltura-notte-alto"),
     "azienda": ("sede-notte", "sede-notte-alto"),
+    "imballaggi": ("imballaggi-notte", "imballaggi-notte-alto"),
 }
 
 # Attributo sizes delle foto ad alta risoluzione: (foto larga, ritaglio verticale). 120vw lascia margine al lento
 # zoom (Ken Burns, fino a 1,14x); il ritaglio verticale a 100vw sceglie la versione da 840 px sui telefoni a 2x
 # (e' l'LCP su rete mobile). Le altre pagine usano 100vw.
-HERO_SIZES = {"agricoltura": ("120vw", "100vw"), "azienda": ("120vw", "120vw")}
+HERO_SIZES = {"agricoltura": ("120vw", "100vw"), "azienda": ("120vw", "120vw"), "imballaggi": ("120vw", "100vw")}
 
 # Carosello dell'hero della home, in quest'ordine (la prima slide e' l'identita' della home e l'unica foto caricata
 # subito): pagine di HEROES/NIGHT_HEROES. Per cambiare una foto o aggiungere la variante serale si toccano solo
 # quelle due tabelle (e tools/hero_images.py): pagina della linea e slide restano allineate.
 HERO_SLIDES = ["agricoltura", "garden", "olive", "azienda"]
 
-SECTIONS = ["richiesta-preventivo", "contatti", "azienda", "applicazioni", "video", "area-riservata"]
+def menu_items(lang: str) -> list[dict]:
+    """Menu principale (ordine deciso dal cliente). Voce con `children`: sottomenu a tendina (desktop) o a fisarmonica
+    (telefono); il suo `href` serve al menu "light" del piè di pagina (solo primo livello)."""
+    L = f"/{lang}"
+    return [
+        {"key": "menu.home", "href": f"{L}/"},
+        {"key": "menu.company", "href": f"{L}/azienda/", "children": [
+            {"key": "menu.about", "href": f"{L}/azienda/"},
+            {"key": "menu.packaging", "href": f"{L}/azienda/imballaggi/"}]},
+        {"key": "menu.fairs", "href": f"{L}/fiere/"},
+        {"key": "menu.products", "href": f"{L}/#linee", "children": [
+            {"key": "menu.agricoltura", "href": f"{L}/agricoltura/"},
+            {"key": "menu.garden", "href": f"{L}/garden/"},
+            {"key": "menu.olive", "href": f"{L}/olive/"},
+            {"key": "menu.catalogs", "href": f"{L}/cataloghi/"}]},
+        {"key": "menu.gallery", "href": f"{L}/galleria/"},
+        {"key": "menu.videos", "href": f"{L}/video/"},
+        {"key": "menu.contacts", "href": f"{L}/contatti/"},
+    ]
+
+
+def nav_state(path: str, lang: str) -> list[dict]:
+    """Menu con lo stato della pagina `path` (es. "/it/azienda/imballaggi/"): `current` sulla voce della pagina,
+    `active` sulla voce della sezione (anche per le sottopagine: famiglie e prodotti ricadono sulla loro linea) e sul
+    genitore del sottomenu. Vince il collegamento piu' lungo che e' prefisso del percorso; la home solo se esatta."""
+    items = [dict(it, children=[dict(c) for c in it.get("children", [])]) for it in menu_items(lang)]
+    links = [(it, None) for it in items if not it["children"]] + [(c, it) for it in items for c in it["children"]]
+    best = None
+    for link, parent in links:
+        h = link["href"]
+        if h == path or (h != f"/{lang}/" and path.startswith(h)):
+            if best is None or len(h) > len(best[0]["href"]):
+                best = (link, parent)
+    if best:
+        link, parent = best
+        link["active"] = True
+        link["current"] = link["href"] == path
+        if parent:
+            parent["active"] = True
+    return items
+
+
+# --- fiere (data/fiere.json) ------------------------------------------------------
+
+MONTHS = ["gennaio", "febbraio", "marzo", "aprile", "maggio", "giugno", "luglio", "agosto", "settembre", "ottobre",
+          "novembre", "dicembre"]
+FAIR_FIELDS = ("id", "nome", "luogo", "paese", "data_inizio", "data_fine", "anno", "periodo", "stand", "testo",
+               "fonte_url_sito_vecchio")
+
+
+def load_fairs(path: Path | None = None) -> list[dict]:
+    """data/fiere.json -> lista di fiere. Errore chiaro per campi mancanti, id doppi o date non ISO."""
+    path = DATA_DIR / "fiere.json" if path is None else Path(path)
+    fairs = json.loads(path.read_text(encoding="utf-8"))["fiere"] if path.is_file() else []
+    seen = set()
+    for f in fairs:
+        missing = [k for k in FAIR_FIELDS if k not in f]
+        if missing:
+            raise ValueError(f"data/fiere.json: {f.get('id')!r} senza {', '.join(missing)}")
+        if f["id"] in seen:
+            raise ValueError(f"data/fiere.json: id ripetuto {f['id']!r}")
+        seen.add(f["id"])
+        for k in ("data_inizio", "data_fine"):
+            if f[k]:
+                date.fromisoformat(f[k])
+    return fairs
+
+
+def fair_dates(f: dict) -> str:
+    """Date leggibili: "10-14 novembre 2026", "30 novembre - 3 dicembre 2023"; senza date il periodo o l'anno."""
+    if not f["data_inizio"]:
+        return f["periodo"] or str(f["anno"])
+    a = date.fromisoformat(f["data_inizio"])
+    b = date.fromisoformat(f["data_fine"]) if f["data_fine"] else a
+    if a == b:
+        return f"{a.day} {MONTHS[a.month - 1]} {a.year}"
+    if (a.year, a.month) == (b.year, b.month):
+        return f"{a.day}–{b.day} {MONTHS[a.month - 1]} {a.year}"
+    if a.year == b.year:
+        return f"{a.day} {MONTHS[a.month - 1]} – {b.day} {MONTHS[b.month - 1]} {a.year}"
+    return f"{a.day} {MONTHS[a.month - 1]} {a.year} – {b.day} {MONTHS[b.month - 1]} {b.year}"
+
+
+def _fair_end(f: dict) -> date:
+    for k in ("data_fine", "data_inizio"):
+        if f[k]:
+            return date.fromisoformat(f[k])
+    return date(int(f["anno"]), 12, 31)  # senza date: conta solo l'anno
+
+
+def split_fairs(fairs: list[dict], today: date) -> tuple[list[dict], list[tuple[int, list[dict]]]]:
+    """(prossime, passate per anno). Passata = fine (o inizio, o 31/12 dell'anno) precedente a `today`. Prossime dalla
+    piu' vicina; passate dalla piu' recente, raggruppate per anno decrescente."""
+    view = [dict(f, date_label=fair_dates(f), end=_fair_end(f)) for f in fairs]
+    upcoming = sorted((f for f in view if f["end"] >= today), key=lambda f: (f["data_inizio"] or "9999", f["id"]))
+    past = sorted((f for f in view if f["end"] < today), key=lambda f: (f["end"], f["id"]), reverse=True)
+    years: dict[int, list[dict]] = {}
+    for f in past:
+        years.setdefault(int(f["anno"]), []).append(f)
+    return upcoming, sorted(years.items(), reverse=True)
+
+
+def load_packaging(path: Path | None = None) -> dict:
+    """data/imballaggi.json: titolo e paragrafi della pagina Imballaggi (vuoti finche' il cliente non da' il testo)."""
+    path = DATA_DIR / "imballaggi.json" if path is None else Path(path)
+    data = json.loads(path.read_text(encoding="utf-8")) if path.is_file() else {}
+    return {"titolo": data.get("titolo") or "Imballaggi", "paragrafi": [p for p in data.get("paragrafi", []) if p.strip()]}
 
 
 def _env(lang: str) -> Environment:
@@ -101,13 +260,8 @@ def _env(lang: str) -> Environment:
                       autoescape=select_autoescape(["html"], default=True),
                       trim_blocks=True, lstrip_blocks=True)
     env.globals.update(lang=lang, contacts=CONTACTS, t=lambda k: t(k, lang), text=lambda d: text(d, lang),
-                       menu=[(f"/{lang}/", "menu.products"),
-                             (f"/{lang}/applicazioni/", "menu.applications"),
-                             (f"/{lang}/video/", "menu.videos"),
-                             (f"/{lang}/azienda/", "menu.company"),
-                             (f"/{lang}/area-riservata/", "menu.reserved"),
-                             (f"/{lang}/contatti/", "menu.contacts"),
-                             (f"/{lang}/richiesta-preventivo/", "menu.quote")])
+                       menu=menu_items(lang), nav_state=lambda path: nav_state(path, lang), social=SOCIAL, apps=APPS,
+                       privacy_url=PRIVACY_URL, year=build_date().year, maps_url=MAPS_URL)
     return env
 
 
@@ -389,12 +543,15 @@ def build_site(c: Catalog, out: Path, lang: str = "it", sources: Path | None = N
     urls: list[str] = []
     imgs = home_images()
 
-    def render(tpl: str, dest: Path, description: str | None = None, **ctx) -> None:
+    def render(tpl: str, dest: Path, description: str | None = None, sitemap: bool = True, **ctx) -> None:
         rel = dest.relative_to(out).as_posix()
         canonical = f"{SITE_URL}/{rel}/"
-        urls.append(canonical)
+        if sitemap:
+            urls.append(canonical)
+        ctx.setdefault("nav", env.globals["nav_state"](f"/{rel}/"))
         _write(dest / "index.html", env.get_template(tpl).render(
-            description=_clip(description, 200) if description else None, canonical=canonical, **ctx), written)
+            description=_clip(description, 200) if description else None, canonical=canonical, path=f"/{rel}/",
+            **ctx), written)
 
     render("home.html", base, description=t("home.tagline", lang), title=t("home.title", lang),
            **home_context(c, lang))
@@ -468,16 +625,40 @@ def build_site(c: Catalog, out: Path, lang: str = "it", sources: Path | None = N
            description=t("quote.intro", lang), privacy_url=PRIVACY_URL)
     render("page.html", base / "contatti", line=None, title=t("page.contacts", lang),
            description=f"{CONTACTS['name']}, {CONTACTS['address']}. Tel. {CONTACTS['phone']}, {CONTACTS['email']}.",
-           kind="contacts", contacts=CONTACTS)
+           kind="contacts")
+    story = COMPANY_STORY
     render("company.html", base / "azienda", line=None, title=t("page.company", lang),
-           description=" ".join(COMPANY_HISTORY[:2]), paragraphs=COMPANY_HISTORY,
+           description=" ".join(text for _, text in story["steps"][:2]), story=story,
            hero=_hero("azienda", imgs), imgs=imgs)
-    render("page.html", base / "applicazioni", line=None, title=t("page.applications", lang),
-           kind="placeholder")
-    render("page.html", base / "video", line=None, title=t("page.videos", lang),
-           kind="placeholder")
-    render("page.html", base / "area-riservata", line=None, title=t("page.reserved", lang),
-           kind="reserved")
+    pack = load_packaging()
+    render("packaging.html", base / "azienda" / "imballaggi", line=None, title=pack["titolo"], pack=pack,
+           hero=_hero("imballaggi", imgs),
+           description=" ".join(pack["paragrafi"])[:200] or f"{pack['titolo']} - {CONTACTS['name']}, Rignano sull'Arno.")
+    today = build_date()
+    upcoming, past = split_fairs(load_fairs(), today)
+    render("fairs.html", base / "fiere", line=None, title=t("page.fairs", lang), upcoming=upcoming, past=past,
+           description="Le fiere a cui partecipa ARNOplast: prossimi appuntamenti e archivio delle fiere passate.")
+    pdfs = []
+    for slug, (src_name, pub_name) in CATALOG_PDFS.items():
+        f = out / "downloads" / pub_name
+        if f.is_file():
+            l = next((l for l in c.lines if l.slug == slug), None)
+            pdfs.append({"slug": slug, "name": text(l.name, lang) if l else slug.title(), "url": f"/downloads/{pub_name}",
+                         "year": re.search(r"(\d{4})", pub_name).group(1),
+                         "mb": f"{f.stat().st_size / 1e6:.1f}".replace(".", ",")})
+    render("catalogs.html", base / "cataloghi", line=None, title=t("page.catalogs", lang), pdfs=pdfs,
+           description="Cataloghi ARNOplast in PDF da scaricare (Agricoltura, Garden, Raccolta olive) e app ARNOplast.")
+    render("page.html", base / "galleria", line=None, title=t("page.gallery", lang), kind="placeholder")
+    render("page.html", base / "video", line=None, title=t("page.videos", lang), kind="placeholder")
+    render("page.html", base / "area-riservata", line=None, title=t("page.reserved", lang), kind="reserved")
+    render("page.html", base / "cookie", line=None, title=t("page.cookie", lang), kind="cookie")
+    # Vecchio indirizzo del prototipo: rimanda alla Galleria (anche in _redirects), fuori dalla sitemap.
+    render("moved.html", base / "applicazioni", line=None, title=t("page.gallery", lang), sitemap=False,
+           target=f"/{lang}/galleria/", canonical_override=f"{SITE_URL}/{lang}/galleria/")
+    # Inglese: per ora una sola pagina "in arrivo" (noindex, fuori dalla sitemap), con lo stesso header e footer.
+    # Header e footer restano quelli italiani (le pagine inglesi non esistono ancora); il contenuto e' lang="en".
+    render("en.html", out / "en", line=None, title="English version coming soon", sitemap=False, noindex=True,
+           page_lang="en", nav=nav_state("/en/", lang))
 
     (base / "search-index.json").write_text(
         json.dumps(list(search_arts.values()) + search_pages, ensure_ascii=False, separators=(",", ":")),
@@ -492,11 +673,18 @@ def build_site(c: Catalog, out: Path, lang: str = "it", sources: Path | None = N
     static = SITE_DIR / "static"
     if static.is_dir():
         shutil.copytree(static, out / "static", dirs_exist_ok=True)
+        # Menu (nav.js) in coda ad anim.js: entrambi script classici in ogni pagina; separati costavano una
+        # connessione in piu' prima delle immagini (LCP delle famiglie peggiore di ~300 ms in Fast 3G).
+        js = out / "static" / "js"
+        if (js / "nav.js").is_file():
+            (js / "anim.js").write_text((static / "js" / "anim.js").read_text(encoding="utf-8").rstrip() + "\n;\n"
+                                        + (static / "js" / "nav.js").read_text(encoding="utf-8"), encoding="utf-8")
 
     redirects = DATA_DIR / "redirects.csv"
     if redirects.is_file():
         shutil.copyfile(redirects, out / "redirects.csv")
-        (out / "_redirects").write_text(netlify_rules(load_redirects(redirects)), encoding="utf-8")
+        rows = load_redirects(redirects) + [(f"/{lang}/applicazioni/", f"/{lang}/galleria/")]
+        (out / "_redirects").write_text(netlify_rules(rows), encoding="utf-8")
     return written
 
 

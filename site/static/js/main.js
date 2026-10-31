@@ -1,4 +1,4 @@
-// Comportamento del prototipo: lista richiesta, contatori, modulo, ricerca, menu mobile.
+// Comportamento del prototipo: lista richiesta, contatori, modulo, ricerca (il menu e' in nav.js).
 // ES module senza dipendenze. Tutto l'accesso a localStorage passa da quote.js (load/save).
 import { addItem, canAdd, setQty, removeItem, isValidQty, load, save, emailBody, itemKey, QTY_MAX, STORAGE_KEY } from './quote.js';
 import { buildIndex, search } from './search.js';
@@ -443,31 +443,7 @@ if (searchInput && results) {
   });
 }
 
-/* ---------- Menu mobile ---------- */
-const toggle = $('.menu-toggle');
-const nav = $('#site-menu');
-if (toggle && nav) {
-  const setOpen = (open) => {
-    toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
-    nav.classList.toggle('open', open);
-  };
-  toggle.addEventListener('click', () => setOpen(toggle.getAttribute('aria-expanded') !== 'true'));
-  document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape' && toggle.getAttribute('aria-expanded') === 'true') { setOpen(false); toggle.focus(); }
-  });
-  document.addEventListener('click', (e) => {
-    if (toggle.getAttribute('aria-expanded') === 'true' && !e.target.closest('.site-header')) setOpen(false);
-  });
-}
-
-// Voce di menu corrente (le pagine di catalogo ricadono su "Prodotti").
-{
-  const here = location.pathname;
-  const items = $$('.menu a').map((a) => [a, new URL(a.href, location.href).pathname]);
-  const match = items.find(([, p]) => p !== `/${LANG}/` && here.startsWith(p))
-    || items.find(([, p]) => p === `/${LANG}/` && here.startsWith(p) && here !== p);
-  if (match) match[0].setAttribute('aria-current', 'page');
-}
+// Menu (pannello del telefono, sottomenu, voce attiva): nav.js e il markup generato dalla build.
 
 updateCounters();
 renderQuote();

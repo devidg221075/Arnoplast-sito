@@ -1,0 +1,83 @@
+/* Pagine Azienda, Imballaggi, Fiere, Cataloghi. */
+
+/* Storia a tappe: linea verticale, anni in evidenza; su desktop l'anno a sinistra della linea. */
+.co-h { font-size: clamp(1.9rem, 5.4vw, 3.4rem); max-width: 18ch; margin-bottom: 28px; }
+.co-timeline { position: relative; list-style: none; margin: 0 0 56px; padding: 0; }
+.co-timeline::before { content: ""; position: absolute; left: 7px; top: 8px; bottom: 8px; width: 2px; background: linear-gradient(var(--red), var(--line)); }
+.co-timeline li { position: relative; padding: 0 0 32px 40px; }
+.co-timeline li::before { content: ""; position: absolute; left: 0; top: 6px; width: 16px; height: 16px; border-radius: 50%; background: var(--white); border: 3px solid var(--red); }
+.co-year { margin: 0 0 6px; }
+.co-year span { display: inline-block; font-size: clamp(1.5rem, 4.5vw, 2.4rem); font-weight: 900; line-height: 1; letter-spacing: -.03em; text-transform: uppercase; color: var(--red); }
+.co-timeline p:last-child { margin: 0; max-width: 62ch; font-size: 1.08rem; line-height: 1.6; }
+.co-timeline-end { margin-bottom: 0; }
+.co-timeline-end::before { background: var(--red); bottom: auto; height: 24px; }
+.co-timeline-end li::before { background: var(--red); }
+.co-today { padding-top: 8px; }
+.co-links { display: grid; gap: 20px; }
+.co-card { padding: 28px; border-radius: var(--r); background: var(--paper); }
+.co-card h2 { font-size: clamp(1.4rem, 3.6vw, 2rem); }
+.co-card address { font-style: normal; line-height: 1.7; margin-bottom: 18px; }
+.co-card-pack { background: var(--black); color: var(--white); }
+.co-card-pack p { color: #d6d6db; }
+.co-btns { display: flex; flex-wrap: wrap; gap: 10px; margin: 0; }
+.co-card-pack .btn-ghost, .hx .btn-ghost { border-color: var(--white); }
+
+/* Imballaggi: blocco "in arrivo" */
+.soon { max-width: 760px; padding: 32px 28px; border-left: 6px solid var(--red); background: var(--paper); border-radius: var(--r); }
+.soon h2 { font-size: clamp(1.4rem, 3.6vw, 2rem); }
+.soon p { max-width: 60ch; }
+
+/* Fiere */
+.fr-cards { list-style: none; margin: 0; padding: 0; display: grid; gap: 18px; }
+.fr-card { display: flex; flex-direction: column; padding: 26px 24px; border-radius: var(--r); background: var(--black); color: var(--white); border-top: 6px solid var(--red); }
+.fr-card h3 { font-size: clamp(1.5rem, 4vw, 2.1rem); margin-bottom: 14px; }
+.fr-text { color: #d6d6db; font-size: .95rem; }
+.fr-cta { margin-top: auto; align-self: flex-start; font-weight: 800; font-size: .8rem; letter-spacing: .08em; text-transform: uppercase; color: var(--white); }
+.fr-cta:hover { color: var(--yellow); }
+.fr-meta { display: grid; gap: 6px; margin: 0 0 14px; font-size: .95rem; }
+.fr-meta div { display: flex; gap: 10px; }
+.fr-meta dt { flex: 0 0 4.5em; font-size: .72rem; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; line-height: 1.9; opacity: .75; }
+.fr-meta dd { margin: 0; font-weight: 700; }
+.fr-openday { background: var(--yellow); color: var(--black); padding: 36px 0; }
+.fr-openday h2 { font-size: clamp(1.4rem, 3.6vw, 2rem); margin-bottom: .3em; }
+.fr-openday p { margin: 0; font-weight: 600; }
+.fr-year { display: grid; gap: 8px 32px; padding: 24px 0; border-top: 2px solid var(--ink); }
+.fr-y { font-size: clamp(2rem, 6vw, 3.2rem); color: var(--red); margin: 0; }
+.fr-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 22px; }
+.fr-list li { padding-bottom: 20px; border-bottom: 1px solid var(--line); }
+.fr-list li:last-child { border-bottom: 0; padding-bottom: 0; }
+.fr-list h4 { margin: 0 0 8px; font-size: 1.2rem; font-weight: 900; text-transform: uppercase; letter-spacing: -.01em; }
+.fr-list .fr-meta { color: var(--muted); }
+.fr-list .fr-meta dt { opacity: 1; }
+.fr-list .fr-meta dd { color: var(--ink); font-weight: 600; }
+.fr-list details { max-width: 70ch; }
+.fr-list summary { cursor: pointer; font-weight: 800; font-size: .8rem; letter-spacing: .08em; text-transform: uppercase; color: var(--red-dark); min-height: 32px; display: flex; align-items: center; }
+.fr-list details p { margin: 8px 0 0; }
+.fr-src { font-size: .8rem; color: var(--muted); }
+
+/* Cataloghi */
+.cat-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 18px; }
+.cat-item { padding: 26px 24px; border-radius: var(--r); background: var(--paper); border-top: 6px solid var(--red); }
+.cat-item[data-line="agricoltura"] { border-top-color: #3f8622; }
+.cat-item[data-line="olive"] { border-top-color: #6b7a12; }
+.cat-item h2 { font-size: clamp(1.5rem, 4vw, 2.1rem); }
+.cat-kind { font-size: .76rem; font-weight: 800; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); margin-bottom: 8px; }
+.cat-size { color: var(--muted); font-weight: 600; }
+.cat-app { padding-top: 0; }
+.cat-app h2 { font-size: clamp(1.3rem, 3.4vw, 1.8rem); }
+
+@media (min-width: 700px) {
+  .co-links { grid-template-columns: 1fr 1fr; }
+  .fr-cards, .cat-list { grid-template-columns: repeat(2, 1fr); }
+  .fr-year { grid-template-columns: 9rem 1fr; }
+}
+@media (min-width: 1024px) {
+  .co-timeline { margin-left: 13rem; }
+  .co-timeline li { padding-left: 48px; padding-bottom: 44px; }
+  .co-year { position: absolute; right: calc(100% + 24px); top: 0; width: 12rem; text-align: right; }
+  .co-timeline p:last-child { font-size: 1.15rem; }
+  .co-today { margin-left: 13rem; }
+  .co-today .co-timeline { margin-left: 0; }
+  .fr-cards, .cat-list { grid-template-columns: repeat(3, 1fr); }
+  .fr-card, .cat-item { padding: 32px 30px; }
+}

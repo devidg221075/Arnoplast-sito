@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% block head_extra %}<meta http-equiv="refresh" content="0; url={{ target }}">
+  <meta name="robots" content="noindex">{% endblock %}
+{% block main %}
+<section class="page-head">
+  <div class="wrap">
+    <h1>{{ title }}</h1>
+    <p><a href="{{ target }}">{{ title }}</a></p>
+  </div>
+</section>
+{% endblock %}

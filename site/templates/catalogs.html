@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block head_extra %}<link rel="stylesheet" href="/static/css/pages.css">{% endblock %}
+{% block main %}
+<section class="page-head">
+  <div class="wrap">
+    <nav class="breadcrumb" aria-label="Breadcrumb"><a href="/{{ lang }}/">{{ t('breadcrumb.home') }}</a></nav>
+    <p class="kicker">{{ t('menu.products') }}</p>
+    <h1>{{ title }}</h1>
+    <p class="lead">{{ t('cat.intro') }}</p>
+  </div>
+</section>
+<section class="wrap section">
+  <ul class="cat-list">
+  {% for p in pdfs %}
+    <li class="cat-item" data-line="{{ p.slug }}">
+      <p class="cat-kind">{{ t('cat.catalog') }} {{ p.year }}</p>
+      <h2>{{ p.name }}</h2>
+      <p class="cat-size">PDF · {{ p.mb }} MB</p>
+      <p class="co-btns"><a class="btn btn-primary" href="{{ p.url }}" download>{{ t('cat.download') }}<span class="sr-only"> {{ p.name }} {{ p.year }}</span></a>
+      <a class="btn btn-ghost" href="/{{ lang }}/{{ p.slug }}/">{{ t('cat.see_line') }}<span class="sr-only">: {{ p.name }}</span></a></p>
+    </li>
+  {% endfor %}
+  </ul>
+</section>
+<section class="wrap section cat-app" aria-labelledby="cat-app-t">
+  <h2 id="cat-app-t">{{ t('cat.app_title') }}</h2>
+  <p>{{ t('footer.app_text') }}</p>
+  <p class="co-btns">{% for name, url, icon in apps %}<a class="btn btn-ghost" href="{{ url }}" target="_blank" rel="noopener">{{ name }}<span class="sr-only"> ({{ t('footer.new_tab') }})</span></a> {% endfor %}</p>
+</section>
+{% endblock %}

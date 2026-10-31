@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% import "_hero.html" as hx with context %}
+{% block head_extra %}<link rel="stylesheet" href="/static/css/pages.css">{% endblock %}
+
+{% block main %}
+{% if hero %}
+<section class="hx hx-pack">
+  <div class="hx-media" data-parallax>{{ hx.picture(hero.img, hero.alt, hero.portrait, sizes=hero.sizes, night=hero.night, night_portrait=hero.night_portrait, portrait_sizes=hero.portrait_sizes) }}</div>
+  <div class="wrap hx-in">
+    <nav class="breadcrumb hx-crumb" aria-label="Breadcrumb"><a href="/{{ lang }}/">{{ t('breadcrumb.home') }}</a> / <a href="/{{ lang }}/azienda/">{{ t('page.company') }}</a></nav>
+    <p class="hx-kicker"><span class="flag" aria-hidden="true"></span>{{ t('page.company') }}</p>
+    <h1 class="hx-title">{{ hx.split(title, letters=True) }}</h1>
+    <div class="hx-ctas">
+      <a class="btn btn-primary" href="/{{ lang }}/contatti/">{{ t('page.contacts') }} <span class="btn-arrow" aria-hidden="true">→</span></a>
+      <a class="btn hx-btn-glass" href="/{{ lang }}/richiesta-preventivo/">{{ t('hv.quote_cta') }}</a>
+    </div>
+  </div>
+  {{ hx.cue() }}
+</section>
+{% else %}
+<section class="page-head">
+  <div class="wrap">
+    <nav class="breadcrumb" aria-label="Breadcrumb"><a href="/{{ lang }}/">{{ t('breadcrumb.home') }}</a> / <a href="/{{ lang }}/azienda/">{{ t('page.company') }}</a></nav>
+    <h1>{{ title }}</h1>
+  </div>
+</section>
+{% endif %}
+{# Il testo della pagina viene da data/imballaggi.json ("paragrafi"): finche' e' vuoto resta il blocco "in arrivo". #}
+{% if pack.paragrafi %}
+<section class="wrap section prose pk-text">
+  {% for p in pack.paragrafi %}<p{% if loop.first %} class="lead"{% endif %}>{{ p }}</p>{% endfor %}
+</section>
+{% else %}
+<section class="wrap section">
+  <div class="soon" data-reveal>
+    <h2>{{ t('soon.title') }}</h2>
+    <p>{{ t('soon.text') }}</p>
+    <p class="co-btns"><a class="btn btn-primary" href="/{{ lang }}/contatti/">{{ t('page.contacts') }} <span class="btn-arrow" aria-hidden="true">→</span></a>
+    <a class="btn btn-ghost" href="/{{ lang }}/richiesta-preventivo/">{{ t('hv.quote_cta') }}</a></p>
+  </div>
+</section>
+{% endif %}
+{% endblock %}

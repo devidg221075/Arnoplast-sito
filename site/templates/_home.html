@@ -32,7 +32,7 @@
 
 {% macro contact_list(cls) %}
 <dl class="{{ cls }}">
-  <div><dt>{{ t('hv.call') }}</dt><dd><a href="tel:+390558347031">{{ contacts.phone }}</a></dd></div>
+  <div><dt>{{ t('hv.call') }}</dt><dd>{% for label, tel in contacts.phones %}<a href="tel:{{ tel }}">{{ label }}</a>{% if not loop.last %}<br>{% endif %}{% endfor %}</dd></div>
   <div><dt>{{ t('hv.write') }}</dt><dd><a href="mailto:{{ contacts.email }}">{{ contacts.email }}</a></dd></div>
   <div><dt>{{ t('hv.where') }}</dt><dd>{{ contacts.address }}</dd></div>
 </dl>

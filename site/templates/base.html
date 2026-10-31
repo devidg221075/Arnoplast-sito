@@ -7,13 +7,20 @@
   <meta name="theme-color" content="#0b0b0c">
   {% if description %}<meta name="description" content="{{ description }}">
   {% endif %}
-  {% if canonical %}<link rel="canonical" href="{{ canonical }}">
+  {% if noindex %}<meta name="robots" content="noindex">
   {% endif %}
+  {% if canonical_override or canonical %}<link rel="canonical" href="{{ canonical_override or canonical }}">
+  {% endif %}
+  {# Lingue: quando esisteranno le pagine inglesi, `alternates` = [(hreflang, url assoluto), ...]. #}
+  {% for hl, href in alternates or [] %}<link rel="alternate" hreflang="{{ hl }}" href="{{ href }}">
+  {% endfor %}
   <script>document.documentElement.classList.add('js');addEventListener('pagereveal',function(e){var v=e.viewTransition;if(v)[v.ready,v.finished,v.updateCallbackDone].forEach(function(p){p&&p.catch(function(){})})})</script>
   <noscript><style>.quote-count{display:none}</style></noscript>
   <link rel="stylesheet" href="/static/css/main.css">
+  <link rel="stylesheet" href="/static/css/nav.css">
   <link rel="stylesheet" href="/static/css/motion.css">
   <script type="module" src="/static/js/main.js"></script>
+  {# anim.js pubblicato contiene anche nav.js (menu): un solo script classico, una richiesta in meno. #}
   <script src="/static/js/anim.js" defer></script>
   {% block head_extra %}{% endblock %}
 </head>
@@ -38,23 +45,38 @@
       </button>
     </div>
     <nav id="site-menu" class="site-nav" aria-label="{{ t('menu.label') }}">
-      <ul class="menu wrap">
-      {% for href, key in menu %}
-        <li{% if key == 'menu.quote' %} class="menu-quote"{% endif %}><a href="{{ href }}">{{ t(key) }}{% if key == 'menu.quote' %} <span class="quote-count" aria-live="polite">0</span>{% endif %}</a></li>
+      <div class="nav-in wrap">
+      <ul class="menu">
+      {% for it in nav %}
+        {% if it.children %}
+        <li class="has-sub{{ ' is-active' if it.active }}">
+          <button type="button" class="menu-btn" aria-expanded="false" aria-controls="sub-{{ loop.index }}">{{ t(it.key) }}<svg class="chev" viewBox="0 0 12 12" width="12" height="12" aria-hidden="true"><path d="M2.5 4.5 6 8l3.5-3.5" fill="none" stroke="currentColor" stroke-width="1.8"/></svg></button>
+          <ul class="sub" id="sub-{{ loop.index }}">
+          {% for c in it.children %}
+            <li><a href="{{ c.href }}"{% if c.current %} aria-current="page"{% elif c.active %} aria-current="true"{% endif %}>{{ t(c.key) }}</a></li>
+          {% endfor %}
+          </ul>
+        </li>
+        {% else %}
+        <li{% if it.active %} class="is-active"{% endif %}><a href="{{ it.href }}"{% if it.current %} aria-current="page"{% elif it.active %} aria-current="true"{% endif %}>{{ t(it.key) }}</a></li>
+        {% endif %}
       {% endfor %}
+        <li class="menu-quote"><a href="/{{ lang }}/richiesta-preventivo/">{{ t('menu.quote') }} <span class="quote-count" aria-live="polite">0</span></a></li>
       </ul>
+      <div class="nav-aside">
+        <ul class="lang" aria-label="{{ t('lang.label') }}">
+          <li><a href="/it/" hreflang="it" lang="it"{% if (page_lang or lang) == 'it' %} aria-current="true"{% endif %}>IT<span class="sr-only"> {{ t('lang.it') }}</span></a></li>
+          <li><a href="/en/" hreflang="en" lang="en"{% if (page_lang or lang) == 'en' %} aria-current="true"{% endif %}>EN<span class="sr-only"> {{ t('lang.en') }}</span></a></li>
+        </ul>
+        <a class="reserved-link" href="/{{ lang }}/area-riservata/"{% if path == '/' ~ lang ~ '/area-riservata/' %} aria-current="page"{% endif %}><svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true"><path d="M12 2a5 5 0 0 1 5 5v3h2v12H5V10h2V7a5 5 0 0 1 5-5Zm0 2a3 3 0 0 0-3 3v3h6V7a3 3 0 0 0-3-3Z"/></svg>{{ t('menu.reserved') }}</a>
+      </div>
+      </div>
     </nav>
   </header>
-  <main id="main">
+  <main id="main"{% if page_lang and page_lang != lang %} lang="{{ page_lang }}"{% endif %}>
   {% block main %}{% endblock %}
   </main>
-  <footer class="site-footer">
-    <div class="wrap">
-      <p class="footer-logo"><img src="/static/img/arnoplast-logo-negativo.svg" width="180" height="32" alt="ARNOplast" loading="lazy"></p>
-      <p>ARNO Commerciale s.r.l. - Via G. di Vittorio, 37, 50067 Rignano sull'Arno (FI) - ITALY</p>
-      <p class="footer-made"><span class="flag" aria-hidden="true"></span>Made in Italy</p>
-    </div>
-  </footer>
+  {% include "_footer.html" %}
   <p id="live" class="sr-only" role="status" aria-live="polite"></p>
 </body>
 </html>

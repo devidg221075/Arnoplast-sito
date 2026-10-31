@@ -11,13 +11,15 @@
   <address class="contact-card">
     <p><strong>{{ contacts.name }}</strong></p>
     <p>{{ t('contacts.address') }}: {{ contacts.address }}</p>
-    <p>{{ t('contacts.phone') }} {{ contacts.phone }}</p>
-    <p>{{ t('contacts.fax') }} {{ contacts.fax }}</p>
+    <p>{{ t('contacts.phone') }} {% for label, tel in contacts.phones %}<a href="tel:{{ tel }}">{{ label }}</a>{% if not loop.last %} · {% endif %}{% endfor %}</p>
     <p>{{ t('contacts.email') }}: <a href="mailto:{{ contacts.email }}">{{ contacts.email }}</a></p>
-    <p>{{ t('contacts.web') }}: <a href="https://{{ contacts.web }}">{{ contacts.web }}</a></p>
+    <p>{{ t('footer.vat') }} {{ contacts.vat }} · {{ t('footer.rea') }} {{ contacts.rea }} · {{ t('footer.capital') }} {{ contacts.capital }}</p>
   </address>
+  <p><a class="btn btn-ghost" href="{{ maps_url }}" target="_blank" rel="noopener">{{ t('contacts.maps') }}<span class="sr-only"> ({{ t('footer.new_tab') }})</span></a></p>
 {% elif kind == 'reserved' %}
   <p class="notice" role="note">{{ t('reserved.notice') }}</p>
+{% elif kind == 'cookie' %}
+  <p class="notice">{{ t('page.cookie_text') }} <a href="{{ privacy_url }}">{{ t('footer.privacy') }}</a></p>
 {% else %}
   <p class="notice">{{ t('page.placeholder') }}</p>
 {% endif %}

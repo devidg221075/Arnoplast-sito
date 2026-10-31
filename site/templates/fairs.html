@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+{% block head_extra %}<link rel="stylesheet" href="/static/css/pages.css">{% endblock %}
+{% macro meta(f) %}
+<dl class="fr-meta">
+  <div><dt>{{ t('fairs.when') }}</dt><dd>{% if f.data_inizio %}<time datetime="{{ f.data_inizio }}">{{ f.date_label }}</time>{% else %}{{ f.date_label }}{% endif %}</dd></div>
+  {% if f.luogo or f.paese %}<div><dt>{{ t('fairs.where') }}</dt><dd>{{ f.luogo }}{% if f.luogo and f.paese %}, {% endif %}{{ f.paese }}</dd></div>{% endif %}
+  {% if f.stand %}<div><dt>{{ t('fairs.stand') }}</dt><dd>{{ f.stand }}</dd></div>{% endif %}
+</dl>
+{% endmacro %}
+
+{% block main %}
+<section class="page-head">
+  <div class="wrap">
+    <nav class="breadcrumb" aria-label="Breadcrumb"><a href="/{{ lang }}/">{{ t('breadcrumb.home') }}</a></nav>
+    <p class="kicker">{{ t('fairs.kicker') }}</p>
+    <h1>{{ title }}</h1>
+    <p class="lead">{{ t('fairs.intro') }}</p>
+  </div>
+</section>
+<section class="wrap section" id="prossime" aria-labelledby="fr-next-t">
+  <h2 class="section-title" id="fr-next-t">{{ t('fairs.upcoming') }}</h2>
+  {% if upcoming %}
+  <ul class="fr-cards" data-reveal="stagger">
+  {% for f in upcoming %}
+    <li class="fr-card" id="{{ f.id }}">
+      <h3>{{ f.nome }}</h3>
+      {{ meta(f) }}
+      {% if f.testo %}<p class="fr-text">{{ f.testo }}</p>{% endif %}
+      <a class="fr-cta" href="/{{ lang }}/contatti/">{{ t('fairs.meet') }} <span aria-hidden="true">→</span></a>
+    </li>
+  {% endfor %}
+  </ul>
+  {% else %}
+  <p class="notice">{{ t('fairs.none') }}</p>
+  {% endif %}
+</section>
+<section class="fr-openday" aria-labelledby="fr-od-t">
+  <div class="wrap">
+    <h2 id="fr-od-t">{{ t('fairs.openday') }}</h2>
+    <p>{{ t('fairs.openday_text') }}</p>
+  </div>
+</section>
+<section class="wrap section" id="passate" aria-labelledby="fr-past-t">
+  <h2 class="section-title" id="fr-past-t">{{ t('fairs.past') }}</h2>
+  {% for year, items in past %}
+  <div class="fr-year">
+    <h3 class="fr-y">{{ year }}</h3>
+    <ul class="fr-list">
+    {% for f in items %}
+      <li id="{{ f.id }}">
+        <h4>{{ f.nome }}</h4>
+        {{ meta(f) }}
+        {% if f.testo %}
+        <details>
+          <summary>{{ t('fairs.more') }}</summary>
+          <p>{{ f.testo }}</p>
+          {% if f.fonte_url_sito_vecchio %}<p class="fr-src">{{ t('fairs.source') }} ({{ f.fonte_url_sito_vecchio | replace('https://www.', '') }})</p>{% endif %}
+        </details>
+        {% endif %}
+      </li>
+    {% endfor %}
+    </ul>
+  </div>
+  {% endfor %}
+</section>
+{% endblock %}

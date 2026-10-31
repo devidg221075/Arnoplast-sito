@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% import "_hero.html" as hx with context %}
+{% block head_extra %}<link rel="stylesheet" href="/static/css/pages.css">{% endblock %}
 
 {% block main %}
 {% if hero %}
@@ -26,10 +27,20 @@
 </section>
 {% endif %}
 <section class="wrap section co-story" id="storia" aria-labelledby="co-story-t">
-  <h2 class="section-title" id="co-story-t" data-reveal>{{ t('home.kicker') }}</h2>
+  <p class="kicker" data-reveal>{{ story.kicker }}</p>
+  <h2 class="co-h" id="co-story-t" data-reveal>{{ story.title }}</h2>
   <ol class="co-timeline" data-reveal="stagger">
-  {% for p in paragraphs %}<li><p>{{ p }}</p></li>{% endfor %}
+  {% for label, p in story.steps %}
+    <li><p class="co-year"><span>{{ label }}</span></p><p>{{ p }}</p></li>
+  {% endfor %}
   </ol>
+  <div class="co-today">
+    <p class="kicker" data-reveal>{{ story.today_kicker }}</p>
+    <h2 class="co-h" id="co-today-t" data-reveal>{{ story.today_title }}</h2>
+    <ol class="co-timeline co-timeline-end" data-reveal="stagger">
+      <li><p class="co-year"><span>{{ story.today[0] }}</span></p><p>{{ story.today[1] }}</p></li>
+    </ol>
+  </div>
 </section>
 {% if imgs and 'progetto' in imgs %}
 <section class="co-chain" aria-labelledby="co-chain-t">
@@ -45,4 +56,20 @@
   </ol>
 </section>
 {% endif %}
+<section class="wrap section co-links" aria-label="{{ t('co.visit') }}">
+  <div class="co-card co-card-pack" data-reveal>
+    <h2>{{ t('co.packaging_title') }}</h2>
+    <p>{{ t('co.packaging_text') }}</p>
+    <a class="btn btn-primary" href="/{{ lang }}/azienda/imballaggi/">{{ t('co.packaging_cta') }} <span class="btn-arrow" aria-hidden="true">→</span></a>
+  </div>
+  <div class="co-card" data-reveal>
+    <h2>{{ t('co.visit') }}</h2>
+    <address>
+      <strong>{{ contacts.name }}</strong><br>{{ contacts.street }}<br>{{ contacts.city }} - {{ contacts.country }}<br>
+      {% for label, tel in contacts.phones %}<a href="tel:{{ tel }}">{{ label }}</a> · {% endfor %}<a href="mailto:{{ contacts.email }}">{{ contacts.email }}</a>
+    </address>
+    <p class="co-btns"><a class="btn btn-ghost" href="{{ maps_url }}" target="_blank" rel="noopener">{{ t('contacts.maps') }}<span class="sr-only"> ({{ t('footer.new_tab') }})</span></a>
+    <a class="btn btn-ghost" href="/{{ lang }}/contatti/">{{ t('page.contacts') }}</a></p>
+  </div>
+</section>
 {% endblock %}
