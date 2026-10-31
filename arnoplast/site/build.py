@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import json
+import re
 import shutil
 import sys
 from html import escape
@@ -42,6 +43,12 @@ THUMB_WIDTHS = (200, 400)
 THUMB_SIZES = "(min-width: 1024px) 22vw, (min-width: 600px) 30vw, 46vw"
 # Le prime miniature sono sopra la piega (2 colonne x 2 righe su telefono): niente lazy.
 EAGER_THUMBS = 4
+
+# Foto prodotto ritagliate dai cataloghi (data/images/<linea>/<slug>.photo.png, vedi
+# arnoplast/extract/photos.py): WebP a queste larghezze, mai oltre i pixel nativi.
+PHOTO_WIDTHS = (360, 640)
+CARD_SIZES = "(min-width: 1240px) 290px, (min-width: 1024px) 23vw, (min-width: 600px) 31vw, calc(50vw - 22px)"
+PRODUCT_PHOTO_SIZES = "(min-width: 1024px) 40vw, calc(100vw - 32px)"
 
 # Informativa privacy esistente; la fase WordPress puo' cambiarla qui.
 PRIVACY_URL = "https://www.arnoplast.it/privacy-policy-arno-plast"
@@ -127,22 +134,107 @@ def _image_size(path: Path) -> tuple[int, int] | None:
     return None
 
 
-_THUMB_CACHE: dict[tuple[str, int, int], tuple[bytes, int]] = {}  # build ripetuti nello stesso processo (test)
+_THUMB_CACHE: dict[tuple[str, int, int, int], tuple[bytes, int]] = {}  # build ripetuti nello stesso processo (test)
 
 
-def _thumb_bytes(src: Path, width: int) -> tuple[bytes, int]:
-    """WebP della pagina `src` a larghezza `width` (e la sua altezza)."""
+def _thumb_bytes(src: Path, width: int, quality: int = 68) -> tuple[bytes, int]:
+    """WebP dell'immagine `src` a larghezza `width` (e la sua altezza)."""
     from io import BytesIO
     from PIL import Image
-    key = (str(src), src.stat().st_mtime_ns, width)
+    key = (str(src), src.stat().st_mtime_ns, width, quality)
     if key not in _THUMB_CACHE:
         with Image.open(src) as im:
             im = im.convert("RGB")
             h = max(1, round(im.height * width / im.width))
             buf = BytesIO()
-            im.resize((width, h), Image.LANCZOS).save(buf, "WEBP", quality=68, method=6)
+            if (width, h) != im.size:
+                im = im.resize((width, h), Image.LANCZOS)
+            im.save(buf, "WEBP", quality=quality, method=6)
         _THUMB_CACHE[key] = (buf.getvalue(), h)
     return _THUMB_CACHE[key]
+
+
+def photo_source(prod) -> Path | None:
+    """Foto ritagliata del prodotto in data/ (accanto alla fascia di pagina `image`), se esiste."""
+    if not prod.image:
+        return None
+    src = DATA_DIR / Path(prod.image).with_suffix(".photo.png")
+    return src if src.is_file() else None
+
+
+def photo_widths(native: int, targets: tuple[int, ...] = PHOTO_WIDTHS) -> list[int]:
+    """Larghezze da generare: quelle sotto la larghezza nativa, piu' la nativa (al massimo
+    la piu' grande richiesta). Mai ingrandimenti."""
+    top = min(native, max(targets))
+    return sorted({w for w in targets if w < top} | {top})
+
+
+def make_photo(prod, out: Path) -> dict | None:
+    """Foto ritagliata in WebP (out/photos/<linea>/<slug>-<w>.webp) -> src, srcset, width, height.
+
+    None se la foto non c'e' (la build ricade sulla miniatura della pagina del catalogo)."""
+    src = photo_source(prod)
+    if src is None:
+        return None
+    try:
+        size = _image_size(src)
+        rel = Path(*Path(prod.image).with_suffix("").parts[1:])
+        made = []
+        for w in photo_widths(size[0]):
+            data, h = _thumb_bytes(src, w, quality=78)
+            dest = out / "photos" / rel.parent / f"{rel.name}-{w}.webp"
+            dest.parent.mkdir(parents=True, exist_ok=True)
+            dest.write_bytes(data)
+            made.append((w, h, f"/photos/{rel.parent.as_posix()}/{rel.name}-{w}.webp"))
+    except Exception as e:  # noqa: BLE001 - la foto e' accessoria
+        print(f"ATTENZIONE: foto non generata per {prod.image}: {e}", file=sys.stderr)
+        return None
+    w, h, url = made[-1]
+    return {"src": url, "width": w, "height": h, "srcset": ", ".join(f"{u} {x}w" for x, _, u in made)}
+
+
+# --- video YouTube (dai QR code dei cataloghi) ------------------------------------
+
+_YT_ID = re.compile(r"^https://(?:youtu\.be/|(?:www\.)?youtube\.com/(?:watch\?v=|shorts/|embed/))([\w-]{6,})")
+
+
+def _video_id(url: str) -> str:
+    m = _YT_ID.match(url)
+    return m.group(1) if m else url
+
+
+def load_videos(path: Path | None = None) -> dict:
+    """data/videos.json: "linea/famiglia/prodotto" -> {"videos": [url...], "source": [...]}."""
+    path = DATA_DIR / "videos.json" if path is None else Path(path)
+    return json.loads(path.read_text(encoding="utf-8")) if path.is_file() else {}
+
+
+def product_videos(c: Catalog, videos: dict | None) -> dict[str, list[str]]:
+    """Video per prodotto ("linea/famiglia/prodotto" -> URL): quelli di videos.json piu'
+    l'eventuale `video_url` del catalogo, senza doppioni (stesso video YouTube).
+
+    Una chiave di videos.json che non corrisponde a nessun prodotto, o un URL non https,
+    e' un errore (ValueError): catalog.json e videos.json vanno tenuti allineati."""
+    videos = videos or {}
+    keys = {f"{l.slug}/{f.slug}/{p.slug}": p for l in c.lines for f in l.families for p in f.products}
+    unknown = sorted(set(videos) - set(keys))
+    if unknown:
+        raise ValueError("data/videos.json: prodotti inesistenti in catalog.json: " + ", ".join(unknown))
+    out: dict[str, list[str]] = {}
+    for key, prod in keys.items():
+        urls = list(videos.get(key, {}).get("videos", []))
+        if prod.video_url:
+            urls.append(prod.video_url)
+        seen, merged = set(), []
+        for u in urls:
+            if not str(u).startswith("https://"):
+                raise ValueError(f"data/videos.json: URL non valido per {key}: {u!r}")
+            if _video_id(u) not in seen:
+                seen.add(_video_id(u))
+                merged.append(u)
+        if merged:
+            out[key] = merged
+    return out
 
 
 def make_thumbs(prod, out: Path) -> dict | None:
@@ -236,10 +328,15 @@ def home_context(c: Catalog, lang: str) -> dict:
             "contacts": CONTACTS}
 
 
-def build_site(c: Catalog, out: Path, lang: str = "it", sources: Path | None = None) -> list[Path]:
+def build_site(c: Catalog, out: Path, lang: str = "it", sources: Path | None = None,
+               videos: dict | None = None) -> list[Path]:
+    """Scrive il sito in `out`. `videos`: contenuto di data/videos.json (vedi load_videos);
+    None = nessun video oltre ai `video_url` del catalogo."""
     out = Path(out)
     sources = SOURCE_DIR if sources is None else Path(sources)
     env = _env(lang)
+    env.globals["materials_names"] = MATERIALS
+    vids = product_videos(c, videos)
     written: list[Path] = []
     base = out / lang
     urls: list[str] = []
@@ -279,12 +376,15 @@ def build_site(c: Catalog, out: Path, lang: str = "it", sources: Path | None = N
             search_pages.append({"name": text(fam.name, lang), "kind": "family",
                                  "parent": text(line.name, lang), "url": fam_url})
             names = ", ".join(text(p.name, lang) for p in fam.products[:3])
+            photos = {p.slug: make_photo(p, out) for p in fam.products}
             render("family.html", base / line.slug / fam.slug, line=line, family=fam,
                    title=text(fam.name, lang),
                    description=f"{text(fam.name, lang)} ({text(line.name, lang)}): "
                                f"{len(fam.products)} prodotti, tra cui {names}.",
-                   thumbs={p.slug: make_thumbs(p, out) for p in fam.products},
-                   eager_thumbs=EAGER_THUMBS, thumb_sizes=THUMB_SIZES)
+                   photos=photos,
+                   thumbs={p.slug: make_thumbs(p, out) for p in fam.products if not photos[p.slug]},
+                   videos={p.slug: vids.get(f"{line.slug}/{fam.slug}/{p.slug}", []) for p in fam.products},
+                   eager_thumbs=EAGER_THUMBS, thumb_sizes=THUMB_SIZES, card_sizes=CARD_SIZES)
             for prod in fam.products:
                 url = f"/{lang}/{line.slug}/{fam.slug}/{prod.slug}/"
                 arts = prod.articles
@@ -299,7 +399,9 @@ def build_site(c: Catalog, out: Path, lang: str = "it", sources: Path | None = N
                        show_imb=any(a.imb is not None for a in arts),
                        show_pallet=any(a.pallet is not None for a in arts),
                        image_url=f"/{prod.image}" if has_image else None,
-                       image_size=_image_size(DATA_DIR / prod.image) if has_image else None)
+                       image_size=_image_size(DATA_DIR / prod.image) if has_image else None,
+                       photo=photos[prod.slug], photo_sizes=PRODUCT_PHOTO_SIZES,
+                       videos=vids.get(f"{line.slug}/{fam.slug}/{prod.slug}", []))
                 if has_image:
                     dest = out / prod.image
                     dest.parent.mkdir(parents=True, exist_ok=True)
@@ -384,8 +486,10 @@ def main(out: Path | None = None, sources: Path | None = None, catalog_path: Pat
         print(f"ATTENZIONE: {n} prodotti senza immagine: {d} {why}. Le pagine saranno "
               "generate senza foto. Rigenerale con: python -m arnoplast.extract.build --images-only",
               file=sys.stderr)
+    videos = load_videos()
+    product_videos(c, videos)  # chiavi di videos.json non valide: errore prima di cancellare `out`
     clean_dir(out)
-    written = build_site(c, out, sources=sources)
+    written = build_site(c, out, sources=sources, videos=videos)
     print(f"{len(written)} pagine scritte in {out}")
 
 

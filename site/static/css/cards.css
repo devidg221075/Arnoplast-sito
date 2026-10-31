@@ -1,0 +1,61 @@
+/* Solo pagine famiglia: griglia di schede prodotto (foto ritagliata, nome, materiali, codici, video).
+   Tutta la scheda e' cliccabile (link del titolo esteso con ::after); il link video sta sopra. */
+.pgrid { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+.pcard {
+  position: relative; display: flex; flex-direction: column; min-width: 0; background: var(--white);
+  border: 1px solid var(--line); border-radius: var(--r); overflow: hidden;
+  transition: border-color .2s, box-shadow .25s var(--e), transform .25s var(--e);
+}
+.pcard-media { position: relative; aspect-ratio: 1; background: var(--paper); border-bottom: 3px solid var(--accent); overflow: hidden; }
+.pcard-media img {
+  position: absolute; inset: 0; width: 100%; height: 100%; padding: 10%; object-fit: contain;
+  mix-blend-mode: multiply; transition: transform .45s var(--e);
+}
+.pcard-media.is-page img { padding: 6px; }
+.pcard-body { display: flex; flex-direction: column; gap: 10px; flex: 1; padding: 12px 12px 14px; }
+.pcard-title { margin: 0; font-size: .92rem; font-weight: 900; line-height: 1.15; letter-spacing: -.01em; text-transform: uppercase; overflow-wrap: anywhere; }
+.pcard-link { text-decoration: none; color: var(--ink); }
+.pcard-link::after { content: ""; position: absolute; inset: 0; z-index: 1; }
+.pcard-link:focus-visible { outline: none; }
+.pcard:focus-within { outline: 3px solid var(--accent); outline-offset: 2px; }
+.pcard-mats { position: relative; z-index: 2; list-style: none; display: flex; width: fit-content; flex-wrap: wrap; gap: 4px; margin: 0; padding: 0; }
+.mat {
+  display: inline-grid; place-items: center; min-width: 2.4em; height: 2.1em; padding: 0 .55em; border-radius: 999px;
+  background: var(--yellow); color: var(--black); font-size: .66rem; font-weight: 900; letter-spacing: .03em; line-height: 1;
+  box-shadow: inset 0 0 0 1.5px rgba(0, 0, 0, .12);
+}
+.pcard-meta { margin: 0; font-size: .78rem; color: var(--muted); font-variant-numeric: tabular-nums; }
+.pcard-foot { margin-top: auto; }
+.pcard-cta {
+  display: flex; align-items: center; justify-content: space-between; gap: 8px; min-height: 40px; padding: 0 12px;
+  border: 1.5px solid var(--ink); border-radius: var(--r); font-size: .7rem; font-weight: 800; letter-spacing: .08em;
+  text-transform: uppercase; color: var(--ink); white-space: nowrap; transition: background-color .2s, color .2s, border-color .2s;
+}
+.pcard:hover .pcard-cta { background: var(--accent); border-color: var(--accent); color: var(--white); }
+.pcard-arrow { display: inline-block; font-size: .9rem; transition: transform .3s var(--e); }
+/* Video: etichetta sull'angolo della foto (link separato, sopra il link della scheda). */
+.pcard-video {
+  position: absolute; top: 8px; right: 8px; z-index: 2; display: inline-flex; align-items: center; gap: 5px; min-height: 30px; padding: 0 10px 0 8px;
+  border-radius: 999px; background: var(--ink); color: var(--white); font-size: .66rem; font-weight: 800;
+  letter-spacing: .06em; text-transform: uppercase; text-decoration: none; white-space: nowrap; transition: background-color .2s;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, .18);
+}
+.pcard-video svg { fill: currentColor; flex: none; }
+.pcard-video:hover, .pcard-video:focus-visible { background: var(--red); color: var(--white); }
+.pcard-video:focus-visible { outline: 3px solid var(--yellow); outline-offset: 2px; }
+.pcard:hover { border-color: var(--ink); box-shadow: 0 14px 34px rgba(0, 0, 0, .1); }
+@media (prefers-reduced-motion: no-preference) and (hover: hover) {
+  .pcard:hover { transform: translateY(-3px); }
+  .pcard:hover .pcard-media img { transform: scale(1.05); }
+  .pcard:hover .pcard-arrow { transform: translateX(4px); }
+}
+@media (min-width: 600px) {
+  .pgrid { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+  .pcard-body { padding: 14px 16px 16px; }
+  .pcard-title { font-size: 1rem; }
+}
+@media (min-width: 1024px) {
+  .pgrid { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 22px; }
+  .pcard-title { font-size: 1.05rem; }
+  .mat { font-size: .7rem; }
+}

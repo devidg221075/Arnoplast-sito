@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% block head_extra %}<link rel="stylesheet" href="/static/css/cards.css">{% endblock %}
 {% block main %}
 <section class="page-head">
   <div class="wrap">
@@ -9,17 +10,37 @@
 </section>
 <section class="wrap section">
   <h2 class="section-title">{{ t('family.products') }}</h2>
-  <ul class="product-list">
+  <ul class="pgrid" data-reveal="stagger">
   {% for p in family.products %}
-    <li class="product-card">
-      <a href="/{{ lang }}/{{ line.slug }}/{{ family.slug }}/{{ p.slug }}/">
-        <span class="thumb">{% set th = thumbs[p.slug] if thumbs else None %}{% if th %}<img src="{{ th.src }}"{% if th.srcset %} srcset="{{ th.srcset }}" sizes="{{ thumb_sizes }}"{% endif %}{% if th.width %} width="{{ th.width }}" height="{{ th.height }}"{% endif %} alt=""{% if loop.index > eager_thumbs %} loading="lazy"{% endif %} decoding="async">{% endif %}</span>
-        <span class="product-card-body">
-          <span class="card-title">{{ text(p.name) }}</span>
-          {% if p.materials %}<span class="materials">{% for m in p.materials %}<span class="tag">{{ m }}</span>{% endfor %}</span>{% endif %}
-          <span class="card-sub">{{ p.articles | length }} {{ t('family.code') if p.articles | length == 1 else t('family.codes') }}</span>
-        </span>
-      </a>
+    {% set url = '/' ~ lang ~ '/' ~ line.slug ~ '/' ~ family.slug ~ '/' ~ p.slug ~ '/' %}
+    {% set name = text(p.name) %}
+    {% set ph = photos[p.slug] if photos else None %}
+    {% set th = thumbs.get(p.slug) if thumbs else None %}
+    {% set vs = videos[p.slug] if videos else [] %}
+    {% set n = p.articles | length %}
+    <li class="pcard">
+      <div class="pcard-media{% if not ph %} is-page{% endif %}">
+      {% if ph %}
+        <img src="{{ ph.src }}" srcset="{{ ph.srcset }}" sizes="{{ card_sizes }}" width="{{ ph.width }}" height="{{ ph.height }}" alt="{{ name }}"{% if loop.first %} fetchpriority="high"{% elif loop.index > eager_thumbs %} loading="lazy"{% endif %} decoding="async">
+      {% elif th %}
+        <img src="{{ th.src }}"{% if th.srcset %} srcset="{{ th.srcset }}" sizes="{{ thumb_sizes }}"{% endif %}{% if th.width %} width="{{ th.width }}" height="{{ th.height }}"{% endif %} alt="{{ name }}"{% if loop.index > eager_thumbs %} loading="lazy"{% endif %} decoding="async">
+      {% endif %}
+      </div>
+      <div class="pcard-body">
+        <h3 class="pcard-title"><a class="pcard-link" href="{{ url }}">{{ name }}</a></h3>
+        {% if p.materials %}
+        <ul class="pcard-mats" aria-label="{{ t('product.materials') }}">
+        {% for m in p.materials %}<li class="mat" title="{{ materials_names.get(m, m) }}"><span aria-hidden="true">{{ m }}</span><span class="sr-only">{{ materials_names.get(m, m) }} ({{ m }})</span></li>{% endfor %}
+        </ul>
+        {% endif %}
+        <p class="pcard-meta">{{ n }} {{ t('family.code') if n == 1 else t('family.codes') }}</p>
+        <div class="pcard-foot">
+          <span class="pcard-cta" aria-hidden="true">{{ t('card.view') }} <span class="pcard-arrow">→</span></span>
+        </div>
+          {% if vs %}
+          <a class="pcard-video" href="{{ vs[0] }}" target="_blank" rel="noopener" aria-label="{{ t('card.video') if vs | length == 1 else (vs | length) ~ ' ' ~ t('card.videos') }}: {{ name }} ({{ t('video.external') }})"><svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true"><path d="M8 5.5v13l11-6.5z"/></svg>{{ t('card.video') if vs | length == 1 else (vs | length) ~ ' ' ~ t('card.videos') }}</a>
+          {% endif %}
+      </div>
     </li>
   {% endfor %}
   </ul>
