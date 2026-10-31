@@ -30,8 +30,9 @@ KNOWN_ODDITIES = [
     "Prodotti con testo non numerico nelle colonne (es. \"BOB. 200MT\", "
     "\"1 KG/600KG\", \"BLISTER/IND.\"): il valore non è stato letto e compare "
     "come \"-\".",
-    "Link video: il campo è vuoto per tutti i prodotti (i QR code non sono "
-    "stati decodificati).",
+    "Link video: sono in data/videos.json (letti dai QR code dei cataloghi), "
+    "non in catalog.json; il campo video_url di catalog.json, se compilato, si "
+    "aggiunge senza doppioni.",
 ]
 
 
@@ -161,13 +162,27 @@ def _product_html(prod: Product, pdf_name: str, pages: list[int] | None,
     return "".join(h)
 
 
+def photos_to_check(c: Catalog, photos: dict) -> list[tuple[str, str, int | None, str]]:
+    """(chiave prodotto, nome, pagina, motivo) delle foto ritagliate da controllare a mano
+    (`photos`: data/photos.json, per percorso immagine)."""
+    out = []
+    for l in c.lines:
+        for f in l.families:
+            for p in f.products:
+                ph = photos.get(p.image or "")
+                if ph and ph.get("check"):
+                    out.append((f"{l.slug}/{f.slug}/{p.slug}", text(p.name, "it"), ph.get("page"), ph["check"]))
+    return out
+
+
 def render_report(c: Catalog, out: Path,
                   pages: dict[str, list[int]] | None = None,
-                  probable: set[str] | None = None) -> None:
+                  probable: set[str] | None = None,
+                  photos: dict | None = None) -> None:
     """Scrive la pagina di controllo in `out`.
 
     `pages`: mappa 'linea/famiglia/prodotto' -> pagine sorgente (se None non
-    viene mostrata la pagina).
+    viene mostrata la pagina). `photos`: data/photos.json (foto ritagliate).
     """
     from arnoplast.extract.build import suspect_rows
     from arnoplast.extract.layout import LINES
@@ -192,6 +207,15 @@ def render_report(c: Catalog, out: Path,
                  'leggibile o codice jolly non ordinabile):</p><ul>')
         for name, code in suspects:
             h.append(f"<li>{_e(name)}: <code>{_e(code)}</code></li>")
+        h.append("</ul></div>")
+    if photos:
+        todo = photos_to_check(c, photos)
+        h.append(f'<div class="warn" id="foto-da-controllare"><p><b>Foto da controllare</b> '
+                 f"({len(todo)} prodotti): foto ritagliate dal catalogo non affidabili "
+                 "(<code>python -m arnoplast.extract.build --images-only</code>, correzioni in "
+                 "<code>arnoplast/extract/photos.py</code>, PHOTO_OVERRIDES).</p><ul>")
+        for key, name, page, why in todo:
+            h.append(f"<li>{_e(name)} <small>({_e(key)}, pag. {_e(page)})</small>: {_e(why)}</li>")
         h.append("</ul></div>")
     h.append('<div class="warn"><p><b>Anomalie note dei sorgenti</b>, da valutare:</p><ul>')
     h += [f"<li>{_e(o)}</li>" for o in KNOWN_ODDITIES]
@@ -240,7 +264,10 @@ def main() -> int:
     fp = lambda slug, n: family_for(slug, n)
     probable: set[str] = set()
     pages = product_pages(c, _default_pages(c), fp, probable)
-    render_report(c, DATA_DIR / "review.html", pages, probable)
+    import json
+    pj = DATA_DIR / "photos.json"
+    photos = json.loads(pj.read_text(encoding="utf-8")) if pj.is_file() else None
+    render_report(c, DATA_DIR / "review.html", pages, probable, photos)
     print(f"scritto {DATA_DIR / 'review.html'} ({len(pages)} prodotti con pagina)")
     return 0
 
