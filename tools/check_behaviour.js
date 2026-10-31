@@ -486,6 +486,40 @@ await m1.goto(BASE + '/it/azienda/imballaggi/?luce=notte', { waitUntil: 'load' }
 ok(/imballaggi-notte-alto/.test(await m1.locator('img[fetchpriority="high"]').evaluate((i) => i.currentSrc)), '390 px imballaggi ?luce=notte: ritaglio verticale notturno');
 await mobCtx.close();
 
+// --- Fiere: scadenza in pagina (data-fair-end + fairs.js) con l'orologio del browser spostato in avanti.
+{
+  const at = async (iso, width) => {
+    const ctx = await browser.newContext({ viewport: { width, height: 900 } });
+    const pg = await ctx.newPage();
+    watch(pg);
+    if (iso) await pg.clock.setFixedTime(new Date(iso + 'T10:00:00'));
+    await pg.goto(BASE + '/it/fiere/', { waitUntil: 'load' });
+    const st = await pg.evaluate(() => ({
+      ends: [...document.querySelectorAll('#prossime [data-fair-end]')].map((c) => [c.id, c.getAttribute('data-fair-end'), !c.hidden && c.offsetHeight > 0]),
+      none: !!document.getElementById('fr-none') && document.getElementById('fr-none').offsetHeight > 0,
+      overflow: document.documentElement.scrollWidth > window.innerWidth,
+    }));
+    await ctx.close();
+    return st;
+  };
+  const next = (iso) => { const d = new Date(iso + 'T12:00:00Z'); d.setUTCDate(d.getUTCDate() + 1); return d.toISOString().slice(0, 10); };
+  const now = await at(null, 1440);
+  if (!now.ends.length) {
+    ok(now.none, 'fiere: nessuna fiera futura nel build, messaggio "nessuna fiera in programma" visibile (scadenza non verificabile)');
+  } else {
+    ok(now.ends.every((e) => e[2]) && !now.none, `fiere: ${now.ends.length} prossime visibili oggi, messaggio nascosto`);
+    const first = now.ends.map((e) => e[1]).sort()[0];
+    const last = now.ends.map((e) => e[1]).sort().pop();
+    for (const w of [1440, 390]) {
+      const mid = await at(next(first), w);
+      ok(mid.ends.every((e) => e[2] === (e[1] >= next(first))) && (mid.ends.some((e) => e[2]) || mid.none) && !mid.overflow,
+        `fiere ${w} px al ${next(first)}: schede finite il ${first} nascoste, le altre visibili, nessun overflow`);
+      const after = await at(next(last), w);
+      ok(after.ends.every((e) => !e[2]) && after.none && !after.overflow, `fiere ${w} px al ${next(last)}: nessuna scheda, messaggio "nessuna fiera in programma"`);
+    }
+  }
+}
+
 const foreign = requests.filter((u) => new URL(u).origin !== origin);
 ok(foreign.length === 0, `nessuna richiesta esterna (${requests.length} richieste, ${new Set(requests).size} URL distinti)`);
 // Messaggio di Chromium (non un errore JS) quando lo script naviga mentre una transizione tra pagine e' in corso.
