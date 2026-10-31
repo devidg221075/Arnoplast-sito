@@ -276,7 +276,141 @@ for (const path of ['/it/', '/it/olive/', '/it/azienda/']) {
   await p2.waitForTimeout(1200);
   ok(await allShown(p2), `senza JS ${path}: hero e sezioni visibili`);
 }
+await p2.goto(BASE + '/it/');
+ok(await p2.locator('.hs-links a').count() === 4 && await p2.locator('.hs-links a').last().isVisible() && !(await p2.locator('.hs-ctrl').isVisible())
+  && await p2.locator('img[fetchpriority="high"]').evaluate((i) => i.complete && i.naturalWidth > 0), 'senza JS /it/: prima foto, link alle 4 sezioni visibili, comandi nascosti');
 await nojs.close();
+
+// --- Carosello dell'hero della home.
+const watch = (pg) => {
+  pg.on('console', (m) => { if (m.type() === 'error') errors.push(m.text()); });
+  pg.on('pageerror', (e) => errors.push(e.message));
+  pg.on('request', (r) => requests.push(r.url()));
+};
+const hs = (pg) => pg.evaluate(() => {
+  const idx = (sel) => [...document.querySelectorAll(sel)].findIndex((e) => e.classList.contains('is-active'));
+  return {
+    pic: idx('.hs-pic'), cap: idx('.hs-cap'),
+    dot: [...document.querySelectorAll('.hs-dot')].findIndex((d) => d.getAttribute('aria-current') === 'true'),
+    live: document.querySelector('.hs-caps').getAttribute('aria-live'),
+    visibleCaps: [...document.querySelectorAll('.hs-cap')].filter((c) => getComputedStyle(c).visibility === 'visible').length,
+    srcs: [...document.querySelectorAll('.hs-pic img')].map((i) => i.currentSrc),
+    srcsets: [...document.querySelectorAll('.hs-pic img, .hs-pic source')].map((e) => e.getAttribute('srcset') || ''),
+  };
+});
+// Slide i attiva ovunque (foto, didascalia, indicatore) e una sola didascalia visibile (finita la dissolvenza).
+const at = (st, i) => st.pic === i && st.cap === i && st.dot === i && st.visibleCaps === 1;
+const deskCtx = await browser.newContext({ viewport: { width: 1440, height: 900 } });
+const d1 = await deskCtx.newPage();
+watch(d1);
+await d1.goto(BASE + '/it/?luce=giorno', { waitUntil: 'domcontentloaded' });
+let st = await hs(d1);
+ok(at(st, 0) && st.srcsets.filter(Boolean).length === 2 && st.live === 'off', `carosello: all'apertura solo la prima foto ha srcset (${st.srcsets.filter(Boolean).length} su ${st.srcsets.length}), aria-live=off`);
+await d1.waitForLoadState('load');
+await d1.waitForTimeout(3500);
+st = await hs(d1);
+ok(st.srcsets.every(Boolean) && st.srcs.every((u) => u && !/-3200\.webp/.test(u)), `carosello 1440: dopo load + inattivita' tutte le foto caricate, nessuna da 3200 (${st.srcs.map((u) => u.split('/').pop()).join(', ')})`);
+ok(await d1.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth), '1440 px /it/: nessun overflow orizzontale');
+// Rotazione automatica (mouse fuori dal carosello, nessun fuoco dentro).
+await d1.mouse.move(700, 40);
+await d1.waitForTimeout(7200 - 3500);
+st = await hs(d1);
+ok(at(st, 1) && st.live === 'off', `carosello: rotazione automatica alla slide 2 dopo ~6,5 s (slide ${st.pic + 1}, aria-live=${st.live})`);
+// Comandi: successiva, frecce, indicatori, precedente.
+await d1.locator('.hs-next').click();
+await d1.waitForTimeout(800);
+st = await hs(d1);
+ok(at(st, 2) && st.live === 'polite', `carosello: "successiva" porta alla slide 3 (aria-live=${st.live} col fuoco nel carosello)`);
+await d1.keyboard.press('ArrowRight');
+await d1.waitForTimeout(800);
+ok(at(await hs(d1), 3), 'carosello: freccia destra -> slide 4');
+await d1.keyboard.press('ArrowRight');
+await d1.waitForTimeout(800);
+ok(at(await hs(d1), 0), 'carosello: freccia destra dall\'ultima torna alla prima');
+await d1.keyboard.press('ArrowLeft');
+await d1.waitForTimeout(800);
+ok(at(await hs(d1), 3), 'carosello: freccia sinistra dalla prima va all\'ultima');
+await d1.locator('.hs-dot').nth(1).click();
+await d1.waitForTimeout(800);
+ok(at(await hs(d1), 1), 'carosello: clic sull\'indicatore 2');
+await d1.locator('.hs-prev').click();
+await d1.waitForTimeout(800);
+ok(at(await hs(d1), 0), 'carosello: "precedente" -> slide 1');
+// Pausa: ferma la rotazione anche fuori dal carosello.
+await d1.locator('.hs-pause').click();
+const pausedLabel = await d1.locator('.hs-pause').getAttribute('aria-label');
+await d1.mouse.move(700, 40);
+await d1.evaluate(() => document.activeElement.blur());
+await d1.waitForTimeout(8000);
+st = await hs(d1);
+ok(at(st, 0) && st.live === 'polite' && /Riprendi/.test(pausedLabel), `carosello: in pausa resta sulla slide 1 per 8 s (aria-live=${st.live}, pulsante "${pausedLabel}")`);
+await d1.locator('.hs-pause').click();
+// Ricerca in uso: la rotazione si ferma mentre si scrive, poi la ricerca funziona.
+await d1.locator('label[for="site-search"]:not(.sr-only)').first().click();
+await d1.mouse.move(700, 40);
+await d1.keyboard.type('prisma', { delay: 120 });
+await d1.waitForTimeout(7500);
+ok(at(await hs(d1), 0), 'carosello: nessun cambio di slide mentre si scrive nella ricerca');
+await d1.waitForSelector('#search-results a');
+ok(await d1.locator('#search-results a').count() > 0, 'home 1440: ricerca dalla home con risultati');
+await d1.keyboard.press('Escape');
+// Mouse sopra il carosello: pausa temporanea.
+await d1.evaluate(() => document.activeElement.blur());
+await d1.mouse.move(1100, 500);
+await d1.waitForTimeout(7500);
+ok(at(await hs(d1), 0), 'carosello: nessun cambio di slide col mouse sopra');
+await d1.mouse.move(700, 40);
+await d1.waitForTimeout(7500);
+ok(at(await hs(d1), 1), 'carosello: tolto il mouse la rotazione riprende');
+await deskCtx.close();
+
+// Di sera (?luce=notte): foto notturne su tutte le slide che le hanno, anche quelle caricate dopo.
+for (const [w, h] of [[1440, 900], [390, 844]]) {
+  const c = await browser.newContext({ viewport: { width: w, height: h }, deviceScaleFactor: w < 600 ? 2 : 1 });
+  const pg = await c.newPage();
+  watch(pg);
+  await pg.goto(BASE + '/it/?luce=notte', { waitUntil: 'load' });
+  await pg.waitForTimeout(4000);
+  const night = await pg.evaluate(() => [...document.querySelectorAll('.hs-pic')].map((p) => ({
+    has: !!p.querySelector('[data-night-srcset]'), src: p.querySelector('img').currentSrc })));
+  ok(night.every((n) => n.src && (n.has ? /-notte-/.test(n.src) : !/-notte-/.test(n.src))) && night.filter((n) => n.has).length === 2,
+    `${w} px ?luce=notte: foto notturne sulle slide che le hanno (${night.map((n) => n.src.split('/').pop()).join(', ')})`);
+  if (w < 600) ok(/-alto-840\.webp$/.test(night[0].src), `390 px @2x: prima foto dal ritaglio verticale da 840 px (${night[0].src.split('/').pop()})`);
+  await c.close();
+}
+
+// Swipe su touch screen (telefono): sinistra = successiva, destra = precedente.
+const touch = await browser.newContext({ viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true });
+const t1 = await touch.newPage();
+watch(t1);
+await t1.goto(BASE + '/it/', { waitUntil: 'load' });
+const cdpT = await touch.newCDPSession(t1);
+const swipe = async (x0, x1) => {
+  await cdpT.send('Input.dispatchTouchEvent', { type: 'touchStart', touchPoints: [{ x: x0, y: 300 }] });
+  for (let k = 1; k <= 5; k++) await cdpT.send('Input.dispatchTouchEvent', { type: 'touchMove', touchPoints: [{ x: x0 + (x1 - x0) * k / 5, y: 302 }] });
+  await cdpT.send('Input.dispatchTouchEvent', { type: 'touchEnd', touchPoints: [] });
+  await t1.waitForTimeout(800);
+};
+await swipe(320, 80);
+ok(at(await hs(t1), 1), 'carosello: swipe verso sinistra -> slide 2');
+await swipe(80, 320);
+ok(at(await hs(t1), 0), 'carosello: swipe verso destra -> slide 1');
+await touch.close();
+
+// Movimento ridotto: nessuna rotazione ne' zoom, comandi manuali attivi, pulsante pausa nascosto.
+const calm2 = await browser.newContext({ viewport: { width: 1440, height: 900 }, reducedMotion: 'reduce' });
+const r1 = await calm2.newPage();
+watch(r1);
+await r1.goto(BASE + '/it/', { waitUntil: 'load' });
+await r1.mouse.move(700, 40);
+await r1.waitForTimeout(8000);
+st = await hs(r1);
+ok(at(st, 0) && await r1.locator('.hs-pause').isHidden() && st.live === 'polite', `movimento ridotto: resta sulla slide 1 dopo 8 s, pausa nascosta, aria-live=${st.live}`);
+await r1.locator('.hs-next').click();
+await r1.waitForTimeout(400);
+ok(at(await hs(r1), 1) && await r1.evaluate(() => [...document.querySelectorAll('.hs-pic img, .hs-fill')].every((e) => getComputedStyle(e).animationName === 'none')),
+  'movimento ridotto: "successiva" funziona, nessuna animazione');
+await calm2.close();
 
 const foreign = requests.filter((u) => new URL(u).origin !== origin);
 ok(foreign.length === 0, `nessuna richiesta esterna (${requests.length} richieste, ${new Set(requests).size} URL distinti)`);

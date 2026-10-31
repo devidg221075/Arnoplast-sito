@@ -31,7 +31,7 @@ def html(out, rel):
 def test_hero_pages_have_full_screen_hero_with_one_priority_image(site, rel):
     out, _ = site
     h = html(out, rel)
-    assert re.search(r'<section class="(a-hero|hx [^"]*)"', h), rel
+    assert re.search(r'<section class="(a-hero[^"]*|hx [^"]*)"', h), rel
     assert 'class="hx-media" data-parallax' in h
     prio = re.findall(r'<img\b[^>]*fetchpriority="high"[^>]*>', h)
     assert len(prio) == 1, rel
@@ -49,7 +49,9 @@ def test_hero_pages_have_full_screen_hero_with_one_priority_image(site, rel):
             assert f.is_file() and f.suffix == ".webp" and f.stat().st_size <= 250 * 1024, part
     for other in re.findall(r"<img\b[^>]*>", h):
         if other != img and "arnoplast-logo" not in other:
-            assert 'loading="lazy"' in other, other
+            # lazy, oppure foto rinviata del carosello della home (solo data-srcset: la carica hero-slides.js)
+            deferred = 'data-srcset="' in other and not re.search(r'\s(?:src|srcset)="', other)
+            assert 'loading="lazy"' in other or (rel == "it" and deferred), other
 
 
 @pytest.mark.parametrize("rel", COMPACT_PAGES)
@@ -152,5 +154,22 @@ def test_company_hero_has_night_variant_chosen_in_page(site):
             f = out / part.split()[0].lstrip("/")
             assert f.is_file() and f.suffix == ".webp" and f.stat().st_size <= 250 * 1024, part
     assert "getHours()" in h and "luce=(notte|giorno)" in h
-    for rel in ("it", "it/agricoltura", "it/garden", "it/olive"):
+    for rel in ("it/garden", "it/olive"):  # foto dai cataloghi, senza variante serale
         assert "data-night-srcset" not in html(out, rel), rel
+
+
+def test_agricoltura_hero_has_night_variant_from_client_photos(site):
+    out, _ = site
+    h = html(out, "it/agricoltura")
+    img = re.search(r"<img\b[^>]*fetchpriority[^>]*>", h).group(0)
+    assert 'src="/static/img/home/agricoltura-giorno-3200.webp"' in img and 'sizes="120vw"' in img
+    assert "agricoltura-notte" not in img.split("data-night-srcset")[0]
+    night = re.findall(r'data-night-srcset="([^"]+)"', h)
+    assert len(night) == 2 and "agricoltura-notte-3200" in night[1] and "agricoltura-notte-alto-1260" in night[0]
+    for srcset in night:
+        for part in srcset.split(","):
+            f = out / part.split()[0].lstrip("/")
+            assert f.is_file() and f.stat().st_size <= 250 * 1024, part
+    assert "getHours()" in h and "luce=(notte|giorno)" in h
+    assert "tunnel" not in h
+    assert not list((ROOT / "site" / "static" / "img" / "home").glob("tunnel-*"))

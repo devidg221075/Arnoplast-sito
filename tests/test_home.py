@@ -29,7 +29,7 @@ def test_single_home_without_variants(site):
         assert not (out / "static" / "css" / f"home-{v}.css").exists()
     h = html(out)
     assert "vswitch" not in h and "noindex" not in h
-    assert 'class="a-hero"' in h
+    assert 'class="a-hero hs"' in h
 
 
 def test_home_has_header_with_quote_counter(site):
@@ -48,10 +48,17 @@ def test_home_has_single_priority_hero_image(site):
     assert h.count('fetchpriority="high"') == 1
     imgs = [t for t in re.findall(r"<img\b[^>]*>", h) if "arnoplast-logo" not in t]
     assert imgs
+    deferred = 0
     for img in imgs:
         assert 'alt="' in img, img
-        if 'fetchpriority="high"' not in img:
+        if 'fetchpriority="high"' in img:
+            continue
+        if 'data-srcset="' in img:  # foto delle slide successive del carosello: solo dati, nessun download
+            assert not re.search(r'\s(?:src|srcset)="', img) and 'decoding="async"' in img, img
+            deferred += 1
+        else:
             assert 'loading="lazy"' in img and 'decoding="async"' in img, img
+    assert deferred == 3
 
 
 def test_hero_image_has_dimensions_and_srcset(site):
@@ -124,13 +131,20 @@ def test_home_numbers_come_from_catalog(site):
 
 def test_home_photos_are_local_and_small(site):
     out, _ = site
-    tags = " ".join(t for t in re.findall(r"<(?:img|source)\b[^>]*>", html(out)) if "arnoplast-logo" not in t)
-    for src in re.findall(r'(?:src|srcset)="([^"]+)"', tags):
-        for part in src.split(","):
-            path = part.split()[0]
-            assert path.startswith("/static/img/home/"), path
-            f = out / path.lstrip("/")
-            assert f.is_file() and f.stat().st_size <= 150 * 1024, path
+    h = html(out)
+    hero = h[h.index('<div class="hx-media"'):h.index('<div class="wrap a-hero-in')]
+    rest = h.replace(hero, "")
+    # Foto dell'hero (carosello, fino a 3200 px): <= 250 KB come gli altri hero; le altre foto della home <= 150 KB.
+    for part_html, limit in ((hero, 250), (rest, 150)):
+        tags = " ".join(t for t in re.findall(r"<(?:img|source)\b[^>]*>", part_html) if "arnoplast-logo" not in t)
+        srcs = re.findall(r'(?:src|srcset)="([^"]+)"', tags)  # anche data-src, data-srcset, data-night-srcset
+        assert srcs
+        for src in srcs:
+            for part in src.split(","):
+                path = part.split()[0]
+                assert path.startswith("/static/img/home/"), path
+                f = out / path.lstrip("/")
+                assert f.is_file() and f.stat().st_size <= limit * 1024, path
 
 
 def test_image_dimensions_match_files(site):
