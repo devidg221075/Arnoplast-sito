@@ -251,7 +251,9 @@ for (const path of ['/it/', '/it/agricoltura/', '/it/azienda/']) {
   const got = await page.evaluate(() => [...document.querySelectorAll('[data-countup]')].map((e) => e.textContent));
   ok(await allShown(page), `${path}: dopo lo scorrimento tutti i blocchi animati sono visibili`);
   ok(JSON.stringify(want) === JSON.stringify(got), `${path}: contatori al valore della pagina (${got.join(', ')})`);
-  ok(await page.evaluate(() => document.querySelectorAll('img[fetchpriority="high"]').length === 1), `${path}: una sola immagine prioritaria`);
+  // Home con una fiera senza foto come prima slide: fondo grafico in CSS, nessuna immagine prioritaria.
+  const prio = await page.evaluate(() => ({ n: document.querySelectorAll('img[fetchpriority="high"]').length, poster: !!document.querySelector('.hs-pic:first-child .hs-poster') }));
+  ok(prio.n === (prio.poster ? 0 : 1), `${path}: ${prio.n} immagine prioritaria${prio.poster ? ' (prima slide: fiera senza foto, fondo grafico)' : ''}`);
 }
 // Movimento ridotto: nessuna animazione, contenuto visibile subito senza scorrere.
 const calm = await browser.newContext({ viewport: { width: 390, height: 844 }, reducedMotion: 'reduce' });
@@ -277,8 +279,16 @@ for (const path of ['/it/', '/it/olive/', '/it/azienda/']) {
   ok(await allShown(p2), `senza JS ${path}: hero e sezioni visibili`);
 }
 await p2.goto(BASE + '/it/');
-ok(await p2.locator('.hs-links a').count() === 4 && await p2.locator('.hs-links a').last().isVisible() && !(await p2.locator('.hs-ctrl').isVisible())
-  && await p2.locator('img[fetchpriority="high"]').evaluate((i) => i.complete && i.naturalWidth > 0), 'senza JS /it/: prima foto, link alle 4 sezioni visibili, comandi nascosti');
+{
+  // Senza JS vale la build: tante voci quante slide (fiere future + 4 sezioni); prima slide = foto o fondo grafico.
+  const nSlides = await p2.locator('.hs-cap').count();
+  const first = p2.locator('.hs-pic').first();
+  const firstOk = await first.locator('.hs-poster').count()
+    ? await first.locator('.hs-poster').isVisible() && await p2.locator('img[fetchpriority="high"]').count() === 0
+    : await p2.locator('img[fetchpriority="high"]').evaluate((i) => i.complete && i.naturalWidth > 0);
+  ok(nSlides >= 4 && await p2.locator('.hs-links a').count() === nSlides && await p2.locator('.hs-links a').last().isVisible() && !(await p2.locator('.hs-ctrl').isVisible()) && firstOk,
+    `senza JS /it/: prima slide visibile, link alle ${nSlides} slide, comandi nascosti`);
+}
 await nojs.close();
 
 // --- Carosello dell'hero della home.
@@ -305,7 +315,12 @@ const d1 = await deskCtx.newPage();
 watch(d1);
 await d1.goto(BASE + '/it/?luce=giorno', { waitUntil: 'domcontentloaded' });
 let st = await hs(d1);
-ok(at(st, 0) && st.srcsets.filter(Boolean).length === 2 && st.live === 'off', `carosello: all'apertura solo la prima foto ha srcset (${st.srcsets.filter(Boolean).length} su ${st.srcsets.length}), aria-live=off`);
+const N = await d1.locator('.hs-cap').count();
+// Nel markup (prima di qualsiasi script) solo la prima slide ha srcset veri; le altre solo data-srcset.
+const homeHtml = await (await fetch(BASE + '/it/')).text();
+const media = homeHtml.slice(homeHtml.indexOf('class="hx-media"'), homeHtml.indexOf('class="wrap a-hero-in'));
+const restSets = media.split('<div class="hs-pic').slice(2).filter((part) => / srcset="/.test(part)).length;
+ok(at(st, 0) && restSets === 0 && st.live === 'off', `carosello: all'apertura solo la prima slide ha srcset (${st.srcsets.filter(Boolean).length} su ${st.srcsets.length}), ${N} slide, aria-live=off`);
 await d1.waitForLoadState('load');
 await d1.waitForTimeout(3500);
 st = await hs(d1);
@@ -324,12 +339,15 @@ ok(at(st, 2) && st.live === 'polite', `carosello: "successiva" porta alla slide 
 await d1.keyboard.press('ArrowRight');
 await d1.waitForTimeout(800);
 ok(at(await hs(d1), 3), 'carosello: freccia destra -> slide 4');
+await d1.locator('.hs-dot').nth(N - 1).click();
+await d1.waitForTimeout(800);
+ok(at(await hs(d1), N - 1) && await d1.locator('.hs-count').textContent() === `${String(N).padStart(2, '0')} / ${String(N).padStart(2, '0')}`, `carosello: indicatore dell'ultima slide, contatore "${await d1.locator('.hs-count').textContent()}"`);
 await d1.keyboard.press('ArrowRight');
 await d1.waitForTimeout(800);
 ok(at(await hs(d1), 0), 'carosello: freccia destra dall\'ultima torna alla prima');
 await d1.keyboard.press('ArrowLeft');
 await d1.waitForTimeout(800);
-ok(at(await hs(d1), 3), 'carosello: freccia sinistra dalla prima va all\'ultima');
+ok(at(await hs(d1), N - 1), 'carosello: freccia sinistra dalla prima va all\'ultima');
 await d1.locator('.hs-dot').nth(1).click();
 await d1.waitForTimeout(800);
 ok(at(await hs(d1), 1), 'carosello: clic sull\'indicatore 2');
@@ -371,11 +389,12 @@ for (const [w, h] of [[1440, 900], [390, 844]]) {
   watch(pg);
   await pg.goto(BASE + '/it/?luce=notte', { waitUntil: 'load' });
   await pg.waitForTimeout(4000);
-  const night = await pg.evaluate(() => [...document.querySelectorAll('.hs-pic')].map((p) => ({
+  const night = await pg.evaluate(() => [...document.querySelectorAll('.hs-pic')].filter((p) => p.querySelector('img')).map((p) => ({
     has: !!p.querySelector('[data-night-srcset]'), src: p.querySelector('img').currentSrc })));
   ok(night.every((n) => n.src && (n.has ? /-notte-/.test(n.src) : !/-notte-/.test(n.src))) && night.filter((n) => n.has).length === 2,
     `${w} px ?luce=notte: foto notturne sulle slide che le hanno (${night.map((n) => n.src.split('/').pop()).join(', ')})`);
-  if (w < 600) ok(/-alto-840\.webp$/.test(night[0].src), `390 px @2x: prima foto dal ritaglio verticale da 840 px (${night[0].src.split('/').pop()})`);
+  const agri = night.find((n) => /agricoltura-/.test(n.src)) || night[0];
+  if (w < 600) ok(/-alto-840\.webp$/.test(agri.src), `390 px @2x: foto di Agricoltura dal ritaglio verticale da 840 px (${agri.src.split('/').pop()})`);
   await c.close();
 }
 
@@ -411,6 +430,57 @@ await r1.waitForTimeout(400);
 ok(at(await hs(r1), 1) && await r1.evaluate(() => [...document.querySelectorAll('.hs-pic img, .hs-fill')].every((e) => getComputedStyle(e).animationName === 'none')),
   'movimento ridotto: "successiva" funziona, nessuna animazione');
 await calm2.close();
+
+// --- Slide delle fiere nell'hero: scadenza in pagina (data-fair-end + hero-slides.js) con l'orologio spostato.
+{
+  const html = await (await fetch(BASE + '/it/')).text();
+  const ends = [...html.matchAll(/class="hs-cap hs-fair[^"]*"[^>]*data-fair-end="([\d-]+)"/g)].map((m) => m[1]);
+  const base = (html.match(/class="hs-cap[ "]/g) || []).length - ends.length;
+  const scen = async (iso, w) => {
+    const ctx = await browser.newContext({ viewport: { width: w, height: w < 600 ? 844 : 900 } });
+    const pg = await ctx.newPage();
+    watch(pg);
+    await pg.clock.setFixedTime(new Date(iso + 'T10:00:00'));
+    await pg.goto(BASE + '/it/?luce=giorno', { waitUntil: 'load' });
+    await pg.waitForTimeout(600);
+    const r = await pg.evaluate(() => {
+      const caps = [...document.querySelectorAll('.hs-cap')];
+      const pic0 = document.querySelector('.hs-pic');
+      const img0 = pic0 && pic0.querySelector('img');
+      return {
+        n: caps.length, pics: document.querySelectorAll('.hs-pic').length, dots: document.querySelectorAll('.hs-dot').length,
+        labels: caps.map((c) => c.getAttribute('aria-label')),
+        dotLabels: [...document.querySelectorAll('.hs-dot')].map((d) => d.getAttribute('aria-label')),
+        count: document.querySelector('.hs-count').textContent.trim(),
+        active: caps.findIndex((c) => c.classList.contains('is-active')),
+        pic0: !!pic0 && pic0.classList.contains('is-active') && !pic0.hasAttribute('aria-hidden'),
+        dot0: document.querySelector('.hs-dot').getAttribute('aria-current') === 'true',
+        img0: img0 ? img0.getAttribute('srcset') || '' : 'poster',
+        overflow: document.documentElement.scrollWidth > window.innerWidth,
+      };
+    });
+    if (r.img0 !== 'poster') r.loaded = await pg.locator('.hs-pic').first().locator('img').evaluate((i) => i.complete && i.naturalWidth > 0);
+    // La rotazione riparte dalle slide rimaste: "successiva" va alla seconda, il contatore segue.
+    await pg.locator('.hs-next').click();
+    await pg.waitForTimeout(500);
+    r.next = await pg.locator('.hs-count').textContent();
+    await ctx.close();
+    return r;
+  };
+  const pad = (x) => String(x).padStart(2, '0');
+  for (const [iso, label] of [['2026-10-31', '(a)'], ['2026-11-20', '(b)'], ['2026-12-01', '(c)']]) {
+    const want = base + ends.filter((e) => e >= iso).length;
+    for (const w of [1440, 390]) {
+      const r = await scen(iso, w);
+      const labelsOk = r.labels.every((l, j) => l.startsWith(`${j + 1} di ${want}: `)) && r.dotLabels.every((l, j) => l === r.labels[j]);
+      ok(r.n === want && r.pics === want && r.dots === want && r.count === `01 / ${pad(want)}` && labelsOk && r.active === 0 && r.pic0 && r.dot0
+        && (r.img0 === 'poster' || (r.img0 && r.loaded)) && r.next.trim() === `02 / ${pad(want)}` && !r.overflow,
+        `hero fiere ${label} ${iso} ${w} px: ${r.n} slide (attese ${want}), contatore "${r.count}", prima "${r.labels[0]}", successiva "${r.next.trim()}"`);
+      if (iso === '2026-12-01') ok(/Agricoltura$/.test(r.labels[0]) && r.loaded, `hero fiere ${label} ${w} px: prima slide Agricoltura con la foto caricata subito`);
+    }
+  }
+  ok(base === 4 && ends.length >= 0, `hero: ${ends.length} slide fiera nel build + ${base} sezioni`);
+}
 
 // --- Menu principale: sottomenu (mouse e tastiera, 1440 px), fisarmonica (390 px), lingua, pagine nuove.
 const navCtx = await browser.newContext({ viewport: { width: 1440, height: 900 } });
