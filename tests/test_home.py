@@ -252,3 +252,16 @@ def test_contacts_page_form_fields_and_map_on_click(site):
     for data in ("01987190483", "FI355293", "49.580,00", "+39 055 83 47 031", "info@arnoplast.it", "ARNOcommerciale"):
         assert data in h, data
     assert 'id="c-web"' in h  # trappola antispam
+
+
+def test_cookie_page_lists_real_storage_and_services(site):
+    out, _ = site
+    h = (out / "it" / "cookie" / "index.html").read_text(encoding="utf-8")
+    assert "arnoplast.quote.v2" in h and "Facebook" in h and "YouTube" in h and "Vimeo" in h and "Google Maps" in h
+    assert "privacy-policy-arno-plast" in h and "in preparazione" not in h
+    # coerenza con il codice: l'unica chiave di archivio locale usata dal sito e' quella elencata
+    js = (Path(__file__).resolve().parent.parent / "site" / "static" / "js")
+    keys = set(re.findall(r"'(arnoplast\.[\w.]+)'", (js / "quote.js").read_text(encoding="utf-8")))
+    assert "arnoplast.quote.v2" in keys
+    for f in js.glob("*.js"):
+        assert "document.cookie" not in f.read_text(encoding="utf-8"), f.name

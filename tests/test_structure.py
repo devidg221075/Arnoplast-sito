@@ -354,7 +354,7 @@ def test_catalogs_page(site):
 def test_placeholders_and_old_applications_url(site):
     assert "<title>Galleria - ARNOplast</title>" in html(site, "it/galleria")
     assert "<title>Video e Tutorial - ARNOplast</title>" in html(site, "it/video")
-    assert "in preparazione" in html(site, "it/cookie")
+    assert "Il sito non imposta cookie" in html(site, "it/cookie") and "in preparazione" not in html(site, "it/cookie")
     moved = html(site, "it/applicazioni")
     assert 'content="0; url=/it/galleria/"' in moved and "noindex" in moved
     assert "/it/applicazioni/ /it/galleria/ 301" in (site / "_redirects").read_text(encoding="utf-8")

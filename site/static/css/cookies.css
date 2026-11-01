@@ -1,0 +1,14 @@
+/* Cookie e privacy: pagina di testo con una tabella e un elenco. */
+.ck { display: grid; gap: 36px; max-width: 880px; }
+.ck h2 { font-size: clamp(1.4rem, 3.6vw, 2rem); }
+.ck p, .ck li { max-width: 70ch; }
+.ck-brief { padding: 20px 24px; border-left: 6px solid var(--red); background: var(--paper); }
+.ck-brief ul { margin: 0; padding-left: 1.2em; display: grid; gap: 6px; font-weight: 600; }
+.ck-table { display: grid; border: 1px solid var(--line); }
+.ck-row { display: grid; gap: 6px; padding: 14px 16px; border-top: 1px solid var(--line); }
+.ck-row:first-child { border-top: 0; }
+.ck-head { display: none; font-size: .75rem; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; background: var(--paper); }
+@media (min-width: 720px) { .ck-row { grid-template-columns: 2fr 2fr 2fr; gap: 20px; } .ck-head { display: grid; } }
+.ck-ext { list-style: none; margin: 0; padding: 0; display: grid; gap: 0; border: 1px solid var(--line); }
+.ck-ext li { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 6px 20px; padding: 14px 16px; border-top: 1px solid var(--line); max-width: none; }
+.ck-ext li:first-child { border-top: 0; }

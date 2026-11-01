@@ -68,6 +68,14 @@ CONTACTS = {
     "capital": "49.580,00 i.v.",
     "web": "www.arnoplast.it",
 }
+# Servizi esterni che la pagina Cookie e privacy elenca (si attivano solo al clic): (chiave testo, informativa ufficiale).
+EXTERNAL_SERVICES = [
+    ("ck.ext_fb", "https://www.facebook.com/privacy/policy/"),
+    ("ck.ext_yt", "https://policies.google.com/privacy"),
+    ("ck.ext_vimeo", "https://vimeo.com/privacy"),
+    ("ck.ext_maps", "https://policies.google.com/privacy"),
+]
+
 # "Tipologia utente" del modulo contatti: elenco del sito vecchio, parola per parola.
 USER_TYPES = ["Privato/Altro", "Azienda Agricola", "Garden/Vivaio", "Riv. Macc. Agr./Officina", "Agraria/Consorzio Agrario",
               "Ferramenta/Fai da te", "Manutentori/Giardinieri", "Grossa Distrib. Spec.", "Ingrosso/Consulente",
@@ -882,7 +890,8 @@ def build_site(c: Catalog, out: Path, lang: str = "it", sources: Path | None = N
     render("videos.html", base / "video", line=None, title=t("page.videos", lang), sections=video_sections(c, lang, vids),
            description=t("vid.lead", lang))
     render("page.html", base / "area-riservata", line=None, title=t("page.reserved", lang), kind="reserved")
-    render("page.html", base / "cookie", line=None, title=t("page.cookie", lang), kind="cookie")
+    render("cookies.html", base / "cookie", line=None, title=t("page.cookie", lang), description=t("ck.lead", lang),
+           privacy_url=PRIVACY_URL, services=EXTERNAL_SERVICES)
     # Vecchio indirizzo del prototipo: rimanda alla Galleria (anche in _redirects), fuori dalla sitemap.
     render("moved.html", base / "applicazioni", line=None, title=t("page.gallery", lang), sitemap=False,
            target=f"/{lang}/galleria/", canonical_override=f"{SITE_URL}/{lang}/galleria/")

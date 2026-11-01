@@ -93,3 +93,6 @@ Testo legale di 5.600 caratteri. Non lo riscrivo: il sito nuovo rimanda alla pol
 4. **Listini** e documenti dell'**area riservata** (e la regola di accesso).
 5. Testo di **Chi siamo** in italiano (l'ho ricostruito dalla home e dalla versione inglese, da confermare).
 6. Indicazioni sul **feed social** in Notizie.
+
+## Nota: pagina "Cookie e privacy" (sito nuovo)
+Elenca solo fatti tecnici verificati sul prototipo statico: nessun cookie, un solo dato nell'archivio locale (`arnoplast.quote.v2`), servizi esterni solo dopo un clic (Facebook, YouTube senza cookie, Vimeo, Google Maps). Va **ricontrollata e aggiornata** quando arriva WordPress (plugin, invio del modulo, antispam, eventuali statistiche) e va sottoposta al consulente legale del cliente: il testo legale (informativa privacy) resta quello del cliente, collegato dalla pagina.

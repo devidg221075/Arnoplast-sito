@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block head_extra %}<link rel="stylesheet" href="/static/css/pages.css"><link rel="stylesheet" href="/static/css/cookies.css">{% endblock %}
+{% block main %}
+{# Cookie e privacy: solo fatti tecnici di questo sito. Il testo legale (informativa privacy) e' quello del cliente, collegato. #}
+<section class="page-head">
+  <div class="wrap">
+    <nav class="breadcrumb" aria-label="Breadcrumb"><a href="/{{ lang }}/">{{ t('breadcrumb.home') }}</a></nav>
+    <h1>{{ title }}</h1>
+    <p class="lead">{{ t('ck.lead') }}</p>
+  </div>
+</section>
+<div class="wrap section ck">
+  <section aria-labelledby="ck-brief-t" class="ck-brief">
+    <h2 id="ck-brief-t">{{ t('ck.brief_t') }}</h2>
+    <ul><li>{{ t('ck.brief_1') }}</li><li>{{ t('ck.brief_2') }}</li><li>{{ t('ck.brief_3') }}</li></ul>
+  </section>
+  <section aria-labelledby="ck-store-t">
+    <h2 id="ck-store-t">{{ t('ck.store_t') }}</h2>
+    <p>{{ t('ck.store_intro') }}</p>
+    <div class="ck-table" role="table" aria-label="{{ t('ck.store_t') }}">
+      <div class="ck-row ck-head" role="row"><span role="columnheader">{{ t('ck.col_what') }}</span><span role="columnheader">{{ t('ck.col_why') }}</span><span role="columnheader">{{ t('ck.col_where') }}</span></div>
+      <div class="ck-row" role="row"><span role="cell">{{ t('ck.store_quote') }}</span><span role="cell">{{ t('ck.store_quote_why') }}</span><span role="cell">{{ t('ck.store_quote_where') }}</span></div>
+    </div>
+  </section>
+  <section aria-labelledby="ck-ext-t">
+    <h2 id="ck-ext-t">{{ t('ck.ext_t') }}</h2>
+    <p>{{ t('ck.ext_intro') }}</p>
+    <ul class="ck-ext">
+    {% for key, url in services %}
+      <li><span>{{ t(key) }}</span> <a href="{{ url }}" target="_blank" rel="noopener">{{ t('ck.policy_link') }}<span class="sr-only"> ({{ t('footer.new_tab') }})</span></a></li>
+    {% endfor %}
+    </ul>
+  </section>
+  <section aria-labelledby="ck-links-t"><h2 id="ck-links-t">{{ t('ck.links_t') }}</h2><p>{{ t('ck.links_text') }}</p></section>
+  <section aria-labelledby="ck-clear-t"><h2 id="ck-clear-t">{{ t('ck.clear_t') }}</h2><p>{{ t('ck.clear_text') }}</p></section>
+  <section aria-labelledby="ck-priv-t"><h2 id="ck-priv-t">{{ t('ck.privacy_t') }}</h2><p>{{ t('ck.privacy_text') }}</p>
+    <p><a class="btn btn-primary" href="{{ privacy_url }}" target="_blank" rel="noopener">{{ t('ck.privacy_cta') }}<span class="sr-only"> ({{ t('footer.new_tab') }})</span></a></p></section>
+</div>
+{% endblock %}
