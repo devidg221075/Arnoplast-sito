@@ -278,3 +278,14 @@ def test_home_video_section_loads_player_only_on_click(tmp_path):
     assert 'id="a-video-t"' in h and "home-video.js" in h and "<iframe" not in h
     assert 'data-hv-src="https://www.youtube-nocookie.com/embed/6t_hUfHWVwQ' in h
     assert h.index('id="a-idea-t"') < h.index('id="a-video-t"') < h.index('id="a-steps-t"')
+
+
+def test_header_is_sticky_with_shadow_hook_and_app_band_on_home(site):
+    out, _ = site
+    root = Path(__file__).resolve().parent.parent / "site" / "static"
+    assert re.search(r"\.site-header \{[^}]*position: sticky; top: 0;", (root / "css" / "main.css").read_text(encoding="utf-8"))
+    assert "is-stuck" in (root / "css" / "nav.css").read_text(encoding="utf-8") and "is-stuck" in (root / "js" / "nav.js").read_text(encoding="utf-8")
+    h = (out / "it" / "index.html").read_text(encoding="utf-8")
+    band = h.split('id="a-app-t"')[1].split("</section>")[0]
+    assert "apps.apple.com" in band and "play.google.com" in band
+    assert h.index('id="a-steps-t"') < h.index('id="a-app-t"') < h.index('id="a-contact-t"')

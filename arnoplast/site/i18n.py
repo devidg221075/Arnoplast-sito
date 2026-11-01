@@ -314,6 +314,8 @@ STRINGS = {
         "hv.video_text": "Guarda il video dell'azienda. Nella pagina Video e Tutorial trovi tutti i nostri filmati e i tutorial di montaggio.",
         "hv.video_play": "Guarda il video",
         "hv.video_all": "Tutti i video e tutorial",
+        "hv.app_eyebrow": "App ARNOplast",
+        "hv.app_title": "I nostri articoli sempre con te",
         "hs.fair": "Fiera",
         "hs.fair_kicker": "Ci trovi a",
         "hs.fair_more": "Scopri",

@@ -159,6 +159,21 @@
   </div>
 </section>
 
+<section class="a-app" aria-labelledby="a-app-t">
+  <div class="wrap a-app-in">
+    <div class="aa-text" data-reveal>
+      <p class="a-eyebrow">{{ t('hv.app_eyebrow') }}</p>
+      <h2 id="a-app-t">{{ t('hv.app_title') }}</h2>
+      <p>{{ t('footer.app_text') }}</p>
+    </div>
+    <ul class="aa-btns" data-reveal>
+    {% for name, url, icon in apps %}
+      <li><a class="btn aa-btn" href="{{ url }}" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M7 2h10a2 2 0 0 1 2 2v16a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2Zm0 2v14h10V4Zm5 15.2a1 1 0 1 0 0 2 1 1 0 0 0 0-2Z"/></svg>{{ name }}<span class="sr-only"> ({{ t('footer.new_tab') }})</span></a></li>
+    {% endfor %}
+    </ul>
+  </div>
+</section>
+
 <section class="a-contact wrap" aria-labelledby="a-contact-t">
   <div data-reveal>
     <h2 id="a-contact-t">{{ t('hv.contacts_title') }}</h2>

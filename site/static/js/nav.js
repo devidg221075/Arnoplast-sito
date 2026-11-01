@@ -92,3 +92,12 @@
   var onChange = function () { closeAll(); setPanel(false); };
   if (desktop.addEventListener) desktop.addEventListener('change', onChange); else desktop.addListener(onChange);
 })();
+// Testata fissa (position: sticky in main.css): un'ombra leggera appare appena la pagina scorre, per staccarla dal contenuto.
+(function () {
+  var head = document.querySelector('.site-header');
+  if (!head) return;
+  var ticking = false;
+  function update() { ticking = false; head.classList.toggle('is-stuck', (window.pageYOffset || document.documentElement.scrollTop) > 8); }
+  addEventListener('scroll', function () { if (!ticking) { ticking = true; requestAnimationFrame(update); } }, { passive: true });
+  update();
+})();

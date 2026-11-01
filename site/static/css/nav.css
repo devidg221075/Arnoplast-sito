@@ -87,3 +87,7 @@
   .has-sub:not(.shut):hover > .sub { display: block; }
   .has-sub:not(.shut):hover .chev { transform: rotate(180deg); }
 }
+
+/* Testata fissa: ombra quando la pagina e' scesa (classe messa da nav.js). */
+.site-header { transition: box-shadow .2s; }
+.site-header.is-stuck { box-shadow: 0 6px 22px rgba(0, 0, 0, .35); }

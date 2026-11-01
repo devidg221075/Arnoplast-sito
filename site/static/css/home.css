@@ -231,3 +231,15 @@ html:not(.js) .hs-caps, html:not(.js) .hs-ctrl { display: none; }
 .av-open:focus-visible { outline: 3px solid var(--yellow, #ffd400); outline-offset: -3px; }
 .av-media iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
 @media (min-width: 1024px) { .a-video { grid-template-columns: 5fr 7fr; gap: 56px; padding-top: 96px; padding-bottom: 96px; } }
+
+/* Fascia app: sfondo scuro, testo e due pulsanti verso i negozi. */
+.a-app { background: var(--black); color: var(--white); padding: 56px 0; }
+.a-app-in { display: grid; gap: 24px; align-items: center; }
+.a-app h2 { font-size: clamp(1.9rem, 5.4vw, 3.2rem); line-height: .95; max-width: 18ch; color: var(--white); }
+.a-app .a-eyebrow { color: var(--yellow, #ffd400); }
+.aa-text p { color: #c9c9cf; max-width: 50ch; }
+.aa-btns { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 12px; }
+.aa-btn { background: var(--white); color: var(--black); }
+.aa-btn:hover { background: var(--red); color: var(--white); }
+.a-app :focus-visible { outline-color: var(--white); }
+@media (min-width: 900px) { .a-app-in { grid-template-columns: 1fr auto; gap: 56px; } .a-app { padding: 80px 0; } }
