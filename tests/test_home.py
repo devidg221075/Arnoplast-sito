@@ -334,3 +334,13 @@ def test_security_headers_file_with_inline_hashes(tmp_path):
             assert f"'sha256-{digest}'" in hdr, f
     for host in ("youtube-nocookie.com", "player.vimeo.com", "www.facebook.com", "www.google.com"):
         assert host in hdr
+
+
+def test_reserved_area_is_noindex_preview_without_documents(tmp_path):
+    c = load_catalog(Path(__file__).resolve().parent.parent / "data" / "catalog.json")
+    build_site(c, tmp_path)
+    h = (tmp_path / "it" / "area-riservata" / "index.html").read_text(encoding="utf-8")
+    assert 'content="noindex"' in h and 'type="password"' in h and "reserved.js" in h
+    assert "Listini vari, documentazione commerciale e promozionale" in h and "/it/contatti/" in h
+    assert ".pdf" not in h  # nessun documento nel sito pubblico
+    assert "/it/area-riservata/" not in (tmp_path / "sitemap.xml").read_text(encoding="utf-8")

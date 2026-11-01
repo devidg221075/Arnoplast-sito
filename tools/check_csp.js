@@ -16,13 +16,16 @@ const srv = http.createServer((q, r) => {
   r.writeHead(200, Object.fromEntries([['Content-Type', types[path.extname(f)] || 'application/octet-stream'], ...hdr]));
   fs.createReadStream(f).pipe(r);
 }).listen(0, async () => {
-  const base = 'http://localhost:' + srv.address().port; const viol = [];
+  const base = 'http://localhost:' + srv.address().port; const viol = []; const notes = new Set();
   const b = await chromium.launch();
   for (const [w, h] of [[1440, 900], [390, 844]]) {
     const p = await b.newPage({ viewport: { width: w, height: h } });
-    p.on('console', m => { if (/Content Security Policy|Refused to/i.test(m.text())) viol.push(m.text().slice(0, 200)); });
+    p.on('console', m => { const tx = m.text();
+      if (!(m.location().url || '').startsWith(base)) return; // solo i messaggi delle nostre pagine: le finestre di YouTube, Vimeo ecc. hanno una politica propria
+      if (/X-Frame-Options/i.test(tx)) { notes.add(tx.slice(0, 160)); return; } // rifiuto del servizio esterno, non della nostra politica
+      if (/Content Security Policy|Refused to/i.test(tx)) viol.push(tx.slice(0, 200)); });
     p.on('pageerror', e => viol.push('pageerror: ' + e.message));
-    await p.addInitScript(() => document.addEventListener('securitypolicyviolation', e => console.log('Content Security Policy: ' + e.violatedDirective + ' ' + e.blockedURI)));
+    await p.addInitScript(() => document.addEventListener('securitypolicyviolation', e => location.origin === top.location.origin && console.log('Content Security Policy: ' + e.violatedDirective + ' ' + e.blockedURI)));
     p.setDefaultTimeout(4000);
     const go = async u => { await p.goto(base + u); await p.waitForTimeout(700); };
     const act = async (label, fn) => { try { await fn(); } catch (e) { viol.push('azione non riuscita: ' + label); } };
@@ -38,6 +41,7 @@ const srv = http.createServer((q, r) => {
   }
   await b.close(); srv.close();
   const uniq = [...new Set(viol)];
+  if (notes.size) console.log('NOTA (non e\' la nostra politica):\n' + [...notes].join('\n'));
   console.log(uniq.length ? 'VIOLAZIONI:\n' + uniq.join('\n') : 'OK: nessuna violazione della Content-Security-Policy');
   process.exit(uniq.length ? 1 : 0);
 });

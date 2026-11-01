@@ -67,7 +67,7 @@ Nuovo: ✔ PDF dei cataloghi sulle pagine linea; ➕ pagina Download, app, listi
 Nuovo: ➕ pagina con tutti i video, collegati alle schede prodotto.
 
 ### Restricted area (/…/restricted-area)  ✅
-Pagina protetta da password WordPress: "LISTINI VARI, DOCUMENTAZIONE COMMERCIALE E PROMOZIONALE". **Non conosco ne' la password ne' i documenti.** Nuovo: ✔ segnaposto con accesso previsto; ➕ contenuti (listini, documenti) da voi.
+Pagina protetta da password WordPress: "LISTINI VARI, DOCUMENTAZIONE COMMERCIALE E PROMOZIONALE". **Non conosco ne' la password ne' i documenti.** Nuovo: ✔ pagina con campo password (anteprima grafica, noindex, fuori dalla sitemap); ➕ contenuti (listini, documenti) e password da voi. **Un sito statico non puo' proteggere file: i documenti NON vanno nel sito pubblico**; con WordPress si usa una pagina protetta da password (poi accesso per utente).
 
 ### Contatti (/contatti-arno-plast, /en/contacts-arno-plast)  ✅
 Indirizzo **Via Comunale dell'Isola 65/B/C/D, 50067 Rignano sull'Arno (FI)**; telefoni **+39 055 83 47 031 e 033**; **info@arnoplast.it**; Facebook; **P.IVA 01987190483, Iscr. Rea FI355293, Cap. Soc. 49.580,00 i.v.**; **mappa Google**; **modulo "Richiedici un contatto"**: Nome\*, Cognome, Email\*, Ragione sociale, Referente aziendale, Telefono\*, Indirizzo\*, Localita', CAP, Nazione, **Tipologia utente\***, Descrivi la tua richiesta\*, **consenso privacy GDPR\*** (con link all'informativa), **captcha**. In coda: ARNOcommerciale.

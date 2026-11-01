@@ -962,8 +962,8 @@ def build_site(c: Catalog, out: Path, lang: str = "it", sources: Path | None = N
            description=t("gallery.lead", lang))
     render("videos.html", base / "video", line=None, title=t("page.videos", lang), lib=video_library(c, lang),
            description=t("vid.lead", lang))
-    render("page.html", base / "area-riservata", line=None, title=t("page.reserved", lang), kind="reserved",
-           description=t("reserved.notice", lang))
+    render("reserved.html", base / "area-riservata", line=None, title=t("page.reserved", lang), noindex=True,
+           sitemap=False, description=t("rs.lead", lang))
     render("cookies.html", base / "cookie", line=None, title=t("page.cookie", lang), description=t("ck.lead", lang),
            privacy_url=PRIVACY_URL, services=EXTERNAL_SERVICES)
     # Vecchio indirizzo del prototipo: rimanda alla Galleria (anche in _redirects), fuori dalla sitemap.
