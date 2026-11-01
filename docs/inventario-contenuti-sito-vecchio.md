@@ -26,6 +26,7 @@ Contenuti: banner **App** ("Scarica la nostra nuova APP per visualizzare in modo
 Nel sito nuovo: ✔ cataloghi e storia sintetica; ➕ app, fiere con date, video, social, stampa, teaser stampi.
 
 ### Chi siamo (/arno-plast-la-nostra-storia-e-chi-siamo, /en/our-history-and-who-we-are)  🟡
+_Nuovo tentativo il 2026-11-01: il sito vecchio chiude ancora la connessione (non insisto). La sottopagina **/notizie** (gia' scaricata) contiene solo il feed social: e' coperta dalla sezione "I nostri post social" della home. Per il testo italiano serve il salvataggio della pagina da parte del cliente._
 IT bloccata; **EN letta**, e coincide con i testi della home: nascita 1975 come ARNOstampi sdf; 1983 ARNOplast s.r.l.; meta' anni Ottanta prima produzione di accessori per l'agricoltura (mercato del Sud); fine anni Novanta svolta verso prodotti a marchio per agricoltura e giardinaggio e nascita di **ARNO commerciale s.r.l.**; oggi sede e stabilimenti a Rignano sull'Arno con terzisti toscani, vendita in Europa, Mediterraneo e oltreoceano. Contiene anche **mappa Google** e rimando ai contatti.
 Nuovo: ✔ testo di base nella pagina Azienda; ➕ storia completa a tappe, mappa.
 
