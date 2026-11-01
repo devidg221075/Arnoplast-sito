@@ -166,6 +166,8 @@ STRINGS = {
         "hv.step2_text": "Indica le quantità in confezioni accanto a ogni codice: la lista resta salvata su questo dispositivo.",
         "hv.step3": "Ricevi il preventivo",
         "hv.step3_text": "Invia la richiesta con i tuoi dati: ti rispondiamo con un'offerta.",
+        "hv.stampi_eyebrow": "Stampi",
+        "hv.stampi_text": "Disegno e costruzione stampi ad iniezione e soffiaggio per materie plastiche.",
         "hv.idea_title": "Dall'idea al prodotto finito",
         "hv.idea_text": "Nati nel 1975 come officina di stampi per iniezione e soffiaggio, dal 1983 seguiamo ogni articolo dalla progettazione al prodotto finito, nei nostri stabilimenti di Rignano sull'Arno.",
         "hv.idea_1": "Progettazione",

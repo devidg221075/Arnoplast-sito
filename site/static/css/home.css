@@ -243,3 +243,9 @@ html:not(.js) .hs-caps, html:not(.js) .hs-ctrl { display: none; }
 .aa-btn:hover { background: var(--red); color: var(--white); }
 .a-app :focus-visible { outline-color: var(--white); }
 @media (min-width: 900px) { .a-app-in { grid-template-columns: 1fr auto; gap: 56px; } .a-app { padding: 80px 0; } }
+
+.a-stampi { background: #f2f2f4; padding: 48px 0; }
+.a-stampi-in { display: grid; gap: 24px; align-items: center; }
+.a-stampi h2 { font-size: clamp(1.5rem, 4.2vw, 2.3rem); line-height: 1.1; max-width: 34ch; margin: 0; }
+.a-stampi .a-eyebrow { margin-bottom: 8px; }
+@media (min-width: 900px) { .a-stampi-in { grid-template-columns: 1fr auto; gap: 56px; } .a-stampi { padding: 64px 0; } }
