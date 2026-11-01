@@ -1,0 +1,132 @@
+{
+ "_nota": "Elenchi dei video del sito vecchio (/video-arno-plast e /tutorial-agricoltura), nello stesso ordine. 'titolo' null = il sito vecchio non aveva il titolo. 'prodotto' (facoltativo) = chiave linea/famiglia/prodotto della scheda collegata; se manca si ricava da data/videos.json.",
+ "video": [
+  {
+   "titolo": "Arno Plast",
+   "vimeo": "684684219"
+  },
+  {
+   "titolo": "Oleo Carbon",
+   "vimeo": "268614956"
+  },
+  {
+   "titolo": "Oleo",
+   "vimeo": "268615335"
+  },
+  {
+   "titolo": "Ligatex",
+   "vimeo": "268616891"
+  },
+  {
+   "titolo": "Bobinetta Ligatex",
+   "vimeo": "268615341"
+  },
+  {
+   "titolo": "Test vento",
+   "vimeo": "268615369"
+  },
+  {
+   "titolo": null,
+   "vimeo": "268615395"
+  },
+  {
+   "titolo": null,
+   "vimeo": "268615061"
+  },
+  {
+   "titolo": null,
+   "vimeo": "268615238"
+  },
+  {
+   "titolo": null,
+   "vimeo": "337220625"
+  }
+ ],
+ "agricoltura": [
+  {
+   "titolo": "Copripalo Monviso",
+   "youtube": "yMqD2nmIcNs"
+  },
+  {
+   "titolo": "Copripalo Monviso",
+   "youtube": "2r0ehZ8YO4A"
+  },
+  {
+   "titolo": "Copripalo Latina",
+   "youtube": "PVakNgUmaSY"
+  },
+  {
+   "titolo": "Copripalo FG",
+   "youtube": "Rcb9Lx205Kg"
+  },
+  {
+   "titolo": "Copripalo FG",
+   "youtube": "psdy6Xum578"
+  },
+  {
+   "titolo": "Copripalo Prisma",
+   "youtube": "IbH_X4Tl_Gw",
+   "prodotto": "agricoltura/copripalo/copripalo-prisma"
+  },
+  {
+   "titolo": "Copripalo Qubo",
+   "youtube": "8WScqK19s7c"
+  },
+  {
+   "titolo": "Copripalo Reno Vit. RP.",
+   "youtube": "5oI5c3nFZL8"
+  },
+  {
+   "titolo": "Copripalo Reno Vit. CAP.",
+   "youtube": "GxILx63co0I"
+  },
+  {
+   "titolo": "Copripalo Sphera",
+   "youtube": "dRiyTutWAog"
+  },
+  {
+   "titolo": "Copripalo Zephiro",
+   "youtube": "qcVIm53kEQc"
+  },
+  {
+   "titolo": "Clip Roma",
+   "youtube": "f-EpVzYPkmM"
+  },
+  {
+   "titolo": "Clip Rania",
+   "youtube": "BtfcNetEmmM"
+  },
+  {
+   "titolo": "Clip Resia",
+   "youtube": "JIMPRHkMmBM"
+  },
+  {
+   "titolo": "Clip Riva",
+   "youtube": "a5IaUnDxuyg"
+  },
+  {
+   "titolo": "Clip Start",
+   "youtube": "8okx9uadQDM"
+  },
+  {
+   "titolo": "Clip Morsa",
+   "youtube": "HgPj1oBXUZE"
+  },
+  {
+   "titolo": "Stop.net",
+   "youtube": "wjMZ590X2r0"
+  },
+  {
+   "titolo": "Stop.film",
+   "youtube": "_5HaygxJv94"
+  },
+  {
+   "titolo": "Moschettone",
+   "youtube": "qvP-yg3tPuI"
+  },
+  {
+   "titolo": "Ancora.net",
+   "youtube": "y2fjs31LI58"
+  }
+ ]
+}

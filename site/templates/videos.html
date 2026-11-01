@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block head_extra %}<link rel="stylesheet" href="/static/css/videos.css"><script src="/static/js/videos.js" defer></script>{% endblock %}
+{% block main %}
+{# Video e Tutorial (data/tutorial.json, video delle schede in data/videos.json). Ogni video e' una scheda: il lettore di
+   YouTube/Vimeo si carica solo dopo il clic (nessuna richiesta a terzi prima); senza JS la scheda e' un link al video. #}
+<section class="page-head">
+  <div class="wrap">
+    <nav class="breadcrumb" aria-label="Breadcrumb"><a href="/{{ lang }}/">{{ t('breadcrumb.home') }}</a></nav>
+    <h1>{{ title }}</h1>
+    <p class="lead">{{ t('vid.lead') }}</p>
+    <ul class="vd-jump">{% for s in sections %}<li><a class="btn btn-ghost" href="#{{ s.key }}">{{ s.title }}</a></li>{% endfor %}</ul>
+  </div>
+</section>
+{% for s in sections %}
+<section class="wrap section vd-sec" id="{{ s.key }}" aria-labelledby="vd-{{ s.key }}-t">
+  <h2 id="vd-{{ s.key }}-t">{{ s.title }} <span class="vd-n">{{ s.cards | length }}</span></h2>
+  <p class="vd-intro">{{ s.intro }}</p>
+  <ul class="vd-grid">
+  {% for v in s.cards %}
+    <li class="vd-card">
+      <div class="vd-media" data-vsrc="{{ v.src }}" data-vtitle="{{ v.title }}">
+        <a class="vd-play" href="{{ v.url }}" target="_blank" rel="noopener">
+          <span class="vd-ico" aria-hidden="true"><svg viewBox="0 0 24 24" width="26" height="26"><path d="M8 5.5v13l11-6.5z"/></svg></span>
+          <span class="vd-t">{{ v.title }}</span>
+          <span class="vd-s">{{ 'Vimeo' if v.service == 'vimeo' else 'YouTube' }}<span class="sr-only"> ({{ t('footer.new_tab') }})</span></span>
+        </a>
+      </div>
+      {% if v.product %}<p class="vd-prod"><a href="{{ v.product.href }}">{{ t('vid.product') }}: {{ v.product.name }} <span aria-hidden="true">→</span></a></p>{% endif %}
+    </li>
+  {% endfor %}
+  </ul>
+</section>
+{% endfor %}
+<section class="wrap section"><p class="vd-privacy">{{ t('vid.privacy') }}</p></section>
+{% endblock %}

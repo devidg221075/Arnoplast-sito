@@ -216,3 +216,26 @@ def test_catalog_flipbook_pages(site):
 def test_flipbook_base_comes_from_the_page_images():
     js = (Path(__file__).resolve().parent.parent / "site" / "static" / "js" / "flipbook.js").read_text(encoding="utf-8")
     assert ".fb-list img" in js and "getAttribute('src')" in js  # percorsi relativi anche da file://
+
+
+def test_videos_page_has_all_old_site_videos_without_external_requests(tmp_path):
+    from arnoplast.site.build import DATA_DIR, load_videos
+    c = load_catalog(DATA_DIR / "catalog.json")
+    build_site(c, tmp_path, videos=load_videos())
+    h = (tmp_path / "it" / "video" / "index.html").read_text(encoding="utf-8")
+    assert "in preparazione" not in h and "videos.js" in h and "<iframe" not in h
+    assert h.count("player.vimeo.com/video/") == 10  # video aziendali
+    for yid in ("yMqD2nmIcNs", "y2fjs31LI58", "I5Yv9WzYzLo"):  # primo e ultimo tutorial Agricoltura, uno Garden
+        assert f"youtube-nocookie.com/embed/{yid}" in h
+    assert h.count('class="vd-card"') == 10 + 21 + 4
+    assert ' src="https://www.youtube' not in h and ' src="https://player.vimeo' not in h
+    assert "/it/agricoltura/copripalo/copripalo-monviso/" in h
+
+
+def test_tutorial_json_products_exist_in_real_catalog():
+    import json
+    from arnoplast.site.build import DATA_DIR
+    c = load_catalog(DATA_DIR / "catalog.json")
+    keys = {f"{l.slug}/{f.slug}/{p.slug}" for l in c.lines for f in l.families for p in f.products}
+    for v in json.loads((DATA_DIR / "tutorial.json").read_text(encoding="utf-8"))["agricoltura"]:
+        assert v.get("prodotto", "agricoltura/copripalo/copripalo-prisma") in keys

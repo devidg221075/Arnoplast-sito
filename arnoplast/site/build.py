@@ -503,6 +503,62 @@ def load_videos(path: Path | None = None) -> dict:
     return json.loads(path.read_text(encoding="utf-8")) if path.is_file() else {}
 
 
+def _yt_id(url: str) -> str | None:
+    m = re.search(r"(?:youtu\.be/|[?&]v=|/embed/)([\w-]{6,})", url)
+    return m.group(1) if m else None
+
+
+def video_sections(c: Catalog, lang: str, vids: dict[str, list[str]]) -> list[dict]:
+    """Pagina Video e Tutorial (data/tutorial.json + video delle schede): sezioni con schede video.
+    Ogni scheda: titolo, id, servizio ('vimeo'|'youtube'), link esterno e, se noto, la scheda prodotto collegata."""
+    path = DATA_DIR / "tutorial.json"
+    data = json.loads(path.read_text(encoding="utf-8")) if path.is_file() else {}
+    prods = {f"{l.slug}/{f.slug}/{p.slug}": (l, f, p) for l in c.lines for f in l.families for p in f.products}
+    by_id: dict[str, str] = {}
+    for key, urls in vids.items():
+        for u in urls:
+            if _yt_id(u):
+                by_id.setdefault(_yt_id(u), key)
+
+    def link(key: str | None):
+        if not key:
+            return None
+        if key not in prods:  # catalogo ridotto (test): nessun collegamento; il test sul catalogo vero li controlla
+            return None
+        l, f, p = prods[key]
+        return {"href": f"/{lang}/{l.slug}/{f.slug}/{p.slug}/", "name": text(p.name, lang)}
+
+    def card(title, service, vid, key=None):
+        url = f"https://vimeo.com/{vid}" if service == "vimeo" else f"https://www.youtube.com/watch?v={vid}"
+        src = (f"https://player.vimeo.com/video/{vid}?autoplay=1" if service == "vimeo"
+               else f"https://www.youtube-nocookie.com/embed/{vid}?autoplay=1&rel=0")
+        return {"title": title, "id": vid, "service": service, "url": url, "src": src, "product": link(key)}
+
+    out = []
+    n = 0
+    items = []
+    for v in data.get("video", []):
+        n += 1
+        items.append(card(v.get("titolo") or f"{t('vid.untitled', lang)} {n}", "vimeo", v["vimeo"]))
+    out.append({"key": "video", "title": t("vid.company", lang), "intro": t("vid.company_intro", lang), "cards": items})
+    items = [card(v["titolo"], "youtube", v["youtube"], v.get("prodotto") or by_id.get(v["youtube"]))
+             for v in data.get("agricoltura", [])]
+    out.append({"key": "agricoltura", "title": t("vid.agri", lang), "intro": t("vid.agri_intro", lang), "cards": items})
+    items, seen = [], {c_["id"] for c_ in out[1]["cards"]}
+    for key, (l, f, p) in prods.items():
+        if l.slug != "garden":
+            continue
+        for i, u in enumerate(vids.get(key, []), 1):
+            yid = _yt_id(u)
+            if yid and yid not in seen:
+                seen.add(yid)
+                suffix = f" {i}" if len(vids[key]) > 1 else ""
+                items.append(card(f"{text(p.name, lang)}{suffix}", "youtube", yid, key))
+    if items:
+        out.append({"key": "garden", "title": t("vid.garden", lang), "intro": t("vid.garden_intro", lang), "cards": items})
+    return out
+
+
 def product_videos(c: Catalog, videos: dict | None) -> dict[str, list[str]]:
     """Video per prodotto ("linea/famiglia/prodotto" -> URL): quelli di videos.json piu'
     l'eventuale `video_url` del catalogo, senza doppioni (stesso video YouTube).
@@ -816,7 +872,8 @@ def build_site(c: Catalog, out: Path, lang: str = "it", sources: Path | None = N
                description=f"Sfoglia online il {t('cat.catalog', lang).lower()} ARNOplast {p['name']} {p['year']}.")
     render("gallery.html", base / "galleria", line=None, title=t("page.gallery", lang), photos=load_gallery(),
            description=t("gallery.lead", lang))
-    render("page.html", base / "video", line=None, title=t("page.videos", lang), kind="placeholder")
+    render("videos.html", base / "video", line=None, title=t("page.videos", lang), sections=video_sections(c, lang, vids),
+           description=t("vid.lead", lang))
     render("page.html", base / "area-riservata", line=None, title=t("page.reserved", lang), kind="reserved")
     render("page.html", base / "cookie", line=None, title=t("page.cookie", lang), kind="cookie")
     # Vecchio indirizzo del prototipo: rimanda alla Galleria (anche in _redirects), fuori dalla sitemap.
