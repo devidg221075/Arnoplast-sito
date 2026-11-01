@@ -160,8 +160,8 @@ def test_footer_on_every_page(site):
             assert f'<a href="{url}" target="_blank" rel="noopener">' in f or f'href="{url}" target="_blank" rel="noopener"' in f, url
         light = re.search(r'<nav class="wrap ft-nav".*?</nav>', f, re.S).group(0)
         labels = [re.sub(r"<[^>]+>", "", x).strip() for x in re.findall(r"<a [^>]*>(.*?)</a>", light, re.S)]
-        assert labels == TOP + ["Area riservata", "Privacy policy", "Cookie"]
-        assert f'href="{B.PRIVACY_URL}"' in light and 'href="/it/cookie/"' in light
+        assert labels == TOP + ["Area riservata", "Cookie e privacy"]  # una sola voce: la pagina rimanda alla privacy policy
+        assert 'href="/it/cookie/"' in light and B.PRIVACY_URL not in light
         assert "© 2026 ARNOplast. Tutti i diritti riservati." in f
         assert "Commerciale" not in f and "Vittorio" not in f
 
