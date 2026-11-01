@@ -23,7 +23,7 @@ Il sito nuovo, oggi: Prodotti, Applicazioni (segnaposto), Video e tutorial (segn
 
 ### Home (/ e /en)  ✅
 Contenuti: banner **App** ("Scarica la nostra nuova APP per visualizzare in modo interattivo ed aggiornato tutti i nostri articoli", iOS e Android) · teaser "Disegno e costruzione stampi ad iniezione e soffiaggio per materie plastiche" · banner **fiere** con date (Cisterna di Latina 18/20 settembre 2026, Fruit Attraction Madrid 5/8 ottobre 2026, EIMA Bologna 10/14 novembre 2026, Interpoma Bolzano 25/27 novembre 2026) · tre riquadri catalogo (Agricoltura, Garden, Raccolta olive) · storia in due blocchi ("Da dove siamo nati", "Cosa facciamo e dove vogliamo andare"/"Oggi") · invito ai cataloghi online · **video YouTube incorporato** · **feed social** (post Facebook dell'azienda, in tempo reale) · link LinkedIn e Facebook · un articolo di **FreshPlaza** (stampa) su Arno Plast.
-Nel sito nuovo: ✔ cataloghi e storia sintetica; ➕ app, fiere con date, video, social, stampa, teaser stampi.
+Nel sito nuovo: ✔ cataloghi e storia sintetica; ➕ app, fiere con date, video, social, stampa. ✔ teaser stampi (fascia in home, link a Chi siamo).
 
 ### Chi siamo (/arno-plast-la-nostra-storia-e-chi-siamo, /en/our-history-and-who-we-are)  ✅ (testo italiano ricevuto dal cliente il 2026-11-01, in `COMPANY_STORY`)
 _Nuovo tentativo il 2026-11-01: il sito vecchio chiude ancora la connessione (non insisto). La sottopagina **/notizie** (gia' scaricata) contiene solo il feed social: e' coperta dalla sezione "I nostri post social" della home. Per il testo italiano serve il salvataggio della pagina da parte del cliente._
