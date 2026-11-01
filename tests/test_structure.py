@@ -184,12 +184,13 @@ def test_contacts_page_and_home_use_new_data(site):
 
 def test_company_page_has_client_history_verbatim(site):
     h = html(site, "it/azienda").replace("&#39;", "'")
-    for s in ("Da dove siamo nati", "Arno Plast - La storia", "Cosa facciamo e dove vogliamo andare", "Arno Plast - Oggi",
+    for s in ("Da dove siamo nati", "Arno Plast - La storia", "Chi siamo oggi, cosa facciamo e dove vogliamo andare", "Arno Plast oggi",
               "ARNOplast s.r.l. nasce nel 1975 come ARNOstampi sdf.",
-              "Nel 1983 la nuova denominazione ARNOplast s.r.l. contraddistingue il primo allineamento strategico",
+              "Nel 1983 la nuova denominazione ARNOplast s.r.l. contraddistingue il primo allineamento strategico. L’azienda implementa",
               "A metà anni Ottanta inizia anche una limitata produzione di accessori a proprio marchio",
-              "la ARNO commerciale s.r.l..",
-              "e in alcuni Paesi oltre oceano."):
+              "Come risultato di questa situazione decide di trarre il massimo dalle proprie capacità innovative.",
+              "la ARNOcommerciale s.r.l.",
+              "posizione leader nel mercato italiano.", "Mediterraneo e in diversi Paesi oltre oceano."):
         assert s in h, s
     years = re.findall(r'<p class="co-year"><span>([^<]+)</span>', h)
     assert years == ["1975", "1983", "Anni Ottanta", "Anni Novanta", "Oggi"]

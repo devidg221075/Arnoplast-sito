@@ -23,33 +23,35 @@ ROOT = Path(__file__).resolve().parent.parent.parent
 DATA_DIR = ROOT / "data"
 SITE_DIR = ROOT / "site"
 
-# Storia aziendale: testi del cliente dalla home del sito vecchio ("Da dove siamo nati / Arno Plast - La storia" e
-# "Cosa facciamo e dove vogliamo andare / Arno Plast - Oggi"), riportati senza modifiche. Tappa -> (etichetta, testo).
+# Storia aziendale: testo della pagina "Chi siamo" del sito vecchio, inviato dal cliente (1 novembre 2026). Uniche
+# correzioni ai refusi del testo ricevuto: "Firenze Assieme" -> "Firenze. Assieme", "leadernel" -> "leader nel",
+# "ARNOcommerciale s.r.l.." -> un solo punto. Tappa -> (etichetta, testo).
 COMPANY_STORY = {
     "kicker": "Da dove siamo nati",
     "title": "Arno Plast - La storia",
     "steps": [
         ("1975", "ARNOplast s.r.l. nasce nel 1975 come ARNOstampi sdf. Nei primi anni l’azienda si focalizza sulla "
                  "progettazione e sulla costruzione di stampi per iniezione e soffiaggio di materie plastiche."),
-        ("1983", "Nel 1983 la nuova denominazione ARNOplast s.r.l. contraddistingue il primo allineamento strategico "
-                 "che l’azienda implementa con la volontà di fornire alla clientela un servizio completo, dalla "
+        ("1983", "Nel 1983 la nuova denominazione ARNOplast s.r.l. contraddistingue il primo allineamento strategico. "
+                 "L’azienda implementa la volontà di fornire alla clientela un servizio completo, dalla "
                  "progettazione al prodotto finito."),
         ("Anni Ottanta", "A metà anni Ottanta inizia anche una limitata produzione di accessori a proprio marchio per "
                          "agricoltura professionale rivolti in prevalenza al mercato dell’Italia meridionale."),
-        ("Anni Novanta", "Alla fine degli anni Novanta, l’impresa, intuendo le difficoltà cui sarebbe andata incontro "
-                         "di lì a poco la subfornitura, mette in atto una seconda svolta strategica e decide di trarre "
-                         "il massimo dalle proprie capacità innovative presentando una gamma di prodotti a proprio "
-                         "marchio per agricoltura e giardinaggio; di questo periodo anche la creazione di una società "
-                         "dedita esclusivamente al processo di distribuzione, la ARNO commerciale s.r.l.."),
+        ("Anni Novanta", "ARNOplast s.r.l. alla fine degli anni Novanta, intuendo le difficoltà cui sarebbe andata "
+                         "incontro di lì a poco la subfornitura, mette in atto una seconda svolta strategica. Come "
+                         "risultato di questa situazione decide di trarre il massimo dalle proprie capacità innovative. "
+                         "Presenta una gamma di prodotti a proprio marchio per agricoltura e giardinaggio; di questo "
+                         "periodo anche la creazione di una società dedita esclusivamente al processo di "
+                         "distribuzione, la ARNOcommerciale s.r.l."),
     ],
-    "today_kicker": "Cosa facciamo e dove vogliamo andare",
-    "today_title": "Arno Plast - Oggi",
-    "today": ("Oggi", "Oggi ARNOplast – con sede e stabilimenti produttivi a Rignano sull’Arno, non lontano da Firenze, "
-                      "assieme ad una squadra di conto terzisti in Toscana – collegata ad ARNO commerciale ha "
-                      "conquistato una posizione nel mercato italiano dei sistemi per il giardinaggio e l’agricoltura "
-                      "ed è arrivata a commercializzare i propri prodotti in tutta Europa, nel Bacino del Mediterraneo "
-                      "e in alcuni Paesi oltre oceano."),
-    "source": "https://www.arnoplast.it/",
+    "today_kicker": "Chi siamo oggi, cosa facciamo e dove vogliamo andare",
+    "today_title": "Arno Plast oggi",
+    "today": ("Oggi", "Oggi ARNOplast ha sede e stabilimenti produttivi a Rignano sull’Arno, non lontano da Firenze. "
+                      "Assieme ad una squadra di conto terzisti in Toscana, collegata ad ARNO commerciale, ha "
+                      "conquistato una posizione leader nel mercato italiano. Con i sistemi per il giardinaggio e "
+                      "l’agricoltura ARNOplast è arrivata a commercializzare i propri prodotti in tutta Europa, "
+                      "Mediterraneo e in diversi Paesi oltre oceano."),
+    "source": "https://www.arnoplast.it/arno-plast-la-nostra-storia-e-chi-siamo",
 }
 
 # Dati societari (dal sito vecchio, pagina Contatti e piè di pagina). Usati da footer, Contatti, home, preventivo.
