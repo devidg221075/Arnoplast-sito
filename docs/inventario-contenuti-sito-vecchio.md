@@ -96,3 +96,6 @@ Testo legale di 5.600 caratteri. Non lo riscrivo: il sito nuovo rimanda alla pol
 
 ## Nota: pagina "Cookie e privacy" (sito nuovo)
 Elenca solo fatti tecnici verificati sul prototipo statico: nessun cookie, un solo dato nell'archivio locale (`arnoplast.quote.v2`), servizi esterni solo dopo un clic (Facebook, YouTube senza cookie, Vimeo, Google Maps). Va **ricontrollata e aggiornata** quando arriva WordPress (plugin, invio del modulo, antispam, eventuali statistiche) e va sottoposta al consulente legale del cliente: il testo legale (informativa privacy) resta quello del cliente, collegato dalla pagina.
+
+## Decisione: avviso cookie con consenso (fase WordPress)
+Il cliente prevede di usare **Google Analytics** sul sito definitivo. Nel prototipo statico non c'è nessun tracciamento e non serve alcun avviso. Con WordPress: avviso di consenso al primo accesso (iubenda o plugin equivalente, da scegliere con il consulente legale) che **blocca Google Analytics finché l'utente non accetta**; poi aggiornare la pagina "Cookie e privacy" (elenco dei cookie, durata, link all'informativa di Google) e ricontrollare i servizi esterni al clic (Facebook, YouTube, Vimeo, Google Maps).
