@@ -523,55 +523,46 @@ def _yt_id(url: str) -> str | None:
     return m.group(1) if m else None
 
 
-def video_sections(c: Catalog, lang: str, vids: dict[str, list[str]]) -> list[dict]:
-    """Pagina Video e Tutorial (data/tutorial.json + video delle schede): sezioni con schede video.
-    Ogni scheda: titolo, id, servizio ('vimeo'|'youtube'), link esterno e, se noto, la scheda prodotto collegata."""
+VIDEO_GROUPS = [("video", "vid.f_video"), ("agricoltura", "vid.f_agri"), ("garden", "vid.f_garden"), ("olive", "vid.f_olive")]
+VIDEO_THUMB_DIR = ROOT / "site" / "static" / "img" / "video"
+
+
+def _duration_label(d: str, lang: str) -> str:
+    m, s_ = (int(x) for x in d.split(":"))
+    return (f"{m} " + ("minuto" if m == 1 else "minuti") + f" e {s_} " + ("secondo" if s_ == 1 else "secondi"))
+
+
+def video_library(c: Catalog, lang: str) -> dict:
+    """Pagina Video e Tutorial (data/tutorial.json): schede con gruppo (filtro), servizio, durata, anteprima (file in
+    site/static/img/video se presente) e scheda prodotto collegata (solo se esiste nel catalogo)."""
     path = DATA_DIR / "tutorial.json"
     data = json.loads(path.read_text(encoding="utf-8")) if path.is_file() else {}
     prods = {f"{l.slug}/{f.slug}/{p.slug}": (l, f, p) for l in c.lines for f in l.families for p in f.products}
-    by_id: dict[str, str] = {}
-    for key, urls in vids.items():
-        for u in urls:
-            if _yt_id(u):
-                by_id.setdefault(_yt_id(u), key)
-
-    def link(key: str | None):
-        if not key:
-            return None
-        if key not in prods:  # catalogo ridotto (test): nessun collegamento; il test sul catalogo vero li controlla
-            return None
-        l, f, p = prods[key]
-        return {"href": f"/{lang}/{l.slug}/{f.slug}/{p.slug}/", "name": text(p.name, lang)}
-
-    def card(title, service, vid, key=None):
-        url = f"https://vimeo.com/{vid}" if service == "vimeo" else f"https://www.youtube.com/watch?v={vid}"
-        src = (f"https://player.vimeo.com/video/{vid}?autoplay=1" if service == "vimeo"
-               else f"https://www.youtube-nocookie.com/embed/{vid}?autoplay=1&rel=0")
-        return {"title": title, "id": vid, "service": service, "url": url, "src": src, "product": link(key)}
-
-    out = []
-    n = 0
-    items = []
+    cards = []
     for v in data.get("video", []):
-        n += 1
-        items.append(card(v.get("titolo") or f"{t('vid.untitled', lang)} {n}", "vimeo", v["vimeo"]))
-    out.append({"key": "video", "title": t("vid.company", lang), "intro": t("vid.company_intro", lang), "cards": items})
-    items = [card(v["titolo"], "youtube", v["youtube"], v.get("prodotto") or by_id.get(v["youtube"]))
-             for v in data.get("agricoltura", [])]
-    out.append({"key": "agricoltura", "title": t("vid.agri", lang), "intro": t("vid.agri_intro", lang), "cards": items})
-    items, seen = [], {c_["id"] for c_ in out[1]["cards"]}
-    for key, (l, f, p) in prods.items():
-        if l.slug != "garden":
-            continue
-        for i, u in enumerate(vids.get(key, []), 1):
-            yid = _yt_id(u)
-            if yid and yid not in seen:
-                seen.add(yid)
-                suffix = f" {i}" if len(vids[key]) > 1 else ""
-                items.append(card(f"{text(p.name, lang)}{suffix}", "youtube", yid, key))
-    if items:
-        out.append({"key": "garden", "title": t("vid.garden", lang), "intro": t("vid.garden_intro", lang), "cards": items})
-    return out
+        svc, vid, gr = v["servizio"], v["id"], v["gruppo"]
+        if svc not in ("vimeo", "youtube") or gr not in dict(VIDEO_GROUPS):
+            raise ValueError(f"data/tutorial.json: servizio o gruppo non valido: {v}")
+        url = f"https://vimeo.com/{vid}" if svc == "vimeo" else f"https://www.youtube.com/watch?v={vid}"
+        src = (f"https://player.vimeo.com/video/{vid}?autoplay=1" if svc == "vimeo"
+               else f"https://www.youtube-nocookie.com/embed/{vid}?autoplay=1&rel=0")
+        prod = None
+        if v.get("prodotto") in prods:
+            l, f, p = prods[v["prodotto"]]
+            prod = {"href": f"/{lang}/{l.slug}/{f.slug}/{p.slug}/", "name": text(p.name, lang)}
+        thumb = f"/static/img/video/{svc}-{vid}.webp" if (VIDEO_THUMB_DIR / f"{svc}-{vid}.webp").is_file() else None
+        dur = v.get("durata")
+        cards.append({"group": gr, "service": svc, "label": "Vimeo" if svc == "vimeo" else "YouTube", "id": vid,
+                      "title": v["titolo"], "url": url, "src": src, "product": prod, "thumb": thumb, "duration": dur,
+                      "duration_label": _duration_label(dur, lang) if dur else None,
+                      "category": t("vid.c_video" if gr == "video" else f"vid.c_{gr}", lang),
+                      "search": " ".join([v["titolo"], t(f"vid.f_{'agri' if gr == 'agricoltura' else gr}", lang),
+                                          prod["name"] if prod else "", "Vimeo" if svc == "vimeo" else "YouTube"])})
+    filters = [("all", t("vid.f_all", lang), len(cards))] + [
+        (k, t(label, lang), sum(1 for c_ in cards if c_["group"] == k)) for k, label in VIDEO_GROUPS
+        if any(c_["group"] == k for c_ in cards)]
+    return {"cards": cards, "filters": filters, "n_video": sum(1 for c_ in cards if c_["group"] == "video"),
+            "n_tut": sum(1 for c_ in cards if c_["group"] != "video")}
 
 
 def product_videos(c: Catalog, videos: dict | None) -> dict[str, list[str]]:
@@ -887,7 +878,7 @@ def build_site(c: Catalog, out: Path, lang: str = "it", sources: Path | None = N
                description=f"Sfoglia online il {t('cat.catalog', lang).lower()} ARNOplast {p['name']} {p['year']}.")
     render("gallery.html", base / "galleria", line=None, title=t("page.gallery", lang), photos=load_gallery(),
            description=t("gallery.lead", lang))
-    render("videos.html", base / "video", line=None, title=t("page.videos", lang), sections=video_sections(c, lang, vids),
+    render("videos.html", base / "video", line=None, title=t("page.videos", lang), lib=video_library(c, lang),
            description=t("vid.lead", lang))
     render("page.html", base / "area-riservata", line=None, title=t("page.reserved", lang), kind="reserved")
     render("cookies.html", base / "cookie", line=None, title=t("page.cookie", lang), description=t("ck.lead", lang),

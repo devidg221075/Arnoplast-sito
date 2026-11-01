@@ -1,35 +1,45 @@
 {% extends "base.html" %}
 {% block head_extra %}<link rel="stylesheet" href="/static/css/videos.css"><script src="/static/js/videos.js" defer></script>{% endblock %}
 {% block main %}
-{# Video e Tutorial (data/tutorial.json, video delle schede in data/videos.json). Ogni video e' una scheda: il lettore di
-   YouTube/Vimeo si carica solo dopo il clic (nessuna richiesta a terzi prima); senza JS la scheda e' un link al video. #}
-<section class="page-head">
+{# Videoteca (data/tutorial.json): filtri per sezione, ricerca, schede con anteprima e durata, lettore in finestra.
+   YouTube/Vimeo si caricano solo dopo il clic su una scheda; senza JS ogni scheda e' un link al video. #}
+<section class="page-head vt-head">
   <div class="wrap">
     <nav class="breadcrumb" aria-label="Breadcrumb"><a href="/{{ lang }}/">{{ t('breadcrumb.home') }}</a></nav>
     <h1>{{ title }}</h1>
     <p class="lead">{{ t('vid.lead') }}</p>
-    <ul class="vd-jump">{% for s in sections %}<li><a class="btn btn-ghost" href="#{{ s.key }}">{{ s.title }}</a></li>{% endfor %}</ul>
+    <ul class="vt-summary"><li><b>{{ lib.n_video }}</b> {{ t('vid.sum_video') }}</li><li><b>{{ lib.n_tut }}</b> {{ t('vid.sum_tut') }}</li></ul>
   </div>
 </section>
-{% for s in sections %}
-<section class="wrap section vd-sec" id="{{ s.key }}" aria-labelledby="vd-{{ s.key }}-t">
-  <h2 id="vd-{{ s.key }}-t">{{ s.title }} <span class="vd-n">{{ s.cards | length }}</span></h2>
-  <p class="vd-intro">{{ s.intro }}</p>
-  <ul class="vd-grid">
-  {% for v in s.cards %}
-    <li class="vd-card">
-      <div class="vd-media" data-vsrc="{{ v.src }}" data-vtitle="{{ v.title }}">
-        <a class="vd-play" href="{{ v.url }}" target="_blank" rel="noopener">
-          <span class="vd-ico" aria-hidden="true"><svg viewBox="0 0 24 24" width="26" height="26"><path d="M8 5.5v13l11-6.5z"/></svg></span>
-          <span class="vd-t">{{ v.title }}</span>
-          <span class="vd-s">{{ 'Vimeo' if v.service == 'vimeo' else 'YouTube' }}<span class="sr-only"> ({{ t('footer.new_tab') }})</span></span>
-        </a>
-      </div>
-      {% if v.product %}<p class="vd-prod"><a href="{{ v.product.href }}">{{ t('vid.product') }}: {{ v.product.name }} <span aria-hidden="true">→</span></a></p>{% endif %}
-    </li>
+<section class="wrap vt-library" data-video-library aria-label="{{ t('vid.lib') }}" data-one="{{ t('vid.count_one') }}" data-many="{{ t('vid.count') }}">
+  <div class="vt-toolbar">
+    <div class="vt-filters" role="group" aria-label="{{ t('vid.filter') }}">
+    {% for key, label, n in lib.filters %}
+      <button type="button" class="vt-filter" data-video-filter="{{ key }}" aria-pressed="{{ 'true' if loop.first else 'false' }}" aria-controls="video-grid">{{ label }} <span>{{ n }}</span></button>
+    {% endfor %}
+    </div>
+    <div class="vt-find"><label for="video-search">{{ t('vid.search') }}</label><input id="video-search" type="search" placeholder="{{ t('vid.search_ph') }}" autocomplete="off" aria-controls="video-grid"></div>
+  </div>
+  <div class="vt-meta"><p class="vt-result" data-video-result role="status" aria-live="polite" aria-atomic="true">{{ lib.cards | length }} {{ t('vid.count') }}</p><p class="vt-privacy" id="video-privacy">{{ t('vid.privacy') }}</p></div>
+  <div class="vt-grid" id="video-grid">
+  {% for v in lib.cards %}
+    <article class="vt-card" data-video-card data-group="{{ v.group }}" data-search="{{ v.search }}">
+      <a class="vt-open" href="{{ v.url }}" target="_blank" rel="noopener noreferrer" data-video-open data-src="{{ v.src }}" data-title="{{ v.title }}" data-provider="{{ v.label }}" aria-label="{{ t('vid.watch') }} {{ v.title }} {{ t('vid.on') }} {{ v.label }}" aria-describedby="video-privacy">
+        {% if v.thumb %}<img src="{{ v.thumb }}" width="640" height="360" alt="" loading="{{ 'eager' if loop.index <= 3 else 'lazy' }}" decoding="async">{% else %}<span class="vt-ph" aria-hidden="true"></span>{% endif %}
+        <span class="vt-play" aria-hidden="true"><svg viewBox="0 0 24 24" width="25" height="25"><path d="M7 4v16l14-8z"/></svg></span><span class="vt-provider">{{ v.label }}</span>{% if v.duration %}<span class="vt-duration" aria-label="{{ t('vid.duration') }} {{ v.duration_label }}">{{ v.duration }}</span>{% endif %}
+      </a>
+      <div class="vt-body"><p class="vt-category">{{ v.category }}</p><h2>{{ v.title }}</h2>
+        <div class="vt-links">{% if v.product %}<a class="vt-product" href="{{ v.product.href }}" aria-label="{{ t('vid.product') }}: {{ v.product.name }}">{{ t('vid.product') }} <span aria-hidden="true">→</span></a>{% endif %}<a class="vt-external" href="{{ v.url }}" target="_blank" rel="noopener noreferrer">{{ t('vid.open') }} {{ v.label }}<span class="sr-only"> ({{ t('footer.new_tab') }})</span> <span aria-hidden="true">↗</span></a></div></div>
+    </article>
   {% endfor %}
-  </ul>
+  </div>
+  <div class="vt-empty" data-video-empty hidden><h2>{{ t('vid.none') }}</h2><p>{{ t('vid.none_text') }}</p><button class="vt-reset" type="button" data-video-reset>{{ t('vid.reset') }}</button></div>
 </section>
-{% endfor %}
-<section class="wrap section"><p class="vd-privacy">{{ t('vid.privacy') }}</p></section>
+<dialog class="vt-dialog" id="video-dialog" aria-labelledby="video-dialog-title">
+  <div class="vt-dialog-shell">
+    <div class="vt-dialog-top"><h2 id="video-dialog-title"></h2><button type="button" class="vt-close" data-video-close aria-label="{{ t('vid.close') }}"><span aria-hidden="true">×</span></button></div>
+    <div class="vt-player" data-video-player></div>
+    <div class="vt-dialog-foot"><p>{{ t('vid.fallback') }}</p><a data-video-external target="_blank" rel="noopener noreferrer" href="#">{{ t('vid.open') }} <span data-video-provider></span> ↗</a></div>
+  </div>
+</dialog>
 {% endblock %}

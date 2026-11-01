@@ -1,132 +1,259 @@
 {
- "_nota": "Elenchi dei video del sito vecchio (/video-arno-plast e /tutorial-agricoltura), nello stesso ordine. 'titolo' null = il sito vecchio non aveva il titolo. 'prodotto' (facoltativo) = chiave linea/famiglia/prodotto della scheda collegata; se manca si ricava da data/videos.json.",
+ "_nota": "Elenco della pagina Video e Tutorial, nell'ordine della videoteca. gruppo: video|agricoltura|garden|olive. durata m:ss (solo dove nota). prodotto: chiave linea/famiglia/prodotto della scheda collegata. Le anteprime stanno in site/static/img/video/<servizio>-<id>.webp (tools/video_thumbs.py).",
  "video": [
   {
-   "titolo": "Arno Plast",
-   "vimeo": "684684219"
+   "gruppo": "video",
+   "servizio": "vimeo",
+   "id": "684684219",
+   "titolo": "ARNOplast: la nostra azienda",
+   "durata": "1:38"
   },
   {
+   "gruppo": "video",
+   "servizio": "vimeo",
+   "id": "268614956",
    "titolo": "Oleo Carbon",
-   "vimeo": "268614956"
+   "durata": "0:10",
+   "prodotto": "olive/agevolatori-e-macchine/oleo-carbon"
   },
   {
+   "gruppo": "video",
+   "servizio": "vimeo",
+   "id": "268615335",
    "titolo": "Oleo",
-   "vimeo": "268615335"
+   "durata": "0:02"
   },
   {
+   "gruppo": "video",
+   "servizio": "vimeo",
+   "id": "268616891",
    "titolo": "Ligatex",
-   "vimeo": "268616891"
+   "durata": "6:54",
+   "prodotto": "agricoltura/sistemi-di-legatura/ligatex"
   },
   {
-   "titolo": "Bobinetta Ligatex",
-   "vimeo": "268615341"
+   "gruppo": "video",
+   "servizio": "vimeo",
+   "id": "268615341",
+   "titolo": "Sostituzione bobinetta Ligatex",
+   "durata": "0:32",
+   "prodotto": "agricoltura/sistemi-di-legatura/ligatex"
   },
   {
+   "gruppo": "video",
+   "servizio": "vimeo",
+   "id": "268615369",
    "titolo": "Test vento",
-   "vimeo": "268615369"
+   "durata": "0:47"
   },
   {
-   "titolo": null,
-   "vimeo": "268615395"
+   "gruppo": "video",
+   "servizio": "vimeo",
+   "id": "268615395",
+   "titolo": "GEN60",
+   "durata": "1:32"
   },
   {
-   "titolo": null,
-   "vimeo": "268615061"
+   "gruppo": "video",
+   "servizio": "vimeo",
+   "id": "268615061",
+   "titolo": "Video d’archivio 01",
+   "durata": "0:50"
   },
   {
-   "titolo": null,
-   "vimeo": "268615238"
+   "gruppo": "video",
+   "servizio": "vimeo",
+   "id": "268615238",
+   "titolo": "Exp Agro",
+   "durata": "4:55"
   },
   {
-   "titolo": null,
-   "vimeo": "337220625"
-  }
- ],
- "agricoltura": [
-  {
-   "titolo": "Copripalo Monviso",
-   "youtube": "yMqD2nmIcNs"
+   "gruppo": "video",
+   "servizio": "vimeo",
+   "id": "337220625",
+   "titolo": "Video d’archivio 02",
+   "durata": "0:52"
   },
   {
-   "titolo": "Copripalo Monviso",
-   "youtube": "2r0ehZ8YO4A"
+   "gruppo": "agricoltura",
+   "servizio": "youtube",
+   "id": "yMqD2nmIcNs",
+   "titolo": "Copripalo Monviso · 1",
+   "prodotto": "agricoltura/copripalo/copripalo-monviso"
   },
   {
+   "gruppo": "agricoltura",
+   "servizio": "youtube",
+   "id": "2r0ehZ8YO4A",
+   "titolo": "Copripalo Monviso · 2",
+   "prodotto": "agricoltura/copripalo/copripalo-monviso"
+  },
+  {
+   "gruppo": "agricoltura",
+   "servizio": "youtube",
+   "id": "PVakNgUmaSY",
    "titolo": "Copripalo Latina",
-   "youtube": "PVakNgUmaSY"
+   "prodotto": "agricoltura/copripalo/copripalo-latina"
   },
   {
-   "titolo": "Copripalo FG",
-   "youtube": "Rcb9Lx205Kg"
+   "gruppo": "agricoltura",
+   "servizio": "youtube",
+   "id": "Rcb9Lx205Kg",
+   "titolo": "Copripalo FG · 1",
+   "prodotto": "agricoltura/copripalo/copripalo-fg-40-50-60-65-80"
   },
   {
-   "titolo": "Copripalo FG",
-   "youtube": "psdy6Xum578"
+   "gruppo": "agricoltura",
+   "servizio": "youtube",
+   "id": "psdy6Xum578",
+   "titolo": "Copripalo FG · 2",
+   "prodotto": "agricoltura/copripalo/copripalo-fg-40-50-60-65-80"
   },
   {
-   "titolo": "Copripalo Prisma",
-   "youtube": "IbH_X4Tl_Gw",
+   "gruppo": "agricoltura",
+   "servizio": "youtube",
+   "id": "IbH_X4Tl_Gw",
+   "titolo": "Copripalo Prisma · GZ",
    "prodotto": "agricoltura/copripalo/copripalo-prisma"
   },
   {
+   "gruppo": "agricoltura",
+   "servizio": "youtube",
+   "id": "8WScqK19s7c",
    "titolo": "Copripalo Qubo",
-   "youtube": "8WScqK19s7c"
+   "prodotto": "agricoltura/copripalo/copripalo-qubo"
   },
   {
-   "titolo": "Copripalo Reno Vit. RP.",
-   "youtube": "5oI5c3nFZL8"
+   "gruppo": "agricoltura",
+   "servizio": "youtube",
+   "id": "5oI5c3nFZL8",
+   "titolo": "Copripalo Reno · Vit. RP.",
+   "prodotto": "agricoltura/copripalo/copripalo-reno"
   },
   {
-   "titolo": "Copripalo Reno Vit. CAP.",
-   "youtube": "GxILx63co0I"
+   "gruppo": "agricoltura",
+   "servizio": "youtube",
+   "id": "GxILx63co0I",
+   "titolo": "Copripalo Reno · Vit. CAP.",
+   "prodotto": "agricoltura/copripalo/copripalo-reno"
   },
   {
+   "gruppo": "agricoltura",
+   "servizio": "youtube",
+   "id": "dRiyTutWAog",
    "titolo": "Copripalo Sphera",
-   "youtube": "dRiyTutWAog"
+   "prodotto": "agricoltura/copripalo/copripalo-sphera"
   },
   {
+   "gruppo": "agricoltura",
+   "servizio": "youtube",
+   "id": "qcVIm53kEQc",
    "titolo": "Copripalo Zephiro",
-   "youtube": "qcVIm53kEQc"
+   "prodotto": "agricoltura/copripalo/copripalo-zephiro"
   },
   {
+   "gruppo": "agricoltura",
+   "servizio": "youtube",
+   "id": "f-EpVzYPkmM",
    "titolo": "Clip Roma",
-   "youtube": "f-EpVzYPkmM"
+   "prodotto": "agricoltura/placchette/placchetta-roma"
   },
   {
+   "gruppo": "agricoltura",
+   "servizio": "youtube",
+   "id": "BtfcNetEmmM",
    "titolo": "Clip Rania",
-   "youtube": "BtfcNetEmmM"
+   "prodotto": "agricoltura/placchette/placchetta-rania"
   },
   {
+   "gruppo": "agricoltura",
+   "servizio": "youtube",
+   "id": "JIMPRHkMmBM",
    "titolo": "Clip Resia",
-   "youtube": "JIMPRHkMmBM"
+   "prodotto": "agricoltura/placchette/placchetta-resia"
   },
   {
+   "gruppo": "agricoltura",
+   "servizio": "youtube",
+   "id": "a5IaUnDxuyg",
    "titolo": "Clip Riva",
-   "youtube": "a5IaUnDxuyg"
+   "prodotto": "agricoltura/placchette/placchetta-riva-riva-jr"
   },
   {
+   "gruppo": "agricoltura",
+   "servizio": "youtube",
+   "id": "8okx9uadQDM",
    "titolo": "Clip Start",
-   "youtube": "8okx9uadQDM"
+   "prodotto": "agricoltura/placchette/placchetta-start"
   },
   {
+   "gruppo": "agricoltura",
+   "servizio": "youtube",
+   "id": "HgPj1oBXUZE",
    "titolo": "Clip Morsa",
-   "youtube": "HgPj1oBXUZE"
+   "prodotto": "agricoltura/ferma-teli-e-reti/clips-morsa-50"
   },
   {
+   "gruppo": "agricoltura",
+   "servizio": "youtube",
+   "id": "wjMZ590X2r0",
    "titolo": "Stop.net",
-   "youtube": "wjMZ590X2r0"
+   "prodotto": "agricoltura/placchette/new-stop-net"
   },
   {
+   "gruppo": "agricoltura",
+   "servizio": "youtube",
+   "id": "_5HaygxJv94",
    "titolo": "Stop.film",
-   "youtube": "_5HaygxJv94"
+   "prodotto": "agricoltura/ferma-teli-e-reti/stop-film-70"
   },
   {
+   "gruppo": "agricoltura",
+   "servizio": "youtube",
+   "id": "qvP-yg3tPuI",
    "titolo": "Moschettone",
-   "youtube": "qvP-yg3tPuI"
+   "prodotto": "agricoltura/moschettoni-e-tiranti/mosch-autobloccante-elefante"
   },
   {
+   "gruppo": "agricoltura",
+   "servizio": "youtube",
+   "id": "y2fjs31LI58",
    "titolo": "Ancora.net",
-   "youtube": "y2fjs31LI58"
+   "prodotto": "agricoltura/placchette/ancora-net"
+  },
+  {
+   "gruppo": "garden",
+   "servizio": "youtube",
+   "id": "I5Yv9WzYzLo",
+   "titolo": "Testina Elektra · Montaggio 1",
+   "prodotto": "garden/testine/testina-batti-e-vai-elektra"
+  },
+  {
+   "gruppo": "garden",
+   "servizio": "youtube",
+   "id": "JRgh6-y4b44",
+   "titolo": "Testina Elektra · Montaggio 2",
+   "prodotto": "garden/testine/testina-batti-e-vai-elektra"
+  },
+  {
+   "gruppo": "garden",
+   "servizio": "youtube",
+   "id": "6sbdI6YYLSY",
+   "titolo": "Testina Vega · Montaggio 1",
+   "prodotto": "garden/testine/testina-vega-multifilo"
+  },
+  {
+   "gruppo": "garden",
+   "servizio": "youtube",
+   "id": "rKYen5uid5w",
+   "titolo": "Testina Vega · Montaggio 2",
+   "prodotto": "garden/testine/testina-vega-multifilo"
+  },
+  {
+   "gruppo": "olive",
+   "servizio": "youtube",
+   "id": "wGBNoeV_srQ",
+   "titolo": "Martino"
   }
  ]
 }
