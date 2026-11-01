@@ -12,7 +12,7 @@ CSS = ROOT / "site" / "static" / "css"
 JS = ROOT / "site" / "static" / "js"
 HERO_PAGES = ["it", "it/agricoltura", "it/garden", "it/olive", "it/azienda"]
 COMPACT_PAGES = ["it/agricoltura/copripalo", "it/agricoltura/copripalo/copripalo-prisma", "it/garden/testine",
-                 "it/contatti", "it/richiesta-preventivo"]
+                 "it/richiesta-preventivo"]
 
 
 @pytest.fixture(scope="module")

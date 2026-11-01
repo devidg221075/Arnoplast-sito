@@ -239,3 +239,16 @@ def test_tutorial_json_products_exist_in_real_catalog():
     keys = {f"{l.slug}/{f.slug}/{p.slug}" for l in c.lines for f in l.families for p in f.products}
     for v in json.loads((DATA_DIR / "tutorial.json").read_text(encoding="utf-8"))["agricoltura"]:
         assert v.get("prodotto", "agricoltura/copripalo/copripalo-prisma") in keys
+
+
+def test_contacts_page_form_fields_and_map_on_click(site):
+    out, _ = site
+    h = (out / "it" / "contatti" / "index.html").read_text(encoding="utf-8")
+    assert "<iframe" not in h and ' src="https://www.google.com/maps' not in h and "data-map-src=" in h
+    req = set(re.findall(r'<(?:input|select|textarea)[^>]* name="(\w+)"[^>]*required', h))
+    assert req == {"name", "email", "phone", "type", "message", "privacy"}, req
+    for opt in ("Azienda Agricola", "Riv. Macc. Agr./Officina", "Grossa Distrib. Spec.", "Ente"):
+        assert f'<option value="{opt}">' in h
+    for data in ("01987190483", "FI355293", "49.580,00", "+39 055 83 47 031", "info@arnoplast.it", "ARNOcommerciale"):
+        assert data in h, data
+    assert 'id="c-web"' in h  # trappola antispam

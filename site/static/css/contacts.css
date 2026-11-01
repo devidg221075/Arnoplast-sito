@@ -1,0 +1,21 @@
+/* Contatti: hero corto, recapiti + modulo, mappa al clic. */
+.hx-short { min-height: min(56svh, 520px); }
+.ct-grid { display: grid; gap: 40px; }
+@media (min-width: 960px) { .ct-grid { grid-template-columns: 5fr 7fr; gap: 64px; align-items: start; } }
+.ct-dl { margin: 0; display: grid; }
+.ct-dl > div { padding: 16px 0; border-top: 1px solid var(--line); }
+.ct-dl dt { font-size: .75rem; font-weight: 800; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); margin-bottom: 4px; }
+.ct-dl dd { margin: 0; font-size: 1.05rem; }
+.ct-dl address { font-style: normal; margin-bottom: 6px; }
+.ct-note { color: var(--muted); font-size: .9rem; }
+.ct-form-wrap form { display: grid; gap: 14px; }
+.ct-form-wrap .field-row { display: grid; gap: 14px; }
+@media (min-width: 640px) { .ct-form-wrap .field-row { grid-template-columns: 1fr 1fr; } .ct-form-wrap .field-row.three { grid-template-columns: 2fr 1fr 2fr; } }
+.ct-form-wrap select, .ct-form-wrap input:not([type=checkbox]), .ct-form-wrap textarea { width: 100%; }
+.hp { position: absolute; left: -10000px; width: 1px; height: 1px; overflow: hidden; }
+.ct-form-wrap .field.invalid input, .ct-form-wrap .field.invalid select, .ct-form-wrap .field.invalid textarea { border-color: var(--red); }
+.ct-map-box { display: grid; gap: 12px; justify-items: start; align-content: center; min-height: 360px; padding: 28px; border: 1px solid var(--line); border-radius: var(--r); background: #f4f4f2; }
+.ct-map-box.is-loaded { display: block; padding: 0; min-height: 0; border: 0; background: none; }
+.ct-map-box iframe { display: block; width: 100%; height: 420px; border: 0; }
+.ct-map-note { margin: 0; max-width: 52ch; color: var(--muted); font-size: .9rem; }
+.ct-commercial p { max-width: 70ch; color: var(--muted); }

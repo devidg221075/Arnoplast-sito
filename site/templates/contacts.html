@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+{% import "_hero.html" as hx with context %}
+{% block head_extra %}<link rel="stylesheet" href="/static/css/pages.css"><link rel="stylesheet" href="/static/css/contacts.css"><script src="/static/js/contacts.js" defer></script>{% endblock %}
+{% block main %}
+{# Contatti: hero corto con la foto della sede, recapiti e dati societari (sito vecchio), modulo "Richiedici un contatto"
+   (campi del sito vecchio, Tipologia utente compresa), mappa caricata solo al clic. Nel prototipo il modulo apre la posta
+   con la richiesta compilata (mailto); l'invio vero e il controllo antispam arrivano con WordPress. #}
+{% if hero %}
+<section class="hx hx-company hx-short">
+  <div class="hx-media" data-parallax>{{ hx.picture(hero.img, hero.alt, hero.portrait, sizes='120vw', night=hero.night, night_portrait=hero.night_portrait) }}</div>
+  <div class="wrap hx-in">
+    <nav class="breadcrumb hx-crumb" aria-label="Breadcrumb"><a href="/{{ lang }}/">{{ t('breadcrumb.home') }}</a></nav>
+    <h1 class="hx-title">{{ hx.split(title, letters=True) }}</h1>
+    <p class="hx-lead">{{ t('ct.lead') }}</p>
+    <div class="hx-ctas">
+      <a class="btn btn-primary" href="#modulo">{{ t('ct.write') }} <span class="btn-arrow" aria-hidden="true">→</span></a>
+      <a class="btn hx-btn-glass" href="tel:{{ contacts.phone_tel }}">{{ t('ct.call') }} {{ contacts.phone }}</a>
+    </div>
+  </div>
+</section>
+{% else %}
+<section class="page-head"><div class="wrap"><nav class="breadcrumb" aria-label="Breadcrumb"><a href="/{{ lang }}/">{{ t('breadcrumb.home') }}</a></nav><h1>{{ title }}</h1><p class="lead">{{ t('ct.lead') }}</p></div></section>
+{% endif %}
+<div class="wrap section ct-grid">
+  <section class="ct-info" aria-labelledby="ct-info-t">
+    <h2 id="ct-info-t">{{ t('ct.how') }}</h2>
+    <dl class="ct-dl">
+      <div><dt>{{ t('ct.phones') }}</dt><dd>{% for label, tel in contacts.phones %}<a href="tel:{{ tel }}">{{ label }}</a>{% if not loop.last %}<br>{% endif %}{% endfor %}</dd></div>
+      <div><dt>{{ t('ct.mail') }}</dt><dd><a href="mailto:{{ contacts.email }}">{{ contacts.email }}</a></dd></div>
+      <div><dt>{{ t('ct.where') }}</dt><dd><address><strong>{{ contacts.name }}</strong><br>{{ contacts.street }}<br>{{ contacts.city }} - {{ contacts.country }}</address>
+        <a href="{{ maps_url }}" target="_blank" rel="noopener">{{ t('contacts.maps') }}<span class="sr-only"> ({{ t('footer.new_tab') }})</span></a></dd></div>
+      <div><dt>{{ t('ct.legal') }}</dt><dd>{{ t('footer.vat') }} {{ contacts.vat }}<br>{{ t('footer.rea') }} {{ contacts.rea }}<br>{{ t('footer.capital') }} {{ contacts.capital }}</dd></div>
+      <div><dt>{{ t('ct.follow') }}</dt><dd>{% for name, url, icon in social %}<a href="{{ url }}" target="_blank" rel="noopener">{{ name }}<span class="sr-only"> ({{ t('footer.new_tab') }})</span></a>{% if not loop.last %} · {% endif %}{% endfor %}</dd></div>
+    </dl>
+  </section>
+  <section class="ct-form-wrap" id="modulo" aria-labelledby="ct-form-t">
+    <h2 id="ct-form-t">{{ t('ct.form') }}</h2>
+    <p class="ct-note">{{ t('ct.form_note') }}</p>
+    <noscript><p class="noscript-note" role="note">{{ t('ct.noscript') }} <a href="mailto:{{ contacts.email }}">{{ contacts.email }}</a> · {{ contacts.phone }}</p></noscript>
+    <form id="contact-form" novalidate data-email="{{ contacts.email }}" data-err-required="{{ t('ct.err_required') }}" data-err-email="{{ t('ct.err_email') }}" data-sent="{{ t('ct.sent') }}" data-subject="{{ t('ct.form') }}">
+      <div class="field-row">
+        <div class="field"><label for="c-name">{{ t('ct.name') }} <abbr title="{{ t('quote.required') }}">*</abbr></label> <input type="text" id="c-name" name="name" required autocomplete="given-name"></div>
+        <div class="field"><label for="c-surname">{{ t('ct.surname') }}</label> <input type="text" id="c-surname" name="surname" autocomplete="family-name"></div>
+      </div>
+      <div class="field-row">
+        <div class="field"><label for="c-email">{{ t('ct.email') }} <abbr title="{{ t('quote.required') }}">*</abbr></label> <input type="email" id="c-email" name="email" required autocomplete="email"></div>
+        <div class="field"><label for="c-phone">{{ t('ct.phone') }} <abbr title="{{ t('quote.required') }}">*</abbr></label> <input type="tel" id="c-phone" name="phone" required autocomplete="tel"></div>
+      </div>
+      <div class="field-row">
+        <div class="field"><label for="c-company">{{ t('ct.company') }}</label> <input type="text" id="c-company" name="company" autocomplete="organization"></div>
+        <div class="field"><label for="c-contact">{{ t('ct.contact') }}</label> <input type="text" id="c-contact" name="contact"></div>
+      </div>
+      <div class="field"><label for="c-type">{{ t('ct.type') }} <abbr title="{{ t('quote.required') }}">*</abbr></label>
+        <select id="c-type" name="type" required>{% for u in user_types %}<option value="{{ u }}">{{ u }}</option>{% endfor %}</select></div>
+      <div class="field"><label for="c-address">{{ t('ct.address') }}</label> <input type="text" id="c-address" name="address" autocomplete="street-address"></div>
+      <div class="field-row three">
+        <div class="field"><label for="c-city">{{ t('ct.city') }}</label> <input type="text" id="c-city" name="city" autocomplete="address-level2"></div>
+        <div class="field"><label for="c-zip">{{ t('ct.zip') }}</label> <input type="text" id="c-zip" name="zip" autocomplete="postal-code"></div>
+        <div class="field"><label for="c-country">{{ t('ct.country') }}</label> <input type="text" id="c-country" name="country" value="Italia" autocomplete="country-name"></div>
+      </div>
+      <div class="field"><label for="c-msg">{{ t('ct.message') }} <abbr title="{{ t('quote.required') }}">*</abbr></label> <textarea id="c-msg" name="message" rows="5" required></textarea></div>
+      <div class="field hp" aria-hidden="true"><label for="c-web">Web</label> <input type="text" id="c-web" name="website" tabindex="-1" autocomplete="off"></div>
+      <div class="field check"><label><input type="checkbox" id="c-privacy" name="privacy" required data-label="{{ t('ct.privacy_short') }}"> <span>{{ t('ct.privacy') }} <abbr title="{{ t('quote.required') }}">*</abbr></span></label>
+         <a href="{{ privacy_url }}" target="_blank" rel="noopener">{{ t('ct.privacy_link') }}<span class="sr-only"> ({{ t('footer.new_tab') }})</span></a></div>
+      <div id="contact-message" class="form-message" role="alert" tabindex="-1" hidden></div>
+      <p><button type="submit" class="btn btn-primary btn-block">{{ t('ct.submit') }}</button></p>
+      <p class="ct-note">{{ t('ct.proto') }}</p>
+    </form>
+  </section>
+</div>
+<section class="wrap section ct-map" aria-labelledby="ct-map-t">
+  <h2 id="ct-map-t">{{ t('ct.map') }}</h2>
+  <div class="ct-map-box" data-map-src="{{ map_embed }}" data-map-title="{{ t('ct.map_title') }}">
+    <p class="ct-map-note">{{ t('ct.map_note') }}</p>
+    <a class="btn btn-primary" href="{{ maps_url }}" target="_blank" rel="noopener" data-map-load>{{ t('ct.map_load') }}</a>
+  </div>
+</section>
+<section class="wrap section ct-commercial"><p>{{ t('ct.commercial') }}</p></section>
+{% endblock %}

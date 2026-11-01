@@ -68,6 +68,13 @@ CONTACTS = {
     "capital": "49.580,00 i.v.",
     "web": "www.arnoplast.it",
 }
+# "Tipologia utente" del modulo contatti: elenco del sito vecchio, parola per parola.
+USER_TYPES = ["Privato/Altro", "Azienda Agricola", "Garden/Vivaio", "Riv. Macc. Agr./Officina", "Agraria/Consorzio Agrario",
+              "Ferramenta/Fai da te", "Manutentori/Giardinieri", "Grossa Distrib. Spec.", "Ingrosso/Consulente",
+              "Installatore/Importatore", "Edile", "Ente"]
+# Mappa incorporata (solo dopo il clic): stessa ricerca del link "Apri in Google Maps".
+MAP_EMBED = "https://www.google.com/maps?q=" + quote("ARNO PLAST, Via Comunale dell'Isola 65, 50067 Rignano sull'Arno FI") + "&output=embed"
+
 # Indirizzo su Google Maps: solo un link esterno (nessuna mappa incorporata, nessuna richiesta a terzi).
 MAPS_URL = "https://www.google.com/maps/search/?api=1&query=" + quote(
     "ARNO PLAST, Via Comunale dell'Isola 65, 50067 Rignano sull'Arno FI")
@@ -833,9 +840,9 @@ def build_site(c: Catalog, out: Path, lang: str = "it", sources: Path | None = N
 
     render("quote.html", base / "richiesta-preventivo", line=None, title=t("quote.title", lang),
            description=t("quote.intro", lang), privacy_url=PRIVACY_URL)
-    render("page.html", base / "contatti", line=None, title=t("page.contacts", lang),
+    render("contacts.html", base / "contatti", line=None, title=t("page.contacts", lang),
            description=f"{CONTACTS['name']}, {CONTACTS['address']}. Tel. {CONTACTS['phone']}, {CONTACTS['email']}.",
-           kind="contacts")
+           hero=_hero("azienda", imgs), imgs=imgs, user_types=USER_TYPES, map_embed=MAP_EMBED, privacy_url=PRIVACY_URL)
     story = COMPANY_STORY
     render("company.html", base / "azienda", line=None, title=t("page.company", lang),
            description=" ".join(text for _, text in story["steps"][:2]), story=story,
