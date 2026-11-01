@@ -289,3 +289,48 @@ def test_header_is_sticky_with_shadow_hook_and_app_band_on_home(site):
     band = h.split('id="a-app-t"')[1].split("</section>")[0]
     assert "apps.apple.com" in band and "play.google.com" in band
     assert h.index('id="a-steps-t"') < h.index('id="a-app-t"') < h.index('id="a-contact-t"')
+
+
+def test_seo_open_graph_jsonld_and_unique_titles(tmp_path):
+    import json
+    from arnoplast.site.build import DATA_DIR, load_videos, SITE_URL
+    c = load_catalog(DATA_DIR / "catalog.json")
+    build_site(c, tmp_path, videos=load_videos())
+    titles, descs = {}, {}
+    for f in tmp_path.glob("it/**/index.html"):
+        h = f.read_text(encoding="utf-8")
+        rel = f.relative_to(tmp_path).as_posix()
+        if "applicazioni" in rel:  # rimando alla Galleria (noindex, canonical sulla Galleria)
+            continue
+        t = re.search(r"<title>(.*?)</title>", h, re.S).group(1)
+        assert t not in titles, (rel, titles.get(t))
+        titles[t] = rel
+        d = re.search(r'<meta name="description" content="([^"]+)"', h)
+        assert d and d.group(1) not in descs, rel
+        descs[d.group(1)] = rel
+        assert h.count("<h1") == 1, rel
+        for p in ("og:title", "og:description", "og:url", "og:image", "twitter:card"):
+            assert f'"{p}"' in h, (rel, p)
+        assert f'content="{SITE_URL}/static/img/home/sede-giorno-1280.webp"' in h
+    home = (tmp_path / "it" / "index.html").read_text(encoding="utf-8")
+    ld = json.loads(re.search(r'<script type="application/ld\+json">(.*?)</script>', home, re.S).group(1))
+    assert ld["@type"] == "Organization" and ld["telephone"] == "+390558347031" and ld["address"]["postalCode"] == "50067"
+    assert len(ld["sameAs"]) == 3
+
+
+def test_security_headers_file_with_inline_hashes(tmp_path):
+    import base64
+    import hashlib
+    c = load_catalog(Path(__file__).resolve().parent.parent / "data" / "catalog.json")
+    build_site(c, tmp_path)
+    hdr = (tmp_path / "_headers").read_text(encoding="utf-8")
+    for needle in ("Content-Security-Policy:", "X-Content-Type-Options: nosniff", "Referrer-Policy:", "Permissions-Policy:",
+                   "frame-ancestors 'none'", "object-src 'none'", "Strict-Transport-Security:"):
+        assert needle in hdr, needle
+    assert "unsafe-inline'" not in hdr.split("script-src")[1].split(";")[0]  # nessun script inline generico
+    for f in tmp_path.rglob("*.html"):
+        for m in re.finditer(r"<script(?![^>]*\ssrc=)(?![^>]*ld\+json)[^>]*>(.*?)</script>", f.read_text(encoding="utf-8"), re.S):
+            digest = base64.b64encode(hashlib.sha256(m.group(1).encode()).digest()).decode()
+            assert f"'sha256-{digest}'" in hdr, f
+    for host in ("youtube-nocookie.com", "player.vimeo.com", "www.facebook.com", "www.google.com"):
+        assert host in hdr

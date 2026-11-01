@@ -398,7 +398,8 @@ def _env(lang: str) -> Environment:
     env.filters["rich"] = rich
     env.globals.update(lang=lang, contacts=CONTACTS, t=lambda k: t(k, lang), text=lambda d: text(d, lang),
                        menu=menu_items(lang), nav_state=lambda path: nav_state(path, lang), social=SOCIAL, apps=APPS,
-                       privacy_url=PRIVACY_URL, year=build_date().year, maps_url=MAPS_URL)
+                       privacy_url=PRIVACY_URL, year=build_date().year, maps_url=MAPS_URL,
+                       og_image=SITE_URL + "/static/img/home/sede-giorno-1280.webp")
     return env
 
 
@@ -748,6 +749,75 @@ def upcoming_fairs(limit: int | None = None) -> list[dict]:
     return split_fairs(fairs, build_date(), fair_photos(fairs))[0][:limit]
 
 
+def _unique_title(seen: set[str], name: str, family: str, line: str, shared: bool) -> str | None:
+    """Titolo <title> di un prodotto: il nome; se piu' prodotti (o una famiglia) lo condividono, con famiglia e linea, e se
+    ancora uguale (prodotti doppi nello stesso catalogo) con un numero. None = nessun titolo speciale."""
+    if not shared:
+        return None
+    base = f"{name} - {family} - {line}"
+    title, n = base, 1
+    while title in seen:
+        n += 1
+        title = f"{base} ({n})"
+    seen.add(title)
+    return title
+
+
+def security_headers(out: Path) -> str:
+    """File `_headers` (Netlify / Cloudflare Pages) con le intestazioni di sicurezza. La Content-Security-Policy ammette
+    solo risorse del sito, piu' i quattro servizi che si attivano al clic (YouTube senza cookie, Vimeo, Facebook, Google
+    Maps) come frame; gli script e lo stile inline di pagina sono ammessi per impronta (sha256), calcolata qui dai file
+    generati: se cambia uno script inline, cambia l'impronta da sola."""
+    import base64
+    import hashlib
+    inline_js, inline_css = set(), set()
+    for f in out.rglob("*.html"):
+        h = f.read_text(encoding="utf-8")
+        for m in re.finditer(r"<script(?![^>]*\ssrc=)(?![^>]*type=\"application/ld\+json\")[^>]*>(.*?)</script>", h, re.S):
+            inline_js.add(m.group(1))
+        for m in re.finditer(r"<style[^>]*>(.*?)</style>", h, re.S):
+            inline_css.add(m.group(1))
+
+    def sha(body: str) -> str:
+        return "'sha256-" + base64.b64encode(hashlib.sha256(body.encode("utf-8")).digest()).decode() + "'"
+
+    csp = "; ".join([
+        "default-src 'self'",
+        "script-src 'self' " + " ".join(sorted(sha(b) for b in inline_js)),
+        "style-src 'self' " + " ".join(sorted(sha(b) for b in inline_css)),
+        "style-src-attr 'unsafe-inline'",  # attributi style="--var: ..." (proporzioni, punto focale)
+        "img-src 'self' data:",
+        "font-src 'self'",
+        "connect-src 'self'",
+        "frame-src https://www.youtube-nocookie.com https://player.vimeo.com https://www.facebook.com https://www.google.com",
+        "media-src 'self'",
+        "object-src 'none'",
+        "base-uri 'self'",
+        "form-action 'self'",
+        "frame-ancestors 'none'",
+    ])
+    return ("/*\n"
+            f"  Content-Security-Policy: {csp}\n"
+            "  X-Content-Type-Options: nosniff\n"
+            "  X-Frame-Options: DENY\n"
+            "  Referrer-Policy: strict-origin-when-cross-origin\n"
+            "  Permissions-Policy: camera=(), microphone=(), geolocation=(), payment=(), usb=(), interest-cohort=()\n"
+            "  Cross-Origin-Opener-Policy: same-origin\n"
+            "  Strict-Transport-Security: max-age=31536000; includeSubDomains\n")
+
+
+def organization_ld() -> str:
+    """Dati strutturati schema.org (Organization) dai dati societari: home e Contatti. JSON pronto da <script>."""
+    c = CONTACTS
+    data = {"@context": "https://schema.org", "@type": "Organization", "name": c["name"], "url": SITE_URL + "/",
+            "logo": SITE_URL + "/static/img/arnoplast-logo-colori.svg", "email": c["email"], "telephone": c["phone_tel"],
+            "vatID": "IT" + c["vat"],
+            "address": {"@type": "PostalAddress", "streetAddress": c["street"], "addressLocality": "Rignano sull'Arno",
+                        "postalCode": "50067", "addressRegion": "FI", "addressCountry": "IT"},
+            "sameAs": [url for _, url, _ in SOCIAL]}
+    return json.dumps(data, ensure_ascii=False).replace("</", "<\\/")
+
+
 def build_site(c: Catalog, out: Path, lang: str = "it", sources: Path | None = None,
                videos: dict | None = None) -> list[Path]:
     """Scrive il sito in `out`. `videos`: contenuto di data/videos.json (vedi load_videos);
@@ -757,6 +827,13 @@ def build_site(c: Catalog, out: Path, lang: str = "it", sources: Path | None = N
     env = _env(lang)
     env.globals["materials_names"] = MATERIALS
     vids = product_videos(c, videos)
+    seen_titles: set[str] = set()
+    name_count: dict[str, int] = {}
+    for l_ in c.lines:
+        for f_ in l_.families:
+            name_count[text(f_.name, lang)] = name_count.get(text(f_.name, lang), 0) + 1  # una famiglia puo' avere il nome di un suo prodotto
+            for p_ in f_.products:
+                name_count[text(p_.name, lang)] = name_count.get(text(p_.name, lang), 0) + 1
     written: list[Path] = []
     base = out / lang
     urls: list[str] = []
@@ -772,7 +849,7 @@ def build_site(c: Catalog, out: Path, lang: str = "it", sources: Path | None = N
             description=_clip(description, 200) if description else None, canonical=canonical, path=f"/{rel}/",
             **ctx), written)
 
-    render("home.html", base, description=t("home.tagline", lang), title=t("home.title", lang),
+    render("home.html", base, description=t("home.tagline", lang), title=t("home.title", lang), jsonld=organization_ld(),
            **home_context(c, lang))
 
     # Ricerca: un articolo per codice (con i prodotti in cui compare) + una voce per famiglia e prodotto.
@@ -815,6 +892,8 @@ def build_site(c: Catalog, out: Path, lang: str = "it", sources: Path | None = N
                 mats = ", ".join(MATERIALS.get(m, m) for m in prod.materials)
                 render("product.html", base / line.slug / fam.slug / prod.slug,
                        line=line, family=fam, product=prod, title=text(prod.name, lang),
+                       seo_title=_unique_title(seen_titles, text(prod.name, lang), text(fam.name, lang), text(line.name, lang),
+                                               name_count[text(prod.name, lang)] > 1),
                        description=f"{text(prod.name, lang)}, {text(fam.name, lang)} ({text(line.name, lang)}): "
                                    f"{len(arts)} codici articolo" + (f". Materiali: {mats}" if mats else "") + ".",
                        row_ids=_unique_ids([a.code for a in arts]),
@@ -844,7 +923,7 @@ def build_site(c: Catalog, out: Path, lang: str = "it", sources: Path | None = N
            description=t("quote.intro", lang), privacy_url=PRIVACY_URL)
     render("contacts.html", base / "contatti", line=None, title=t("page.contacts", lang),
            description=f"{CONTACTS['name']}, {CONTACTS['address']}. Tel. {CONTACTS['phone']}, {CONTACTS['email']}.",
-           hero=_hero("azienda", imgs), imgs=imgs, user_types=USER_TYPES, map_embed=MAP_EMBED, privacy_url=PRIVACY_URL)
+           hero=_hero("azienda", imgs), imgs=imgs, user_types=USER_TYPES, jsonld=organization_ld(), map_embed=MAP_EMBED, privacy_url=PRIVACY_URL)
     story = COMPANY_STORY
     render("company.html", base / "azienda", line=None, title=t("page.company", lang),
            description=" ".join(text for _, text in story["steps"][:2]), story=story,
@@ -883,7 +962,8 @@ def build_site(c: Catalog, out: Path, lang: str = "it", sources: Path | None = N
            description=t("gallery.lead", lang))
     render("videos.html", base / "video", line=None, title=t("page.videos", lang), lib=video_library(c, lang),
            description=t("vid.lead", lang))
-    render("page.html", base / "area-riservata", line=None, title=t("page.reserved", lang), kind="reserved")
+    render("page.html", base / "area-riservata", line=None, title=t("page.reserved", lang), kind="reserved",
+           description=t("reserved.notice", lang))
     render("cookies.html", base / "cookie", line=None, title=t("page.cookie", lang), description=t("ck.lead", lang),
            privacy_url=PRIVACY_URL, services=EXTERNAL_SERVICES)
     # Vecchio indirizzo del prototipo: rimanda alla Galleria (anche in _redirects), fuori dalla sitemap.
@@ -901,6 +981,7 @@ def build_site(c: Catalog, out: Path, lang: str = "it", sources: Path | None = N
         '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
         + "".join(f"  <url><loc>{escape(u)}</loc></url>\n" for u in dict.fromkeys(urls))
         + "</urlset>\n", encoding="utf-8")
+    (out / "_headers").write_text(security_headers(out), encoding="utf-8")
     (out / "robots.txt").write_text(f"User-agent: *\nAllow: /\n\nSitemap: {SITE_URL}/sitemap.xml\n",
                                     encoding="utf-8")
 

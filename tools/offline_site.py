@@ -90,7 +90,7 @@ def main(out: Path) -> None:
         '<!doctype html><meta charset="utf-8"><title>ARNOplast</title>'
         f'<meta http-equiv="refresh" content="0; url={lang}/index.html">'
         f'<a href="{lang}/index.html">Apri il sito</a>\n', encoding="utf-8")
-    for f in ("_redirects", "robots.txt", "sitemap.xml"):
+    for f in ("_redirects", "_headers", "robots.txt", "sitemap.xml"):
         (out / f).unlink(missing_ok=True)
     shutil.make_archive(str(out), "zip", out.parent, out.name)
     print(f"Apri {out / 'index.html'} (archivio: {out}.zip)")

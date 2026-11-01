@@ -222,3 +222,6 @@ build. Per la home: le slide dell'hero (vedi "Fiere nell'hero della home"), che 
 restare sotto i 250 KB). Il testo non esiste ancora: si scrive in `data/imballaggi.json` (`"paragrafi": ["...", ...]`)
 senza toccare i template; finche' l'elenco e' vuoto la pagina mostra "Contenuto in arrivo" con i link a Contatti e
 alla richiesta di preventivo.
+
+## Sicurezza (intestazioni HTTP)
+La build scrive `_headers` (formato Netlify / Cloudflare Pages): Content-Security-Policy con impronte sha256 degli script e dello stile inline, `X-Content-Type-Options`, `X-Frame-Options`, `Referrer-Policy`, `Permissions-Policy`, `Cross-Origin-Opener-Policy`, HSTS. Gli unici domini esterni ammessi (come frame, e solo dopo un clic) sono YouTube senza cookie, Vimeo, Facebook e Google Maps. Su un altro hosting (Apache/nginx, WordPress) le stesse intestazioni vanno riprodotte dal server. Controllo: `node tools/check_csp.js <cartella-costruita>` serve il sito con quelle intestazioni e prova tutte le funzioni con risorse esterne; esce con errore se c'e' una violazione.
