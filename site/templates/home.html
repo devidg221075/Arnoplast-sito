@@ -114,6 +114,23 @@
   </div>
 </section>
 
+{% if home_video %}
+<section class="a-video wrap" aria-labelledby="a-video-t">
+  <div class="av-text" data-reveal>
+    <p class="a-eyebrow">{{ t('hv.video_eyebrow') }}</p>
+    <h2 id="a-video-t">{{ t('hv.video_title') }}</h2>
+    <p>{{ t('hv.video_text') }}</p>
+    <a class="btn a-btn-dark" href="/{{ lang }}/video/">{{ t('hv.video_all') }} <span aria-hidden="true">→</span></a>
+  </div>
+  <div class="av-media" data-reveal data-hv-src="{{ home_video.src | replace('?autoplay=1&rel=0', '?rel=0') }}" data-hv-title="{{ home_video.title }}">
+    <a class="av-open" href="{{ home_video.url }}" target="_blank" rel="noopener noreferrer" aria-label="{{ t('hv.video_play') }}: {{ home_video.title }} ({{ t('footer.new_tab') }})">
+      <img src="/static/img/home/video-aziendale-640.webp" srcset="/static/img/home/video-aziendale-640.webp 640w" sizes="(min-width: 1024px) 700px, 100vw" width="640" height="360" alt="" loading="lazy" decoding="async">
+      <span class="av-play" aria-hidden="true"><svg viewBox="0 0 24 24" width="30" height="30"><path d="M7 4v16l14-8z"/></svg></span><span class="av-cap">{{ t('hv.video_play') }} · YouTube</span>
+    </a>
+  </div>
+</section>
+{% endif %}
+
 <section class="a-steps" aria-labelledby="a-steps-t">
   <div class="wrap">
     <h2 id="a-steps-t" data-reveal>{{ t('hv.steps_title') }}</h2>

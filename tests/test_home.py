@@ -224,7 +224,7 @@ def test_videos_page_library_with_filters_and_search(tmp_path):
     build_site(c, tmp_path, videos=load_videos())
     h = (tmp_path / "it" / "video" / "index.html").read_text(encoding="utf-8")
     assert "in preparazione" not in h and "videos.js" in h and "<iframe" not in h
-    assert h.count('class="vt-card"') == 36 and h.count("player.vimeo.com/video/") == 10
+    assert h.count('class="vt-card"') == 37 and h.count("player.vimeo.com/video/") == 10
     for key in ("all", "video", "agricoltura", "garden", "olive"):
         assert f'data-video-filter="{key}"' in h
     for yid in ("yMqD2nmIcNs", "y2fjs31LI58", "I5Yv9WzYzLo", "wGBNoeV_srQ"):
@@ -268,3 +268,13 @@ def test_cookie_page_lists_real_storage_and_services(site):
     assert "arnoplast.quote.v2" in keys
     for f in js.glob("*.js"):
         assert "document.cookie" not in f.read_text(encoding="utf-8"), f.name
+
+
+def test_home_video_section_loads_player_only_on_click(tmp_path):
+    from arnoplast.site.build import DATA_DIR, load_videos
+    c = load_catalog(DATA_DIR / "catalog.json")
+    build_site(c, tmp_path, videos=load_videos())
+    h = (tmp_path / "it" / "index.html").read_text(encoding="utf-8")
+    assert 'id="a-video-t"' in h and "home-video.js" in h and "<iframe" not in h
+    assert 'data-hv-src="https://www.youtube-nocookie.com/embed/6t_hUfHWVwQ' in h
+    assert h.index('id="a-idea-t"') < h.index('id="a-video-t"') < h.index('id="a-steps-t"')

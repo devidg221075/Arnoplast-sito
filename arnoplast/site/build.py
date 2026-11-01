@@ -524,6 +524,7 @@ def _yt_id(url: str) -> str | None:
 
 
 VIDEO_GROUPS = [("video", "vid.f_video"), ("agricoltura", "vid.f_agri"), ("garden", "vid.f_garden"), ("olive", "vid.f_olive")]
+HOME_VIDEO_ID = "6t_hUfHWVwQ"  # video YouTube della vecchia home (data/tutorial.json)
 VIDEO_THUMB_DIR = ROOT / "site" / "static" / "img" / "video"
 
 
@@ -561,7 +562,8 @@ def video_library(c: Catalog, lang: str) -> dict:
     filters = [("all", t("vid.f_all", lang), len(cards))] + [
         (k, t(label, lang), sum(1 for c_ in cards if c_["group"] == k)) for k, label in VIDEO_GROUPS
         if any(c_["group"] == k for c_ in cards)]
-    return {"cards": cards, "filters": filters, "n_video": sum(1 for c_ in cards if c_["group"] == "video"),
+    home = next((c_ for c_ in cards if c_["id"] == HOME_VIDEO_ID), None)
+    return {"home": home, "cards": cards, "filters": filters, "n_video": sum(1 for c_ in cards if c_["group"] == "video"),
             "n_tut": sum(1 for c_ in cards if c_["group"] != "video")}
 
 
@@ -734,7 +736,8 @@ def home_context(c: Catalog, lang: str) -> dict:
              "products": sum(counts.values()), "codes": len({a.code for a in articles})}
     imgs = home_images()
     return {"lines": c.lines, "line": None, "counts": counts, "stats": stats, "imgs": imgs,
-            "slides": hero_slides(c, lang, imgs, stats), "contacts": CONTACTS}
+            "slides": hero_slides(c, lang, imgs, stats), "contacts": CONTACTS,
+            "home_video": video_library(c, lang)["home"]}
 
 
 def upcoming_fairs(limit: int | None = None) -> list[dict]:

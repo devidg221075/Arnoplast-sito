@@ -3,6 +3,13 @@
  "video": [
   {
    "gruppo": "video",
+   "servizio": "youtube",
+   "id": "6t_hUfHWVwQ",
+   "titolo": "ARNOplast: video aziendale",
+   "_nota": "Video della vecchia home (titolo originale 'Video ARNOPLAST LUNGO Mod'); titolo da confermare"
+  },
+  {
+   "gruppo": "video",
    "servizio": "vimeo",
    "id": "684684219",
    "titolo": "ARNOplast: la nostra azienda",
