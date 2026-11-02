@@ -249,3 +249,10 @@ html:not(.js) .hs-caps, html:not(.js) .hs-ctrl { display: none; }
 .a-stampi h2 { font-size: clamp(1.5rem, 4.2vw, 2.3rem); line-height: 1.1; max-width: 34ch; margin: 0; }
 .a-stampi .a-eyebrow { margin-bottom: 8px; }
 @media (min-width: 900px) { .a-stampi-in { grid-template-columns: 1fr auto; gap: 56px; } .a-stampi { padding: 64px 0; } }
+.a-press { padding: 48px 0; }
+.a-press-in { display: grid; gap: 20px; justify-items: start; }
+.a-press h2 { font-size: clamp(1.4rem, 3.8vw, 2rem); line-height: 1.15; max-width: 34ch; margin: 0; }
+.a-press-q { margin: 0; padding: 0 0 0 18px; border-left: 3px solid #d0d0d6; }
+.a-press-q p { margin: 0 0 8px; }
+.a-press-q footer { font-size: .9rem; color: #555; }
+@media (min-width: 900px) { .a-press { padding: 64px 0; } }
