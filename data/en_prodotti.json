@@ -1,0 +1,1470 @@
+{
+ "_nota": "Nomi, caratteristiche e dimensioni dei prodotti in inglese, dai cataloghi inglesi 2026 (Agriculture e Garden), testo del cliente senza modifiche; abbinati per codice del primo articolo. Da verificare: alcune voci possono essere incomplete perche' il layout del PDF e' a colonne. I prodotti in 'mancanti' non hanno un testo inglese nei PDF e restano in italiano o tradotti da noi.",
+ "fonte": "Cataloghi inglesi 2026 (Agriculture, Garden)",
+ "prodotti": {
+  "copripalo-prisma": {
+   "codice": "1807-1351",
+   "nome_en": "POST CAP PRISMA",
+   "features_en": [
+    "indicated for every kind of antihail system with concrete pole",
+    "available both with or without screws",
+    "it semplifies the mouting operations thanks to the screws in only 4 pieces"
+   ],
+   "dimensions_en": [
+    "dimensions: 215x115x120 mm"
+   ]
+  },
+  "copripalo-qubo": {
+   "codice": "1807-1301",
+   "nome_en": "POST CAP QUBO",
+   "features_en": [
+    "indicated for every kind of antihail system with concrete pole",
+    "available both with or without screws",
+    "it semplifies the mouting operations thanks to the screws in only 4 pieces",
+    "8.8 certified screws"
+   ],
+   "dimensions_en": [
+    "dimensions: 160x115x120 mm"
+   ]
+  },
+  "copripalo-zephiro": {
+   "codice": "1807-1401",
+   "nome_en": "POST CAP ZEPHIRO",
+   "features_en": [
+    "Indicated for every kind of antihail system with concrete pole",
+    "It semplifies the mounting operations thanks to the screws in only 4 pieces",
+    "8.8 certified screws"
+   ],
+   "dimensions_en": [
+    "dimensions: 216x100x105 mm"
+   ]
+  },
+  "copripalo-monviso": {
+   "codice": "1807-0727",
+   "nome_en": "MONVISO",
+   "features_en": [
+    "indicated for every kind of hail system with concrete pole",
+    "it semplifies the mounting operations thanks to the tab of the iron wire on the top",
+    "it allows the mounting of the optional side protection to defend the net even later",
+    "available both with screws for flat net and for “capannina”",
+    "to avoid troubles when placing orders please write the name of the pole producer"
+   ],
+   "dimensions_en": [
+    "dimensions: (7x7 - 7x8 – 8x8 - 8x8,5): 125x115x135 mm",
+    "dimensions: (8,5x8,5 - 9x9): 150x130x140 mm",
+    "dimensions: (10x12): 160x135x180 mm"
+   ]
+  },
+  "copripalo-testata": {
+   "codice": "1807-0740",
+   "nome_en": "POST CAP TESTATA",
+   "features_en": [
+    "indicated for every kind of antihail system with concrete pole",
+    "available both with or without screws"
+   ],
+   "dimensions_en": [
+    "dimensions: 192x189x200 mm"
+   ]
+  },
+  "copripalo-latina": {
+   "codice": "1807-1502C",
+   "nome_en": "POST CAP LATINA",
+   "features_en": [
+    "Indicated for 32 mm arch covering systems",
+    "it simplifies the mounting operations and system maintenance",
+    "Available for concrete poles size 7x7 and 7x8",
+    "Patented"
+   ],
+   "dimensions_en": [
+    "Dimensions: 116x126x155mm"
+   ]
+  },
+  "copripalo-sphera": {
+   "codice": "1807-1501C",
+   "nome_en": "POST CAP SPHERA",
+   "features_en": [
+    "Indicated for 32 mm arch covering systems",
+    "It simplifies the mounting operations and system maintenance",
+    "Available for concrete poles size 8x8 and 9x9",
+    "It reduces the wind stresses thanks to its fixing system through a floating sphere",
+    "Patented"
+   ],
+   "dimensions_en": [
+    "Dimensions: 121x121x185mm"
+   ]
+  },
+  "copripalo-latina-omega": {
+   "codice": "1807-1515C",
+   "nome_en": "POST CAP LATINA OMEGA",
+   "features_en": [
+    "Indicated for arch shaped systems from 32mm to 25 mm",
+    "it simplifies the mounting operations and system maintenance",
+    "Available for iron posts from 50 mm to 80 mm",
+    "Patented"
+   ],
+   "dimensions_en": [
+    "Dimensions: 107x125x159mm"
+   ]
+  },
+  "copripalo-fix": {
+   "codice": "1807-0320",
+   "nome_en": "POST CAP FIX",
+   "features_en": [
+    "Ideal for systems with concrete pole, pressure mounting and then tighten the clamp at the bottom side of the cap.",
+    "It semplifies the mounting operations as it does not need ties. The wings on the top hold wires in different diameters.",
+    "It does not alter the net links",
+    "High resistance to weather distress"
+   ],
+   "dimensions_en": [
+    "Dimensions (6x6): 99x100 mm"
+   ]
+  },
+  "copripalo-aer": {
+   "codice": "1807-0307",
+   "nome_en": "POST CAP AER",
+   "features_en": [
+    "Ideal for systems with concrete pole, pressure mounting",
+    "It semplifies the mounting operations as it does not need ties. The wings on the top hold wires in different diameters.",
+    "It does not alter the net links",
+    "High resistance to weather distress"
+   ],
+   "dimensions_en": [
+    "Dimensions (6x6): 99x87x95mm"
+   ]
+  },
+  "angolare-per-paloni": {
+   "codice": "1807-0203",
+   "nome_en": "ANGULAR CAP FOR LARGE POSTS",
+   "features_en": [
+    "Ideal for systems with perimetral large posts",
+    "It could be fastened on the post with pvc tube or iron wire",
+    "It does not alter the net links",
+    "High resistance to weather distress"
+   ],
+   "dimensions_en": [
+    "Dimensions : 73x139x142 mm"
+   ]
+  },
+  "copripalo-reno-10x10": {
+   "codice": "1807-0908",
+   "nome_en": "POST CAP RENO 10X10",
+   "features_en": [
+    "Ideal for systems with concrete posts, pressure mounting",
+    "It simplifies the mounting operations thanks to the screws for the locking on the top longitudinal wires in various diameters.",
+    "It does not alter the net links",
+    "High resistance to weather distress"
+   ],
+   "dimensions_en": [
+    "Dimensions : 130x180 mm 130 180"
+   ]
+  },
+  "copripalo-4-e-12-cm-con-croce": {
+   "codice": "1807-0512",
+   "nome_en": "POST CAP 4 AND 12 CM WITH CROSS",
+   "features_en": [
+    "indicated with every kind of hail system with wooden pole",
+    "it simplifies the mounting operation thanks to the screws for the locking of the iron wire",
+    "it does not alter the net links of the top"
+   ],
+   "dimensions_en": [
+    "Dimensions: 125x130 mm",
+    "Dimensions: 52x78 mm"
+   ]
+  },
+  "copripalo-circolare": {
+   "codice": "1807-0106",
+   "nome_en": "ROUND POST CAP",
+   "features_en": [
+    "ideal for systems with wooden pole",
+    "it does not alter the net links",
+    "high resistance to weather distress"
+   ],
+   "dimensions_en": [
+    "Dimensions: from 60mm to 160mm"
+   ]
+  },
+  "copripalo-universale": {
+   "codice": "1807-0201",
+   "nome_en": "UNIVERSAL POST CAP",
+   "features_en": [
+    "indicated for every kind of hail system with wooden pole or recovery pole",
+    "it simplifies the mounting operation thanks to its adaptability to",
+    "different pole diameters",
+    "it does not alter the net links"
+   ],
+   "dimensions_en": [
+    "Dimensions (6-10 cm): 120x110 mm",
+    "Dimensions (18-21 cm): 220x180 mm"
+   ]
+  },
+  "copripalo-fg-40-50-60-65-80": {
+   "codice": "1807-1103",
+   "nome_en": "POST CAP FG 40-50-60-65-80",
+   "features_en": [
+    "indicated for the systems with iron pole",
+    "it simplifies the mounting operation thanks to the screws for the locking of the iron wire on the top and the transverse wire",
+    "available both with screws for flat net and for “capannina”",
+    "it does not alter the net links",
+    "8 certified screws"
+   ],
+   "dimensions_en": [
+    "Dimensions: 100x120 mm 100 120"
+   ]
+  },
+  "copripalo-champignon-e-basetta": {
+   "codice": "1807-1001",
+   "nome_en": "POST CAP CHAMPIGNON AND TERMINAL BOARD PP",
+   "features_en": [
+    "indicated for the systems with iron pole",
+    "it simplifies the mounting operation thanks to the screws for the locking of the iron wire on the top and the transverse",
+    "available both with screws for flat net and for “capannina”",
+    "it does not alter the net links",
+    "8 certified screws"
+   ],
+   "dimensions_en": [
+    "Dimensions (cp): 120x70x38 mm",
+    "Dimensions (base): 120x70 mm - 193x160mm 120 70"
+   ]
+  },
+  "placchetta-roma": {
+   "codice": "1702-1101",
+   "nome_en": "ROMA CLIP PA FV",
+   "features_en": [
+    "perfect for the sewing of the central row (flat)",
+    "high resistance to weather distress",
+    "it can get a pressure fixing on the net",
+    "it can be open by a single hand",
+    "reopenable",
+    "composed by 4 pieces"
+   ],
+   "dimensions_en": [
+    "Dimensions: 83x40 mm"
+   ]
+  },
+  "placchetta-rania": {
+   "codice": "1702-1102",
+   "nome_en": "RANIA CLIP PA FV",
+   "features_en": [
+    "perfect for the sewing of the central row (flat)",
+    "high resistance to weather distress",
+    "it can get a pressure fixing on the net",
+    "it can be open by a single hand",
+    "reopenable",
+    "composed by 4 pieces"
+   ],
+   "dimensions_en": [
+    "Dimensions: 92x66mm"
+   ]
+  },
+  "placchetta-riva-riva-jr": {
+   "codice": "1702-0901",
+   "nome_en": "RIVA - RIVA JR. CLIP PA FV",
+   "features_en": [
+    "perfect for the sewing of the central row",
+    "high resistance to weather distress",
+    "it can get a pressure fixing on the net",
+    "it can be open by a single hand",
+    "reopenable",
+    "composed by 4 pieces"
+   ],
+   "dimensions_en": [
+    "Dimensions: 54x33 mm / 74x40 mm"
+   ]
+  },
+  "placchetta-new-riva": {
+   "codice": "1702-0904",
+   "nome_en": "NEW RIVA CLIP",
+   "features_en": [
+    "perfect for the sewing of the central row (flat)",
+    "high resistance to weather distress",
+    "it can get a pressure fixing on the net",
+    "it can be open by a single hand",
+    "reopenable",
+    "composed by 4 pieces"
+   ],
+   "dimensions_en": [
+    "Dimensions: 83x40 mm"
+   ]
+  },
+  "placchetta-resia": {
+   "codice": "1702-0103",
+   "nome_en": "RESIA CLIP PA FV",
+   "features_en": [
+    "perfect for the sewing of the central row",
+    "high resistance to weather distress",
+    "it can get a pressure fixing on the net",
+    "it can be open by a single hand",
+    "reopenable",
+    "high breaking load",
+    "composed by 4 pieces"
+   ],
+   "dimensions_en": [
+    "Dimensions: 100x40 mm"
+   ]
+  },
+  "placchetta-new-resia": {
+   "codice": "1702-0105",
+   "nome_en": "NEW RESIA CLIP PA FV",
+   "features_en": [
+    "perfect for the sewing of the central row",
+    "high resistance to weather distress",
+    "It can get a pressure fixing on the net",
+    "it can be open by a single hand",
+    "reopenable",
+    "high breaking load",
+    "composed by 4 pieces"
+   ],
+   "dimensions_en": [
+    "Dimensions: 100x40 mm"
+   ]
+  },
+  "placchetta-start": {
+   "codice": "1702-1201",
+   "nome_en": "START CLIP",
+   "features_en": [
+    "ideal for tensioning the net at the beginning and the end of the row",
+    "high resistance to weather distress",
+    "4 special screws included in the Box",
+    "it can be open by a single hand",
+    "reopenable",
+    "high breaking load",
+    "composed by 4 pieces"
+   ],
+   "dimensions_en": [
+    "Dimensions: 108x84mm"
+   ]
+  },
+  "placchetta-rolle": {
+   "codice": "1702-0801",
+   "nome_en": "ROLLE CLIP",
+   "features_en": [
+    "perfect for the sewing of the net on the iron wire on the top",
+    "high resistance to weather distress",
+    "high mounting speed thanks to the click points"
+   ],
+   "dimensions_en": [
+    "Dimensions: 110x11 mm (ROLLE)"
+   ]
+  },
+  "placchetta-new-rolle": {
+   "codice": "1702-0809",
+   "nome_en": "NEW ROLLE CLIP",
+   "features_en": [
+    "perfect for the sewing of the net on the iron wire on the top",
+    "high resistance to weather distress",
+    "high mounting speed thanks to the click points"
+   ],
+   "dimensions_en": [
+    "Dimensions: 95x100 mm (NEW ROLLE)"
+   ]
+  },
+  "placchetta-rolle-2": {
+   "codice": "1702-0802",
+   "nome_en": "ROLLE 2 CLIP",
+   "features_en": [
+    "perfect for the sewing of the net on the iron wire on the top",
+    "high resistance to weather distress",
+    "high mounting speed thanks to the click points",
+    "extendable by tools, it can be recovered by tools",
+    "with tool"
+   ],
+   "dimensions_en": [
+    "Dimensions: 100x21 mm"
+   ]
+  },
+  "placchetta-agropettine": {
+   "codice": "1702-0407",
+   "nome_en": "AGROPETTINE CLIP CLIP",
+   "features_en": [
+    "perfect for the sewing of the net on the iron wire on the top",
+    "high resistance to weather distress",
+    "high mounting speed thanks to the click points"
+   ],
+   "dimensions_en": [
+    "Dimensions: 86x14 mm"
+   ]
+  },
+  "placchetta-magnum": {
+   "codice": "1702-0501",
+   "nome_en": "MAGNUM CLIP",
+   "features_en": [
+    "perfect to stretch the net with elastic, for windbreak systems and shadows",
+    "high resistance to weather distress",
+    "it can have a pressure fixing on the net",
+    "high mounting speed thanks to the click points",
+    "perfect for all types of net"
+   ],
+   "dimensions_en": [
+    "Dimensions: 113x45 mm"
+   ]
+  },
+  "placchetta-ancorplack": {
+   "codice": "1702-0201",
+   "nome_en": "ANCORPLACK CLIP",
+   "features_en": [
+    "perfect for windbreak and shadow nets",
+    "high resistance to weather distress",
+    "it can be anchored directly on the wire thanks to the hook located on the upper side",
+    "it can be fixed directly on the pressure net thanks to 2 click points",
+    "perfect for all types of net"
+   ],
+   "dimensions_en": [
+    "Dimensions: 50x45 mm"
+   ]
+  },
+  "placchetta-ancorplack-2": {
+   "codice": "1702-0204",
+   "nome_en": "ANCORPLACK 2 CLIP",
+   "features_en": [
+    "perfect for wind break and shadow nets",
+    "high resistance to weather distress",
+    "it can be anchored directly on the wire thanks to the hook located on the upper side",
+    "it can be fixed directly on the pressure net thanks to click points",
+    "perfect for all types of net"
+   ],
+   "dimensions_en": [
+    "Dimensions: 130x42 mm"
+   ]
+  },
+  "placchetta-k4-k10": {
+   "codice": "1702-0210",
+   "nome_en": "K4 - K10 CLIP PA",
+   "features_en": [
+    "perfect for windbreak and shadow nets",
+    "high resistance to weather distress",
+    "it can be anchored directly on the wire thanks to the hook located on the upper side",
+    "it can be fixed directly on the pressure net thanks to 4 click points",
+    "perfect for all types of net"
+   ],
+   "dimensions_en": [
+    "Dimensions: 53x55mm (K4)",
+    "Dimensions: 63x70mm (K10)"
+   ]
+  },
+  "placchetta-h": {
+   "codice": "1702-0507",
+   "nome_en": "CARATTERISTICHE",
+   "features_en": [],
+   "dimensions_en": [
+    "Dimensions: 55x34 mm - hole 11 mm"
+   ]
+  },
+  "placchetta-ad-anello": {
+   "codice": "1702-0701",
+   "nome_en": "RING CLIP",
+   "features_en": [
+    "It protects the net from wearing and tearing",
+    "It can have a pressure fixing on the net",
+    "Perfect for all types of net",
+    "Perfect for antifrost and irrigation systems"
+   ],
+   "dimensions_en": [
+    "Dimensions: 110 mm - hole 45 mm"
+   ]
+  },
+  "placchetta-accoppiateli": {
+   "codice": "1702-0602",
+   "nome_en": "FILM.NET JOINER CLIP",
+   "features_en": [
+    "perfect for matching, linking and fixing nets",
+    "high resistance to weather distress",
+    "it can have a pressure fixing",
+    "it perfectly connects 2 overlapped nets",
+    "perfect for all kinds of net"
+   ],
+   "dimensions_en": [
+    "Dimensions: 82x27 mm"
+   ]
+  },
+  "ancora-net": {
+   "codice": "1802-0403",
+   "nome_en": "ANCORA.NET PVC",
+   "features_en": [
+    "perfect for the winter closing of nets",
+    "high mounting speed",
+    "practical and cheap",
+    "when opening the nets you do not have to remove any element of the system"
+   ],
+   "dimensions_en": []
+  },
+  "new-stop-net": {
+   "codice": "1802-0413",
+   "nome_en": "NEW STOP.NET PVC",
+   "features_en": [
+    "perfect for the winter closing and sewing of nets",
+    "high mounting speed thanks to 6 points",
+    "when opening the nets you do not have to remove any element of the system"
+   ],
+   "dimensions_en": [
+    "Dimensions: 100x14 mm 32"
+   ]
+  },
+  "stop-net-stop-net-2": {
+   "codice": "1802-0405",
+   "nome_en": "STOP.NET - STOP NET 2 PVC",
+   "features_en": [
+    "perfect for the winter closing and sewing of nets",
+    "high mounting speed thanks to 6 points",
+    "when opening the nets you do not have to remove any element of the system"
+   ],
+   "dimensions_en": [
+    "Dimensions: 104x21 mm"
+   ]
+  },
+  "moschettone-ovale-e-ursus": {
+   "codice": "1803-0115",
+   "nome_en": "OVAL CARABINER",
+   "features_en": [
+    "perfect for anchoring wired caps and plastic film, particularly indicated for antirain systems",
+    "high resistance to weather distress",
+    "reopenable",
+    "easy to install"
+   ],
+   "dimensions_en": [
+    "Dimensions: 38x34mm - 48x34mm - 67x40mm - 77x48mm"
+   ]
+  },
+  "morsa-100": {
+   "codice": "1701-0310",
+   "nome_en": "MORSA 100",
+   "features_en": [
+    "perfect for anchoring nets and plastic film, particularly indicated for anti rain system",
+    "high resistance to weather distress",
+    "perfect for all type of nets and films",
+    "2 special self-tapping screws included in the Box"
+   ],
+   "dimensions_en": [
+    "Dimensions: 104x41mm - 100x35mm"
+   ]
+  },
+  "clips-morsa-70": {
+   "codice": "1701-0303",
+   "nome_en": "CLIPS MORSA 70",
+   "features_en": [
+    "perfect for anchoring nets and plastic film, particularly indicated for anti rain system",
+    "high resistance to weather distress",
+    "it can be anchored directly to the wire or the BUNGEE",
+    "special self-tapping screw included in the Box",
+    "perfect for all types of films of any thickness"
+   ],
+   "dimensions_en": [
+    "Dimensions: 70x40mm"
+   ]
+  },
+  "clips-morsa-50": {
+   "codice": "1701-0307",
+   "nome_en": "CLIPS MORSA 50",
+   "features_en": [
+    "perfect for anchoring nets and plastic film, particularly indicated for anti rain system",
+    "high resistance to weather distress",
+    "it can be anchored directly to the wire or the BUNGEE",
+    "Special self tapping screw included in the box",
+    "perfect for all types of films of any thickness"
+   ],
+   "dimensions_en": [
+    "Dimensions: 50x29mm 50 29"
+   ]
+  },
+  "stop-film-70": {
+   "codice": "1802-0409",
+   "nome_en": "STOP.FILM 70 PVC",
+   "features_en": [
+    "perfect for anchoring nets and plastic film, particularly indicated for rain systems",
+    "high resistance to weather distress",
+    "special self-tapping screw included in the Box 70"
+   ],
+   "dimensions_en": [
+    "Dimensions: 70x40mm 40 115"
+   ]
+  },
+  "stop-film-50": {
+   "codice": "1802-0408",
+   "nome_en": "STOP.FILM 50 PVC",
+   "features_en": [
+    "perfect for anchoring nets and plastic film, particularly indicated for rain systems",
+    "high resistance to weather distress",
+    "special self-tapping screw included in the Box"
+   ],
+   "dimensions_en": [
+    "Dimensions: 50x27mm 50 27 75"
+   ]
+  },
+  "clips-morsa-40": {
+   "codice": "1701-0301",
+   "nome_en": "CLIPS MORSA 40",
+   "features_en": [
+    "perfect for anchoring nets and plastic film, particularly indicated for rain systems",
+    "high resistance to weather distress",
+    "It can be easily tensioned thanks to the top loop",
+    "Special self tapping screw included in the box",
+    "Perfect for all types of films of any thickness"
+   ],
+   "dimensions_en": [
+    "Dimensions: 27x42mm"
+   ]
+  },
+  "pinza-omega": {
+   "codice": "1701-0202",
+   "nome_en": "OMEGA PLIER",
+   "features_en": [
+    "perfect for anchoring nets and plastic films on a wire",
+    "high resistance to weather distress",
+    "fast and trigger mounting",
+    "recoverable",
+    "suitable for wires from 2.5mm to 4.0mm"
+   ],
+   "dimensions_en": [
+    "Dimensions: 43x36mm (OMEGA)"
+   ]
+  },
+  "morsetto-di-sicurezza-70": {
+   "codice": "1701-0102",
+   "nome_en": "SAFETY BAND 70 FV",
+   "features_en": [
+    "Perfect for anchoring nets and plastic films on a wire",
+    "Perfect for 3,5-7 mm wires",
+    "High resistance to weather distress",
+    "Reopenable"
+   ],
+   "dimensions_en": [
+    "Dimensions: 44x70mm 42 98"
+   ]
+  },
+  "morsetto-di-sicurezza-50": {
+   "codice": "1701-0103",
+   "nome_en": "SAFETY BAND 50 FV",
+   "features_en": [
+    "Perfect for anchoring nets and plastic films on a wire",
+    "Perfect for 3-6 mm wires",
+    "High resistance to weather distress",
+    "Reopenable"
+   ],
+   "dimensions_en": [
+    "Dimensions: 40x50mm 40 99"
+   ]
+  },
+  "gancio-farfalla": {
+   "codice": "1804-0502",
+   "nome_en": "BUTTERFLY HOOK",
+   "features_en": [
+    "perfect for anchoring nets and plastic film, particularly indicated for rain systems",
+    "Ideal for tensioning nets in center row",
+    "high resistance to weather distress"
+   ],
+   "dimensions_en": [
+    "Dimensions: 132x45mm 132 45"
+   ]
+  },
+  "mosch-premontaggio-elefante": {
+   "codice": "1803-0106",
+   "nome_en": "PREMOUNTING SPRING CATCH ELEPHANT PA 31",
+   "features_en": [
+    "perfect for anchoring film and nets with eyelets or clips",
+    "perfect for 6-10mm ropes 65",
+    "high resistance to weather distress",
+    "extreme resistance to traction",
+    "recoverable",
+    "hook with push bolt for a high security TO CLOSE"
+   ],
+   "dimensions_en": []
+  },
+  "pallina-con-elastico": {
+   "codice": "1902-0502",
+   "nome_en": "BALL WITH ELASTIC",
+   "features_en": [
+    "Perfect for the winter closing of the nets",
+    "practical and cheap"
+   ],
+   "dimensions_en": [
+    "Dimensions: 200 - 250 - 350mm 25",
+    "Dimensions (ball): Ø 29mm"
+   ]
+  },
+  "gancio-amo": {
+   "codice": "1804-0406",
+   "nome_en": "AMO HOOK",
+   "features_en": [
+    "perfect for anchoring “ground cover“ and eyelet plastic films",
+    "indicated for anti rain system",
+    "high resistance to weather distress",
+    "extreme resistance to traction"
+   ],
+   "dimensions_en": [
+    "Dimensions: 78x38mm 38"
+   ]
+  },
+  "cordino-pet": {
+   "codice": "1902-0402",
+   "nome_en": "ROPE PET",
+   "features_en": [
+    "Perfect for all type of anchoring",
+    "Realized in braided PET",
+    "rope clip, avoids having to tie knots"
+   ],
+   "dimensions_en": []
+  },
+  "spider": {
+   "codice": "1902-0804",
+   "nome_en": "SPIDER",
+   "features_en": [
+    "Ideal for anti-rain systems",
+    "SPIDER : composed by: 4 Elefant spring catch, 2 pieces of 8 mm Pet Bungee and 1 metal ring 50 mm",
+    "SPIDER SPECIAL: composed by: 4 Elefant spring catch, 2 pieces of 8 mm Pet Bungee, 1 metal ring 50 mm, 1 metallic spring catch and 2 M of cord size 5mm."
+   ],
+   "dimensions_en": []
+  },
+  "ancora-30": {
+   "codice": "1803-0109",
+   "nome_en": "ANCORA.30 PVC",
+   "features_en": [
+    "Adjustable PVC tie rod with SNAP HOOK"
+   ],
+   "dimensions_en": [
+    "Dimensions: 27x300mm"
+   ]
+  },
+  "barretta-sostegno-165": {
+   "codice": "1805-0301",
+   "nome_en": "SUPPORT BAR 165 FV",
+   "features_en": [
+    "perfect for the anchoring of 2 wires on a wooden or concrete pole",
+    "to be anchored on the post through a screw or a metallic wire"
+   ],
+   "dimensions_en": [
+    "Dimensions: 163x22mm"
+   ]
+  },
+  "barretta-sostegno-300": {
+   "codice": "1805-0308",
+   "nome_en": "SUPPORT BAR 300 FV",
+   "features_en": [
+    "perfect for the anchoring of 2 wires on a wooden or concrete pole",
+    "to be anchored on the post through a screw or a metallic wire * U-metallic not included"
+   ],
+   "dimensions_en": [
+    "Dimensions: 300x22mm"
+   ]
+  },
+  "barretta-sostegno-500": {
+   "codice": "1805-0309",
+   "nome_en": "SUPPORT BAR 500 FV",
+   "features_en": [
+    "perfect for the anchoring of 2 wires on a wooden or concrete pole",
+    "to be anchored on the post through a screw or a metallic wire * U-metallic not included"
+   ],
+   "dimensions_en": [
+    "Dimensions: 500x22mm"
+   ]
+  },
+  "gancio-singolo": {
+   "codice": "1805-0101",
+   "nome_en": "SINGLE HOOK",
+   "features_en": [
+    "perfect for the anchoring of a wire on a wooden or concrete pole",
+    "to be anchored on the post through a screw or a metallic wire"
+   ],
+   "dimensions_en": [
+    "Dimensions: 40x10mm"
+   ]
+  },
+  "gancio-doppio": {
+   "codice": "1805-0201",
+   "nome_en": "DOUBLE HOOK",
+   "features_en": [
+    "perfect for the anchoring of a wire on a wooden or concrete pole",
+    "to be anchored on the pole through a screw or a metallic wire",
+    "supplied with double post to hold the wire in case of slope changing"
+   ],
+   "dimensions_en": [
+    "Dimensions: 57x19mm"
+   ]
+  },
+  "barretta-sostegno-75mm": {
+   "codice": "1805-0302",
+   "nome_en": "SUPPORT BAR 75",
+   "features_en": [
+    "perfect for the anchoring of 2 wires on a wooden or concrete pole",
+    "to be anchored on the post through a screw or a bolt"
+   ],
+   "dimensions_en": [
+    "Dimensions: 84x20mm"
+   ]
+  },
+  "enokit": {
+   "codice": "1902-0821",
+   "nome_en": "ENOKIT",
+   "features_en": [
+    "Ideal for antihail systems on espalier vineyard",
+    "Composed by 6 elephant self locking spring catches and 3 pieces of 8 mm elastic, 60 cm long, n.6 Clip Niña"
+   ],
+   "dimensions_en": []
+  },
+  "enolego": {
+   "codice": "1902-0822",
+   "nome_en": "ENOLEGO",
+   "features_en": [
+    "Ideal for antihail systems on espalier vineyard",
+    "Length 24CM"
+   ],
+   "dimensions_en": []
+  },
+  "blocca-crociere": {
+   "codice": "1806-0121",
+   "nome_en": "CROSS-STOP",
+   "features_en": [
+    "perfect for anchoring caps and nets on a tubular",
+    "perfect for greenhouses",
+    "high resistance to weather distress",
+    "screw mounting; recoverable"
+   ],
+   "dimensions_en": [
+    "Dimensions: 22x25mm – 30x35mm – 40x40mm"
+   ]
+  },
+  "clips-per-tubo-irrigazione": {
+   "codice": "1704-0216",
+   "nome_en": "CLIPS FOR IRRIGATION PIPE",
+   "features_en": [
+    "perfect for anchoring the dropping wing on the tutor wire",
+    "perfect for vineyard and groves",
+    "high resistance to weather distress",
+    "trigger mounting",
+    "recoverable"
+   ],
+   "dimensions_en": []
+  },
+  "gancio-tubo-irrigazione": {
+   "codice": "1804-0303",
+   "nome_en": "HOOK FOR IRRIGATION PIPE",
+   "features_en": [
+    "perfect for anchoring the dropping wing on the tutor wire",
+    "perfect for vineyard and groves",
+    "high resistance to weather distress",
+    "trigger mounting",
+    "recoverable",
+    "a drop break profile is in the down side"
+   ],
+   "dimensions_en": [
+    "height: 50, 58, 90, 115mm"
+   ]
+  },
+  "gancio-doppio-2": {
+   "codice": "1804-0401",
+   "nome_en": "DOUBLE HOOK FV",
+   "features_en": [
+    "perfect for anchoring the drooping wing on the ground",
+    "perfect for vineyards and orchard",
+    "high resistance to weather distress",
+    "one model for 16 and 20MM wing"
+   ],
+   "dimensions_en": [
+    "Dimensions: 170x20mm"
+   ]
+  },
+  "gancio-rovescio-in-pvc": {
+   "codice": "1804-0501",
+   "nome_en": "REVERSE HOOK IN PVC",
+   "features_en": [
+    "indicated for stretching 2 wind break nets",
+    "high resistance to weather distress",
+    "used in the tent for grape"
+   ],
+   "dimensions_en": [
+    "Dimensions: 50x11mm"
+   ]
+  },
+  "gancio-rovescio-e-gancio-rovescio-xl": {
+   "codice": "1804-0601",
+   "nome_en": "REVERSE HOOK AND REVERSE HOOK XL FE",
+   "features_en": [
+    "indicated for stretching 2 windbreak nets",
+    "high resistance to weather distress",
+    "used in the tent for grape"
+   ],
+   "dimensions_en": [
+    "Dimensions: 50x11mm",
+    "Dimensions: 58x15mm"
+   ]
+  },
+  "clips-per-serre": {
+   "codice": "1704-0115C",
+   "nome_en": "CLIPS FOR GREENHOUSES",
+   "features_en": [
+    "Clips for anchoring of the film on the tubular for greenhouses",
+    "Material: PVC molded",
+    "Packaging: Box",
+    "High resistance to weathering"
+   ],
+   "dimensions_en": []
+  },
+  "gancio-a-c": {
+   "codice": "1804-0102",
+   "nome_en": "C HOOK",
+   "features_en": [
+    "indicated for anchoring 1 or 2 nets",
+    "used in vineyard to keep 2 wires near",
+    "high resistance to weather distress"
+   ],
+   "dimensions_en": [
+    "Dimensions: 15x55mm – 20x120mm"
+   ]
+  },
+  "ago-cucirete": {
+   "codice": "1705-0202",
+   "nome_en": "SEWING NAIL",
+   "features_en": [
+    "indicated for the net sewing olive harvest",
+    "high resistance to weather distress",
+    "recoverable"
+   ],
+   "dimensions_en": [
+    "Dimensions: 110mm"
+   ]
+  },
+  "chiodo-ferma-telo": {
+   "codice": "1705-0101",
+   "nome_en": "NAIL STOP NET FV",
+   "features_en": [
+    "indicated for the land fixing of caps and nets",
+    "high resistance to weather distress",
+    "hammering",
+    "recoverable"
+   ],
+   "dimensions_en": [
+    "Dimensions: 110, 150, 200mm",
+    "head diameter: 22, 45mm"
+   ]
+  },
+  "gancio-per-occhielli-a-s": {
+   "codice": "1804-0402",
+   "nome_en": "HOOK FOR EYELET - S HOOK",
+   "features_en": [
+    "indicated for anchoring the drilled and/or eyelet cap to a wire",
+    "high resistance to weather distress"
+   ],
+   "dimensions_en": [
+    "Dimensions: 19x39mm",
+    "Dimensions: 22x40mm"
+   ]
+  },
+  "rondella-antistrappo": {
+   "codice": "1703-0102",
+   "nome_en": "ANTI TEAR WASHER",
+   "features_en": [
+    "indicated for fixing nets and films through a screw"
+   ],
+   "dimensions_en": [
+    "Dimensions: Ø 22mm"
+   ]
+  },
+  "fascetta-lego": {
+   "codice": "2202-0219",
+   "nome_en": "BAND LEGO",
+   "features_en": [
+    "indicated for anchoring a plant to a tutor",
+    "used mainly in spurred cordon vineyards",
+    "it allows the growing of the plant without causing the choking",
+    "extendable"
+   ],
+   "dimensions_en": []
+  },
+  "fascetta-guyot": {
+   "codice": "2202-0301",
+   "nome_en": "BAND GUYOT",
+   "features_en": [
+    "indicated for anchoring a plant to a tutor",
+    "used mainly in spurred cordon vineyards",
+    "it allows the growing of the plant without causing the choking",
+    "extendable"
+   ],
+   "dimensions_en": []
+  },
+  "gancio-w": {
+   "codice": "2201-0308",
+   "nome_en": "BAND W",
+   "features_en": [
+    "indicated for anchoring the shoot to the tutor wire yearly",
+    "used mainly for kiwi systems",
+    "high resistance to weather distress"
+   ],
+   "dimensions_en": []
+  },
+  "gancio-b1-b2": {
+   "codice": "2201-0401",
+   "nome_en": "HOOK B1-B2",
+   "features_en": [
+    "indicated for anchoring the plant stock to the tutor wire",
+    "used in grooves",
+    "it allows the growing of the plant without causing the choking",
+    "recoverable",
+    "pliers available upon request to ease the mounting"
+   ],
+   "dimensions_en": [
+    "Dimensions: 15x150 mm",
+    "Dimensions: 15x188 mm"
+   ]
+  },
+  "tubetto-pvc": {
+   "codice": "1901-0260",
+   "nome_en": "PVC BAG",
+   "features_en": [
+    "indicated for anchoring the plant stock to the tutor wire",
+    "good resistance to traction and knot",
+    "practical and cheap"
+   ],
+   "dimensions_en": []
+  },
+  "filo-in-poliestere": {
+   "codice": "2101-0201",
+   "nome_en": "POLYESTER WIRE",
+   "features_en": [
+    "minimum elasticity",
+    "it does not conduct electricity",
+    "in the laying it must be stretched for about 1,5%",
+    "wide range of elements for the laying on pg. 43",
+    "used in vines and greenhouses"
+   ],
+   "dimensions_en": []
+  },
+  "ligatex": {
+   "codice": "2203-0101",
+   "nome_en": "LIGATEX",
+   "features_en": [
+    "hand and mechanical binder, it does not need battery",
+    "in order to carry out a right binding, 3 movements are necessary",
+    "perfect for year binding of the vines",
+    "the wire get spoiled after a season facilitating the operation of extraction during the pruning",
+    "each spool contains about 1100 bindings",
+    "pliers: Boxed in blister – to be hanged",
+    "different spare parts available upon request",
+    "practical, strong and cheap",
+    "made in France",
+    "pliers weight with complete spool: about 500gr"
+   ],
+   "dimensions_en": []
+  },
+  "anello-ferma-rete-cavallotto": {
+   "codice": "2011-0011",
+   "nome_en": "METAL RING - U METAL FE",
+   "features_en": [
+    "ideal to fix the net at the start/end of the raws",
+    "practical and economical"
+   ],
+   "dimensions_en": []
+  },
+  "cavallotto-a-u-in-metallo": {
+   "codice": "1805-0306",
+   "nome_en": "U METAL FE",
+   "features_en": [
+    "indicated for concrete posts"
+   ],
+   "dimensions_en": []
+  },
+  "morsetto-moschettone": {
+   "codice": "2011-0006",
+   "nome_en": "CLAMP - CARABINER FE",
+   "features_en": [
+    "ideal to fix wire or rope"
+   ],
+   "dimensions_en": []
+  },
+  "coprimorsetto": {
+   "codice": "2011-0012",
+   "nome_en": "COVER - CLAMP",
+   "features_en": [
+    "indicates for the protection of metal clamps #8-10"
+   ],
+   "dimensions_en": []
+  },
+  "testina-vega-multifilo": {
+   "codice": "1102-0701",
+   "nome_en": "MULTIWIRE VEGA HEAD",
+   "features_en": [
+    "Very fast system for the replacing of the wire",
+    "Weight 108gr - diam 103 mm - cutting height from the ground: 6 mm",
+    "It can bear nylon wires (36 cm diam 4.00mm)",
+    "It can be used with 2 or 4 pieces of wire, positioned both laterally and vertically",
+    "Available with both universal and threaded insert",
+    "very strong plastic material"
+   ],
+   "dimensions_en": []
+  },
+  "testina-semiautomatica-diamante": {
+   "codice": "1101-0101",
+   "nome_en": "SEMIAUTOMATIC HEAD “DIAMANTE”",
+   "features_en": [
+    "Single operation for the exit of the wire",
+    "The innovative locking system makes the product extremely simple and strong until the end of its useful life",
+    "Contains 10 meters of wire ø 2.4 mm",
+    "Weight approx 350 grams with wire. - Ø 132 mm",
+    "Available with universal insert or threaded insert",
+    "Compact and robust",
+    "Made of highly resistant plastic material"
+   ],
+   "dimensions_en": []
+  },
+  "filo-super-professionale-highlander": {
+   "codice": "1401-0125",
+   "nome_en": "SUPER PROFESSIONAL HIGHLANDER WIRE",
+   "features_en": [
+    "Super high quality professional wire",
+    "Ideal for tough jobs and ongoing",
+    "Excellent in all weather conditions",
+    "Provides an even cut and a high elasticity",
+    "Ideal for automatic heads and multi-wire",
+    "Available in round and square section SMALL HIGHLANDER DISPENSER"
+   ],
+   "dimensions_en": []
+  },
+  "filo-super-professionale-highlander-velox": {
+   "codice": "1422-0124",
+   "nome_en": "SUPER PROFESSIONAL VELOX WIRE",
+   "features_en": [
+    "Super high quality professional wire saw",
+    "Ideal for tough jobs and ongoing",
+    "Excellent in all weather conditions",
+    "Provides an even cut and a high elasticity",
+    "Ideal for tap'n go heads and multi-wire",
+    "Excellent air prenetration, reduces gasoline consumption DISPENSER HIGHLANDER VELOX"
+   ],
+   "dimensions_en": []
+  },
+  "filo-super-professionale-highlander-raptor": {
+   "codice": "1411-0130",
+   "nome_en": "SUPER PROFESSIONAL HIGHLANDER RAPTOR WIRE SAW",
+   "features_en": [
+    "Super high quality professional wire saw",
+    "Ideal for tough jobs and ongoing",
+    "Excellent in all weather conditions",
+    "Provides an even cut and a high elasticity",
+    "Ideal for tap'n go heads and multi-wire DISPENSER HIGHLANDER RAPTOR"
+   ],
+   "dimensions_en": []
+  },
+  "filo-super-professionale-highlander-duplex": {
+   "codice": "1431-0127",
+   "nome_en": "SUPER PROFESSIONAL HIGHLANDER DUPLEX",
+   "features_en": [
+    "Super high quality professional wire saw",
+    "Ideal for tough jobs and ongoing",
+    "Excellent in all weather conditions",
+    "Provides an even cut and a high elasticity",
+    "Ideal for tap'n go heads and multi-wire",
+    "Double profile DISPENSER HIGHLANDER DUPLEX"
+   ],
+   "dimensions_en": []
+  },
+  "filo-professionale-arancio": {
+   "codice": "1301-1116",
+   "nome_en": "PROFESSIONAL WIRE ARNOPLAST (ORANGE)",
+   "features_en": [
+    "High quality Professional wire",
+    "Ideal for tough jobs and ongoing",
+    "Excellent in all weather conditions",
+    "Provides an even cut and a high elasticity",
+    "Ideal for automatic heads",
+    "Available in round, square and star section LITTLE ORANGE DISPENSER"
+   ],
+   "dimensions_en": []
+  },
+  "disco-widia-tungsteno": {
+   "codice": "1501-0801",
+   "nome_en": "WIDIA DISC & TUNGSTEN",
+   "features_en": [],
+   "dimensions_en": []
+  },
+  "testina-andromeda": {
+   "codice": "1501-0204",
+   "nome_en": "ANDROMEDA DISC",
+   "features_en": [],
+   "dimensions_en": []
+  },
+  "disco-widia-tsumura-40d": {
+   "codice": "1501-0802",
+   "nome_en": "WIDIA TSUMURA DISC 40D",
+   "features_en": [],
+   "dimensions_en": []
+  },
+  "tritatutto": {
+   "codice": "1501-0202",
+   "nome_en": "TRITATUTTO (GRINDER DISC)",
+   "features_en": [],
+   "dimensions_en": []
+  },
+  "disco-a4": {
+   "codice": "1501-0601",
+   "nome_en": "DISCO A4",
+   "features_en": [],
+   "dimensions_en": []
+  },
+  "spazzola-in-metallo": {
+   "codice": "1604-0104",
+   "nome_en": "METAL BRUSH",
+   "features_en": [],
+   "dimensions_en": []
+  },
+  "lama-romboidale": {
+   "codice": "1505-2516",
+   "nome_en": "DIAMOND SHAPE BLADE",
+   "features_en": [],
+   "dimensions_en": []
+  },
+  "lama-dritta": {
+   "codice": "1502-2530",
+   "nome_en": "BLADE",
+   "features_en": [],
+   "dimensions_en": []
+  },
+  "lama-per-rovi-con-alette": {
+   "codice": "1506-3030",
+   "nome_en": "BRAMBLE BLADE",
+   "features_en": [],
+   "dimensions_en": []
+  },
+  "elmetto-boscaiolo": {
+   "codice": "1606-0301",
+   "nome_en": "WOOD CUTTER’S HELMET",
+   "features_en": [
+    "In accordance to standards CE",
+    "Available only with metal mesh grille",
+    "Equipped with headphones",
+    "EN 397: CE 2797"
+   ],
+   "dimensions_en": []
+  },
+  "visiera-protettiva-fusion": {
+   "codice": "1601-0302",
+   "nome_en": "PROTECTIVE VISOR FUSION",
+   "features_en": [
+    "Available with polycarbonate mask/wire mesh",
+    "In accordance to standards CE",
+    "Package: dismantled in blister",
+    "Minimum order 1 box",
+    "EN 166-B"
+   ],
+   "dimensions_en": []
+  },
+  "visiera-protettiva-professionale-in-rete-metallica": {
+   "codice": "1601-0101",
+   "nome_en": "PROFESSIONAL PROTECTIVE VISOR WITH METAL SHIELD",
+   "features_en": [
+    "In accordance to standards CE professional protective visor",
+    "Metal mask",
+    "Rear control knob",
+    "EN 397: CE 2797"
+   ],
+   "dimensions_en": []
+  },
+  "visiera-protettiva-professionale-in-policarbonato": {
+   "codice": "1601-0102",
+   "nome_en": "PROFESSIONAL PROTECTIVE VISOR IN POLYCARBONATE",
+   "features_en": [
+    "In accordance to standards CE p rofessional protective visor",
+    "Polycarbonate mask",
+    "Rear control knob",
+    "EN 166-B"
+   ],
+   "dimensions_en": []
+  },
+  "visiera-protettiva-standard-in-rete-metallica": {
+   "codice": "1601-0201",
+   "nome_en": "STANDARD PROTECTIVE VISOR WITH METAL MASK",
+   "features_en": [
+    "Standard protective visor, EU Standards",
+    "Metal mask",
+    "EN 1731-S"
+   ],
+   "dimensions_en": []
+  },
+  "visiera-protettiva-standard-in-policarbonato": {
+   "codice": "1601-0202",
+   "nome_en": "STANDARD PROTECTIVE VISOR IN POLYCARBONATE",
+   "features_en": [
+    "Standard protective visor, EU Standards",
+    "Polycarbonate mask",
+    "EN 166-B"
+   ],
+   "dimensions_en": []
+  },
+  "pantalone-impermeabile-taglia-unica": {
+   "codice": "1602-0201",
+   "nome_en": "WATERPROOF TROUSERS (ONE SIZE)",
+   "features_en": [
+    "Easy to wear through the rear opening",
+    "Made of waterproof fabric Anti plug",
+    "Ideal for gardening, nurseries and for the use of the brushcutter",
+    "With breathable mesh (*) on the back *"
+   ],
+   "dimensions_en": []
+  },
+  "grembiule-imperbeabile": {
+   "codice": "1602-0302",
+   "nome_en": "WATERPROOF OVERALL",
+   "features_en": [
+    "Made from waterproof fabric",
+    "Thorn resistant",
+    "Ideal for gardening, hedging and use with brushcutters"
+   ],
+   "dimensions_en": []
+  },
+  "parastinco": {
+   "codice": "1602-0701",
+   "nome_en": "SHIN GUARD",
+   "features_en": [
+    "Fast and practical",
+    "Protects from impacts caused by the throwing of stones or small objects during brushcutter’s work"
+   ],
+   "dimensions_en": []
+  },
+  "olio-miscela": {
+   "codice": "1603-0201",
+   "nome_en": "TWO-STROKE ENGINE OIL",
+   "features_en": [
+    "Oil mixture for two-stroke engines",
+    "The 100 ml bottle is packaged in convenient counter display boxes",
+    "Cert APITC JASO FB ISO-L-EGB",
+    "Made in Italy",
+    "Obligatory packing"
+   ],
+   "dimensions_en": []
+  },
+  "olio-catena-motosega": {
+   "codice": "1603-0301",
+   "nome_en": "CHAIN SAW OIL",
+   "features_en": [
+    "BIO refrigerant vegetable oil",
+    "Resistant to low temperatures",
+    "Obligatory packing",
+    "Cert CEC-L-33-A94-90"
+   ],
+   "dimensions_en": []
+  },
+  "fune-avviamento-e-parasassi": {
+   "codice": "1604-0501",
+   "nome_en": "START ROPE AND UNIVERSAL STONE PROTECTION",
+   "features_en": [],
+   "dimensions_en": []
+  },
+  "filo-per-spollonatrice": {
+   "codice": "1006-0170",
+   "nome_en": "PRUNING WIRE",
+   "features_en": [],
+   "dimensions_en": []
+  },
+  "tracolla-per-decespugliatore": {
+   "codice": "1602-0603",
+   "nome_en": "TOP PRO BEST",
+   "features_en": [],
+   "dimensions_en": []
+  },
+  "inserti-maschio-femmina-per-testine": {
+   "codice": "2412-0701",
+   "nome_en": "MALE & FEMALE INSERTS FOR ARNO HEADS",
+   "features_en": [],
+   "dimensions_en": []
+  },
+  "coppia-conica-coppetta-disco": {
+   "codice": "1604-0101",
+   "nome_en": "INSERT FOR GEAR, UNIVERSAL GEAR",
+   "features_en": [
+    "Universal accessories for brushcutters"
+   ],
+   "dimensions_en": []
+  },
+  "ancorplack": {
+   "codice": "1702-0205",
+   "nome_en": "ANCORPLACK",
+   "features_en": [
+    "Clip with double-pointed hook",
+    "Ideal for anchoring nets or sheets along fences or wire",
+    "Color: Black",
+    "Dim: 53x40 mm"
+   ],
+   "dimensions_en": []
+  },
+  "chiodi-ferma-telo": {
+   "codice": "1705-0101",
+   "nome_en": "NAIL STOP NET FV",
+   "features_en": [
+    "indicated for the land fixing of caps and nets",
+    "high resistance to weather distress",
+    "hammering",
+    "recoverable"
+   ],
+   "dimensions_en": [
+    "Dimensions: 110, 150, 200mm",
+    "head diameter: 22, 45mm"
+   ]
+  },
+  "chiodo-cuci-rete": {
+   "codice": "1705-0202",
+   "nome_en": "SEWING NAIL",
+   "features_en": [
+    "indicated for the net sewing olive harvest",
+    "high resistance to weather distress",
+    "recoverable"
+   ],
+   "dimensions_en": [
+    "Dimensions: 110mm"
+   ]
+  },
+  "chiodi-cuci-rete": {
+   "codice": "1705-0202",
+   "nome_en": "SEWING NAIL",
+   "features_en": [
+    "indicated for the net sewing olive harvest",
+    "high resistance to weather distress",
+    "recoverable"
+   ],
+   "dimensions_en": [
+    "Dimensions: 110mm"
+   ]
+  }
+ },
+ "mancanti": [
+  "copripalo-eco-5x5-6x6",
+  "copripalo-eco-7x7-9x9",
+  "copripalo-reno",
+  "ago-cucirete",
+  "placchetta-nina",
+  "placchetta-12-punte-e-mega",
+  "placchetta-2-punte",
+  "moschettone-autobloccante",
+  "mosch-autobloccante-elefante",
+  "mosch-per-premontaggio",
+  "mosch-standard-metallico-e-rapid",
+  "corda-elastica-8mm-pet",
+  "elastico-premontato",
+  "clip-fermafune",
+  "colibri",
+  "gancio-vignola-s-in-ferro",
+  "ricambi-e-viterie",
+  "testina-batti-e-vai-sirio-coppa-folle",
+  "testina-batti-e-vai-stilo",
+  "testina-batti-e-vai-eco",
+  "testina-mach-5",
+  "testina-mach-3",
+  "testina-mach-1",
+  "testina-batti-e-vai-elektra",
+  "testina-multifilo-ufo-alluminio",
+  "testina-multifilo-ufo-ufo-lite",
+  "testina-batti-e-vai-alluminio-coppa-folle",
+  "testina-batti-e-vai-alluminio-coppa-folle-eco",
+  "lama-a-3-punte",
+  "scatola-dadi-viti",
+  "scatola-kit-inserti-per-testine-arno-plast",
+  "grasso",
+  "piastrina-a-2-punte",
+  "piastrina-nina",
+  "piastrina-12-punte",
+  "tubetto-pvc",
+  "espositori",
+  "excelso",
+  "martino-light",
+  "martino-eco",
+  "oleo-carbon",
+  "oleo-luxor",
+  "rastrello",
+  "reti-per-olive"
+ ]
+}
