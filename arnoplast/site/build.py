@@ -1,6 +1,7 @@
 """Generatore del sito statico: catalogo -> HTML + indice di ricerca."""
 from __future__ import annotations
 
+import copy
 import json
 import os
 import re
@@ -381,7 +382,8 @@ def split_fairs(fairs: list[dict], today: date,
         return ", ".join(x for x in (f["luogo"], f["paese"]) if x)
 
     view = [dict(f, date_label=fair_dates(f, lang), end=_fair_end(f), end_iso=_fair_end(f).isoformat(),
-                 place=loc(f), short=fair_short(fair_text(f, lang)),
+                 place=loc(f), short=fair_short(fair_text(f, lang)), testo=fair_text(f, lang)["testo"],
+                 stand=(f.get("stand_en") or f.get("stand", "")) if lang == "en" else f.get("stand", ""),
                  link=f.get("link") or "", img=photos.get(f["id"])) for f in fairs]
     upcoming = sorted((f for f in view if f["end"] >= today), key=lambda f: (f["data_inizio"] or "9999", f["id"]))
     past = sorted((f for f in view if f["end"] < today), key=lambda f: (f["end"], f["id"]), reverse=True)
@@ -842,8 +844,57 @@ def organization_ld() -> str:
     return json.dumps(data, ensure_ascii=False).replace("</", "<\\/")
 
 
+def _load_en(name: str) -> dict:
+    p = DATA_DIR / name
+    return json.loads(p.read_text(encoding="utf-8")) if p.is_file() else {}
+
+
+def english_catalog(c: Catalog) -> Catalog:
+    """Copia del catalogo con i testi inglesi: nomi di prodotto, caratteristiche, dimensioni e descrizioni degli
+    articoli (per codice). Dove manca un testo inglese resta quello italiano (ricaduta, mai vuoto)."""
+    en_p = _load_en("en_prodotti.json").get("prodotti", {})
+    en_a = _load_en("en_articoli.json")
+    arts = {**en_a.get("articoli", {}), **en_a.get("tradotti_da_noi", {})}
+    out = copy.deepcopy(c)
+    for line in out.lines:
+        for fam in line.families:
+            for prod in fam.products:
+                e = en_p.get(prod.slug)
+                if e:
+                    nome = e.get("nome_en") or ""
+                    prod.name = dict(prod.name, en=nome.title() if nome.isupper() else nome)
+                    prod.features = list(e.get("features_en") or [])
+                    prod.dimensions = list(e.get("dimensions_en") or [])
+                for art in prod.articles:
+                    if arts.get(art.code):
+                        art.description = dict(art.description, en=arts[art.code])
+    return out
+
+
+def load_en_story() -> dict | None:
+    st = _load_en("en_storia.json")
+    if not st:
+        return None  # senza testo inglese la pagina Azienda in inglese non si costruisce
+    return {"kicker": st["kicker"], "title": st["title"], "steps": [tuple(x) for x in st["steps"]],
+            "today_kicker": st["today_kicker"], "today_title": st["today_title"], "today": tuple(st["today"]),
+            "source": st["source"]}
+
+
+def load_en_packaging(it_pack: dict) -> dict:
+    """Imballaggi in inglese: testi e tabella inglesi; il colore di ogni riga (tipo) resta quello italiano."""
+    en = _load_en("en_imballaggi.json")
+    if not en:
+        return {"titolo": "", "sezione": "", "paragrafi": [], "tabella": [], "nota": ""}
+    rows = []
+    for i, r in enumerate(en["tabella"]):
+        it_tipo = it_pack["tabella"][i].get("tipo", "") if i < len(it_pack["tabella"]) else ""
+        rows.append(dict(r, tipo=it_tipo))
+    return {"titolo": en["titolo"], "sezione": en["sezione"], "paragrafi": en["paragrafi"], "tabella": rows,
+            "nota": en["nota"]}
+
+
 def build_site(c: Catalog, out: Path, lang: str = "it", sources: Path | None = None,
-               videos: dict | None = None) -> list[Path]:
+               videos: dict | None = None, write_globals: bool = True) -> list[Path]:
     """Scrive il sito in `out`. `videos`: contenuto di data/videos.json (vedi load_videos);
     None = nessun video oltre ai `video_url` del catalogo."""
     out = Path(out)
@@ -869,22 +920,14 @@ def build_site(c: Catalog, out: Path, lang: str = "it", sources: Path | None = N
         if sitemap:
             urls.append(canonical)
         ctx.setdefault("nav", env.globals["nav_state"](f"/{rel}/"))
+        if lang == "en":  # versione inglese non ancora pubblica: nessuna indicizzazione
+            ctx.setdefault("noindex", True)
         _write(dest / "index.html", env.get_template(tpl).render(
             description=_clip(description, 200) if description else None, canonical=canonical, path=f"/{rel}/",
             **ctx), written)
 
     render("home.html", base, description=t("home.tagline", lang), title=t("home.title", lang), jsonld=organization_ld(),
            **home_context(c, lang))
-    # Home inglese (solo testi): i link portano ancora alle pagine italiane, che sono le uniche costruite.
-    # Appena ci sono le pagine inglesi, si tolgono la sostituzione e il noindex e si passa a lang="en" per tutto.
-    if lang == "it":
-        en_env = _env("en")
-        en_html = en_env.get_template("home.html").render(
-            description=t("home.tagline", "en"), canonical=f"{SITE_URL}/en/", path="/en/", noindex=True,
-            title=t("home.title", "en"), jsonld=None, nav=en_env.globals["nav_state"]("/en/"),
-            **home_context(c, "en"))
-        en_html = re.sub(r'href="/en/(?!" hreflang)', 'href="/it/', en_html)  # il selettore lingua resta su /en/
-        _write(out / "en" / "index.html", en_html, written)
 
     # Ricerca: un articolo per codice (con i prodotti in cui compare) + una voce per famiglia e prodotto.
     search_arts: dict[str, dict] = {}
@@ -958,14 +1001,16 @@ def build_site(c: Catalog, out: Path, lang: str = "it", sources: Path | None = N
     render("contacts.html", base / "contatti", line=None, title=t("page.contacts", lang),
            description=f"{CONTACTS['name']}, {CONTACTS['address']}. Tel. {CONTACTS['phone']}, {CONTACTS['email']}.",
            hero=_hero("azienda", imgs), imgs=imgs, user_types=USER_TYPES, jsonld=organization_ld(), map_embed=MAP_EMBED, privacy_url=PRIVACY_URL)
-    story = COMPANY_STORY
-    render("company.html", base / "azienda", line=None, title=t("page.company", lang),
-           description=" ".join(text for _, text in story["steps"][:2]), story=story,
-           hero=_hero("azienda", imgs), imgs=imgs)
-    pack = load_packaging()
-    render("packaging.html", base / "azienda" / "imballaggi", line=None, title=pack["titolo"], pack=pack,
-           hero=_hero("imballaggi", imgs),
-           description=re.sub(r"\*\*", "", " ".join(pack["paragrafi"]))[:200] or f"{pack['titolo']} - {CONTACTS['name']}, Rignano sull'Arno.")
+    story = COMPANY_STORY if lang == "it" else load_en_story()
+    if story is not None:
+      render("company.html", base / "azienda", line=None, title=t("page.company", lang),
+             description=" ".join(text for _, text in story["steps"][:2]), story=story,
+             hero=_hero("azienda", imgs), imgs=imgs)
+    pack = load_packaging() if lang == "it" else load_en_packaging(load_packaging())
+    if lang == "it" or pack["paragrafi"]:  # in inglese solo con il testo inglese (data/en_imballaggi.json)
+        render("packaging.html", base / "azienda" / "imballaggi", line=None, title=pack["titolo"], pack=pack,
+               hero=_hero("imballaggi", imgs),
+               description=re.sub(r"\*\*", "", " ".join(pack["paragrafi"]))[:200] or f"{pack['titolo']} - {CONTACTS['name']}, Rignano sull'Arno.")
     fairs = load_fairs()
     upcoming, past = split_fairs(fairs, build_date(), fair_photos(fairs))
     render("fairs.html", base / "fiere", line=None, title=t("page.fairs", lang), upcoming=upcoming, past=past,
@@ -999,7 +1044,7 @@ def build_site(c: Catalog, out: Path, lang: str = "it", sources: Path | None = N
            description=t("gallery.lead", lang))
     render("videos.html", base / "video", line=None, title=t("page.videos", lang), lib=video_library(c, lang),
            description=t("vid.lead", lang))
-    if (DATA_DIR / "privacy.json").is_file():  # testo del cliente, copiato dal sito vecchio (vedi data/privacy.json)
+    if lang == "it" and (DATA_DIR / "privacy.json").is_file():  # testo del cliente, copiato dal sito vecchio (vedi data/privacy.json)
         privacy = json.loads((DATA_DIR / "privacy.json").read_text(encoding="utf-8"))
         render("privacy.html", base / "privacy-policy-arno-plast", line=None, title=privacy["titolo"],
                paragrafi=privacy["paragrafi"],
@@ -1019,6 +1064,15 @@ def build_site(c: Catalog, out: Path, lang: str = "it", sources: Path | None = N
     (base / "search-index.json").write_text(
         json.dumps(list(search_arts.values()) + search_pages, ensure_ascii=False, separators=(",", ":")),
         encoding="utf-8")
+    if write_globals:
+        _write_globals(out, urls, sources, lang)
+    if lang == "it" and write_globals:  # la versione inglese, con gli stessi file di servizio
+        written += build_site(english_catalog(c), out, lang="en", sources=sources, videos=videos, write_globals=False)
+    return written
+
+
+def _write_globals(out: Path, urls: list[str], sources: Path | None, lang: str) -> None:
+    """File di tutto il sito (una volta sola, dalla build italiana): sitemap, intestazioni, robots, asset, reindirizzamenti."""
     (out / "sitemap.xml").write_text(
         '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
         + "".join(f"  <url><loc>{escape(u)}</loc></url>\n" for u in dict.fromkeys(urls))
@@ -1045,7 +1099,6 @@ def build_site(c: Catalog, out: Path, lang: str = "it", sources: Path | None = N
         shutil.copyfile(redirects, out / "redirects.csv")
         rows = load_redirects(redirects) + [(f"/{lang}/applicazioni/", f"/{lang}/galleria/")]
         (out / "_redirects").write_text(netlify_rules(rows), encoding="utf-8")
-    return written
 
 
 def clean_dir(out: Path) -> None:

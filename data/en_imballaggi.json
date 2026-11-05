@@ -1,0 +1,83 @@
+{
+ "_nota": "Pagina Imballaggi in inglese: traduzione nostra dal testo italiano (da verificare col cliente). Il codice e le tabelle restano quelli del testo italiano.",
+ "titolo": "Packaging",
+ "sezione": "Our packaging",
+ "paragrafi": [
+  "Legislative Decree 3 September 2020, no. 116 requires that all packaging be “suitably labelled according to the methods set out in the applicable UNI technical standards and in accordance with the decisions adopted by the European Commission”.",
+  "**Environmental labelling** consists of identifying all packaging placed on the Italian market, to indicate its **composition**, to make its **collection**, **reuse**, **recovery**, **recycling** and **correct disposal** easier for the consumer.",
+  "Under the regulations, the label must be applied directly on the packaging, through digital channels (App, QR code, websites), on transport documents, instruction leaflets or information panels at the point of sale. Our packaging is defined as shown in the table below."
+ ],
+ "tabella": [
+  {
+   "imballaggio": "Cardboard box",
+   "codice": "PAP 20",
+   "raccolta": "Paper collection"
+  },
+  {
+   "imballaggio": "Adhesive label",
+   "codice": "PAP 20",
+   "raccolta": "Mixed waste"
+  },
+  {
+   "imballaggio": "Adhesive tape",
+   "codice": "PP 5",
+   "raccolta": "Plastic collection"
+  },
+  {
+   "imballaggio": "Polyethylene bags",
+   "codice": "LDPE 4",
+   "raccolta": "Plastic collection"
+  },
+  {
+   "imballaggio": "Stretch film",
+   "codice": "LDPE 4",
+   "raccolta": "Plastic collection"
+  },
+  {
+   "imballaggio": "Plastic pallet",
+   "codice": "HDPE 2",
+   "raccolta": "Plastic collection"
+  },
+  {
+   "imballaggio": "Dispenser pack",
+   "codice": "SBC 7",
+   "raccolta": "Plastic collection"
+  },
+  {
+   "imballaggio": "Frame pack",
+   "codice": "LLDPE 4",
+   "raccolta": "Plastic collection"
+  },
+  {
+   "imballaggio": "Cable ties",
+   "codice": "PA 7",
+   "raccolta": "Plastic collection"
+  },
+  {
+   "imballaggio": "Plastic reels",
+   "codice": "PS 6",
+   "raccolta": "Plastic collection"
+  },
+  {
+   "imballaggio": "Wooden pallet",
+   "codice": "FOR 50",
+   "raccolta": "Eco-island collection"
+  },
+  {
+   "imballaggio": "Flanges and cardboard reel tubes",
+   "codice": "PAP 21",
+   "raccolta": "Paper collection"
+  },
+  {
+   "imballaggio": "Polystyrene capsules",
+   "codice": "PS 6",
+   "raccolta": "Plastic collection"
+  },
+  {
+   "imballaggio": "Plastic reels",
+   "codice": "PP 5",
+   "raccolta": "Plastic collection"
+  }
+ ],
+ "nota": "Always check the regulations of your Municipality."
+}

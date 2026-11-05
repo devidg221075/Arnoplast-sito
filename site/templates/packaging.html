@@ -40,7 +40,7 @@
     {% for r in pack.tabella %}
     <li class="pk-card pk-{{ r.tipo }}">
       <h3 class="pk-name">{{ r.imballaggio }}</h3>
-      <p class="pk-code"><span class="sr-only">Codice materiale: </span>{{ r.codice }}</p>
+      <p class="pk-code"><span class="sr-only">{{ t('pk.code') }}</span>{{ r.codice }}</p>
       <p class="pk-coll">{{ r.raccolta }}</p>
     </li>
     {% endfor %}

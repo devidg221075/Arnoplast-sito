@@ -347,6 +347,7 @@ EN = {
     "hs.fair": "Fair",
     "hs.fair_kicker": "Find us at",
     "hs.fair_more": "Discover",
+    "pk.code": "Material code: ",
     "home.h1": "Plastic accessories for those who work the land",
     "home.fact_firenze": "Florence",
     "home.fact_reach": "Europe · Mediterranean",

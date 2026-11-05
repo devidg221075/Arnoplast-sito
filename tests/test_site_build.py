@@ -124,9 +124,10 @@ def test_i18n_falls_back_to_italian():
 def test_real_catalog_smoke(tmp_path):
     c = load_catalog(ROOT / "data" / "catalog.json")
     written = build_site(c, tmp_path)
+    written = [p for p in written if p.relative_to(tmp_path).parts[0] != "en"]  # le pagine inglesi si contano a parte
     n_fam = sum(len(l.families) for l in c.lines)
     n_prod = sum(len(f.products) for l in c.lines for f in l.families)
-    assert len(written) == 1 + len(c.lines) + n_fam + n_prod + 17  # home + pagine di servizio, /en/, il rimando /it/applicazioni/, i 3 sfogliatori dei cataloghi, Open Day e Privacy
+    assert len(written) == 1 + len(c.lines) + n_fam + n_prod + 16  # home + pagine di servizio, il rimando /it/applicazioni/, i 3 sfogliatori dei cataloghi, Open Day e Privacy (le pagine /en/ si contano a parte)
     for f in written:
         low = f.read_text(encoding="utf-8").lower()
         for w in ("carrello", "€", "prezzo"):

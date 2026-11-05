@@ -126,8 +126,7 @@ def test_english_home_page(site):
     assert '<meta name="robots" content="noindex">' in h
     assert '<html lang="en">' in h
     assert "Plastic accessories for those who work the land" in h
-    assert 'href="/en/"' not in h.replace('href="/en/" hreflang', "")  # i link portano alle pagine italiane (per ora)
-    assert 'href="/it/azienda/"' in h
+    assert 'href="/en/azienda/"' in h and 'href="/it/azienda/"' not in h  # link tutti in inglese, il selettore lingua resta su /en/
     assert re.search(r'href="/en/" hreflang="en" lang="en" aria-current="true"', h)
     labels = top_labels(h)
     assert 'class="site-footer"' in h and labels[0] == "Home" and "Company" in labels and "Contacts" in labels

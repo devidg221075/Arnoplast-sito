@@ -374,7 +374,7 @@
   },
   "placchetta-agropettine": {
    "codice": "1702-0407",
-   "nome_en": "AGROPETTINE CLIP CLIP",
+   "nome_en": "Agropettine clip",
    "features_en": [
     "perfect for the sewing of the net on the iron wire on the top",
     "high resistance to weather distress",
@@ -443,11 +443,14 @@
   },
   "placchetta-h": {
    "codice": "1702-0507",
-   "nome_en": "CARATTERISTICHE",
-   "features_en": [],
+   "nome_en": "H Clip",
+   "features_en": [
+    "ideal for anti-insect systems for shade structures or windbreaks"
+   ],
    "dimensions_en": [
-    "Dimensions: 55x34 mm - hole 11 mm"
-   ]
+    "dimensions: 55x34 mm - hole 11 mm"
+   ],
+   "traduzione_nostra": true
   },
   "placchetta-ad-anello": {
    "codice": "1702-0701",
