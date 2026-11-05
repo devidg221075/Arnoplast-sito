@@ -219,7 +219,8 @@ MONTHS = ["gennaio", "febbraio", "marzo", "aprile", "maggio", "giugno", "luglio"
 FAIR_FIELDS = ("id", "nome", "luogo", "paese", "data_inizio", "data_fine", "anno", "periodo", "stand", "testo",
                "fonte_url_sito_vecchio")
 # Campi facoltativi: foto (file in content/photos/fiere), descrizione per le schede, sito ufficiale (solo https).
-FAIR_OPTIONAL = ("immagine", "descrizione_breve", "link", "punto_focale")
+FAIR_OPTIONAL = ("immagine", "descrizione_breve", "link", "punto_focale", "luogo_en", "paese_en", "testo_en")
+# In inglese: luogo, paese e testo (facoltativi) si usano al posto di quelli italiani, se presenti.
 # Punto focale della foto nella slide dell'hero (object-position CSS): una o due parole chiave o percentuali.
 FAIR_FOCAL = re.compile(r"^(?:left|right|top|bottom|center|\d{1,3}(?:\.\d+)?%)(?: (?:left|right|top|bottom|center|"
                         r"\d{1,3}(?:\.\d+)?%))?$")
@@ -303,6 +304,11 @@ def fair_dates(f: dict, lang: str = "it") -> str:
     return f"{a.day} {months[a.month - 1]} {a.year} – {b.day} {months[b.month - 1]} {b.year}"
 
 
+def fair_text(f: dict, lang: str) -> dict:
+    """La scheda con il testo della lingua richiesta (testo_en, se c'e'; altrimenti quello italiano)."""
+    return dict(f, testo=f["testo_en"]) if lang == "en" and f.get("testo_en") else f
+
+
 def fair_short(f: dict, limit: int = SHORT_MAX) -> str:
     """Descrizione per le schede: `descrizione_breve`, o la prima frase di `testo` se finisce entro `limit` caratteri
     (o tutto il testo, se e' breve e senza frasi). Altrimenti taglio all'ultima parola intera con "…". Mai parole
@@ -368,8 +374,13 @@ def split_fairs(fairs: list[dict], today: date,
     piu' vicina; passate dalla piu' recente, raggruppate per anno decrescente. Ogni fiera riceve anche le date
     leggibili, la fine ISO (per lo script che nasconde le schede scadute), luogo, descrizione breve e foto."""
     photos = photos or {}
+    def loc(f: dict) -> str:
+        if lang == "en":  # luogo e paese in inglese, se ci sono (altrimenti restano quelli italiani)
+            return ", ".join(x for x in (f.get("luogo_en") or f["luogo"], f.get("paese_en") or f["paese"]) if x)
+        return ", ".join(x for x in (f["luogo"], f["paese"]) if x)
+
     view = [dict(f, date_label=fair_dates(f, lang), end=_fair_end(f), end_iso=_fair_end(f).isoformat(),
-                 place=", ".join(x for x in (f["luogo"], f["paese"]) if x), short=fair_short(f),
+                 place=loc(f), short=fair_short(fair_text(f, lang)),
                  link=f.get("link") or "", img=photos.get(f["id"])) for f in fairs]
     upcoming = sorted((f for f in view if f["end"] >= today), key=lambda f: (f["data_inizio"] or "9999", f["id"]))
     past = sorted((f for f in view if f["end"] < today), key=lambda f: (f["end"], f["id"]), reverse=True)
@@ -710,7 +721,7 @@ def fair_slides(lang: str, today: date | None = None, fairs: list[dict] | None =
             "key": f"fiera-{f['id']}", "fair": True, "href": f"/{lang}/fiere/#{f['id']}", "label": f["nome"],
             "aria": f"{t('hs.fair', lang)}: {f['nome']}", "nums": [],
             "id": f["id"], "dates": f["date_label"], "start": f["data_inizio"], "end": f["end_iso"],
-            "place": f["place"], "short": fair_short(f, FAIR_HERO_SHORT), "days": fair_days(f),
+            "place": f["place"], "short": fair_short(fair_text(f, lang), FAIR_HERO_SHORT), "days": fair_days(f),
             # Nessun ritaglio verticale: sui telefoni la foto larga e' inquadrata da object-position (punto_focale).
             "hero": {"img": img, "alt": "", "sizes": FAIR_HERO_SIZES, "focal": f.get("punto_focale") or "center",
                      "portrait": None, "night": None, "night_portrait": None, "portrait_sizes": None}

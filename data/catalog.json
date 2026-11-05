@@ -10650,7 +10650,8 @@
         {
           "slug": "agevolatori-e-macchine",
           "name": {
-            "it": "Agevolatori e macchine"
+            "it": "Agevolatori e macchine",
+            "en": "Harvest aids and machines"
           },
           "products": [
             {
