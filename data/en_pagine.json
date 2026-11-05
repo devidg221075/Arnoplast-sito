@@ -741,5 +741,44 @@
     "Tutti i diritti sono riservati."
    ]
   }
+ },
+ "home_en_sito_vecchio": {
+  "titolo": "Home (EN)",
+  "percorso_sito_vecchio": "https://www.arnoplast.it/en",
+  "nota": "Testi inglesi della home del sito vecchio, copiati senza modifiche dalla pagina salvata. Esclusi: post social (sono Facebook/LinkedIn, con testi misti italiano-inglese), banner cookie, footer ripetuto.",
+  "righe_home": [
+   "Design and construction",
+   "injection molds and blow molds for plastic materials",
+   "Agri-Lazio",
+   "Cisterna di latina 18/20 September 2026",
+   "Fruit-attraction",
+   "Madrid - 5/8 October 2026",
+   "Eima",
+   "Bologna - 10/14 November 2026",
+   "Interpoma",
+   "Bozen - 25/27 November 2026",
+   "Visit our AGRICULTURE catalogue",
+   "Agriculture",
+   "Visit our GARDEN catalogue",
+   "Garden",
+   "Visit our catalogue",
+   "Olive harvest"
+  ],
+  "righe_storia": [
+   "From where we were born",
+   "Arno Plast - The history",
+   "ARNOplast s.r.l. was established in 1975 as ARNO- stampi sdf. During the first years the company focu- sed on designing and building moulds for injection moulding and blowing of plastic materials.",
+   "In 1983 the new company’s name ARNOplast s.r.l. srl marks the first strategic layout which the company implements with the willingness to provide clients a complete service, from the designing to the finished product.",
+   "Also in the mid 1980’s the company begins a limited production of accessories with its own brand name for professional agriculture targeted predominantly to Southern Italy’s markets.",
+   "At the end of the 1990’s, realizing the difficulties it would encounter from there on and due to sub- supply, the company carried out a second strategic turning point and decided to get the best from their own innovative capacities, presenting a new range of products with their brand for agriculture and gardening; also in this period the creation of a Company dedicated exclusively to the distribution process was created, the ARNOcommerciale srl.",
+   "What we do and where we want to go",
+   "Arno Plast - Today",
+   "Today ARNOplast with head office and production plant in Rignano sull’Arno not far from Florence, together with ARNOcommerciale have acquired a position in the Italian market for the gardening andagriculture systems and have commercialized their own products in all of Europe, in the Mediterranean area and in overseas countries."
+  ],
+  "righe_cataloghi": [
+   "VISIT OUR ONLINE CATALOGUES",
+   "Professional agriculture and gardening",
+   "GO TO CATALOGUES"
+  ]
  }
 }
