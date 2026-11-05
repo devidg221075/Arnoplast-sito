@@ -97,7 +97,7 @@ def test_home_css_is_only_linked_from_home(site):
     for f in out.rglob("*.html"):
         h = f.read_text(encoding="utf-8")
         linked = "/static/css/home.css" in h
-        assert linked == (f.relative_to(out).as_posix() == "it/index.html"), f
+        assert linked == (f.relative_to(out).as_posix() in ("it/index.html", "en/index.html")), f
     assert (out / "static" / "css" / "home.css").is_file()
 
 

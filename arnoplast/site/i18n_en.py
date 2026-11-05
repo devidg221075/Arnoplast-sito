@@ -347,4 +347,9 @@ EN = {
     "hs.fair": "Fair",
     "hs.fair_kicker": "Find us at",
     "hs.fair_more": "Discover",
+    "home.h1": "Plastic accessories for those who work the land",
+    "home.fact_firenze": "Florence",
+    "home.fact_reach": "Europe · Mediterranean",
+    "home.fact_oceano": "and overseas",
+    "home.h2_lines": "Three ranges for the field, the garden and the olive grove",
 }

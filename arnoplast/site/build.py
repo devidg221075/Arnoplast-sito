@@ -283,19 +283,24 @@ def load_fairs(path: Path | None = None) -> list[dict]:
     return fairs
 
 
-def fair_dates(f: dict) -> str:
+MONTHS_EN = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October",
+             "November", "December"]
+
+
+def fair_dates(f: dict, lang: str = "it") -> str:
     """Date leggibili: "10-14 novembre 2026", "30 novembre - 3 dicembre 2023"; senza date il periodo o l'anno."""
+    months = MONTHS_EN if lang == "en" else MONTHS
     if not f["data_inizio"]:
         return f["periodo"] or str(f["anno"])
     a = date.fromisoformat(f["data_inizio"])
     b = date.fromisoformat(f["data_fine"]) if f["data_fine"] else a
     if a == b:
-        return f"{a.day} {MONTHS[a.month - 1]} {a.year}"
+        return f"{a.day} {months[a.month - 1]} {a.year}"
     if (a.year, a.month) == (b.year, b.month):
-        return f"{a.day}–{b.day} {MONTHS[a.month - 1]} {a.year}"
+        return f"{a.day}–{b.day} {months[a.month - 1]} {a.year}"
     if a.year == b.year:
-        return f"{a.day} {MONTHS[a.month - 1]} – {b.day} {MONTHS[b.month - 1]} {a.year}"
-    return f"{a.day} {MONTHS[a.month - 1]} {a.year} – {b.day} {MONTHS[b.month - 1]} {b.year}"
+        return f"{a.day} {months[a.month - 1]} – {b.day} {months[b.month - 1]} {a.year}"
+    return f"{a.day} {months[a.month - 1]} {a.year} – {b.day} {months[b.month - 1]} {b.year}"
 
 
 def fair_short(f: dict, limit: int = SHORT_MAX) -> str:
@@ -358,12 +363,12 @@ def fair_days(f: dict) -> str:
 
 
 def split_fairs(fairs: list[dict], today: date,
-                photos: dict | None = None) -> tuple[list[dict], list[tuple[int, list[dict]]]]:
+                photos: dict | None = None, lang: str = "it") -> tuple[list[dict], list[tuple[int, list[dict]]]]:
     """(prossime, passate per anno). Passata = fine (o inizio, o 31/12 dell'anno) precedente a `today`. Prossime dalla
     piu' vicina; passate dalla piu' recente, raggruppate per anno decrescente. Ogni fiera riceve anche le date
     leggibili, la fine ISO (per lo script che nasconde le schede scadute), luogo, descrizione breve e foto."""
     photos = photos or {}
-    view = [dict(f, date_label=fair_dates(f), end=_fair_end(f), end_iso=_fair_end(f).isoformat(),
+    view = [dict(f, date_label=fair_dates(f, lang), end=_fair_end(f), end_iso=_fair_end(f).isoformat(),
                  place=", ".join(x for x in (f["luogo"], f["paese"]) if x), short=fair_short(f),
                  link=f.get("link") or "", img=photos.get(f["id"])) for f in fairs]
     upcoming = sorted((f for f in view if f["end"] >= today), key=lambda f: (f["data_inizio"] or "9999", f["id"]))
@@ -699,7 +704,7 @@ def fair_slides(lang: str, today: date | None = None, fairs: list[dict] | None =
     photos = fair_photos(fairs)
     heroes = fair_hero_photos(fairs)
     slides = []
-    for f in split_fairs(fairs, build_date() if today is None else today, photos)[0]:
+    for f in split_fairs(fairs, build_date() if today is None else today, photos, lang)[0]:
         img = heroes.get(f["id"])
         slides.append({
             "key": f"fiera-{f['id']}", "fair": True, "href": f"/{lang}/fiere/#{f['id']}", "label": f["nome"],
@@ -748,12 +753,12 @@ def home_context(c: Catalog, lang: str) -> dict:
             "home_video": video_library(c, lang)["home"]}
 
 
-def upcoming_fairs(limit: int | None = None) -> list[dict]:
+def upcoming_fairs(limit: int | None = None, lang: str = "it") -> list[dict]:
     """Prossime fiere alla data di build, dalla piu' vicina, con date leggibili, luogo, descrizione breve (`short`),
     fine ISO (`end_iso`), sito (`link`) e foto (`img`, None = scheda tipografica). Le slide della home usano
     fair_slides."""
     fairs = load_fairs()
-    return split_fairs(fairs, build_date(), fair_photos(fairs))[0][:limit]
+    return split_fairs(fairs, build_date(), fair_photos(fairs), lang)[0][:limit]
 
 
 def _unique_title(seen: set[str], name: str, family: str, line: str, shared: bool) -> str | None:
@@ -858,6 +863,16 @@ def build_site(c: Catalog, out: Path, lang: str = "it", sources: Path | None = N
 
     render("home.html", base, description=t("home.tagline", lang), title=t("home.title", lang), jsonld=organization_ld(),
            **home_context(c, lang))
+    # Home inglese (solo testi): i link portano ancora alle pagine italiane, che sono le uniche costruite.
+    # Appena ci sono le pagine inglesi, si tolgono la sostituzione e il noindex e si passa a lang="en" per tutto.
+    if lang == "it":
+        en_env = _env("en")
+        en_html = en_env.get_template("home.html").render(
+            description=t("home.tagline", "en"), canonical=f"{SITE_URL}/en/", path="/en/", noindex=True,
+            title=t("home.title", "en"), jsonld=None, nav=en_env.globals["nav_state"]("/en/"),
+            **home_context(c, "en"))
+        en_html = re.sub(r'href="/en/(?!" hreflang)', 'href="/it/', en_html)  # il selettore lingua resta su /en/
+        _write(out / "en" / "index.html", en_html, written)
 
     # Ricerca: un articolo per codice (con i prodotti in cui compare) + una voce per famiglia e prodotto.
     search_arts: dict[str, dict] = {}
@@ -987,8 +1002,7 @@ def build_site(c: Catalog, out: Path, lang: str = "it", sources: Path | None = N
            target=f"/{lang}/galleria/", canonical_override=f"{SITE_URL}/{lang}/galleria/")
     # Inglese: per ora una sola pagina "in arrivo" (noindex, fuori dalla sitemap), con lo stesso header e footer.
     # Header e footer restano quelli italiani (le pagine inglesi non esistono ancora); il contenuto e' lang="en".
-    render("en.html", out / "en", line=None, title="English version coming soon", sitemap=False, noindex=True,
-           page_lang="en", nav=nav_state("/en/", lang))
+
 
     (base / "search-index.json").write_text(
         json.dumps(list(search_arts.values()) + search_pages, ensure_ascii=False, separators=(",", ":")),

@@ -48,7 +48,7 @@ def all_pages(out):
 # --- menu ---------------------------------------------------------------------------------------------
 
 def test_menu_order_and_submenus_on_every_page(site):
-    pages = all_pages(site)
+    pages = [p for p in all_pages(site) if p.relative_to(site).parts[0] != "en"]  # home inglese: menu in inglese, testato a parte
     assert len(pages) > 150
     for p in pages:
         h = p.read_text(encoding="utf-8")
@@ -121,14 +121,17 @@ def test_published_anim_js_carries_the_menu(site):
     assert pub.endswith((src / "nav.js").read_text(encoding="utf-8"))
 
 
-def test_english_placeholder_page(site):
+def test_english_home_page(site):
     h = html(site, "en")
     assert '<meta name="robots" content="noindex">' in h
-    assert "The English version of this site is coming soon. In the meantime you can contact us at" in h
-    assert 'href="mailto:info@arnoplast.it"' in h and 'href="/it/"' in h
-    assert '<main id="main" lang="en">' in h
+    assert '<html lang="en">' in h
+    assert "Plastic accessories for those who work the land" in h
+    assert 'href="/en/"' not in h.replace('href="/en/" hreflang', "")  # i link portano alle pagine italiane (per ora)
+    assert 'href="/it/azienda/"' in h
     assert re.search(r'href="/en/" hreflang="en" lang="en" aria-current="true"', h)
-    assert 'class="site-footer"' in h and top_labels(h)[:7] == TOP
+    labels = top_labels(h)
+    assert 'class="site-footer"' in h and labels[0] == "Home" and "Company" in labels and "Contacts" in labels
+    assert re.search(r'href="/it/" hreflang="it" lang="it"', h)
     assert re.search(r'href="/it/" hreflang="it" lang="it" aria-current="true"', html(site, "it"))
 
 
@@ -145,7 +148,7 @@ def test_contacts_data():
 
 
 def test_footer_on_every_page(site):
-    for p in all_pages(site):
+    for p in [p for p in all_pages(site) if p.relative_to(site).parts[0] != "en"]:  # la home inglese ha la footer in inglese
         h = p.read_text(encoding="utf-8")
         f = re.search(r'<footer class="site-footer">.*?</footer>', h, re.S).group(0)
         assert "arnoplast-logo-negativo.svg" in f
@@ -391,5 +394,5 @@ def test_sitemap_has_new_pages_and_not_english(site):
 def test_no_external_requests_on_new_pages(site):
     for rel in ("it/azienda", "it/azienda/imballaggi", "it/fiere", "it/cataloghi", "en"):
         h = html(site, rel)
-        assert not re.search(r'(?:src|srcset)="https?://', h) and not re.search(r'<link[^>]+href="https?://(?!www\.arnoplast\.it)', h)
+        assert not re.search(r'\s(?:src|srcset)="https?://', h) and not re.search(r'<link[^>]+href="https?://(?!www\.arnoplast\.it)', h)
         assert "<iframe" not in h and "fonts.googleapis" not in h

@@ -344,6 +344,11 @@ STRINGS = {
         "hs.fair": "Fiera",
         "hs.fair_kicker": "Ci trovi a",
         "hs.fair_more": "Scopri",
+        "home.h1": "Accessori in plastica per chi lavora la terra",
+        "home.fact_firenze": "Firenze",
+        "home.fact_reach": "Europa · Mediterraneo",
+        "home.fact_oceano": "e oltre oceano",
+        "home.h2_lines": "Tre linee per il campo, il giardino e l'oliveto",
     },
 }
 

@@ -175,7 +175,7 @@ def test_home_css_and_script_only_on_home(site):
     out, _, _ = site
     for f in out.rglob("*.html"):
         tag = re.search(r'<script\b[^>]*src="/static/js/hero-slides\.js"[^>]*>', f.read_text(encoding="utf-8"))
-        assert bool(tag) == (f.relative_to(out).as_posix() == "it/index.html"), f
+        assert bool(tag) == (f.relative_to(out).as_posix() in ("it/index.html", "en/index.html")), f
         if tag:
             assert "defer" in tag.group(0) and 'type="module"' not in tag.group(0)
     assert (CSS / "main.css").stat().st_size < 30_000
