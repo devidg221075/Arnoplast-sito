@@ -910,16 +910,16 @@
    ]
   },
   "ago-cucirete": {
-   "codice": "1705-0202",
-   "nome_en": "SEWING NAIL",
+   "codice": null,
+   "nome_en": "Stitching needle",
    "features_en": [
-    "indicated for the net sewing olive harvest",
-    "high resistance to weather distress",
-    "recoverable"
+    "ideal for stitching the net onto the ridge wire",
+    "high resistance to weather"
    ],
    "dimensions_en": [
-    "Dimensions: 110mm"
-   ]
+    "dimensions: 110x11 mm"
+   ],
+   "traduzione_nostra": true
   },
   "chiodo-ferma-telo": {
    "codice": "1705-0101",
@@ -1005,14 +1005,15 @@
    ]
   },
   "tubetto-pvc": {
-   "codice": "1901-0260",
-   "nome_en": "PVC BAG",
+   "codice": null,
+   "nome_en": "PVC tube",
    "features_en": [
-    "indicated for anchoring the plant stock to the tutor wire",
-    "good resistance to traction and knot",
-    "practical and cheap"
+    "suitable for tying any plant to a wire or stake",
+    "good resistance to tension and to knots",
+    "practical and economical"
    ],
-   "dimensions_en": []
+   "dimensions_en": [],
+   "traduzione_nostra": true
   },
   "filo-in-poliestere": {
    "codice": "2101-0201",
@@ -1419,52 +1420,651 @@
    "dimensions_en": [
     "Dimensions: 110mm"
    ]
+  },
+  "copripalo-eco-5x5-6x6": {
+   "codice": null,
+   "nome_en": "ECO Post Cap 5x5 – 6x6",
+   "features_en": [
+    "ideal for systems with concrete poles, snap-fitted",
+    "simplifies assembly: no ties needed, the tabs on the top hold wires of different diameters",
+    "does not alter the mesh of the net",
+    "high resistance to weather"
+   ],
+   "dimensions_en": [
+    "dimensions (5x5): 87x100 mm",
+    "dimensions (6x6): 87x100 mm"
+   ],
+   "traduzione_nostra": true
+  },
+  "copripalo-eco-7x7-9x9": {
+   "codice": null,
+   "nome_en": "ECO Post Cap 7x7 – 9x9",
+   "features_en": [
+    "ideal for systems with concrete poles, snap-fitted",
+    "simplifies assembly: no ties needed, the tabs on the top hold wires of different diameters",
+    "does not alter the mesh of the net",
+    "high resistance to weather"
+   ],
+   "dimensions_en": [
+    "dimensions (7x7): 83x99 mm",
+    "dimensions (9x9): 102x92 mm"
+   ],
+   "traduzione_nostra": true
+  },
+  "copripalo-reno": {
+   "codice": null,
+   "nome_en": "Post Cap Reno",
+   "features_en": [
+    "indicated for flat hail-protection systems with wooden poles",
+    "simplifies assembly thanks to the screws that lock the ridge wire and the cross wire",
+    "available with screws for flat net or for “capannina”",
+    "does not alter the mesh of the net",
+    "screws certified 8.8"
+   ],
+   "dimensions_en": [
+    "dimensions (10-12 cm): 130x180 mm",
+    "dimensions (14-16 cm): 180x220 mm"
+   ],
+   "traduzione_nostra": true
+  },
+  "placchetta-nina": {
+   "codice": null,
+   "nome_en": "Clip Niña",
+   "features_en": [
+    "ideal for tensioning the net with elastic and shade cloths",
+    "high resistance to weather",
+    "snap-fitted onto the net",
+    "fast assembly thanks to snap-action points",
+    "suitable for every type of net"
+   ],
+   "dimensions_en": [
+    "dimensions: 78x45 mm"
+   ],
+   "traduzione_nostra": true
+  },
+  "placchetta-12-punte-e-mega": {
+   "codice": null,
+   "nome_en": "Clip 12 Points and Mega",
+   "features_en": [
+    "ideal for tensioning the net with elastic and shade cloths",
+    "high resistance to weather",
+    "snap-fitted onto the net",
+    "suitable for every type of net"
+   ],
+   "dimensions_en": [
+    "dimensions: 138x57 mm",
+    "dimensions: 110x35 mm"
+   ],
+   "traduzione_nostra": true
+  },
+  "placchetta-2-punte": {
+   "codice": null,
+   "nome_en": "Clip 2 Points",
+   "features_en": [
+    "high resistance to weather",
+    "snap-fitted onto the net thanks to the 2 points and snap action",
+    "suitable for every type of net"
+   ],
+   "dimensions_en": [
+    "dimensions: 53x45 mm"
+   ],
+   "traduzione_nostra": true
+  },
+  "moschettone-autobloccante": {
+   "codice": null,
+   "nome_en": "Self-locking snap hook",
+   "features_en": [
+    "ideal for anchoring sheets and nets with an eyelet or clip",
+    "suitable for ropes from 6 to 10 mm",
+    "high resistance to weather",
+    "extremely high tensile strength",
+    "reusable",
+    "locks the elastic rope without a knot"
+   ],
+   "dimensions_en": [
+    "dimensions: 27x65 mm"
+   ],
+   "traduzione_nostra": true
+  },
+  "mosch-autobloccante-elefante": {
+   "codice": null,
+   "nome_en": "Self-locking snap hook Elephant",
+   "features_en": [
+    "ideal for anchoring sheets and nets with an eyelet or clip",
+    "suitable for ropes from 6 to 10 mm",
+    "high resistance to weather",
+    "extremely high tensile strength",
+    "reusable",
+    "snap-closing hook for extra safety",
+    "locks the elastic rope without a knot"
+   ],
+   "dimensions_en": [
+    "dimensions: 27x65 mm"
+   ],
+   "traduzione_nostra": true
+  },
+  "mosch-per-premontaggio": {
+   "codice": null,
+   "nome_en": "Snap hook for pre-assembly",
+   "features_en": [
+    "ideal for anchoring sheets and nets with an eyelet or clip",
+    "suitable for ropes from 6 to 10 mm",
+    "high resistance to weather",
+    "extremely high tensile strength",
+    "reusable"
+   ],
+   "dimensions_en": [
+    "dimensions: 30x64 mm"
+   ],
+   "traduzione_nostra": true
+  },
+  "mosch-standard-metallico-e-rapid": {
+   "codice": null,
+   "nome_en": "Standard, Metal and Rapid snap hooks",
+   "features_en": [
+    "ideal for anchoring sheets and nets with an eyelet",
+    "suitable for ropes from 4 to 6 mm",
+    "high resistance to weather",
+    "reusable",
+    "dimensions: 23x51 mm",
+    "ideal for anchoring sheets and nets with an eyelet or clip",
+    "suitable for ropes from 6 to 10 mm",
+    "high resistance to weather",
+    "reusable",
+    "dimensions: 28x62 mm"
+   ],
+   "dimensions_en": [],
+   "traduzione_nostra": true
+  },
+  "corda-elastica-8mm-pet": {
+   "codice": null,
+   "nome_en": "Elastic rope 8 mm PET",
+   "features_en": [
+    "ideal for tensioning sheets and nets",
+    "8 mm black elastic rope “long life”",
+    "natural rubber core covered with PET",
+    "ideal when supplied together with self-locking snap hooks",
+    "product age traceability thanks to the coloured marker on the outside (the “ecogreen” rope has 2 markers)"
+   ],
+   "dimensions_en": [],
+   "traduzione_nostra": true
+  },
+  "elastico-premontato": {
+   "codice": null,
+   "nome_en": "Pre-assembled elastic",
+   "features_en": [
+    "ideal for tensioning sheets and nets",
+    "8 mm black PET elastic rope",
+    "all sizes available on request",
+    "available with plastic or metal snap hooks"
+   ],
+   "dimensions_en": [],
+   "traduzione_nostra": true
+  },
+  "clip-fermafune": {
+   "codice": null,
+   "nome_en": "Rope clip",
+   "features_en": [
+    "suitable for any type of anchoring",
+    "made of braided PET",
+    "rope clip: avoids having to tie knots"
+   ],
+   "dimensions_en": [
+    "dimensions: 54x21 mm"
+   ],
+   "traduzione_nostra": true
+  },
+  "colibri": {
+   "codice": null,
+   "nome_en": "Colibri",
+   "features_en": [
+    "ideal for table grape systems",
+    "quick fixing of the protective sheet",
+    "does not alter the mesh of the net or the sheet",
+    "high resistance to weather"
+   ],
+   "dimensions_en": [
+    "dimensions: 36x19 mm",
+    "tie-rod size: 310 mm"
+   ],
+   "traduzione_nostra": true
+  },
+  "gancio-vignola-s-in-ferro": {
+   "codice": null,
+   "nome_en": "Vignola hook – S hook in iron",
+   "features_en": [
+    "suitable for anchoring one or two nets",
+    "high resistance to weather"
+   ],
+   "dimensions_en": [
+    "dimensions: 23x46 mm (VIGNOLA)",
+    "dimensions: 24x50 mm (FERRO)"
+   ],
+   "traduzione_nostra": true
+  },
+  "ricambi-e-viterie": {
+   "codice": null,
+   "nome_en": "Spare parts and screws",
+   "features_en": [],
+   "dimensions_en": [],
+   "traduzione_nostra": true
+  },
+  "testina-batti-e-vai-sirio-coppa-folle": {
+   "codice": null,
+   "nome_en": "“Batti e Vai” Sirio head, free cup",
+   "features_en": [
+    "the innovative open-close system of the head with bayonet fitting (patented) makes it easy to replace the line",
+    "the internal spool holds 8 m of 3.0 mm round line",
+    "excellent impact resistance",
+    "no deformation from overheating",
+    "perfect balance at high rotation speed",
+    "supports lines up to ø 4.0 mm",
+    "indicative weight with line 550 g – ø 137 mm",
+    "available with universal fitting or threaded insert",
+    "with control knob fitted on the FREE CUP: more manoeuvrability and no wear of the knob on contact with the ground",
+    "great sturdiness",
+    "heat dissipation during work",
+    "perfect balance"
+   ],
+   "dimensions_en": [],
+   "traduzione_nostra": true
+  },
+  "testina-batti-e-vai-stilo": {
+   "codice": null,
+   "nome_en": "“Batti e Vai” Stilo head",
+   "features_en": [
+    "very high wear resistance",
+    "excellent impact resistance",
+    "bayonet closure",
+    "practical and quick monofilament replacement",
+    "available with universal fitting or threaded insert",
+    "supports lines up to 4.0 mm",
+    "extremely economical",
+    "indicative weight with line 520 g – ø 137 mm",
+    "the internal spool holds 8 m of 3.0 mm line"
+   ],
+   "dimensions_en": [],
+   "traduzione_nostra": true
+  },
+  "testina-batti-e-vai-eco": {
+   "codice": null,
+   "nome_en": "“Batti e Vai” Eco head",
+   "features_en": [
+    "the innovative open-close system of the head with bayonet fitting",
+    "compact, sturdy and very easy to handle",
+    "indicative weight with line 350 g – ø 115 mm",
+    "the innovative closing system gives the product extreme ease of use and sturdiness until the end of its useful life",
+    "made of a special, particularly resistant plastic",
+    "available with universal fitting or threaded insert",
+    "holds 5 m of 3.0 mm line",
+    "supports lines up to ø 3.3 mm"
+   ],
+   "dimensions_en": [],
+   "traduzione_nostra": true
+  },
+  "testina-mach-5": {
+   "codice": null,
+   "nome_en": "Mach 5 head",
+   "features_en": [
+    "easy-load trimmer head",
+    "weight 540 g – diameter 137 mm",
+    "holds 7.5 m of 3.0 mm round line",
+    "supports lines up to 3.50 mm",
+    "available with universal fitting or threaded insert",
+    "made of a particularly resistant plastic"
+   ],
+   "dimensions_en": [],
+   "traduzione_nostra": true
+  },
+  "testina-mach-3": {
+   "codice": null,
+   "nome_en": "Mach 3 head",
+   "features_en": [
+    "easy-load trimmer head",
+    "weight 520 g – diameter 137 mm",
+    "holds 7.5 m of 3.0 mm round line",
+    "supports lines up to 3.50 mm",
+    "available with universal fitting or threaded insert",
+    "made of a particularly resistant plastic"
+   ],
+   "dimensions_en": [],
+   "traduzione_nostra": true
+  },
+  "testina-mach-1": {
+   "codice": null,
+   "nome_en": "Mach 1 head",
+   "features_en": [
+    "easy-load trimmer head",
+    "weight 360 g – diameter 115 mm",
+    "holds 4.5 m of 3.0 mm round line",
+    "supports lines up to 3.00 mm",
+    "available with universal fitting or threaded insert",
+    "made of a particularly resistant plastic"
+   ],
+   "dimensions_en": [],
+   "traduzione_nostra": true
+  },
+  "testina-batti-e-vai-elektra": {
+   "codice": null,
+   "nome_en": "“Batti e Vai” Elektra head",
+   "features_en": [
+    "easy-load trimmer head",
+    "weight 265 g – diameter 97 mm – cutting height from the ground 30 mm",
+    "supports nylon lines up to 2.50 mm diameter",
+    "spool capacity: 3.5 m of 2.5 mm round line",
+    "available with universal fitting or threaded insert",
+    "made of a particularly resistant plastic",
+    "designed for electric, battery and small-displacement petrol brushcutters that rotate counter-clockwise"
+   ],
+   "dimensions_en": [],
+   "traduzione_nostra": true
+  },
+  "testina-multifilo-ufo-alluminio": {
+   "codice": null,
+   "nome_en": "Ufo Aluminium multi-line head",
+   "features_en": [
+    "universal fitting: fits every type of brushcutter",
+    "super-quick system for replacing and locking the lines",
+    "supports lines up to 5 mm",
+    "protective edge: avoids a clean break of the line when working near solid objects",
+    "special thread: limits the risk of the head body jamming during work",
+    "indicative weight with line 300 g – ø 70 mm",
+    "excellent impact resistance",
+    "no deformation from overheating",
+    "perfect balance at high rotation speed"
+   ],
+   "dimensions_en": [],
+   "traduzione_nostra": true
+  },
+  "testina-multifilo-ufo-ufo-lite": {
+   "codice": null,
+   "nome_en": "Ufo – Ufo Lite multi-line head",
+   "features_en": [
+    "universal fitting: fits every type of brushcutter",
+    "super-quick system for replacing and locking the lines",
+    "supports lines up to 5 mm",
+    "protective edge: avoids a clean break of the line when working near solid objects",
+    "special thread: limits the risk of the head body jamming during work",
+    "indicative weight with line 300 g – ø 94 mm",
+    "excellent impact resistance",
+    "no deformation from overheating",
+    "perfect balance at high rotation speed"
+   ],
+   "dimensions_en": [],
+   "traduzione_nostra": true
+  },
+  "testina-batti-e-vai-alluminio-coppa-folle": {
+   "codice": null,
+   "nome_en": "“Batti e Vai” Aluminium head, free cup",
+   "features_en": [
+    "excellent impact resistance",
+    "no deformation from overheating",
+    "perfect balance at high rotation speed",
+    "the innovative open-close system with bayonet fitting (patented) makes it easy to replace the line",
+    "control knob fitted on the FREE CUP",
+    "indicative weight with line 800 g – ø 145 mm",
+    "supports line up to 4 mm",
+    "spool capacity: 3.0 ø line → 8 m",
+    "more manoeuvrability, less wear of the knob on contact with the ground",
+    "great sturdiness",
+    "heat dissipation during work",
+    "perfect balance"
+   ],
+   "dimensions_en": [],
+   "traduzione_nostra": true
+  },
+  "testina-batti-e-vai-alluminio-coppa-folle-eco": {
+   "codice": null,
+   "nome_en": "“Batti e Vai” Aluminium head, free cup Eco",
+   "features_en": [
+    "excellent impact resistance",
+    "no deformation from overheating",
+    "perfect balance at high rotation speed",
+    "the innovative open-close system with bayonet fitting (patented) makes it easy to replace the line",
+    "supports line up to 4 mm",
+    "spool capacity: 3.0 ø line → 6 m",
+    "indicative weight with line 600 g – ø 117 mm",
+    "control knob fitted on the FREE CUP",
+    "more manoeuvrability, less wear of the knob on contact with the ground",
+    "heat dissipation during work",
+    "perfect balance"
+   ],
+   "dimensions_en": [],
+   "traduzione_nostra": true
+  },
+  "lama-a-3-punte": {
+   "codice": null,
+   "nome_en": "3-point blade",
+   "features_en": [],
+   "dimensions_en": [],
+   "traduzione_nostra": true
+  },
+  "scatola-dadi-viti": {
+   "codice": null,
+   "nome_en": "Box of nuts and screws",
+   "features_en": [],
+   "dimensions_en": [],
+   "traduzione_nostra": true
+  },
+  "scatola-kit-inserti-per-testine-arno-plast": {
+   "codice": null,
+   "nome_en": "Box of inserts kit for ARNOplast heads",
+   "features_en": [],
+   "dimensions_en": [],
+   "traduzione_nostra": true
+  },
+  "grasso": {
+   "codice": null,
+   "nome_en": "Grease",
+   "features_en": [
+    "practical metering bottle",
+    "excellent resistance to high temperatures",
+    "mandatory packaging"
+   ],
+   "dimensions_en": [],
+   "traduzione_nostra": true
+  },
+  "piastrina-a-2-punte": {
+   "codice": null,
+   "nome_en": "2-point clip",
+   "features_en": [
+    "ideal for locking nets, sheets and any other type of fabric",
+    "material: polypropylene",
+    "UV resistant",
+    "colour: green",
+    "size: 53x40 mm"
+   ],
+   "dimensions_en": [],
+   "traduzione_nostra": true
+  },
+  "piastrina-nina": {
+   "codice": null,
+   "nome_en": "Clip Niña",
+   "features_en": [
+    "9-point clip, very resistant to tension",
+    "ideal for windy areas",
+    "extends the life of the net",
+    "size: 78x45 mm"
+   ],
+   "dimensions_en": [],
+   "traduzione_nostra": true
+  },
+  "piastrina-12-punte": {
+   "codice": null,
+   "nome_en": "12-point clip",
+   "features_en": [
+    "12-point clip, ideal for locking nets, sheets and any other type of fabric",
+    "material: polypropylene",
+    "supplied in: box",
+    "colour: black",
+    "extends the life of the net",
+    "size: 110x37 mm"
+   ],
+   "dimensions_en": [],
+   "traduzione_nostra": true
+  },
+  "espositori": {
+   "codice": null,
+   "nome_en": "Displays",
+   "features_en": [],
+   "dimensions_en": [],
+   "traduzione_nostra": true
+  },
+  "excelso": {
+   "codice": null,
+   "nome_en": "Excelso",
+   "features_en": [
+    "SHAFT: telescopic carbon with quick lock",
+    "MOTOR POWER: 120 W (positioned at the bottom)",
+    "POWER SUPPLY: 12 volt",
+    "MINIMUM LENGTH: 2.18 m",
+    "MAXIMUM LENGTH: 3.10 m",
+    "WEIGHT: approx. 3.55 kg",
+    "POWER CABLE: 15 m – 2×6 cross-section – 3.250 kg with 20 Ah safety fuse",
+    "AVERAGE CONSUMPTION: 12 Ah",
+    "BEAT FREQUENCY: 1150 / min.",
+    "motor thermal protection",
+    "switch at the bottom",
+    "ergonomic handle",
+    "packaging: cardboard, 2 pieces – pallet of 20 pieces",
+    "packaging size 237 x 46 x 20 h cm",
+    "all spare parts available on request",
+    "for a full working day, use a 12 volt battery of at least 70/80 Ah",
+    "BATTERY NOT INCLUDED!!!"
+   ],
+   "dimensions_en": [],
+   "traduzione_nostra": true
+  },
+  "martino-light": {
+   "codice": null,
+   "nome_en": "Martino Light",
+   "features_en": [
+    "SHAFT: telescopic carbon with quick lock",
+    "MOTOR POWER: 120 W (positioned at the bottom)",
+    "POWER SUPPLY: 12 volt",
+    "MINIMUM LENGTH: 2.13 m",
+    "MAXIMUM LENGTH: 3.10 m",
+    "WEIGHT: approx. 3.3 kg",
+    "POWER CABLE: 15 m – 2×6 cross-section – 3.250 kg with 20 Ah safety fuse",
+    "AVERAGE CONSUMPTION: 12 Ah",
+    "OPERATING SPEED: 2200 strokes/min.",
+    "motor thermal protection",
+    "switch at the bottom",
+    "ergonomic handle",
+    "combined vibration-shaking action",
+    "no damage to the olives: the fruit falls close to the harvesting point",
+    "soft plastic combs",
+    "packaging: cardboard, 2 pieces – pallet of 20 pieces",
+    "packaging size 204 x 46 x 20 h cm",
+    "all spare parts available on request",
+    "for a full working day, use a 12 volt battery of at least 70/80 Ah",
+    "BATTERY NOT INCLUDED!!!"
+   ],
+   "dimensions_en": [],
+   "traduzione_nostra": true
+  },
+  "martino-eco": {
+   "codice": null,
+   "nome_en": "Martino Eco",
+   "features_en": [
+    "SHAFT: fixed aluminium",
+    "MOTOR POWER: 120 W (positioned at the top)",
+    "POWER SUPPLY: 12 volt",
+    "LENGTH: 2.42 m",
+    "WEIGHT: approx. 2.98 kg",
+    "POWER CABLE: 15 m – 2×4 cross-section – 2.960 kg",
+    "AVERAGE CONSUMPTION: 10 Ah",
+    "OPERATING SPEED: 2000 vibrations / min.",
+    "motor thermal protection with reset",
+    "switch at the bottom",
+    "ergonomic handle",
+    "combined vibration-shaking action",
+    "no damage to the olives: the fruit falls close to the harvesting point",
+    "soft plastic combs",
+    "packaging: cardboard, 2 pieces – pallet of 20 pieces",
+    "packaging size 237 x 46 x 20 h cm",
+    "all spare parts available on request",
+    "for a full working day, use a 12 volt battery of at least 70/80 Ah",
+    "BATTERY NOT INCLUDED!!!"
+   ],
+   "dimensions_en": [],
+   "traduzione_nostra": true
+  },
+  "oleo-carbon": {
+   "codice": null,
+   "nome_en": "Oleo Carbon",
+   "features_en": [
+    "SHAFT: telescopic aluminium with quick lock",
+    "MOTOR POWER: 90 W (positioned at the bottom)",
+    "POWER SUPPLY: 12 volt",
+    "MINIMUM LENGTH: 2.32 m",
+    "MAXIMUM LENGTH: 3.17 m",
+    "WEIGHT: approx. 3.300 kg",
+    "POWER CABLE: 15 m – 2×6 cross-section – 3.250 kg with 15 Ah safety fuse",
+    "AVERAGE CONSUMPTION: 10 Ah",
+    "BEAT FREQUENCY: 1200 / min.",
+    "carbon combs",
+    "elliptical movement of the combs",
+    "motor thermal protection with reset",
+    "switch at the bottom",
+    "ergonomic handle",
+    "packaging: cardboard, 2 pieces – pallet of 20 pieces",
+    "packaging size 204 x 46 x 20 h cm",
+    "all spare parts available on request",
+    "for a full working day, use a 12 volt battery of at least 70/80 Ah",
+    "BATTERY NOT INCLUDED!!!"
+   ],
+   "dimensions_en": [],
+   "traduzione_nostra": true
+  },
+  "oleo-luxor": {
+   "codice": null,
+   "nome_en": "Oleo Luxor",
+   "features_en": [
+    "SHAFT: telescopic aluminium with quick lock",
+    "MOTOR POWER: 80 W (positioned at the top)",
+    "POWER SUPPLY: 12 volt",
+    "MINIMUM LENGTH: 2.20 m",
+    "MAXIMUM LENGTH: 3.10 m",
+    "WEIGHT: approx. 3.05 kg",
+    "POWER CABLE: 15 m – 2×6 cross-section – 3.250 kg with 15 Ah safety fuse",
+    "AVERAGE CONSUMPTION: 8 Ah",
+    "BEAT FREQUENCY: 1150 / min.",
+    "double comb with lateral movement",
+    "motor thermal protection with reset",
+    "switch at the bottom",
+    "ergonomic handle",
+    "packaging: cardboard, 2 pieces – pallet of 20 pieces",
+    "packaging size 237 x 46 x 20 h cm",
+    "all spare parts available on request",
+    "for a full working day, use a 12 volt battery of at least 70/80 Ah",
+    "BATTERY NOT INCLUDED!!!"
+   ],
+   "dimensions_en": [],
+   "traduzione_nostra": true
+  },
+  "rastrello": {
+   "codice": null,
+   "nome_en": "Rake",
+   "features_en": [
+    "nine-tooth rake",
+    "sturdy, pointed hook able to catch and lift the net, moving it out of the harvesting area, so that it is not trodden on"
+   ],
+   "dimensions_en": [],
+   "traduzione_nostra": true
+  },
+  "reti-per-olive": {
+   "codice": null,
+   "nome_en": "Olive harvesting nets",
+   "features_en": [
+    "made with virgin HDPE",
+    "UV stabilised, long life",
+    "anti-thorn, 80 g/m²",
+    "food grade: non-toxic, compliant with current European regulations on food packaging"
+   ],
+   "dimensions_en": [],
+   "traduzione_nostra": true
   }
  },
- "mancanti": [
-  "copripalo-eco-5x5-6x6",
-  "copripalo-eco-7x7-9x9",
-  "copripalo-reno",
-  "ago-cucirete",
-  "placchetta-nina",
-  "placchetta-12-punte-e-mega",
-  "placchetta-2-punte",
-  "moschettone-autobloccante",
-  "mosch-autobloccante-elefante",
-  "mosch-per-premontaggio",
-  "mosch-standard-metallico-e-rapid",
-  "corda-elastica-8mm-pet",
-  "elastico-premontato",
-  "clip-fermafune",
-  "colibri",
-  "gancio-vignola-s-in-ferro",
-  "ricambi-e-viterie",
-  "testina-batti-e-vai-sirio-coppa-folle",
-  "testina-batti-e-vai-stilo",
-  "testina-batti-e-vai-eco",
-  "testina-mach-5",
-  "testina-mach-3",
-  "testina-mach-1",
-  "testina-batti-e-vai-elektra",
-  "testina-multifilo-ufo-alluminio",
-  "testina-multifilo-ufo-ufo-lite",
-  "testina-batti-e-vai-alluminio-coppa-folle",
-  "testina-batti-e-vai-alluminio-coppa-folle-eco",
-  "lama-a-3-punte",
-  "scatola-dadi-viti",
-  "scatola-kit-inserti-per-testine-arno-plast",
-  "grasso",
-  "piastrina-a-2-punte",
-  "piastrina-nina",
-  "piastrina-12-punte",
-  "tubetto-pvc",
-  "espositori",
-  "excelso",
-  "martino-light",
-  "martino-eco",
-  "oleo-carbon",
-  "oleo-luxor",
-  "rastrello",
-  "reti-per-olive"
- ]
+ "mancanti": []
 }
