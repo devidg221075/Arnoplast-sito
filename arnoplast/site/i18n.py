@@ -108,6 +108,8 @@ STRINGS = {
         "page.company": "Azienda",
         "page.gallery": "Galleria",
         "page.videos": "Video e Tutorial",
+        "page.openday": "Open Day",
+        "od.text": "Struttura aperta alle visite del pubblico – COMING SOON",
         "page.fairs": "Fiere",
         "page.packaging": "Imballaggi",
         "page.catalogs": "Cataloghi e download",

@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block main %}
+{# Open Day: pagina in arrivo, come nel sito vecchio (solo il testo "COMING SOON"). #}
+<section class="page-head">
+  <div class="wrap">
+    <nav class="breadcrumb" aria-label="Breadcrumb"><a href="/{{ lang }}/">{{ t('breadcrumb.home') }}</a></nav>
+    <h1>{{ title }}</h1>
+  </div>
+</section>
+<div class="wrap section prose">
+  <p class="lead">{{ t('od.text') }}</p>
+  <p><a class="btn btn-primary" href="/{{ lang }}/contatti/">{{ t('menu.contacts') }} <span class="btn-arrow" aria-hidden="true">→</span></a></p>
+</div>
+{% endblock %}

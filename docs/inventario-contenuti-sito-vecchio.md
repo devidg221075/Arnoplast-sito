@@ -30,7 +30,7 @@ _Nuovo tentativo il 2026-11-01: il sito vecchio chiude ancora la connessione (no
 IT bloccata; **EN letta**, e coincide con i testi della home: nascita 1975 come ARNOstampi sdf; 1983 ARNOplast s.r.l.; meta' anni Ottanta prima produzione di accessori per l'agricoltura (mercato del Sud); fine anni Novanta svolta verso prodotti a marchio per agricoltura e giardinaggio e nascita di **ARNO commerciale s.r.l.**; oggi sede e stabilimenti a Rignano sull'Arno con terzisti toscani, vendita in Europa, Mediterraneo e oltreoceano. Contiene anche **mappa Google** e rimando ai contatti.
 Nuovo: ✔ testo di base nella pagina Azienda; ➕ storia completa a tappe, mappa.
 
-### Imballaggi (/imballaggi, /en/packaging)  ⛔ non letta
+### Imballaggi (/imballaggi, /en/packaging)  ✅ approvata dal cliente (2026-11-05)
 Sotto Chi siamo. Il cliente ha fornito le foto (giorno/notte). **Serve il testo**: sito bloccato, mi darete voi il contenuto (anche incollato in chat).
 
 ### Fiere future (/fiere-future, categoria)  🟡 letta in una prova precedente
@@ -42,9 +42,9 @@ Archivio dal 2014: **2026** Fruit Logistica Berlino (4-6 febbraio), Myplant & Ga
 Nuovo: ➕ tutto da riportare nello stesso file dati delle fiere.
 
 ### Open Day (/open-day, /en/open-day-open-structure)  ✅
-Solo "Struttura aperta alle visite del pubblico – COMING SOON". Nuovo: ➕ sezione nella pagina Fiere o pagina propria "in arrivo" (da decidere).
+Solo "Struttura aperta alle visite del pubblico – COMING SOON". Nuovo: ✔ pagina "Open Day" in arrivo (/it/open-day/), decisione del cliente 2026-11-05.
 
-### Notizie (/…/notizie, /en/…/news)  ✅
+### Notizie (/…/notizie, /en/…/news)  ✅ rimossa dal sito nuovo su decisione del cliente (2026-11-05)
 Contiene solo un "social stream" (nessun feed disponibile al momento della lettura). Nuovo: ➕ da decidere: feed social incorporato (esterno, impatta privacy e velocita') oppure elenco di post scelti da voi.
 
 ### Cataloghi e famiglie (/catalogo-…, ~25 pagine IT + ~17 EN)  ✅ testo di presentazione
