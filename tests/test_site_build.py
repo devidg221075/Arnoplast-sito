@@ -124,7 +124,7 @@ def test_real_catalog_smoke(tmp_path):
     written = build_site(c, tmp_path)
     n_fam = sum(len(l.families) for l in c.lines)
     n_prod = sum(len(f.products) for l in c.lines for f in l.families)
-    assert len(written) == 1 + len(c.lines) + n_fam + n_prod + 15  # home + pagine di servizio, /en/, il rimando /it/applicazioni/ e i 3 sfogliatori dei cataloghi
+    assert len(written) == 1 + len(c.lines) + n_fam + n_prod + 16  # home + pagine di servizio, /en/, il rimando /it/applicazioni/, i 3 sfogliatori dei cataloghi e Notizie
     for f in written:
         low = f.read_text(encoding="utf-8").lower()
         for w in ("carrello", "€", "prezzo"):

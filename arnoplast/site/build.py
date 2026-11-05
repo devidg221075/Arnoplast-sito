@@ -964,6 +964,8 @@ def build_site(c: Catalog, out: Path, lang: str = "it", sources: Path | None = N
            description=t("gallery.lead", lang))
     render("videos.html", base / "video", line=None, title=t("page.videos", lang), lib=video_library(c, lang),
            description=t("vid.lead", lang))
+    render("news.html", base / "notizie", line=None, title=t("page.news", lang), social=SOCIAL,
+           description=t("so.text", lang))
     render("reserved.html", base / "area-riservata", line=None, title=t("page.reserved", lang), noindex=True,
            sitemap=False, description=t("rs.lead", lang))
     render("cookies.html", base / "cookie", line=None, title=t("page.cookie", lang), description=t("ck.lead", lang),

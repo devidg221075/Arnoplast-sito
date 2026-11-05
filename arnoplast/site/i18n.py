@@ -108,6 +108,8 @@ STRINGS = {
         "page.company": "Azienda",
         "page.gallery": "Galleria",
         "page.videos": "Video e Tutorial",
+        "page.news": "Notizie",
+        "news.load": "Mostra il feed Facebook",
         "page.fairs": "Fiere",
         "page.packaging": "Imballaggi",
         "page.catalogs": "Cataloghi e download",

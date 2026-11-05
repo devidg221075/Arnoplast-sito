@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block head_extra %}<link rel="stylesheet" href="/static/css/social.css"><script src="/static/js/social.js" defer></script>{% endblock %}
+{% block main %}
+{# Notizie: il feed Facebook completo della pagina ARNOplast. Come in home, il riquadro si carica solo dopo il clic. #}
+<section class="page-head">
+  <div class="wrap">
+    <nav class="breadcrumb" aria-label="Breadcrumb"><a href="/{{ lang }}/">{{ t('breadcrumb.home') }}</a></nav>
+    <h1>{{ title }}</h1>
+    <p class="lead">{{ t('so.text') }}</p>
+  </div>
+</section>
+<section class="wrap section">
+  <div class="so-feed">
+    <div class="so-box" data-fb-box data-fb-src="https://www.facebook.com/plugins/page.php?href=https%3A%2F%2Fwww.facebook.com%2Farnoplast&amp;tabs=timeline&amp;width=500&amp;height=900&amp;small_header=true&amp;adapt_container_width=true&amp;hide_cover=false&amp;show_facepile=false" data-fb-title="{{ t('so.frame') }}">
+      <p class="so-name">Facebook · ARNOplast</p>
+      <p class="so-note">{{ t('so.privacy') }}</p>
+      <a class="btn btn-primary" href="https://www.facebook.com/arnoplast" target="_blank" rel="noopener" data-fb-load>{{ t('news.load') }}</a>
+    </div>
+  </div>
+  <ul class="so-links">
+  {% for name, url, icon in social %}
+    <li><a class="btn so-btn" href="{{ url }}" target="_blank" rel="noopener">{{ name }}<span class="sr-only"> ({{ t('footer.new_tab') }})</span> <span aria-hidden="true">→</span></a></li>
+  {% endfor %}
+  </ul>
+</section>
+{% endblock %}
