@@ -3,14 +3,16 @@
     {
       "slug": "agricoltura",
       "name": {
-        "it": "Agricoltura"
+        "it": "Agricoltura",
+        "en": "Agriculture"
       },
       "accent": "red",
       "families": [
         {
           "slug": "copripalo",
           "name": {
-            "it": "Copripalo"
+            "it": "Copripalo",
+            "en": "Post caps"
           },
           "products": [
             {
@@ -1586,7 +1588,8 @@
         {
           "slug": "placchette",
           "name": {
-            "it": "Placchette"
+            "it": "Placchette",
+            "en": "Clips"
           },
           "products": [
             {
@@ -2569,7 +2572,8 @@
         {
           "slug": "ferma-teli-e-reti",
           "name": {
-            "it": "Ferma-teli e reti"
+            "it": "Ferma-teli e reti",
+            "en": "Clips for net & films"
           },
           "products": [
             {
@@ -3067,7 +3071,8 @@
         {
           "slug": "moschettoni-e-tiranti",
           "name": {
-            "it": "Moschettoni e tiranti"
+            "it": "Moschettoni e tiranti",
+            "en": "Spring catch and tie-rods"
           },
           "products": [
             {
@@ -3716,7 +3721,8 @@
         {
           "slug": "ancoraggi-ganci-e-chiodi",
           "name": {
-            "it": "Ancoraggi, ganci e chiodi"
+            "it": "Ancoraggi, ganci e chiodi",
+            "en": "Anchoring, hooks and nails"
           },
           "products": [
             {
@@ -4653,7 +4659,8 @@
         {
           "slug": "sistemi-di-legatura",
           "name": {
-            "it": "Sistemi di legatura"
+            "it": "Sistemi di legatura",
+            "en": "Tie systems"
           },
           "products": [
             {
@@ -5080,7 +5087,8 @@
         {
           "slug": "accessori-pet-e-ricambi",
           "name": {
-            "it": "Accessori, PET e ricambi"
+            "it": "Accessori, PET e ricambi",
+            "en": "Fittings, PET and spare parts"
           },
           "products": [
             {
@@ -5882,14 +5890,16 @@
     {
       "slug": "garden",
       "name": {
-        "it": "Garden"
+        "it": "Garden",
+        "en": "Garden"
       },
       "accent": "green",
       "families": [
         {
           "slug": "testine",
           "name": {
-            "it": "Testine"
+            "it": "Testine",
+            "en": "Heads for brushcutter"
           },
           "products": [
             {
@@ -7392,7 +7402,8 @@
         {
           "slug": "filo-nylon",
           "name": {
-            "it": "Filo nylon"
+            "it": "Filo nylon",
+            "en": "Nylon wire"
           },
           "products": [
             {
@@ -8680,7 +8691,8 @@
         {
           "slug": "lame",
           "name": {
-            "it": "Lame"
+            "it": "Lame",
+            "en": "Blades for brushcutter"
           },
           "products": [
             {
@@ -9018,7 +9030,8 @@
         {
           "slug": "visiere",
           "name": {
-            "it": "Visiere"
+            "it": "Visiere",
+            "en": "Visors"
           },
           "products": [
             {
@@ -9201,7 +9214,8 @@
         {
           "slug": "abbigliamento",
           "name": {
-            "it": "Abbigliamento"
+            "it": "Abbigliamento",
+            "en": "Protective clothing"
           },
           "products": [
             {
@@ -9331,7 +9345,8 @@
         {
           "slug": "accessori",
           "name": {
-            "it": "Accessori"
+            "it": "Accessori",
+            "en": "Accessories"
           },
           "products": [
             {
@@ -10136,7 +10151,8 @@
         {
           "slug": "ancoraggi",
           "name": {
-            "it": "Ancoraggi"
+            "it": "Ancoraggi",
+            "en": "Clips"
           },
           "products": [
             {
@@ -10582,7 +10598,8 @@
         {
           "slug": "espositori",
           "name": {
-            "it": "Espositori"
+            "it": "Espositori",
+            "en": "Displays"
           },
           "products": [
             {
@@ -10625,7 +10642,8 @@
     {
       "slug": "olive",
       "name": {
-        "it": "Raccolta olive"
+        "it": "Raccolta olive",
+        "en": "Olive harvest"
       },
       "accent": "olive",
       "families": [
