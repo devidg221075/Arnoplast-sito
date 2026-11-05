@@ -124,6 +124,13 @@ PRODUCT_PHOTO_SIZES = "(min-width: 1024px) 40vw, calc(100vw - 32px)"
 # Informativa privacy esistente; la fase WordPress puo' cambiarla qui.
 PRIVACY_URL = "/it/privacy-policy-arno-plast/"  # pagina del sito nuovo, testo in data/privacy.json
 
+
+def privacy_url_for(lang: str) -> str:
+    """Pagina privacy della lingua (in inglese solo se c'e' data/en_privacy.json, altrimenti quella italiana)."""
+    if lang == "en" and (DATA_DIR / "en_privacy.json").is_file():
+        return "/en/privacy-policy-arno-plast/"
+    return PRIVACY_URL
+
 # PDF dei cataloghi: slug linea -> (file sorgente, nome pubblicato)
 CATALOG_PDFS = {
     "agricoltura": ("agricoltura-it.pdf", "catalogo-agricoltura-2026-it.pdf"),
@@ -424,7 +431,7 @@ def _env(lang: str) -> Environment:
     env.filters["rich"] = rich
     env.globals.update(lang=lang, contacts=CONTACTS, t=lambda k: t(k, lang), text=lambda d: text(d, lang),
                        menu=menu_items(lang), nav_state=lambda path: nav_state(path, lang), social=SOCIAL, apps=APPS,
-                       privacy_url=PRIVACY_URL, year=build_date().year, maps_url=MAPS_URL,
+                       privacy_url=privacy_url_for(lang), year=build_date().year, maps_url=MAPS_URL,
                        og_image=SITE_URL + "/static/img/home/sede-giorno-1280.webp")
     return env
 
@@ -849,6 +856,22 @@ def _load_en(name: str) -> dict:
     return json.loads(p.read_text(encoding="utf-8")) if p.is_file() else {}
 
 
+EN_ACRONYMS = {"PA", "FV", "PP", "PE", "PET", "PVC", "FE", "GZ", "UV", "AL", "CP", "FG", "LDPE", "HDPE", "UFO", "RC"}
+
+
+def _en_title(name: str) -> str:
+    """Nome tutto maiuscolo -> iniziali maiuscole, tenendo maiuscole le sigle dei materiali (PA, FV, PVC...)
+    e le parole con cifre o punti (STOP.NET, 7X7)."""
+    out = []
+    for w in name.split(" "):
+        core = w.strip("()-,")
+        if core in EN_ACRONYMS or re.search(r"[\d.]", core) or not core:
+            out.append(w)
+        else:
+            out.append(w.capitalize())
+    return " ".join(out)
+
+
 def english_catalog(c: Catalog) -> Catalog:
     """Copia del catalogo con i testi inglesi: nomi di prodotto, caratteristiche, dimensioni e descrizioni degli
     articoli (per codice). Dove manca un testo inglese resta quello italiano (ricaduta, mai vuoto)."""
@@ -862,7 +885,7 @@ def english_catalog(c: Catalog) -> Catalog:
                 e = en_p.get(prod.slug)
                 if e:
                     nome = e.get("nome_en") or ""
-                    prod.name = dict(prod.name, en=nome.title() if nome.isupper() else nome)
+                    prod.name = dict(prod.name, en=_en_title(nome) if nome.isupper() else nome)
                     prod.features = list(e.get("features_en") or [])
                     prod.dimensions = list(e.get("dimensions_en") or [])
                 for art in prod.articles:
@@ -997,10 +1020,10 @@ def build_site(c: Catalog, out: Path, lang: str = "it", sources: Path | None = N
                     e["products"].append(text(prod.name, lang))
 
     render("quote.html", base / "richiesta-preventivo", line=None, title=t("quote.title", lang),
-           description=t("quote.intro", lang), privacy_url=PRIVACY_URL)
+           description=t("quote.intro", lang), privacy_url=privacy_url_for(lang))
     render("contacts.html", base / "contatti", line=None, title=t("page.contacts", lang),
            description=f"{CONTACTS['name']}, {CONTACTS['address']}. Tel. {CONTACTS['phone']}, {CONTACTS['email']}.",
-           hero=_hero("azienda", imgs), imgs=imgs, user_types=USER_TYPES, jsonld=organization_ld(), map_embed=MAP_EMBED, privacy_url=PRIVACY_URL)
+           hero=_hero("azienda", imgs), imgs=imgs, user_types=USER_TYPES, jsonld=organization_ld(), map_embed=MAP_EMBED, privacy_url=privacy_url_for(lang))
     story = COMPANY_STORY if lang == "it" else load_en_story()
     if story is not None:
       render("company.html", base / "azienda", line=None, title=t("page.company", lang),
@@ -1044,16 +1067,18 @@ def build_site(c: Catalog, out: Path, lang: str = "it", sources: Path | None = N
            description=t("gallery.lead", lang))
     render("videos.html", base / "video", line=None, title=t("page.videos", lang), lib=video_library(c, lang),
            description=t("vid.lead", lang))
-    if lang == "it" and (DATA_DIR / "privacy.json").is_file():  # testo del cliente, copiato dal sito vecchio (vedi data/privacy.json)
-        privacy = json.loads((DATA_DIR / "privacy.json").read_text(encoding="utf-8"))
+    privacy_file = DATA_DIR / ("privacy.json" if lang == "it" else "en_privacy.json")
+    if privacy_file.is_file():  # testo del cliente (italiano: copiato dal sito vecchio; inglese: nostra traduzione)
+        privacy = json.loads(privacy_file.read_text(encoding="utf-8"))
         render("privacy.html", base / "privacy-policy-arno-plast", line=None, title=privacy["titolo"],
                paragrafi=privacy["paragrafi"],
-               description="Informativa privacy di ARNOplast ai sensi dell'art. 13 del Regolamento UE 679/2016 (GDPR).")
+               description=("Informativa privacy di ARNOplast ai sensi dell'art. 13 del Regolamento UE 679/2016 (GDPR)."
+                            if lang == "it" else "ARNOplast privacy notice pursuant to Art. 13 of EU Regulation 679/2016 (GDPR)."))
     render("open_day.html", base / "open-day", line=None, title=t("page.openday", lang), description=t("od.text", lang))
     render("reserved.html", base / "area-riservata", line=None, title=t("page.reserved", lang), noindex=True,
            sitemap=False, description=t("rs.lead", lang))
     render("cookies.html", base / "cookie", line=None, title=t("page.cookie", lang), description=t("ck.lead", lang),
-           privacy_url=PRIVACY_URL, services=EXTERNAL_SERVICES)
+           privacy_url=privacy_url_for(lang), services=EXTERNAL_SERVICES)
     # Vecchio indirizzo del prototipo: rimanda alla Galleria (anche in _redirects), fuori dalla sitemap.
     render("moved.html", base / "applicazioni", line=None, title=t("page.gallery", lang), sitemap=False,
            target=f"/{lang}/galleria/", canonical_override=f"{SITE_URL}/{lang}/galleria/")
