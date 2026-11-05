@@ -152,6 +152,7 @@ EN = {
     "fairs.openday_text": "Open to public visits — coming soon.",
     "cat.intro": "ARNOplast catalogues in PDF, to download and read even without a connection.",
     "cat.download": "Download the PDF",
+    "cat.it_only": "Italian only",
     "cat.catalog": "Catalogue",
     "cat.app_title": "The ARNOplast app",
     "cat.see_line": "See the products online",

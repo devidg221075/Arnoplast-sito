@@ -149,6 +149,7 @@ STRINGS = {
         "fairs.openday_text": "Struttura aperta alle visite del pubblico — in arrivo.",
         "cat.intro": "I cataloghi ARNOplast in PDF, da scaricare e consultare anche senza connessione.",
         "cat.download": "Scarica il PDF",
+        "cat.it_only": "Solo in italiano",
         "cat.catalog": "Catalogo",
         "cat.app_title": "L'app ARNOplast",
         "cat.see_line": "Vedi i prodotti online",
