@@ -227,11 +227,16 @@ FAIR_ID = re.compile(r"^[a-z0-9]+(?:-[a-z0-9]+)*$")
 SHORT_MAX = 170  # descrizione breve ricavata dal testo: frasi intere entro questa lunghezza
 
 
+GALLERY_CATS = ["impianti", "serre", "dettagli", "disegni"]  # ordine dei filtri della Galleria
+
+
 def load_gallery(path: Path | None = None) -> list[dict]:
     """data/galleria.json (scritto da tools/galleria_images.py) -> foto della Galleria. Errore chiaro se manca un file."""
     path = DATA_DIR / "galleria.json" if path is None else Path(path)
     photos = json.loads(path.read_text(encoding="utf-8"))["foto"] if path.is_file() else []
     for ph in photos:
+        if ph.get("categoria", "impianti") not in GALLERY_CATS:
+            raise ValueError(f"data/galleria.json: categoria non valida per la foto {ph['id']}: {ph.get('categoria')!r}")
         for suffix in ("", "-t"):
             f = ROOT / "site" / "static" / "img" / "galleria" / f"{ph['id']}{suffix}.webp"
             if not f.is_file():
@@ -960,7 +965,10 @@ def build_site(c: Catalog, out: Path, lang: str = "it", sources: Path | None = N
                title=f"{t('cat.catalog', lang)} {p['name']} {p['year']}", pdf_url=p["url"],
                base=f"/static/img/cataloghi/{p['slug']}/",
                description=f"Sfoglia online il {t('cat.catalog', lang).lower()} ARNOplast {p['name']} {p['year']}.")
-    render("gallery.html", base / "galleria", line=None, title=t("page.gallery", lang), photos=load_gallery(),
+    gal = load_gallery()
+    gal_cats = [("all", t("gallery.all", lang), len(gal))] + [
+        (k, t(f"gallery.cat_{k}", lang), sum(1 for ph in gal if ph.get("categoria", "impianti") == k)) for k in GALLERY_CATS]
+    render("gallery.html", base / "galleria", line=None, title=t("page.gallery", lang), photos=gal, cats=gal_cats,
            description=t("gallery.lead", lang))
     render("videos.html", base / "video", line=None, title=t("page.videos", lang), lib=video_library(c, lang),
            description=t("vid.lead", lang))

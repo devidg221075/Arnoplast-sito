@@ -4,7 +4,8 @@
   'use strict';
   var grid = document.querySelector('[data-gallery]');
   if (!grid || !grid.getBoundingClientRect || typeof HTMLDialogElement === 'undefined') return;
-  var links = [].slice.call(grid.querySelectorAll('a'));
+  var all = [].slice.call(grid.querySelectorAll('a'));
+  var links = all; // solo le foto visibili col filtro
   var dlg = document.createElement('dialog');
   dlg.className = 'gl-dlg';
   dlg.setAttribute('aria-label', document.title);
@@ -28,9 +29,21 @@
     pos.textContent = (cur + 1) + ' ' + (grid.getAttribute('data-of') || '/') + ' ' + links.length;
     var nx = links[(cur + 1) % links.length]; (new Image()).src = nx.getAttribute('href'); // foto seguente in anticipo
   }
-  links.forEach(function (a, i) {
+  all.forEach(function (a) {
     a.addEventListener('click', function (e) {
-      e.preventDefault(); opener = a; show(i); dlg.showModal();
+      e.preventDefault(); opener = a; show(links.indexOf(a)); dlg.showModal();
+    });
+  });
+  // Filtri per tipo: nascondono le foto degli altri tipi e aggiornano l'ingrandimento.
+  var chips = [].slice.call(document.querySelectorAll('[data-filter]'));
+  chips.forEach(function (chip) {
+    chip.addEventListener('click', function () {
+      var f = chip.getAttribute('data-filter');
+      chips.forEach(function (c) { c.setAttribute('aria-pressed', c === chip ? 'true' : 'false'); });
+      [].forEach.call(grid.querySelectorAll('.gl-item'), function (li) {
+        li.hidden = f !== 'all' && li.getAttribute('data-cat') !== f;
+      });
+      links = all.filter(function (a) { return !a.closest('.gl-item').hidden; });
     });
   });
   dlg.querySelector('.gl-prev').addEventListener('click', function () { show(cur - 1); });

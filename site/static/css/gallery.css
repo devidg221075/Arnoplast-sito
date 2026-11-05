@@ -19,3 +19,13 @@
 .gl-btn:hover { background: #fff; color: #000; }
 .gl-btn:focus-visible, .gl-item a:focus-visible { outline: 3px solid var(--red, #e30613); outline-offset: 2px; }
 .gl-x { position: absolute; top: 10px; right: 10px; }
+/* Filtri per tipo: visibili solo con JS (classe .js su <html>). */
+.gl-filters { display: none; flex-wrap: wrap; gap: 10px; margin: 0 0 24px; }
+.js .gl-filters { display: flex; }
+.gl-chip { min-height: 44px; padding: 8px 16px; border: 2px solid var(--black, #111); border-radius: 999px; background: #fff; color: var(--black, #111); font: inherit; font-weight: 700; font-size: .9rem; cursor: pointer; }
+.gl-chip:hover { background: #f1f1ef; }
+.gl-chip[aria-pressed="true"] { background: var(--black, #111); color: #fff; }
+.gl-chip:focus-visible { outline: 3px solid var(--red, #e30613); outline-offset: 2px; }
+.gl-chip-n { font-weight: 500; opacity: .7; margin-left: 4px; }
+.gl-item[hidden] { display: none; }
+

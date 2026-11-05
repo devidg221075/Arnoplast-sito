@@ -47,7 +47,8 @@ def main(src: Path) -> int:
         tw, th = save(im, OUT / f"{fid}-t.webp", 560, 60)
         w, h = save(im, OUT / f"{fid}.webp", 1400, 62)
         items.append({"id": fid, "w": w, "h": h, "tw": tw, "th": th,
-                      "alt": old.get(fid, {}).get("alt") or ALT, "origine": f.name})
+                      "alt": old.get(fid, {}).get("alt") or ALT, "categoria": old.get(fid, {}).get("categoria", "impianti"),
+                      "origine": f.name})
     for stale in OUT.glob("*.webp"):  # niente file orfani se le foto sono diminuite
         if stale.name.split(".")[0].removesuffix("-t") not in {i["id"] for i in items}:
             stale.unlink()
