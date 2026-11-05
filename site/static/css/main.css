@@ -238,6 +238,7 @@ button, input, textarea, select { font: inherit; color: inherit; }
 .quote-line { display: grid; grid-template-columns: 1fr auto auto; grid-template-areas: "code qty rm" "desc desc desc"; align-items: center; gap: 6px 10px; padding: 14px 0; border-bottom: 1px solid var(--line); animation: pop .2s var(--e); }
 .ql-code { grid-area: code; font-family: var(--mono); font-weight: 800; }
 .ql-desc { grid-area: desc; font-size: .9rem; color: var(--muted); }
+.ql-prod { display: block; }
 .ql-qty { grid-area: qty; display: flex; align-items: center; gap: 6px; font-size: .72rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
 .ql-remove { grid-area: rm; display: inline-grid; place-items: center; width: 38px; height: 38px; border: 2px solid var(--line); border-radius: 50%; background: var(--white); cursor: pointer; font-size: 1.2rem; line-height: 1; transition: border-color .15s, background-color .15s, color .15s; }
 .ql-remove:hover { border-color: var(--red); background: var(--red); color: var(--white); }

@@ -172,7 +172,13 @@ function renderQuote() {
     if (meta(item)) {
       const m = document.createElement('small');
       m.className = 'ql-meta';
-      m.textContent = meta(item);
+      m.textContent = item.conf ? `conf. da ${item.conf}` : '';
+      if (item.product) {
+        const pr = document.createElement('span');
+        pr.className = 'ql-prod';
+        pr.textContent = item.product;
+        m.append(pr);
+      }
       desc.append(' ', m);
     }
 
