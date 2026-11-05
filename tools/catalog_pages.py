@@ -1,6 +1,6 @@
 """Pagine dei cataloghi PDF come immagini leggere per lo sfogliatore (/it/cataloghi/<linea>/).
 
-Uso: python tools/catalog_pages.py [linea ...]      (senza argomenti: tutte le linee di CATALOG_PDFS)
+Uso: python tools/catalog_pages.py [linea ...]      (senza argomenti: tutte le linee, anche quelle inglesi <linea>-en)
 
 Legge content/source/<linea>-it.pdf (come la build), converte ogni pagina con pdftoppm (poppler) e scrive in
 site/static/img/cataloghi/<linea>/ i WebP NNN.webp (larghezza 1200 px, qualita' 68) e NNN-t.webp (anteprima, 180 px),
@@ -16,14 +16,15 @@ from PIL import Image
 
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT))
-from arnoplast.site.build import CATALOG_PDFS, SOURCE_DIR  # noqa: E402
+from arnoplast.site.build import CATALOG_PDFS, CATALOG_PDFS_EN, SOURCE_DIR  # noqa: E402
 
 OUT = ROOT / "site" / "static" / "img" / "cataloghi"
 DATA = ROOT / "data" / "cataloghi.json"
 
 
 def render(slug: str) -> dict:
-    pdf = SOURCE_DIR / CATALOG_PDFS[slug][0]
+    # `<linea>-en` = catalogo inglese (agricoltura-en, garden-en)
+    pdf = SOURCE_DIR / (CATALOG_PDFS_EN[slug[:-3]][0] if slug.endswith("-en") else CATALOG_PDFS[slug][0])
     dest = OUT / slug
     dest.mkdir(parents=True, exist_ok=True)
     for old in dest.glob("*.webp"):
@@ -46,7 +47,7 @@ def render(slug: str) -> dict:
 
 def main(slugs: list[str]) -> int:
     data = json.loads(DATA.read_text(encoding="utf-8")) if DATA.is_file() else {}
-    for s in slugs or list(CATALOG_PDFS):
+    for s in slugs or list(CATALOG_PDFS) + [f"{k}-en" for k in CATALOG_PDFS_EN if CATALOG_PDFS_EN[k] != CATALOG_PDFS[k]]:
         data[s] = render(s)
     DATA.write_text(json.dumps(data, indent=1) + "\n", encoding="utf-8")
     return 0

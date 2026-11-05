@@ -137,7 +137,27 @@ CATALOG_PDFS = {
     "garden": ("garden-it.pdf", "catalogo-garden-2026-it.pdf"),
     "olive": ("olive-it.pdf", "catalogo-raccolta-olive-2025-it.pdf"),
 }
+# Cataloghi in inglese (Agriculture e Garden 2026). Raccolta olive: il depliant 2025 esiste solo in italiano.
+CATALOG_PDFS_EN = {
+    "agricoltura": ("agricoltura-en.pdf", "catalogue-agriculture-2026-en.pdf"),
+    "garden": ("garden-en.pdf", "catalogue-garden-2026-en.pdf"),
+    "olive": CATALOG_PDFS["olive"],
+}
 SOURCE_DIR = ROOT / "content" / "source"
+
+
+def catalog_pdfs(lang: str, sources: Path | None = None) -> dict[str, tuple[str, str, str]]:
+    """linea -> (file sorgente, nome pubblicato, chiave delle pagine dello sfogliatore). In inglese, dove c'e' il PDF
+    inglese si usa quello (pagine in `<linea>-en`); altrimenti si ricade sul PDF italiano."""
+    src_dir = SOURCE_DIR if sources is None else Path(sources)
+    out = {}
+    for slug, (src, pub) in CATALOG_PDFS.items():
+        key = slug
+        if lang == "en" and (src_dir / CATALOG_PDFS_EN[slug][0]).is_file() and CATALOG_PDFS_EN[slug][0] != src:
+            src, pub = CATALOG_PDFS_EN[slug]
+            key = f"{slug}-en"
+        out[slug] = (src, pub, key)
+    return out
 
 # Legenda materiali dei cataloghi (sigla -> nome), nell'ordine della legenda.
 MATERIALS = {"PP": "Polipropilene", "PA": "Poliammide", "PE": "Polietilene", "PET": "Poliestere",
@@ -958,7 +978,7 @@ def build_site(c: Catalog, out: Path, lang: str = "it", sources: Path | None = N
     for line in c.lines:
         pdf = None
         if line.slug in CATALOG_PDFS:
-            src_name, pub_name = CATALOG_PDFS[line.slug]
+            src_name, pub_name, _ = catalog_pdfs(lang, sources)[line.slug]
             if (sources / src_name).is_file():
                 (out / "downloads").mkdir(parents=True, exist_ok=True)
                 shutil.copyfile(sources / src_name, out / "downloads" / pub_name)
@@ -1039,27 +1059,30 @@ def build_site(c: Catalog, out: Path, lang: str = "it", sources: Path | None = N
     render("fairs.html", base / "fiere", line=None, title=t("page.fairs", lang), upcoming=upcoming, past=past,
            description="Le fiere a cui partecipa ARNOplast: prossimi appuntamenti e archivio delle fiere passate.")
     pdfs = []
-    for slug, (src_name, pub_name) in CATALOG_PDFS.items():
+    for slug, (src_name, pub_name, pages_key) in catalog_pdfs(lang, sources).items():
         f = out / "downloads" / pub_name
         if f.is_file():
             l = next((l for l in c.lines if l.slug == slug), None)
-            pdfs.append({"slug": slug, "name": text(l.name, lang) if l else slug.title(), "url": f"/downloads/{pub_name}",
+            pdfs.append({"slug": slug, "key": pages_key, "name": text(l.name, lang) if l else slug.title(),
+                         "url": f"/downloads/{pub_name}",
                          "year": re.search(r"(\d{4})", pub_name).group(1),
                          "mb": f"{f.stat().st_size / 1e6:.1f}".replace(".", ",")})
     render("catalogs.html", base / "cataloghi", line=None, title=t("page.catalogs", lang), pdfs=pdfs,
-           description="Cataloghi ARNOplast in PDF da scaricare (Agricoltura, Garden, Raccolta olive) e app ARNOplast.")
+           description=("Cataloghi ARNOplast in PDF da scaricare (Agricoltura, Garden, Raccolta olive) e app ARNOplast."
+                        if lang == "it" else "ARNOplast catalogues in PDF to download (Agriculture, Garden, Olive harvest) and the ARNOplast app."))
     book = json.loads((DATA_DIR / "cataloghi.json").read_text(encoding="utf-8")) if (DATA_DIR / "cataloghi.json").is_file() else {}
     for p in pdfs:
-        b = book.get(p["slug"])
+        b = book.get(p["key"])
         if not b:
             continue
         for i in range(1, b["pagine"] + 1):
-            if not (ROOT / "site" / "static" / "img" / "cataloghi" / p["slug"] / f"{i:03d}.webp").is_file():
-                raise ValueError(f"data/cataloghi.json: manca la pagina {i} di {p['slug']}; rilanciare tools/catalog_pages.py")
+            if not (ROOT / "site" / "static" / "img" / "cataloghi" / p["key"] / f"{i:03d}.webp").is_file():
+                raise ValueError(f"data/cataloghi.json: manca la pagina {i} di {p['key']}; rilanciare tools/catalog_pages.py")
         render("flipbook.html", base / "cataloghi" / p["slug"], line=None, slug=p["slug"], n=b["pagine"], w=b["w"], h=b["h"],
                title=f"{t('cat.catalog', lang)} {p['name']} {p['year']}", pdf_url=p["url"],
-               base=f"/static/img/cataloghi/{p['slug']}/",
-               description=f"Sfoglia online il {t('cat.catalog', lang).lower()} ARNOplast {p['name']} {p['year']}.")
+               base=f"/static/img/cataloghi/{p['key']}/",
+               description=(f"Sfoglia online il {t('cat.catalog', lang).lower()} ARNOplast {p['name']} {p['year']}."
+                            if lang == "it" else f"Browse the ARNOplast {p['name']} {t('cat.catalog', lang).lower()} {p['year']} online."))
     gal = load_gallery()
     gal_cats = [("all", t("gallery.all", lang), len(gal))] + [
         (k, t(f"gallery.cat_{k}", lang), sum(1 for ph in gal if ph.get("categoria", "impianti") == k)) for k in GALLERY_CATS]
