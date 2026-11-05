@@ -293,6 +293,7 @@ STRINGS = {
         "ct.map_load": "Mostra la mappa",
         "ct.map_note": "Finché non clicchi, nessun servizio esterno viene contattato. Caricando la mappa ti colleghi a Google, che può usare i propri cookie.",
         "ct.map_title": "Mappa della sede ARNOplast a Rignano sull'Arno",
+        "ct.commercial_t": "ARNOcommerciale",
         "ct.commercial": "ARNOcommerciale ha conquistato una posizione nel mercato italiano dei sistemi per il giardinaggio e l'agricoltura ed è arrivata a commercializzare i propri prodotti in tutta Europa, nel Bacino del Mediterraneo e in alcuni Paesi oltre oceano.",
         "ck.lead": "Cosa salva questo sito sul tuo dispositivo e quali servizi esterni si attivano solo con un tuo clic.",
         "ck.brief_t": "In breve",

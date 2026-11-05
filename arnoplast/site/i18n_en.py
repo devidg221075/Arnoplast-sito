@@ -296,6 +296,7 @@ EN = {
     "ct.map_load": "Show the map",
     "ct.map_note": "Until you click, no external service is contacted. When you load the map you connect to Google, which may use its own cookies.",
     "ct.map_title": "Map of the ARNOplast headquarters in Rignano sull'Arno",
+    "ct.commercial_t": "ARNOcommerciale",
     "ct.commercial": "ARNOcommerciale has established a position in the Italian market for gardening and agriculture systems and now sells its products across Europe, in the Mediterranean basin and in some countries overseas.",
     "ck.lead": "What this site stores on your device, and which external services are activated only by your click.",
     "ck.brief_t": "In short",
