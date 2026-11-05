@@ -248,4 +248,5 @@ def test_script_prunes_expired_fairs_before_rotation():
 def test_i18n_labels():
     it = STRINGS["it"]
     assert it["hs.fair_kicker"] == "Ci trovi a" and it["hs.fair_more"] == "Scopri" and it["hs.fair"] == "Fiera"
-    assert t("hs.fair_kicker", "en") == "Ci trovi a"  # finche' non c'e' l'inglese ricade sull'italiano
+    assert t("hs.fair_kicker", "en") == "Find us at"  # inglese dal file i18n_en.py
+    assert t("hs.fair_kicker", "xx") == "Ci trovi a"  # lingua senza stringhe: ricade sull'italiano
