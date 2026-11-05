@@ -219,7 +219,8 @@ MONTHS = ["gennaio", "febbraio", "marzo", "aprile", "maggio", "giugno", "luglio"
 FAIR_FIELDS = ("id", "nome", "luogo", "paese", "data_inizio", "data_fine", "anno", "periodo", "stand", "testo",
                "fonte_url_sito_vecchio")
 # Campi facoltativi: foto (file in content/photos/fiere), descrizione per le schede, sito ufficiale (solo https).
-FAIR_OPTIONAL = ("immagine", "descrizione_breve", "link", "punto_focale", "luogo_en", "paese_en", "testo_en")
+FAIR_OPTIONAL = ("immagine", "descrizione_breve", "link", "punto_focale", "luogo_en", "paese_en", "testo_en",
+                "periodo_en", "stand_en")
 # In inglese: luogo, paese e testo (facoltativi) si usano al posto di quelli italiani, se presenti.
 # Punto focale della foto nella slide dell'hero (object-position CSS): una o due parole chiave o percentuali.
 FAIR_FOCAL = re.compile(r"^(?:left|right|top|bottom|center|\d{1,3}(?:\.\d+)?%)(?: (?:left|right|top|bottom|center|"

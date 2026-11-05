@@ -31,7 +31,8 @@
       "testo": "L'AgriLazio Expo 2026 si terrà a Cisterna di Latina dal 18 al 20 settembre 2026.",
       "fonte_url_sito_vecchio": "https://www.arnoplast.it/categoria/fiere-future",
       "paese_en": "Italy",
-      "luogo_en": "Cisterna di Latina"
+      "luogo_en": "Cisterna di Latina",
+      "testo_en": "AgriLazio Expo 2026 will be held in Cisterna di Latina from 18 to 20 September 2026."
     },
     {
       "id": "fruit-attraction-2026",
@@ -46,7 +47,9 @@
       "testo": "La Fiera Fruit Attraction 2026 si terrà a Madrid, Spagna, presso IFEMA Madrid, dal 5 ottobre al 8 ottobre 2026.",
       "fonte_url_sito_vecchio": "https://www.arnoplast.it/categoria/fiere-future",
       "paese_en": "Spain",
-      "luogo_en": "Madrid (IFEMA)"
+      "luogo_en": "Madrid (IFEMA)",
+      "testo_en": "Fruit Attraction 2026 will be held in Madrid, Spain, at IFEMA Madrid, from 5 to 8 October 2026.",
+      "stand_en": "Hall 8, Stand A15"
     },
     {
       "id": "luv-2026",
@@ -59,7 +62,8 @@
       "periodo": "",
       "stand": "",
       "testo": "LUV – Fiera dell’uva da tavola è un evento pensato per far incontrare tutti gli operatori del comparto dell’uva da tavola.",
-      "fonte_url_sito_vecchio": "https://www.arnoplast.it/categoria/fiere-future"
+      "fonte_url_sito_vecchio": "https://www.arnoplast.it/categoria/fiere-future",
+      "testo_en": "LUV – Fiera dell’uva da tavola (table grape fair) is an event designed to bring together all the operators of the table grape sector."
     },
     {
       "id": "eima-2026",
@@ -106,7 +110,8 @@
       "testo": "Myplant & Garden – International Green Expo La più importante fiera professionale dell'orto-florovivaismo, del garden e del paesaggio in Italia.",
       "fonte_url_sito_vecchio": "https://www.arnoplast.it/fiere-passate",
       "paese_en": "Italy",
-      "luogo_en": "Milan"
+      "luogo_en": "Milan",
+      "testo_en": "Myplant & Garden – International Green Expo. The most important professional fair for horticulture, garden and landscape in Italy."
     },
     {
       "id": "agrilevante-2025",
@@ -121,7 +126,8 @@
       "testo": "La fiera è dedicata a macchine, impianti e a tecnologie per l'agricoltura e rappresenta la manifestazione più importante in campo agricolo non solo per …",
       "fonte_url_sito_vecchio": "https://www.arnoplast.it/fiere-passate",
       "paese_en": "Italy",
-      "luogo_en": "Bari"
+      "luogo_en": "Bari",
+      "testo_en": "The fair is dedicated to machinery, plants and technologies for agriculture, and is the most important event in the agricultural sector not only for …"
     },
     {
       "id": "interpoma-2024",
@@ -136,7 +142,8 @@
       "testo": "Interpoma - la fiera della mela Bolzano diventa la capitale della mela con l'unica fiera al mondo dedicata esclusivamente alle mele. Cos'è Interpoma?",
       "fonte_url_sito_vecchio": "https://www.arnoplast.it/fiere-passate",
       "paese_en": "Italy",
-      "luogo_en": "Bozen"
+      "luogo_en": "Bozen",
+      "testo_en": "Interpoma – the apple fair. Bozen becomes the capital of the apple, with the only fair in the world dedicated exclusively to apples. What is Interpoma?"
     },
     {
       "id": "fruit-logistica-2024",
@@ -166,7 +173,8 @@
       "testo": "Sin dalla prima edizione (2015), Myplant ha registrato una crescita continua in termini di opportunità di business.",
       "fonte_url_sito_vecchio": "https://www.arnoplast.it/fiere-passate",
       "paese_en": "Italy",
-      "luogo_en": "Milan"
+      "luogo_en": "Milan",
+      "testo_en": "Since its first edition (2015), Myplant has recorded continuous growth in business opportunities."
     },
     {
       "id": "fruit-attraction-2023",
@@ -181,7 +189,8 @@
       "testo": "Fruit Attraction si terrà in Ifema Feria de Madrid Madrid dal prossimo 3 al 5 ottobre 2023 presentando le novità di aziende in Spagna …",
       "fonte_url_sito_vecchio": "https://www.arnoplast.it/fiere-passate",
       "paese_en": "Spain",
-      "luogo_en": "Madrid"
+      "luogo_en": "Madrid",
+      "testo_en": "Fruit Attraction will take place at IFEMA Feria de Madrid from 3 to 5 October 2023, presenting the news of companies from Spain …"
     },
     {
       "id": "agrilevante-2023",
@@ -196,7 +205,8 @@
       "testo": "Agrilevante 2023... l'agricoltura mediterranea in un unico evento!",
       "fonte_url_sito_vecchio": "https://www.arnoplast.it/fiere-passate",
       "paese_en": "Italy",
-      "luogo_en": "Bari"
+      "luogo_en": "Bari",
+      "testo_en": "Agrilevante 2023… Mediterranean agriculture in a single event!"
     },
     {
       "id": "croagro-2023",
@@ -241,7 +251,8 @@
       "testo": "Go Future: FRUIT LOGISTICA quale piattaforma globale rivoluzionaria per nuove idee, nuovi impulsi e nuove soluzioni Tutti i contatti, clienti, partner commerciali e tutte …",
       "fonte_url_sito_vecchio": "https://www.arnoplast.it/fiere-passate",
       "paese_en": "Germany",
-      "luogo_en": "Berlin"
+      "luogo_en": "Berlin",
+      "testo_en": "Go Future: FRUIT LOGISTICA as a revolutionary global platform for new ideas, new impulses and new solutions. All contacts, customers, business partners and all …"
     },
     {
       "id": "fruit-attraction-2022",
@@ -286,7 +297,8 @@
       "testo": "Che cos’è Interpoma? È presto detto: Interpoma è l’unica fiera al mondo dedicata esclusivamente al mondo della mela. Dalla produzione, alla conservazione, fino alla commercializzazione. E come tutte le fiere degne di questo nome, è molto più di una fiera. È una piattaforma internazionale che riunisce esperti di tutto il mondo con le loro idee, prodotti, tecnologie, progetti e soluzioni innovative. È un’occasione unica per conoscere nuovi partner, imparare nuove tecniche, scoprire nuovi macchinari. Tutto in un unico luogo, in tre giorni.",
       "fonte_url_sito_vecchio": "https://www.arnoplast.it/interpoma-bolzano-it-19-21-novembre-2020.html",
       "paese_en": "Italy",
-      "luogo_en": "Bozen"
+      "luogo_en": "Bozen",
+      "testo_en": "What is Interpoma? In short, Interpoma is the only fair in the world dedicated exclusively to the apple world: from production, to storage, up to marketing. And like every fair worthy of the name, it is much more than a fair. It is an international platform that brings together experts from all over the world with their ideas, products, technologies, projects and innovative solutions. It is a unique opportunity to meet new partners, learn new techniques and discover new machinery. All in one place, in three days."
     },
     {
       "id": "fruit-logistica-2021",
@@ -301,7 +313,9 @@
       "testo": "Tutti i contatti, clienti, partner commerciali e tutte le idee si trovano sotto lo stesso tetto! 3.200 Espositori e oltre 72.000 Visitatori vengono a FRUIT LOGISTICA ogni anno per realizzare pienamente il loro potenziale di business nel settore del commercio internazionale di prodotti freschi ortofrutticoli e per scrivere la loro personale storia di successo.",
       "fonte_url_sito_vecchio": "https://www.arnoplast.it/fruitlogistica-berlino-de-2-4-febbraio-2021.html",
       "paese_en": "Germany",
-      "luogo_en": "Berlin"
+      "luogo_en": "Berlin",
+      "testo_en": "All contacts, customers, business partners and all ideas under the same roof! 3,200 exhibitors and over 72,000 visitors come to FRUIT LOGISTICA every year to fully realise their business potential in the international trade of fresh fruit and vegetables and to write their own success story.",
+      "periodo_en": "February 2021"
     },
     {
       "id": "eima-2021",
@@ -316,7 +330,9 @@
       "testo": "EIMA International è l’Esposizione Internazionale di Macchine per l’Agricoltura e il Giardinaggio, rassegna a cadenza biennale promossa dal 1969 da FederUnacoma (Federazione Nazionale Costruttori Macchine per l’Agricoltura) ed organizzata dalla sua società di servizi FederUnacoma surl, in collaborazione con BolognaFiere.",
       "fonte_url_sito_vecchio": "https://www.arnoplast.it/eima-bologna-it-febbraio-2021.html",
       "paese_en": "Italy",
-      "luogo_en": "Bologna"
+      "luogo_en": "Bologna",
+      "testo_en": "EIMA International is the International Exhibition of Machinery for Agriculture and Gardening, a biennial event promoted since 1969 by FederUnacoma (the Italian National Federation of Agricultural Machinery Manufacturers) and organised by its service company FederUnacoma surl, in collaboration with BolognaFiere.",
+      "periodo_en": "February 2021"
     },
     {
       "id": "fruit-logistica-2019",
@@ -331,7 +347,8 @@
       "testo": "3.239 Espositori e oltre 78.000 Visitatori vengono a FRUIT LOGISTICA ogni anno per realizzare pienamente il loro potenziale di business nel settore del commercio internazionale di prodotti freschi quale quello ortofrutticolo e per scrivere la loro personale storia di successo.",
       "fonte_url_sito_vecchio": "https://www.arnoplast.it/fruitlogistica-6-7-8-febbraio-2019.html",
       "paese_en": "Germany",
-      "luogo_en": "Berlin"
+      "luogo_en": "Berlin",
+      "testo_en": "3,239 exhibitors and over 78,000 visitors come to FRUIT LOGISTICA every year to fully realise their business potential in the international trade of fresh produce, including fruit and vegetables, and to write their own success story."
     },
     {
       "id": "interpoma-2018",
@@ -344,7 +361,8 @@
       "periodo": "",
       "stand": "",
       "testo": "Interpoma è la fiera per la coltivazione, conservazione e commercializzazione della mela. È l’unico evento per questo settore in tutto il mondo. Ha lo scopo di presentare l’intera catena del processo dalla coltivazione allo stoccaggio e al marketing per un pubblico internazionale. La manifestazione è caratterizzata dalla presentazione di varietà di mele e mutanti, nuove misure fitosanitarie, macchinari e dispositivi, nonché attrezzature di produzione.",
-      "fonte_url_sito_vecchio": "https://www.arnoplast.it/interpoma-15-17-novembre-2018.html"
+      "fonte_url_sito_vecchio": "https://www.arnoplast.it/interpoma-15-17-novembre-2018.html",
+      "testo_en": "Interpoma is the fair for the cultivation, storage and marketing of the apple. It is the only event for this sector in the whole world. It aims to present the entire chain of the process, from cultivation to storage and marketing, to an international audience. The event features apple varieties and mutants, new phytosanitary measures, machinery and devices, as well as production equipment."
     },
     {
       "id": "eima-2018",
@@ -359,7 +377,8 @@
       "testo": "EIMA International è l’Esposizione Internazionale di Macchine per l’Agricoltura e il Giardinaggio, rassegna a cadenza biennale promossa dal 1969 da FederUnacoma (Federazione Nazionale Costruttori Macchine per l’Agricoltura) ed organizzata dalla sua società di servizi FederUnacoma surl, in collaborazione con BolognaFiere.",
       "fonte_url_sito_vecchio": "https://www.arnoplast.it/eima-7-11-novembre-2018.html",
       "paese_en": "Italy",
-      "luogo_en": "Bologna"
+      "luogo_en": "Bologna",
+      "testo_en": "EIMA International is the International Exhibition of Machinery for Agriculture and Gardening, a biennial event promoted since 1969 by FederUnacoma (the Italian National Federation of Agricultural Machinery Manufacturers) and organised by its service company FederUnacoma surl, in collaboration with BolognaFiere."
     },
     {
       "id": "fruit-logistica-2018",
@@ -374,7 +393,8 @@
       "testo": "3.239 Espositori e oltre 78.000 Visitatori vengono a FRUIT LOGISTICA ogni anno per realizzare pienamente il loro potenziale di business nel settore del commercio internazionale di prodotti freschi quale quello ortofrutticolo e per scrivere la loro personale storia di successo.",
       "fonte_url_sito_vecchio": "https://www.arnoplast.it/fruitlogistica-2018-berlino-7-9-febbraio-2018.html",
       "paese_en": "Germany",
-      "luogo_en": "Berlin"
+      "luogo_en": "Berlin",
+      "testo_en": "3,239 exhibitors and over 78,000 visitors come to FRUIT LOGISTICA every year to fully realise their business potential in the international trade of fresh produce, including fruit and vegetables, and to write their own success story."
     },
     {
       "id": "fieragricola-2018",
@@ -389,7 +409,8 @@
       "testo": "La 113ª edizione di Fieragricola, rassegna internazionale biennale dedicata all’agricoltura, si svolgerà da mercoledì 31 gennaio a sabato 3 febbraio 2018 alla Fiera di Verona.",
       "fonte_url_sito_vecchio": "https://www.arnoplast.it/fieragricola-2018-verona-31-gennaio-3-febbraio-2018.html",
       "paese_en": "Italy",
-      "luogo_en": "Verona"
+      "luogo_en": "Verona",
+      "testo_en": "The 113th edition of Fieragricola, the biennial international fair dedicated to agriculture, will be held from Wednesday 31 January to Saturday 3 February 2018 at the Verona Fair."
     },
     {
       "id": "fruitinnovation-2015",
@@ -404,7 +425,9 @@
       "testo": "Fruit Innovation 2015 si svolgerà in concomitanza con EXPO, l’Esposizione Universale di massima attrazione a livello mondiale, che si terrà da maggio ad ottobre e darà visibilità alla tradizione, alla creatività e all’innovazione nel settore dell’alimentazione, sulla base dei nuovi scenari globali. Inoltre, la contemporaneità di Fruit Innovation con IPACKIMA 2015 – l’unica fiera riconosciuta dall’Expo come leader in Italia per le tecnologie del processing e del packaging food e non food – arricchirà la fiera di una nuova centralità e di un’eccezionale risonanza mondiale, in grado di offrire un’ampia opportunità di contatti e visibilità per espositori e buyers da tutto il mondo.",
       "fonte_url_sito_vecchio": "https://www.arnoplast.it/fruitinnovation-fieramilano-20-22-maggio-2015-pad-9-d25.html",
       "paese_en": "Italy",
-      "luogo_en": "Milan (Fieramilano)"
+      "luogo_en": "Milan (Fieramilano)",
+      "testo_en": "Fruit Innovation 2015 will take place at the same time as EXPO, the world’s most important Universal Exhibition, held from May to October, which will showcase tradition, creativity and innovation in the food sector, based on new global scenarios. In addition, Fruit Innovation will be held together with IPACKIMA 2015 – the only fair recognised by Expo as Italy’s leader in food and non-food processing and packaging technologies – giving it a new centrality and exceptional worldwide resonance, offering wide opportunities for contacts and visibility for exhibitors and buyers from all over the world.",
+      "stand_en": "Pavilion 9 – D25"
     },
     {
       "id": "fruit-logistica-2015",
@@ -419,7 +442,9 @@
       "testo": "Fruit Logistica è la fiera leader al mondo per la filiera della frutta e della verdura freschi che coinvolgerà tutti i professionisti che lavorano nel settore, dai produttori, ai grossisti e commercianti.",
       "fonte_url_sito_vecchio": "https://www.arnoplast.it/fruit-logistica-2015-berlin-4-5-6-febbraio-2015.html",
       "paese_en": "Germany",
-      "luogo_en": "Berlin"
+      "luogo_en": "Berlin",
+      "testo_en": "Fruit Logistica is the world’s leading fair for the fresh fruit and vegetable supply chain, involving all professionals working in the sector, from producers to wholesalers and retailers.",
+      "stand_en": "Hall 2.1 – Passage C"
     },
     {
       "id": "eima-2014",
@@ -434,7 +459,9 @@
       "testo": "La rassegna di Eima International, che si tiene dal 12 al 16 novembre presso il Quartiere Fieristico di Bologna, si impone nel panorama mondiale non soltanto per l’ampiezza di superficie e di voci merceologiche, ma per l’alta qualità delle tecnologie esposte.",
       "fonte_url_sito_vecchio": "https://www.arnoplast.it/eima-international-2014-bologna-12-16-novembre-2014.html",
       "paese_en": "Italy",
-      "luogo_en": "Bologna"
+      "luogo_en": "Bologna",
+      "testo_en": "The EIMA International exhibition, held from 12 to 16 November at the Bologna Exhibition Centre, stands out on the world stage not only for the size of its space and the range of product categories, but for the high quality of the technologies on show.",
+      "stand_en": "Hall 34, stand D2"
     },
     {
       "id": "fruit-logistica-2014",
@@ -449,7 +476,9 @@
       "testo": "Fruit Logistica è la fiera leader al mondo per la filiera della frutta e della verdura freschi che coinvolgerà tutti i professionisti che lavorano nel settore, dai produttori, ai grossisti e commercianti.",
       "fonte_url_sito_vecchio": "https://www.arnoplast.it/fruit-logistica-2014-berlin-5-6-7-febbraio-2014.html",
       "paese_en": "Germany",
-      "luogo_en": "Berlin"
+      "luogo_en": "Berlin",
+      "testo_en": "Fruit Logistica is the world’s leading fair for the fresh fruit and vegetable supply chain, involving all professionals working in the sector, from producers to wholesalers and retailers.",
+      "stand_en": "Hall 2.1/D-17"
     }
   ]
 }
