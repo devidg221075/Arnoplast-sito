@@ -134,6 +134,18 @@ def test_english_home_page(site):
     assert re.search(r'href="/it/" hreflang="it" lang="it" aria-current="true"', html(site, "it"))
 
 
+def test_english_pages_have_no_italian_descriptions(site):
+    """Descrizioni (meta), testo alternativo e testi delle fiere della versione inglese non restano in italiano."""
+    fairs = html(site, "en/fiere")
+    assert "Read the presentation" in fairs
+    assert "si terrà" not in fairs and "La Fiera Fruit Attraction" not in fairs
+    for rel in ("en/agricoltura", "en/agricoltura/copripalo", "en/fiere", "en"):
+        h = html(site, rel)
+        meta = re.findall(r'<meta name="description" content="([^"]*)"', h)
+        assert meta and not re.search(r"famiglie|prodotti|codici articolo|Materiali|fiere a cui", meta[0]), (rel, meta)
+    assert "abbacchiatore" not in html(site, "en")
+
+
 # --- footer e dati societari ----------------------------------------------------------------------------
 
 def test_contacts_data():

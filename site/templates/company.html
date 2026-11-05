@@ -57,7 +57,7 @@
     <p>{{ t('hv.idea_text') }}</p>
   </div>
   <ol class="wrap co-photos" data-reveal="stagger">
-    {% for img, key, alt in (('progetto', 'hv.idea_1', 'Progettazione al computer di un articolo'), ('stampaggio', 'hv.idea_2', 'Pressa a iniezione nello stabilimento'), ('magazzino', 'hv.idea_3', 'Magazzino con scaffalature e pallet')) %}
+    {% for img, key, alt in (('progetto', 'hv.idea_1', t('alt.idea_1')), ('stampaggio', 'hv.idea_2', t('alt.idea_2')), ('magazzino', 'hv.idea_3', t('alt.idea_3'))) %}
     {% set im = imgs[img] %}
     <li><figure><span class="co-ph" data-parallax="0.06"><img src="{{ im.src }}" srcset="{{ im.srcset }}" sizes="(min-width: 1024px) 380px, (min-width: 600px) 33vw, 100vw" width="{{ im.width }}" height="{{ im.height }}" alt="{{ alt }}" loading="lazy" decoding="async"></span><figcaption><span aria-hidden="true">0{{ loop.index }}</span> {{ t(key) }}</figcaption></figure></li>
     {% endfor %}

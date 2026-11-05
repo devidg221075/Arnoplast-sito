@@ -163,6 +163,18 @@ def catalog_pdfs(lang: str, sources: Path | None = None) -> dict[str, tuple[str,
 MATERIALS = {"PP": "Polipropilene", "PA": "Poliammide", "PE": "Polietilene", "PET": "Poliestere",
              "PVC": "Polivinilcloruro", "FV": "Fibra di vetro", "FE": "Ferro zincato", "AL": "Alluminio"}
 
+MATERIALS_EN = {"PP": "Polypropylene", "PA": "Polyamide", "PE": "Polyethylene", "PET": "Polyester",
+                "PVC": "Polyvinyl chloride", "FV": "Fibreglass", "FE": "Galvanised iron", "AL": "Aluminium"}
+
+# Testo alternativo delle foto hero in inglese (chiave: l'alt italiano di HEROES).
+HERO_ALT_EN = {
+    "Frutteto coperto dalla rete antigrandine tesa sui pali": "Orchard covered by anti-hail netting stretched over the posts",
+    "Prato e alberi in una giornata di sole": "Lawn and trees on a sunny day",
+    "Raccolta delle olive con l'abbacchiatore": "Olive harvest with a harvesting aid",
+    "La sede ARNOplast a Rignano sull'Arno": "The ARNOplast headquarters in Rignano sull'Arno",
+    "Filari di un frutteto sotto la rete di protezione": "Rows of an orchard under the protective netting",
+}
+
 HOME_IMG_DIR = SITE_DIR / "static" / "img" / "home"
 
 # Hero a tutto schermo (in site/static/img/home): pagina -> (foto, ritaglio verticale, alt). Garden e Olive vengono
@@ -769,6 +781,8 @@ def hero_slides(c: Catalog, lang: str, imgs: dict, stats: dict, fairs: list[dict
         hero = _hero(key, imgs)
         if hero is None:
             continue
+        if lang == "en":
+            hero = dict(hero, alt=HERO_ALT_EN.get(hero["alt"], hero["alt"]))
         if key in lines:
             l = lines[key]
             nf, np_ = len(l.families), sum(len(f.products) for f in l.families)
@@ -964,6 +978,8 @@ def build_site(c: Catalog, out: Path, lang: str = "it", sources: Path | None = N
         if sitemap:
             urls.append(canonical)
         ctx.setdefault("nav", env.globals["nav_state"](f"/{rel}/"))
+        if lang == "en" and ctx.get("hero"):
+            ctx["hero"] = dict(ctx["hero"], alt=HERO_ALT_EN.get(ctx["hero"]["alt"], ctx["hero"]["alt"]))
         if lang == "en":  # versione inglese non ancora pubblica: nessuna indicizzazione
             ctx.setdefault("noindex", True)
         _write(dest / "index.html", env.get_template(tpl).render(
@@ -990,8 +1006,10 @@ def build_site(c: Catalog, out: Path, lang: str = "it", sources: Path | None = N
         render("line.html", base / line.slug, line=line, title=text(line.name, lang), pdf=pdf,
                hero=_hero(line.slug, imgs), line_index=c.lines.index(line) + 1,
                line_stats={"families": len(line.families), "products": n_prod, "codes": n_codes},
-               description=f"{text(line.name, lang)}: {len(line.families)} famiglie e {n_prod} prodotti "
-                           "del catalogo ARNOplast.")
+               description=(f"{text(line.name, lang)}: {len(line.families)} families and {n_prod} products from the "
+                            "ARNOplast catalogue." if lang == "en" else
+                            f"{text(line.name, lang)}: {len(line.families)} famiglie e {n_prod} prodotti "
+                            "del catalogo ARNOplast."))
         for fam in line.families:
             fam_url = f"/{lang}/{line.slug}/{fam.slug}/"
             search_pages.append({"name": text(fam.name, lang), "kind": "family",
@@ -1000,8 +1018,9 @@ def build_site(c: Catalog, out: Path, lang: str = "it", sources: Path | None = N
             photos = {p.slug: make_photo(p, out) for p in fam.products}
             render("family.html", base / line.slug / fam.slug, line=line, family=fam,
                    title=text(fam.name, lang),
-                   description=f"{text(fam.name, lang)} ({text(line.name, lang)}): "
-                               f"{len(fam.products)} prodotti, tra cui {names}.",
+                   description=f"{text(fam.name, lang)} ({text(line.name, lang)}): " +
+                               (f"{len(fam.products)} products, including {names}." if lang == "en" else
+                                f"{len(fam.products)} prodotti, tra cui {names}."),
                    photos=photos,
                    thumbs={p.slug: make_thumbs(p, out) for p in fam.products if not photos[p.slug]},
                    videos={p.slug: vids.get(f"{line.slug}/{fam.slug}/{p.slug}", []) for p in fam.products},
@@ -1010,13 +1029,15 @@ def build_site(c: Catalog, out: Path, lang: str = "it", sources: Path | None = N
                 url = f"/{lang}/{line.slug}/{fam.slug}/{prod.slug}/"
                 arts = prod.articles
                 has_image = _image_url(prod) is not None
-                mats = ", ".join(MATERIALS.get(m, m) for m in prod.materials)
+                mats_map = MATERIALS_EN if lang == "en" else MATERIALS
+                mats = ", ".join(mats_map.get(m, m) for m in prod.materials)
                 render("product.html", base / line.slug / fam.slug / prod.slug,
                        line=line, family=fam, product=prod, title=text(prod.name, lang),
                        seo_title=_unique_title(seen_titles, text(prod.name, lang), text(fam.name, lang), text(line.name, lang),
                                                name_count[text(prod.name, lang)] > 1),
-                       description=f"{text(prod.name, lang)}, {text(fam.name, lang)} ({text(line.name, lang)}): "
-                                   f"{len(arts)} codici articolo" + (f". Materiali: {mats}" if mats else "") + ".",
+                       description=f"{text(prod.name, lang)}, {text(fam.name, lang)} ({text(line.name, lang)}): " +
+                                   (f"{len(arts)} item codes" + (f". Materials: {mats}" if mats else "") + "." if lang == "en" else
+                                   f"{len(arts)} codici articolo" + (f". Materiali: {mats}" if mats else "") + "."),
                        row_ids=_unique_ids([a.code for a in arts]),
                        show_conf=any(a.conf is not None for a in arts),
                        show_imb=any(a.imb is not None for a in arts),
@@ -1056,9 +1077,10 @@ def build_site(c: Catalog, out: Path, lang: str = "it", sources: Path | None = N
                hero=_hero("imballaggi", imgs),
                description=re.sub(r"\*\*", "", " ".join(pack["paragrafi"]))[:200] or f"{pack['titolo']} - {CONTACTS['name']}, Rignano sull'Arno.")
     fairs = load_fairs()
-    upcoming, past = split_fairs(fairs, build_date(), fair_photos(fairs))
+    upcoming, past = split_fairs(fairs, build_date(), fair_photos(fairs), lang)
     render("fairs.html", base / "fiere", line=None, title=t("page.fairs", lang), upcoming=upcoming, past=past,
-           description="Le fiere a cui partecipa ARNOplast: prossimi appuntamenti e archivio delle fiere passate.")
+           description=("The trade fairs ARNOplast attends: upcoming events and archive of past fairs." if lang == "en" else
+                        "Le fiere a cui partecipa ARNOplast: prossimi appuntamenti e archivio delle fiere passate."))
     pdfs = []
     for slug, (src_name, pub_name, pages_key) in catalog_pdfs(lang, sources).items():
         f = out / "downloads" / pub_name
