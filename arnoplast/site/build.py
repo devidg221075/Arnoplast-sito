@@ -48,7 +48,7 @@ COMPANY_STORY = {
     "today_kicker": "Chi siamo oggi, cosa facciamo e dove vogliamo andare",
     "today_title": "Arno Plast oggi",
     "today": ("Oggi", "Oggi ARNOplast ha sede e stabilimenti produttivi a Rignano sull’Arno, non lontano da Firenze. "
-                      "Assieme ad una squadra di conto terzisti in Toscana, collegata ad ARNO commerciale, ha "
+                      "Assieme ad una squadra di conto terzisti in Toscana, collegata ad ARNOcommerciale, ha "
                       "conquistato una posizione leader nel mercato italiano. Con i sistemi per il giardinaggio e "
                       "l’agricoltura ARNOplast è arrivata a commercializzare i propri prodotti in tutta Europa, "
                       "Mediterraneo e in diversi Paesi oltre oceano."),
