@@ -40,6 +40,14 @@
     <ol class="co-timeline co-timeline-end" data-reveal="stagger">
       <li><p class="co-year"><span>{{ story.today[0] }}</span></p><p>{{ story.today[1] }}</p></li>
     </ol>
+    <div class="co-stats" data-reveal>
+      {% for title_key, rows in (('co.mix_t', (('co.agri', 80), ('co.garden', 20))), ('co.area_t', (('co.italy', 60), ('co.abroad', 40)))) %}
+      <section class="co-stat" aria-label="{{ t(title_key) }}">
+        <h3>{{ t(title_key) }}</h3>
+        <ul>{% for key, pct in rows %}<li><span class="co-stat-l">{{ t(key) }}</span><span class="co-stat-bar" style="--pct: {{ pct }}%"><i></i></span><b>{{ pct }}%</b></li>{% endfor %}</ul>
+      </section>
+      {% endfor %}
+    </div>
   </div>
 </section>
 {% if imgs and 'progetto' in imgs %}

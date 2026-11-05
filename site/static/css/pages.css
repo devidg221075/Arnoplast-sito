@@ -115,3 +115,13 @@
 .pk-indif { --pk: #6b6b73; }
 .pk-isola { --pk: #2f8f3a; }
 .pk-note { margin-top: 22px; font-weight: 700; }
+/* Dati del sito vecchio: mix di prodotti e copertura territoriale (barre semplici, senza JS). */
+.co-stats { display: grid; gap: 28px; margin-top: 40px; max-width: 760px; }
+.co-stat h3 { font-size: .8rem; letter-spacing: .1em; text-transform: uppercase; color: var(--red); margin: 0 0 12px; }
+.co-stat ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
+.co-stat li { display: grid; grid-template-columns: 7.5rem 1fr 3rem; align-items: center; gap: 12px; }
+.co-stat-l { font-weight: 700; }
+.co-stat-bar { display: block; height: 10px; background: var(--line); border-radius: 5px; overflow: hidden; }
+.co-stat-bar i { display: block; height: 100%; width: var(--pct); background: var(--red); }
+.co-stat b { text-align: right; }
+@media (min-width: 900px) { .co-stats { grid-template-columns: 1fr 1fr; gap: 48px; max-width: none; } }
