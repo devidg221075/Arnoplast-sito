@@ -78,7 +78,7 @@ Nuovo: ✔ indirizzo/telefono/email nel footer (decisione: dati del sito vecchio
 Modulo di richiesta. Nuovo: ✔ richiesta con lista articoli (mailto nel prototipo); da unificare con il modulo Contatti.
 
 ### Privacy policy (/privacy-policy-arno-plast, /en/…)  ✅
-Testo legale di 5.600 caratteri. Non lo riscrivo: il sito nuovo rimanda alla policy esistente (da ospitare nel sito nuovo in fase WordPress, con il vostro testo).
+Testo legale di 5.600 caratteri, copiato senza modifiche in `data/privacy.json` e pubblicato in `/it/privacy-policy-arno-plast/` (decisione del cliente 2026-11-05: il testo lo fornisce il cliente, noi lo pubblichiamo). Da far verificare al consulente del cliente: nel testo ci sono refusi del sito vecchio (es. "dai suoi adatti", "terzi nominati responsabili preventivamente nominati", "dalTitolare") che non abbiamo corretto. Versione inglese: non ancora creata.
 
 ## 3. Elementi trasversali del sito vecchio
 - **Lingue:** IT e EN, ogni pagina ha la gemella inglese (prodotti compresi): utilissima per la fase inglese.

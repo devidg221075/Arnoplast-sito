@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block main %}
+{# Informativa privacy: testo del cliente, copiato dal sito vecchio senza modifiche (data/privacy.json). Non riscrivere qui. #}
+<section class="page-head">
+  <div class="wrap">
+    <nav class="breadcrumb" aria-label="Breadcrumb"><a href="/{{ lang }}/">{{ t('breadcrumb.home') }}</a></nav>
+    <h1>{{ title }}</h1>
+  </div>
+</section>
+<div class="wrap section prose">
+  {% for p in paragrafi %}<p>{{ p }}</p>
+  {% endfor %}
+</div>
+{% endblock %}

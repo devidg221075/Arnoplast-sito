@@ -121,7 +121,7 @@ CARD_SIZES = "(min-width: 1240px) 290px, (min-width: 1024px) 23vw, (min-width: 6
 PRODUCT_PHOTO_SIZES = "(min-width: 1024px) 40vw, calc(100vw - 32px)"
 
 # Informativa privacy esistente; la fase WordPress puo' cambiarla qui.
-PRIVACY_URL = "https://www.arnoplast.it/privacy-policy-arno-plast"
+PRIVACY_URL = "/it/privacy-policy-arno-plast/"  # pagina del sito nuovo, testo in data/privacy.json
 
 # PDF dei cataloghi: slug linea -> (file sorgente, nome pubblicato)
 CATALOG_PDFS = {
@@ -972,6 +972,11 @@ def build_site(c: Catalog, out: Path, lang: str = "it", sources: Path | None = N
            description=t("gallery.lead", lang))
     render("videos.html", base / "video", line=None, title=t("page.videos", lang), lib=video_library(c, lang),
            description=t("vid.lead", lang))
+    if (DATA_DIR / "privacy.json").is_file():  # testo del cliente, copiato dal sito vecchio (vedi data/privacy.json)
+        privacy = json.loads((DATA_DIR / "privacy.json").read_text(encoding="utf-8"))
+        render("privacy.html", base / "privacy-policy-arno-plast", line=None, title=privacy["titolo"],
+               paragrafi=privacy["paragrafi"],
+               description="Informativa privacy di ARNOplast ai sensi dell'art. 13 del Regolamento UE 679/2016 (GDPR).")
     render("open_day.html", base / "open-day", line=None, title=t("page.openday", lang), description=t("od.text", lang))
     render("reserved.html", base / "area-riservata", line=None, title=t("page.reserved", lang), noindex=True,
            sitemap=False, description=t("rs.lead", lang))

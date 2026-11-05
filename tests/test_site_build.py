@@ -124,7 +124,7 @@ def test_real_catalog_smoke(tmp_path):
     written = build_site(c, tmp_path)
     n_fam = sum(len(l.families) for l in c.lines)
     n_prod = sum(len(f.products) for l in c.lines for f in l.families)
-    assert len(written) == 1 + len(c.lines) + n_fam + n_prod + 16  # home + pagine di servizio, /en/, il rimando /it/applicazioni/, i 3 sfogliatori dei cataloghi e Open Day
+    assert len(written) == 1 + len(c.lines) + n_fam + n_prod + 17  # home + pagine di servizio, /en/, il rimando /it/applicazioni/, i 3 sfogliatori dei cataloghi, Open Day e Privacy
     for f in written:
         low = f.read_text(encoding="utf-8").lower()
         for w in ("carrello", "€", "prezzo"):
@@ -134,9 +134,8 @@ def test_real_catalog_smoke(tmp_path):
 def test_quote_page_privacy_link_points_to_live_policy(tmp_path):
     build_site(cat(prod()), tmp_path)
     html = (tmp_path / "it" / "richiesta-preventivo" / "index.html").read_text(encoding="utf-8")
-    assert 'href="https://www.arnoplast.it/privacy-policy-arno-plast"' in html
-    assert 'target="_blank"' in html and 'rel="noopener"' in html
-    assert 'href="/it/privacy/"' not in html
+    assert 'href="/it/privacy-policy-arno-plast/"' in html
+    assert 'href="https://www.arnoplast.it/privacy-policy-arno-plast"' not in html
 
 
 def test_real_catalog_internal_links_resolve(tmp_path):
