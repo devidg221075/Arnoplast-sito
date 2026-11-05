@@ -115,7 +115,9 @@ def test_missing_image_does_not_break_page(tmp_path):
 
 def test_i18n_falls_back_to_italian():
     assert t("menu.products", "it") == "Prodotti"
-    assert t("menu.products", "en") == "Prodotti"
+    assert t("menu.products", "en") == "Products"
+    assert t("menu.contacts", "en") == "Contacts"
+    assert t("chiave.solo.it", "en") == "chiave.solo.it"  # chiave mancante: nessuna stringa vuota
     assert t("chiave.inesistente", "it") == "chiave.inesistente"
 
 

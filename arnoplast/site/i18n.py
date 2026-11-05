@@ -348,5 +348,9 @@ STRINGS = {
 }
 
 
+from arnoplast.site.i18n_en import EN  # noqa: E402  (stringhe inglesi, vedi il file)
+STRINGS["en"] = EN
+
+
 def t(key: str, lang: str) -> str:
     return STRINGS.get(lang, {}).get(key) or STRINGS["it"].get(key, key)
