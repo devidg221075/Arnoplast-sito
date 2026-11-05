@@ -607,11 +607,12 @@ def video_library(c: Catalog, lang: str) -> dict:
             prod = {"href": f"/{lang}/{l.slug}/{f.slug}/{p.slug}/", "name": text(p.name, lang)}
         thumb = f"/static/img/video/{svc}-{vid}.webp" if (VIDEO_THUMB_DIR / f"{svc}-{vid}.webp").is_file() else None
         dur = v.get("durata")
+        title = (v.get("titolo_en") or v["titolo"]) if lang == "en" else v["titolo"]  # titolo_en: facoltativo
         cards.append({"group": gr, "service": svc, "label": "Vimeo" if svc == "vimeo" else "YouTube", "id": vid,
-                      "title": v["titolo"], "url": url, "src": src, "product": prod, "thumb": thumb, "duration": dur,
+                      "title": title, "url": url, "src": src, "product": prod, "thumb": thumb, "duration": dur,
                       "duration_label": _duration_label(dur, lang) if dur else None,
                       "category": t("vid.c_video" if gr == "video" else f"vid.c_{gr}", lang),
-                      "search": " ".join([v["titolo"], t(f"vid.f_{'agri' if gr == 'agricoltura' else gr}", lang),
+                      "search": " ".join([title, t(f"vid.f_{'agri' if gr == 'agricoltura' else gr}", lang),
                                           prod["name"] if prod else "", "Vimeo" if svc == "vimeo" else "YouTube"])})
     filters = [("all", t("vid.f_all", lang), len(cards))] + [
         (k, t(label, lang), sum(1 for c_ in cards if c_["group"] == k)) for k, label in VIDEO_GROUPS
