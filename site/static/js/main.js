@@ -177,7 +177,7 @@ function renderQuote() {
         const pr = document.createElement('span');
         pr.className = 'ql-prod';
         pr.textContent = item.product;
-        m.append(pr);
+        m.append(' ', pr);
       }
       desc.append(' ', m);
     }

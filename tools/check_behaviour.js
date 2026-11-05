@@ -199,7 +199,7 @@ for (const prod of ['copripalo-prisma', 'copripalo-qubo']) {
 const packs = await stored();
 ok(packs.length === 2 && packs[0].conf !== packs[1].conf && packs.every((i) => i.product), `stesso codice, due confezioni: due voci (${packs.map((i) => `${i.product} da ${i.conf}`).join('; ')})`);
 await page.goto(BASE + QUOTE, { waitUntil: 'networkidle' });
-ok(await page.locator('.quote-line').count() === 2 && (await page.locator('.ql-meta').allTextContents()).every((t) => /conf\. da \d+ – Copripalo/.test(t)), 'pagina richiesta: confezione e prodotto su ogni riga');
+ok(await page.locator('.quote-line').count() === 2 && (await page.locator('.ql-meta').allTextContents()).every((t) => /conf\. da \d+\s+Copripalo/.test(t)), 'pagina richiesta: confezione e prodotto su ogni riga');
 await page.fill('#q-name', 'Mario Rossi');
 await page.fill('#q-email', 'mario@example.com');
 await page.check('#q-privacy');
@@ -539,10 +539,10 @@ ok(/inset/.test(azShown), 'voce attiva evidenziata (sottolineatura rossa)');
 await azBtn.focus();
 await n1.keyboard.press('Shift+Tab'); await n1.keyboard.press('Tab');
 ok(await n1.evaluate(() => getComputedStyle(document.activeElement).outlineStyle !== 'none'), 'fuoco visibile sulle voci di menu');
-// Selettore di lingua: EN porta alla pagina "coming soon" (noindex), IT torna all'italiano.
+// Selettore di lingua: EN porta alla home inglese (noindex), IT torna all'italiano.
 await n1.locator('.lang a[hreflang="en"]').click();
 await n1.waitForURL(/\/en\/$/);
-ok(/coming soon/i.test(await n1.locator('h1').textContent()) && (await n1.locator('meta[name="robots"]').getAttribute('content')) === 'noindex'
+ok(/Plastic accessories/i.test(await n1.locator('h1').textContent()) && (await n1.locator('meta[name="robots"]').getAttribute('content')) === 'noindex'
   && (await n1.locator('.lang a[aria-current]').getAttribute('hreflang')) === 'en', 'lingua: EN apre /en/ (noindex, EN attivo)');
 await n1.locator('.lang a[hreflang="it"]').click();
 await n1.waitForURL(/\/it\/$/);
