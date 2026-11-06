@@ -41,3 +41,8 @@ Stato: tutte le pagine del prototipo sono state riviste insieme, in italiano e i
 - Notizie: rimossa. Open Day: pagina "Coming soon". Download area: decisa. Imballaggi: approvata.
 - Galleria con filtri per tipo (impianti, serre, dettagli, disegni).
 - Modulo contatti senza captcha fino a WordPress.
+
+## 5. Prossimo passo concordato
+
+- Il cliente verifica lo zip di pubblicazione (`arnoplast-sito-pubblicazione.zip`, rigenerabile con la build).
+- Poi: **rendere indicizzata anche la versione inglese**, come quella italiana: togliere `noindex` dalle pagine `/en/`, inserirle nella sitemap, aggiungere gli hreflang tra le due lingue e ricostruire lo zip.
