@@ -298,6 +298,7 @@ STRINGS = {
         "alt.idea_2": "Pressa a iniezione nello stabilimento",
         "alt.idea_3": "Magazzino con scaffalature e pallet",
         "alt.sede": "La sede ARNOplast a Rignano sull'Arno",
+        "alt.gallery": "Accessori ARNOplast su un impianto realizzato",
         "ct.commercial_t": "ARNOcommerciale",
         "ct.commercial": "ARNOcommerciale ha conquistato una posizione nel mercato italiano dei sistemi per il giardinaggio e l'agricoltura ed è arrivata a commercializzare i propri prodotti in tutta Europa, nel Bacino del Mediterraneo e in alcuni Paesi oltre oceano.",
         "ck.lead": "Cosa salva questo sito sul tuo dispositivo e quali servizi esterni si attivano solo con un tuo clic.",

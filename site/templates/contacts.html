@@ -51,7 +51,7 @@
         <div class="field"><label for="c-contact">{{ t('ct.contact') }}</label> <input type="text" id="c-contact" name="contact"></div>
       </div>
       <div class="field"><label for="c-type">{{ t('ct.type') }} <abbr title="{{ t('quote.required') }}">*</abbr></label>
-        <select id="c-type" name="type" required>{% for u in user_types %}<option value="{{ u }}">{{ u }}</option>{% endfor %}</select></div>
+        <select id="c-type" name="type" required>{% for v, lab in user_types %}<option value="{{ v }}">{{ lab }}</option>{% endfor %}</select></div>
       <div class="field"><label for="c-address">{{ t('ct.address') }}</label> <input type="text" id="c-address" name="address" autocomplete="street-address"></div>
       <div class="field-row three">
         <div class="field"><label for="c-city">{{ t('ct.city') }}</label> <input type="text" id="c-city" name="city" autocomplete="address-level2"></div>

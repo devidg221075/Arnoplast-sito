@@ -83,6 +83,14 @@ EXTERNAL_SERVICES = [
 USER_TYPES = ["Privato/Altro", "Azienda Agricola", "Garden/Vivaio", "Riv. Macc. Agr./Officina", "Agraria/Consorzio Agrario",
               "Ferramenta/Fai da te", "Manutentori/Giardinieri", "Grossa Distrib. Spec.", "Ingrosso/Consulente",
               "Installatore/Importatore", "Edile", "Ente"]
+# Etichette inglesi (traduzione nostra, da far verificare): il valore inviato resta quello italiano.
+USER_TYPES_EN = {"Privato/Altro": "Private / Other", "Azienda Agricola": "Farm", "Garden/Vivaio": "Garden centre / Nursery",
+                 "Riv. Macc. Agr./Officina": "Agricultural machinery dealer / Workshop",
+                 "Agraria/Consorzio Agrario": "Agricultural supplier / Farmers' cooperative",
+                 "Ferramenta/Fai da te": "Hardware store / DIY", "Manutentori/Giardinieri": "Maintenance / Gardeners",
+                 "Grossa Distrib. Spec.": "Large specialised retailer", "Ingrosso/Consulente": "Wholesaler / Consultant",
+                 "Installatore/Importatore": "Installer / Importer", "Edile": "Construction", "Ente": "Public body"}
+
 # Mappa incorporata (solo dopo il clic): stessa ricerca del link "Apri in Google Maps".
 MAP_EMBED = "https://www.google.com/maps?q=" + quote("ARNO PLAST, Via Comunale dell'Isola 65, 50067 Rignano sull'Arno FI") + "&output=embed"
 
@@ -333,7 +341,7 @@ def fair_dates(f: dict, lang: str = "it") -> str:
     """Date leggibili: "10-14 novembre 2026", "30 novembre - 3 dicembre 2023"; senza date il periodo o l'anno."""
     months = MONTHS_EN if lang == "en" else MONTHS
     if not f["data_inizio"]:
-        return f["periodo"] or str(f["anno"])
+        return ((f.get("periodo_en") if lang == "en" else "") or f["periodo"]) or str(f["anno"])
     a = date.fromisoformat(f["data_inizio"])
     b = date.fromisoformat(f["data_fine"]) if f["data_fine"] else a
     if a == b:
@@ -420,7 +428,10 @@ def split_fairs(fairs: list[dict], today: date,
             return ", ".join(x for x in (f.get("luogo_en") or f["luogo"], f.get("paese_en") or f["paese"]) if x)
         return ", ".join(x for x in (f["luogo"], f["paese"]) if x)
 
-    view = [dict(f, date_label=fair_dates(f, lang), end=_fair_end(f), end_iso=_fair_end(f).isoformat(),
+    def en_or_it(f: dict, k: str) -> str:  # in inglese luogo e paese tradotti, se ci sono
+        return (f.get(k + "_en") or f[k]) if lang == "en" else f[k]
+
+    view = [dict(f, luogo=en_or_it(f, "luogo"), paese=en_or_it(f, "paese"), date_label=fair_dates(f, lang), end=_fair_end(f), end_iso=_fair_end(f).isoformat(),
                  place=loc(f), short=fair_short(fair_text(f, lang)), testo=fair_text(f, lang)["testo"],
                  stand=(f.get("stand_en") or f.get("stand", "")) if lang == "en" else f.get("stand", ""),
                  link=f.get("link") or "", img=photos.get(f["id"])) for f in fairs]
@@ -596,6 +607,8 @@ VIDEO_THUMB_DIR = ROOT / "site" / "static" / "img" / "video"
 
 def _duration_label(d: str, lang: str) -> str:
     m, s_ = (int(x) for x in d.split(":"))
+    if lang == "en":
+        return f"{m} minute{'' if m == 1 else 's'} and {s_} second{'' if s_ == 1 else 's'}"
     return (f"{m} " + ("minuto" if m == 1 else "minuti") + f" e {s_} " + ("secondo" if s_ == 1 else "secondi"))
 
 
@@ -958,7 +971,7 @@ def build_site(c: Catalog, out: Path, lang: str = "it", sources: Path | None = N
     out = Path(out)
     sources = SOURCE_DIR if sources is None else Path(sources)
     env = _env(lang)
-    env.globals["materials_names"] = MATERIALS
+    env.globals["materials_names"] = MATERIALS_EN if lang == "en" else MATERIALS
     vids = product_videos(c, videos)
     seen_titles: set[str] = set()
     name_count: dict[str, int] = {}
@@ -1065,7 +1078,7 @@ def build_site(c: Catalog, out: Path, lang: str = "it", sources: Path | None = N
            description=t("quote.intro", lang), privacy_url=privacy_url_for(lang))
     render("contacts.html", base / "contatti", line=None, title=t("page.contacts", lang),
            description=f"{CONTACTS['name']}, {CONTACTS['address']}. Tel. {CONTACTS['phone']}, {CONTACTS['email']}.",
-           hero=_hero("azienda", imgs), imgs=imgs, user_types=USER_TYPES, jsonld=organization_ld(), map_embed=MAP_EMBED, privacy_url=privacy_url_for(lang))
+           hero=_hero("azienda", imgs), imgs=imgs, user_types=[(u, USER_TYPES_EN[u] if lang == "en" else u) for u in USER_TYPES], jsonld=organization_ld(), map_embed=MAP_EMBED, privacy_url=privacy_url_for(lang))
     story = COMPANY_STORY if lang == "it" else load_en_story()
     if story is not None:
       render("company.html", base / "azienda", line=None, title=t("page.company", lang),

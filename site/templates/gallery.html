@@ -20,7 +20,7 @@
   {% for ph in photos %}
     <li class="gl-item" data-cat="{{ ph.categoria or 'impianti' }}" style="--r: {{ '%.4f' % (ph.tw / ph.th) }}">
       <a href="/static/img/galleria/{{ ph.id }}.webp" data-w="{{ ph.w }}" data-h="{{ ph.h }}" aria-label="{{ t('gallery.open') }} ({{ loop.index }} {{ t('hs.of') }} {{ loop.length }})">
-        <img src="/static/img/galleria/{{ ph.id }}-t.webp" width="{{ ph.tw }}" height="{{ ph.th }}" alt="{{ ph.alt }}" loading="lazy" decoding="async">
+        <img src="/static/img/galleria/{{ ph.id }}-t.webp" width="{{ ph.tw }}" height="{{ ph.th }}" alt="{{ t('alt.gallery') if lang != 'it' else ph.alt }}" loading="lazy" decoding="async">
       </a>
     </li>
   {% endfor %}

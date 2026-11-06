@@ -301,6 +301,7 @@ EN = {
     "alt.idea_2": "Injection moulding press in the plant",
     "alt.idea_3": "Warehouse with shelving and pallets",
     "alt.sede": "The ARNOplast headquarters in Rignano sull'Arno",
+    "alt.gallery": "ARNOplast accessories on an installed system",
     "ct.commercial_t": "ARNOcommerciale",
     "ct.commercial": "ARNOcommerciale has established a position in the Italian market for gardening and agriculture systems and now sells its products across Europe, in the Mediterranean basin and in some countries overseas.",
     "ck.lead": "What this site stores on your device, and which external services are activated only by your click.",
