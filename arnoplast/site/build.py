@@ -104,7 +104,7 @@ SOCIAL = [
 ]
 APPS = [
     ("App Store", "https://apps.apple.com/it/app/arno-plast/id1534894744", "apple"),
-    ("Google Play", "https://play.google.com/store/apps/details?id=com.arnoplast.keyidea&hl=it&gl=IT", "play"),
+    ("Google Play", "https://play.google.com/store/search?q=arno%20plast&c=apps", "play"),
 ]
 
 

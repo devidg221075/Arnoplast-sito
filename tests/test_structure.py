@@ -170,7 +170,7 @@ def test_footer_on_every_page(site):
         assert 'href="mailto:info@arnoplast.it"' in f
         for url in ("https://www.facebook.com/arnoplast", "https://it.linkedin.com/company/arnoplast-s-r-l",
                     "https://www.instagram.com/arnoplast/", "https://apps.apple.com/it/app/arno-plast/id1534894744",
-                    "https://play.google.com/store/apps/details?id=com.arnoplast.keyidea&amp;hl=it&amp;gl=IT"):
+                    "https://play.google.com/store/search?q=arno%20plast&amp;c=apps"):
             assert f'<a href="{url}" target="_blank" rel="noopener">' in f or f'href="{url}" target="_blank" rel="noopener"' in f, url
         light = re.search(r'<nav class="wrap ft-nav".*?</nav>', f, re.S).group(0)
         labels = [re.sub(r"<[^>]+>", "", x).strip() for x in re.findall(r"<a [^>]*>(.*?)</a>", light, re.S)]
