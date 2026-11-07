@@ -101,7 +101,7 @@ def test_line_hero_numbers_come_from_catalog(site):
 
 def test_motion_assets_linked_on_every_page(site):
     out, _ = site
-    for f in out.rglob("*.html"):
+    for f in (p for p in out.rglob("*.html") if p.parent != out):  # esclusa la pagina iniziale di rimando
         h = f.read_text(encoding="utf-8")
         assert '<link rel="stylesheet" href="/static/css/motion.css">' in h, f
         tag = re.search(r'<script\b[^>]*src="/static/js/anim\.js"[^>]*>', h).group(0)

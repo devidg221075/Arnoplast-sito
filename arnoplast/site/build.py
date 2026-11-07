@@ -1162,6 +1162,15 @@ def _write_globals(out: Path, urls: list[str], sources: Path | None, lang: str) 
         + "".join(f"  <url><loc>{escape(u)}</loc></url>\n" for u in dict.fromkeys(urls))
         + "</urlset>\n", encoding="utf-8")
     (out / "_headers").write_text(security_headers(out), encoding="utf-8")
+    # Pagina iniziale: rimanda all'italiano anche sui server che non leggono _redirects (indirizzo relativo, vale
+    # anche se il sito e' in una sottocartella). Non e' in sitemap e non va indicizzata.
+    (out / "index.html").write_text(
+        '<!doctype html>\n<html lang="it"><head><meta charset="utf-8">'
+        '<meta name="viewport" content="width=device-width, initial-scale=1">'
+        '<title>ARNOplast</title><meta name="robots" content="noindex">'
+        f'<link rel="canonical" href="{SITE_URL}/it/"><meta http-equiv="refresh" content="0; url=it/"></head>'
+        '<body><p><a href="it/">ARNOplast – Italiano</a> · <a href="en/">English</a></p></body></html>\n',
+        encoding="utf-8")
     (out / "robots.txt").write_text(f"User-agent: *\nAllow: /\n\nSitemap: {SITE_URL}/sitemap.xml\n",
                                     encoding="utf-8")
 

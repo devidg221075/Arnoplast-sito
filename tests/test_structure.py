@@ -42,7 +42,7 @@ def top_labels(h):
 
 
 def all_pages(out):
-    return [p for p in out.rglob("index.html")]
+    return [p for p in out.rglob("index.html") if p.parent != out]  # esclusa la pagina iniziale di rimando
 
 
 # --- menu ---------------------------------------------------------------------------------------------
@@ -407,3 +407,10 @@ def test_no_external_requests_on_new_pages(site):
         h = html(site, rel)
         assert not re.search(r'\s(?:src|srcset)="https?://', h) and not re.search(r'<link[^>]+href="https?://(?!www\.arnoplast\.it)', h)
         assert "<iframe" not in h and "fonts.googleapis" not in h
+
+
+def test_root_index_redirects_to_italian(site):
+    out = site
+    h = (out / "index.html").read_text(encoding="utf-8")
+    assert 'http-equiv="refresh" content="0; url=it/"' in h and 'href="it/"' in h and 'href="en/"' in h
+    assert "noindex" in h and "/index.html" not in (out / "sitemap.xml").read_text(encoding="utf-8")
