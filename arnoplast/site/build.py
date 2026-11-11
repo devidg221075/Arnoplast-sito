@@ -17,6 +17,7 @@ from markupsafe import Markup
 
 from arnoplast.catalog import Catalog, load_catalog, text
 from arnoplast.site import fair_images as FI
+from arnoplast.site import gallery_tools as GT
 from arnoplast.site import texts as TX
 from arnoplast.site.i18n import t
 from arnoplast.site.redirects import load_redirects, netlify_rules
@@ -285,6 +286,7 @@ def load_gallery(path: Path | None = None) -> list[dict]:
     """data/galleria.json (scritto da tools/galleria_images.py) -> foto della Galleria. Errore chiaro se manca un file."""
     path = DATA_DIR / "galleria.json" if path is None else Path(path)
     photos = json.loads(path.read_text(encoding="utf-8"))["foto"] if path.is_file() else []
+    GT.check(photos)
     for ph in photos:
         if ph.get("categoria", "impianti") not in GALLERY_CATS:
             raise ValueError(f"data/galleria.json: categoria non valida per la foto {ph['id']}: {ph.get('categoria')!r}")

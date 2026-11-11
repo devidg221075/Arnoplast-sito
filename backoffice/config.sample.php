@@ -3,6 +3,7 @@
 return [
     'site_name' => 'ARNOplast',
     'site_url' => 'https://www.arnoplast.it',          // indirizzo del sito pubblico (logo e link nelle e-mail)
+    'assets_url' => 'https://www.arnoplast.it',         // dove stanno le immagini del sito (per le anteprime della galleria); finché il sito è in prova: https://nuovo.arnoplast.it
     'admin_url' => 'https://gestione.arnoplast.it',     // indirizzo di questo backoffice
     'allowed_origins' => ['https://www.arnoplast.it', 'https://nuovo.arnoplast.it'], // siti che possono inviare i moduli
     'db' => [

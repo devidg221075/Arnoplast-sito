@@ -9,6 +9,8 @@ use Backoffice\Inbox;
 use Backoffice\Content;
 use Backoffice\Fairs;
 use Backoffice\FairsView;
+use Backoffice\Gallery;
+use Backoffice\GalleryView;
 use Backoffice\Mime;
 use Backoffice\Texts;
 use Backoffice\TextsView;
@@ -21,7 +23,9 @@ const STATUSES = ['nuova' => 'Nuova', 'in_lavorazione' => 'In lavorazione', 'pre
 const KINDS = ['contact' => 'Contatto', 'quote' => 'Preventivo'];
 
 header('Content-Type: text/html; charset=utf-8');
-header("Content-Security-Policy: default-src 'none'; style-src 'self'; img-src 'self'; form-action 'self'; base-uri 'none'; frame-ancestors 'none'");
+$assets = (string) App::config('assets_url', '');
+$assetsOrigin = preg_match('~^(https://[A-Za-z0-9.-]+|http://(localhost|127\.0\.0\.1))(:\d+)?$~', rtrim($assets, '/')) ? ' ' . rtrim($assets, '/') : '';
+header("Content-Security-Policy: default-src 'none'; style-src 'self'; img-src 'self'$assetsOrigin; form-action 'self'; base-uri 'none'; frame-ancestors 'none'");
 header('X-Content-Type-Options: nosniff');
 header('X-Frame-Options: DENY');
 header('Referrer-Policy: no-referrer');
@@ -47,7 +51,7 @@ $say = static function (string $text, bool $ok = true): void {
 $render = static function (string $title, string $body, ?array $user = null) use ($e, $url, $flash): never {
     $nav = '';
     if ($user) {
-        $links = ['requests' => 'Richieste'] + (Auth::isAdmin($user) ? ['fairs' => 'Fiere', 'texts' => 'Testi', 'mail' => 'Posta', 'conditions' => 'Condizioni PDF', 'users' => 'Utenti', 'activity' => 'Registro attività'] : []) + ['account' => 'Il mio accesso'];
+        $links = ['requests' => 'Richieste'] + (Auth::isAdmin($user) ? ['fairs' => 'Fiere', 'gallery' => 'Galleria', 'texts' => 'Testi', 'mail' => 'Posta', 'conditions' => 'Condizioni PDF', 'users' => 'Utenti', 'activity' => 'Registro attività'] : []) + ['account' => 'Il mio accesso'];
         foreach ($links as $p => $label) {
             $nav .= '<a href="' . $e($url($p)) . '">' . $e($label) . '</a>';
         }
@@ -65,6 +69,10 @@ $render = static function (string $title, string $body, ?array $user = null) use
 $csrfField = static fn (): string => '<input type="hidden" name="csrf" value="' . $e(Auth::csrf()) . '">';
 $date = static fn (?string $d): string => $d ? date('d/m/Y H:i', strtotime($d)) : '';
 
+if ($isPost && empty($_POST) && empty($_FILES) && (int) ($_SERVER['CONTENT_LENGTH'] ?? 0) > 0) {
+    http_response_code(413);
+    $render('Caricamento troppo grande', '<p>Il server ha rifiutato l\'invio perché i file superano il limite consentito (' . $e((string) ini_get('post_max_size')) . '). Carica meno foto per volta, oppure più piccole. <a href="' . $e($url('gallery')) . '">Torna alla galleria</a></p>');
+}
 if ($isPost && !Auth::checkCsrf()) {
     http_response_code(400);
     $render('Sessione scaduta', '<p>Il modulo non è più valido. <a href="' . $e($url('requests')) . '">Riprova</a>.</p>');
@@ -202,6 +210,77 @@ if (($page === 'fairs' || $page === 'fair') && $admin) {
     $raw = $_SESSION['fair_form'] ?? null;
     unset($_SESSION['fair_form']);
     $render($row ? 'Fiera: ' . ($row['draft']['nome'] ?? $row['item_id']) : 'Nuova fiera', FairsView::form($row, Auth::csrf(), is_array($raw) ? $raw : null), $user);
+}
+
+// --- Galleria (solo amministratore): griglia, aggiunta, scheda di una foto. Le modifiche restano in bozza.
+if (($page === 'gallery' || $page === 'gallery_photo' || $page === 'gallery_img') && $admin) {
+    if ($page === 'gallery_img') { // originale di una foto nuova (non ancora sul sito), solo per chi ha fatto l'accesso
+        $f = Gallery::original((string) ($_GET['id'] ?? ''));
+        if ($f === null) {
+            http_response_code(404);
+            exit;
+        }
+        $info = @getimagesize($f);
+        header_remove('Content-Security-Policy');
+        header('Content-Type: ' . ($info['mime'] ?? 'application/octet-stream'));
+        header('Content-Length: ' . filesize($f));
+        header('Cache-Control: private, max-age=300');
+        readfile($f);
+        exit;
+    }
+    if ($page === 'gallery') {
+        if ($isPost) {
+            $action = (string) ($_POST['action'] ?? '');
+            if ($action === 'import') {
+                $n = Gallery::importSeed();
+                App::log($uid, 'galleria.importata', '', (string) $n);
+                $say($n > 0 ? "Importate $n foto dal sito." : 'Nessuna foto nuova da importare.');
+            } elseif ($action === 'add') {
+                [$added, $errors] = Gallery::addUploads($_FILES['photos'] ?? [], (string) ($_POST['categoria'] ?? ''), $uid);
+                App::log($uid, 'galleria.aggiunte', '', (string) count($added));
+                $msg = ($added ? count($added) . (count($added) === 1 ? ' foto aggiunta' : ' foto aggiunte') . ' (in fondo alla galleria, in bozza). ' : '') . implode(' ', array_slice($errors, 0, 3));
+                $say(trim($msg), !$errors);
+            }
+            $go($url('gallery'));
+        }
+        $cat = is_string($_GET['cat'] ?? null) && isset(Gallery::CATEGORIES[$_GET['cat']]) ? $_GET['cat'] : '';
+        $render('Galleria', GalleryView::list(Auth::csrf(), $cat), $user);
+    }
+    $id = is_string($_GET['id'] ?? null) ? $_GET['id'] : '';
+    $row = Gallery::rows()[$id] ?? null;
+    if (!$row) {
+        http_response_code(404);
+        $render('Foto non trovata', '<p><a href="' . $e($url('gallery')) . '">Torna alla galleria</a></p>', $user);
+    }
+    $self = $url('gallery_photo', ['id' => $id]);
+    if ($isPost) {
+        $action = (string) ($_POST['action'] ?? '');
+        if ($action === 'delete') {
+            Gallery::delete($id, $uid);
+            App::log($uid, 'galleria.eliminata', $id);
+            $say('Foto eliminata.');
+            $go($url('gallery'));
+        }
+        if ($action === 'revert') {
+            Content::revert(Gallery::KIND, $id, $uid);
+            App::log($uid, 'galleria.annullata', $id);
+            $say('Modifiche annullate.');
+            $go($self);
+        }
+        $pos = ctype_digit(trim((string) ($_POST['position'] ?? ''))) ? (int) $_POST['position'] : null;
+        $errors = Gallery::save($id, (string) ($_POST['categoria'] ?? ''), (string) ($_POST['alt'] ?? ''), (string) ($_POST['alt_en'] ?? ''), $pos, $uid);
+        if ($errors) {
+            $_SESSION['gallery_form'] = $_POST;
+            $say(implode(' ', $errors), false);
+            $go($self);
+        }
+        App::log($uid, 'galleria.salvata', $id);
+        $say('Bozza salvata.');
+        $go($self);
+    }
+    $raw = $_SESSION['gallery_form'] ?? null;
+    unset($_SESSION['gallery_form']);
+    $render('Foto ' . $id, GalleryView::photo($row, Auth::csrf(), is_array($raw) ? $raw : null), $user);
 }
 
 // --- Testi fissi del sito, per pagina (solo amministratore). Le modifiche restano in bozza.

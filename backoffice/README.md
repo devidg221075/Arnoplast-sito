@@ -35,6 +35,13 @@ Non servono SSH né Composer sull'hosting: la cartella `vendor/` è già nel rep
    la politica di sicurezza del sito (CSP) lo consente. Senza la variabile i moduli aprono il programma di posta, come prima.
 7. **Origini**: in `config.php`, `allowed_origins` deve elencare gli indirizzi del sito da cui partono i moduli.
 
+## Galleria (tappa 4a)
+
+Menu **Galleria**: «Importa le foto del sito» porta le 145 foto di `data/galleria.json` (`seed/galleria.json`, deve restare identico). Per ogni foto: categoria,
+testo alternativo in italiano e in inglese, posizione; si possono aggiungere foto nuove (JPG/PNG/WebP, 10 MB, fino a 20 per volta) ed eliminarne. Tutto in bozza.
+Le foto nuove si conservano come originali in `var/content/galleria/`; le converte la build del sito con `python tools/galleria_apply.py` (due WebP per foto, come le altre).
+Le anteprime delle foto già sul sito si prendono da `assets_url` (in `config.php`: oggi `https://nuovo.arnoplast.it`).
+
 ## Testi del sito (tappa 4a)
 
 Menu **Testi**: i 333 testi fissi del sito (titoli, pulsanti, descrizioni), raggruppati per pagina, in italiano e inglese. Il campo vuoto = testo originale; si salvano

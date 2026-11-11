@@ -72,3 +72,13 @@ code { font: 13px ui-monospace, Menlo, Consolas, monospace; background: var(--li
 .texttable .tkey { background: var(--paper); padding: 8px 10px; border-top: 1px solid var(--line); }
 .texttable input, .texttable textarea { margin-top: 0; }
 .texttable small { display: block; margin-top: 4px; }
+.chips { display: flex; flex-wrap: wrap; gap: 8px; margin: 16px 0; }
+.chip { display: inline-block; padding: 6px 12px; border: 1px solid #b4b4bb; border-radius: 999px; background: #fff; text-decoration: none; font-size: 14px; }
+.chip.on { background: var(--black); color: #fff; border-color: var(--black); }
+.gallery-grid { list-style: none; margin: 0; padding: 0; display: grid; gap: 12px; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); }
+.gitem { background: #fff; border: 1px solid var(--line); padding: 8px; font-size: 13px; }
+.gitem img, .gitem .noimg { display: block; width: 100%; height: 120px; object-fit: cover; background: var(--paper); }
+.gitem .noimg { display: grid; place-items: center; color: var(--muted); }
+.gitem p { margin: 6px 0 0; }
+.gitem.gone { opacity: .45; }
+.gphoto { display: block; max-width: 100%; height: auto; }
