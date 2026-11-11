@@ -370,3 +370,13 @@ def test_main_css_within_budget_and_product_css_loaded_only_on_product_pages(tmp
     assert 'href="/static/css/product.css"' in page(tmp_path, "agricoltura", "fam", "copripalo")
     assert "product.css" not in (tmp_path / "it" / "contatti" / "index.html").read_text(encoding="utf-8")
     assert "max-width" in (ROOT / "site/static/css/product.css").read_text(encoding="utf-8")
+
+
+def test_build_writes_apache_htaccess(tmp_path):
+    build_site(cat(prod()), tmp_path, sources=tmp_path / "vuota")
+    ht = (tmp_path / ".htaccess").read_text(encoding="utf-8")
+    assert 'Header always set Content-Security-Policy "default-src' in ht
+    assert 'RedirectMatch 301 "^/$" "/it/"' in ht
+    assert "RedirectMatch 301 \"^/catalogo-agricoltura-professionale/?$\" \"/it/agricoltura/\"" in ht
+    assert ht.count("RedirectMatch") >= 100
+    assert "Options -Indexes" in ht

@@ -896,6 +896,36 @@ def security_headers(out: Path) -> str:
             "  Strict-Transport-Security: max-age=31536000; includeSubDomains\n")
 
 
+def apache_htaccess(headers: str, rows: list[tuple[str, str]]) -> str:
+    """File `.htaccess` per un hosting Apache (cPanel): stesse intestazioni di `_headers` e stessi reindirizzamenti di
+    `_redirects`. Le regole sono quelle del sito, nessuna in piu' tranne compressione e cache delle immagini."""
+    lines = ["# Generato dalla build: non modificare a mano.", "Options -Indexes", "DirectoryIndex index.html",
+             "<IfModule mod_headers.c>"]
+    for raw in headers.splitlines():
+        m = re.match(r"^\s+([A-Za-z-]+):\s*(.+)$", raw)
+        if m:
+            lines.append(f'  Header always set {m.group(1)} "{m.group(2).strip()}"')
+    lines += ["</IfModule>",
+              "<IfModule mod_deflate.c>",
+              "  AddOutputFilterByType DEFLATE text/html text/css application/javascript image/svg+xml application/xml",
+              "</IfModule>",
+              "<IfModule mod_expires.c>",
+              "  ExpiresActive On",
+              '  ExpiresByType image/webp "access plus 1 month"',
+              '  ExpiresByType image/jpeg "access plus 1 month"',
+              '  ExpiresByType image/png "access plus 1 month"',
+              '  ExpiresByType image/svg+xml "access plus 1 month"',
+              "</IfModule>",
+              "<IfModule mod_alias.c>"]
+    for old, new in rows:
+        if old == "/":
+            lines.append(f'  RedirectMatch 301 "^/$" "{new}"')
+        else:
+            lines.append(f'  RedirectMatch 301 "^{re.escape(old.rstrip("/")).replace(chr(92) + "-", "-")}/?$" "{new}"')
+    lines.append("</IfModule>")
+    return "\n".join(lines) + "\n"
+
+
 def organization_ld() -> str:
     """Dati strutturati schema.org (Organization) dai dati societari: home e Contatti. JSON pronto da <script>."""
     c = CONTACTS
@@ -1201,6 +1231,8 @@ def _write_globals(out: Path, urls: list[str], sources: Path | None, lang: str) 
         shutil.copyfile(redirects, out / "redirects.csv")
         rows = load_redirects(redirects) + [(f"/{lang}/applicazioni/", f"/{lang}/galleria/")]
         (out / "_redirects").write_text(netlify_rules(rows), encoding="utf-8")
+        (out / ".htaccess").write_text(apache_htaccess((out / "_headers").read_text(encoding="utf-8"), rows),
+                                       encoding="utf-8")
 
 
 def clean_dir(out: Path) -> None:
