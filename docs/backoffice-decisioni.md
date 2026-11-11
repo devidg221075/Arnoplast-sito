@@ -1,0 +1,37 @@
+# Backoffice: decisioni prese e punti aperti
+
+Variazione al progetto: niente WordPress. Il sito resta statico; i contenuti si gestiscono da un backoffice e con Claude, tenuti sincronizzati.
+
+## Decisioni del cliente (11 novembre 2026)
+
+| Tema | Decisione |
+|---|---|
+| Hosting | VPS con hosting condiviso, accesso cPanel senza root. SSH (porta 22) da chiedere al fornitore se serve |
+| Utenti | Amministratore (accesso completo) + personale ARNOplast con ruolo limitato |
+| Conversazioni | Tutto nel backoffice: risposte inviate dal backoffice con il modello e-mail grafico; le risposte del cliente via e-mail rientrano nella conversazione. Vale per contatti e preventivi. Niente va perso |
+| Catalogo | Tre modi: carico il PDF e approvo le differenze; modifica a mano; importazione da Excel/CSV. Italiano e inglese |
+| Preventivi | Stati e note interne; preventivo con prezzi (inseriti a mano, riga per riga); risposta con allegato; esportazione Excel/CSV |
+| Mittente e-mail | Casella ARNOplast via SMTP (info@arnoplast.it) |
+| Pubblicazione | Bozza, anteprima, Pubblica; storico delle versioni e ripristino |
+| Contenuti | Pagine istituzionali, Fiere e Open Day, Galleria e video, Download e area riservata, catalogo |
+| Claude | Le modifiche fatte con Claude e quelle fatte dal backoffice devono restare sincronizzate |
+| Riuso | Stesso programma, un'installazione separata per ogni sito, con moduli attivabili |
+| Sicurezza | Registro delle attività; copie di sicurezza automatiche |
+
+## Proposta tecnica (da confermare)
+
+- **Una sola fonte dei contenuti: il repository Git.** Backoffice e Claude modificano gli stessi file di dati. È questo che li tiene sincronizzati.
+- **Sito pubblico statico**, rigenerato a ogni pubblicazione: il backoffice non rallenta il sito.
+- **Backoffice in PHP + MySQL**, perché funziona su qualunque cPanel senza root ed è il più facile da reinstallare su altri siti.
+- **Rigenerazione del sito**: sull'hosting se cPanel offre «Setup Python App»; altrimenti in un servizio esterno automatico che poi carica i file sull'hosting.
+- **Posta**: invio via SMTP; lettura delle risposte in arrivo con un'operazione pianificata (cron) sulla casella.
+- **Nucleo riusabile**: accessi e ruoli, pagine, richieste e conversazioni, modelli e-mail, pubblicazione, registro, copie di sicurezza. **Moduli per sito**: catalogo, fiere, galleria, preventivi.
+
+## Punti aperti
+
+1. Voci disponibili nel cPanel: Setup Python App, Terminal/SSH Access, Cron Jobs, Git Version Control, versione di PHP, MySQL.
+2. Credenziali SMTP/IMAP della casella e chi gestisce la posta di ARNOplast.
+3. Cosa può fare il ruolo ARNOplast (solo richieste e preventivi, o anche contenuti).
+4. Preventivo in PDF: intestazione, condizioni, IVA, validità, numerazione.
+5. Privacy: tempi di conservazione di richieste e conversazioni (non scelta la scadenza automatica); informativa da aggiornare con il consulente.
+6. Area riservata: accessi per singolo cliente o password unica.
