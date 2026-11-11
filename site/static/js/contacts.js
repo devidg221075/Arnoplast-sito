@@ -19,6 +19,20 @@
     }
     if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(f.email.value.trim())) { f.email.closest('.field').classList.add('invalid'); show(esc(form.getAttribute('data-err-email')), false); f.email.focus(); return; }
     if (f.website && f.website.value) return; // trappola antispam: i visitatori veri non la compilano
+    var endpoint = form.getAttribute('data-endpoint'), mailAddr = form.getAttribute('data-email');
+    if (endpoint) {
+      var payload = { kind: 'contact', lang: document.documentElement.lang || 'it', privacy: f.privacy.checked, website: f.website ? f.website.value : '' };
+      ['name', 'surname', 'email', 'phone', 'company', 'contact', 'type', 'address', 'city', 'zip', 'country', 'message'].forEach(function (k) { payload[k] = f[k].value; });
+      var btn = form.querySelector('button[type=submit]'), label = btn.textContent;
+      var failed = function () { show(esc(form.getAttribute('data-fail')) + ' <a href="mailto:' + esc(mailAddr) + '">' + esc(mailAddr) + '</a>.', false); };
+      btn.disabled = true; btn.textContent = form.getAttribute('data-busy');
+      fetch(endpoint, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload), credentials: 'omit' })
+        .then(function (r) { return r.json().then(function (j) { return { ok: r.ok && j && j.ok, ref: j && j.ref }; }); })
+        .then(function (r) { if (r.ok) { show(esc(form.getAttribute('data-ok')) + (r.ref ? ' <strong>' + esc(r.ref) + '</strong>' : '') + '.', true); form.reset(); } else failed(); })
+        .catch(failed)
+        .then(function () { btn.disabled = false; btn.textContent = label; });
+      return;
+    }
     var lines = [['Nome', (f.name.value + ' ' + f.surname.value).trim()], ['Email', f.email.value], ['Telefono', f.phone.value],
       ['Ragione sociale', f.company.value], ['Referente aziendale', f.contact.value], ['Tipologia utente', f.type.value],
       ['Indirizzo', [f.address.value, f.zip.value, f.city.value].some(function (v) { return v.trim(); }) ? [f.address.value, f.zip.value, f.city.value, f.country.value].filter(Boolean).join(', ') : '']]

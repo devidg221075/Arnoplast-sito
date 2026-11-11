@@ -37,7 +37,7 @@
     <h2 id="ct-form-t">{{ t('ct.form') }}</h2>
     <p class="ct-note">{{ t('ct.form_note') }}</p>
     <noscript><p class="noscript-note" role="note">{{ t('ct.noscript') }} <a href="mailto:{{ contacts.email }}">{{ contacts.email }}</a> · {{ contacts.phone }}</p></noscript>
-    <form id="contact-form" novalidate data-email="{{ contacts.email }}" data-err-required="{{ t('ct.err_required') }}" data-err-email="{{ t('ct.err_email') }}" data-sent="{{ t('ct.sent') }}" data-subject="{{ t('ct.form') }}">
+    <form id="contact-form" novalidate{% if forms_endpoint %} data-endpoint="{{ forms_endpoint }}" data-ok="{{ t('form.ok') }}" data-fail="{{ t('form.fail') }}" data-busy="{{ t('form.busy') }}"{% endif %} data-email="{{ contacts.email }}" data-err-required="{{ t('ct.err_required') }}" data-err-email="{{ t('ct.err_email') }}" data-sent="{{ t('ct.sent') }}" data-subject="{{ t('ct.form') }}">
       <div class="field-row">
         <div class="field"><label for="c-name">{{ t('ct.name') }} <abbr title="{{ t('quote.required') }}">*</abbr></label> <input type="text" id="c-name" maxlength="100" name="name" required autocomplete="given-name"></div>
         <div class="field"><label for="c-surname">{{ t('ct.surname') }}</label> <input type="text" id="c-surname" maxlength="100" name="surname" autocomplete="family-name"></div>
@@ -64,7 +64,7 @@
          <a href="{{ privacy_url }}" target="_blank" rel="noopener">{{ t('ct.privacy_link') }}<span class="sr-only"> ({{ t('footer.new_tab') }})</span></a></div>
       <div id="contact-message" class="form-message" role="alert" tabindex="-1" hidden></div>
       <p><button type="submit" class="btn btn-primary btn-block">{{ t('ct.submit') }}</button></p>
-      <p class="ct-note">{{ t('ct.proto') }}</p>
+      {% if not forms_endpoint %}<p class="ct-note">{{ t('ct.proto') }}</p>{% endif %}
     </form>
   </section>
 </div>

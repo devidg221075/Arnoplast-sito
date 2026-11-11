@@ -351,6 +351,37 @@ if (form) {
       const el = field(k);
       data[k] = el ? el.value : '';
     }
+    const endpoint = form.getAttribute('data-endpoint');
+    if (endpoint) {
+      // Invio al backoffice: la richiesta viene salvata e partono le e-mail al cliente e ad ARNOplast.
+      const btn = form.querySelector('button[type=submit]');
+      const label = btn.textContent;
+      const failed = () => {
+        formMessage(`${form.getAttribute('data-fail')} info@arnoplast.it.`);
+        showCopyable(`A: info@arnoplast.it\nOggetto: Richiesta di preventivo\n\n${emailBody(list, data)}`);
+      };
+      btn.disabled = true;
+      btn.textContent = form.getAttribute('data-busy');
+      fetch(endpoint, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'omit',
+        body: JSON.stringify({ kind: 'quote', lang: LANG, privacy: true, website: '', ...data, items: list }),
+      })
+        .then((r) => r.json().then((j) => ({ ok: r.ok && j && j.ok, ref: j && j.ref })))
+        .then((r) => {
+          if (!r.ok) { failed(); return; }
+          formMessage(`${form.getAttribute('data-ok')}${r.ref ? ` ${r.ref}` : ''}.`, true);
+          list = [];
+          save(storage, list);
+          updateCounters();
+          renderQuote();
+          form.reset();
+        })
+        .catch(failed)
+        .finally(() => { btn.disabled = false; btn.textContent = label; });
+      return;
+    }
     // PROTOTIPO: l'invio vero (email a info@arnoplast.it + copia al cliente, lato server)
     // arriva con WordPress. Qui apriamo il programma di posta con un link mailto precompilato.
     const href = 'mailto:info@arnoplast.it?subject=Richiesta%20di%20preventivo&body='

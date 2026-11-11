@@ -467,12 +467,21 @@ def rich(s: str) -> Markup:
     return Markup(re.sub(r"\*\*(.+?)\*\*", r"<strong>\1</strong>", str(escape(s))))
 
 
+def forms_endpoint() -> str:
+    """Indirizzo https del backoffice che riceve i moduli (variabile ARNO_FORMS_ENDPOINT). Vuoto = il modulo apre il
+    programma di posta, come nel prototipo. Solo https (o http://localhost per le prove)."""
+    url = os.environ.get("ARNO_FORMS_ENDPOINT", "").strip()
+    if url and not re.match(r"^(https://[A-Za-z0-9.-]+|http://(localhost|127\.0\.0\.1)(:\d+)?)(/[A-Za-z0-9._~/-]*)?$", url):
+        raise ValueError(f"ARNO_FORMS_ENDPOINT non valido: {url!r}")
+    return url
+
+
 def _env(lang: str) -> Environment:
     env = Environment(loader=FileSystemLoader(SITE_DIR / "templates"),
                       autoescape=select_autoescape(["html"], default=True),
                       trim_blocks=True, lstrip_blocks=True)
     env.filters["rich"] = rich
-    env.globals.update(lang=lang, contacts=CONTACTS, t=lambda k: t(k, lang), text=lambda d: text(d, lang),
+    env.globals.update(lang=lang, contacts=CONTACTS, forms_endpoint=forms_endpoint(), t=lambda k: t(k, lang), text=lambda d: text(d, lang),
                        menu=menu_items(lang), nav_state=lambda path: nav_state(path, lang), social=SOCIAL, apps=APPS,
                        privacy_url=privacy_url_for(lang), year=build_date().year, maps_url=MAPS_URL,
                        og_image=SITE_URL + "/static/img/home/sede-giorno-1280.webp")
@@ -869,7 +878,7 @@ def security_headers(out: Path) -> str:
         "style-src-attr 'unsafe-inline'",  # attributi style="--var: ..." (proporzioni, punto focale)
         "img-src 'self' data:",
         "font-src 'self'",
-        "connect-src 'self'",
+        "connect-src 'self'" + (" " + re.match(r"^https?://[^/]+", forms_endpoint()).group(0) if forms_endpoint() else ""),
         "frame-src https://www.youtube-nocookie.com https://player.vimeo.com https://www.facebook.com https://www.google.com",
         "media-src 'self'",
         "object-src 'none'",

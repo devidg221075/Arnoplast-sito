@@ -1,0 +1,2 @@
+# Niente di questa cartella è raggiungibile dal web, tranne public/ (vedi public/.htaccess).
+Require all denied
