@@ -46,3 +46,6 @@ Stato: tutte le pagine del prototipo sono state riviste insieme, in italiano e i
 
 - Il cliente verifica lo zip di pubblicazione (`arnoplast-sito-pubblicazione.zip`, rigenerabile con la build).
 - Poi: **rendere indicizzata anche la versione inglese**, come quella italiana: togliere `noindex` dalle pagine `/en/`, inserirle nella sitemap, aggiungere gli hreflang tra le due lingue e ricostruire lo zip.
+
+## Da ricevere: condizioni generali del preventivo
+Testo delle condizioni di vendita (italiano e inglese) da mettere in fondo al PDF del preventivo. Si inserisce da soli nella pagina «Condizioni PDF» del backoffice. Finché manca, il PDF parte senza condizioni e il backoffice lo segnala prima dell'invio. Non lo scrive il backoffice né Claude.
