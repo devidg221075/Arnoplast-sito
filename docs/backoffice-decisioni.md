@@ -53,3 +53,9 @@ Variazione al progetto: niente WordPress. Il sito resta statico; i contenuti si 
 4. **Contenuti e pubblicazione**: pagine, fiere, galleria, video, download; bozza, anteprima, Pubblica; sincronizzazione con il repository; storico e ripristino.
 5. **Catalogo**: modifica a mano, importazione Excel/CSV, caricamento PDF con confronto e approvazione; sfogliatore e download.
 6. **Rifiniture e riuso**: copie di sicurezza automatiche, area riservata, guida d'uso, installazione su un secondo sito.
+
+## Posta (dati non riservati)
+
+- Casella di invio: `noreply@arnoplast.it`. Server `mail.arnoplast.it`: SMTP 465 (SSL), IMAP 993, POP3 995, con autenticazione.
+- La password non va mai scritta nel repository: sta solo nel file di configurazione sull'hosting. Quella comunicata in chat va cambiata.
+- Da decidere: a quale casella arrivano le risposte dei clienti (per farle rientrare nelle conversazioni).
