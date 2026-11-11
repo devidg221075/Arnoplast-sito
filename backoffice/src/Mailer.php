@@ -12,6 +12,20 @@ final class Mailer
     public static ?\Closure $transport = null;
 
     /**
+     * Il logo del modello e-mail si incorpora nel messaggio (immagine inclusa, riferita con cid:): si vede sempre,
+     * anche se la casella blocca le immagini esterne o il sito non è ancora online all'indirizzo del logo.
+     */
+    public static function embedLogo(PHPMailer $m, string $html): string
+    {
+        $file = dirname(__DIR__) . '/public/assets/logo-pdf.png';
+        if (!is_file($file) || !preg_match('~src="[^"]*/static/img/email/logo\.png"~', $html)) {
+            return $html;
+        }
+        $m->addEmbeddedImage($file, 'arnologo', 'arnoplast-logo.png', PHPMailer::ENCODING_BASE64, 'image/png');
+        return (string) preg_replace('~src="[^"]*/static/img/email/logo\.png"~', 'src="cid:arnologo"', $html);
+    }
+
+    /**
      * @param string[] $to
      * @param array{subject:string, html:string, text:string} $mail
      * @param array<int,array{name:string, data:string, type:string}> $attachments allegati (nome, contenuto, tipo)
@@ -58,7 +72,7 @@ final class Mailer
             }
             $m->Subject = $mail['subject'];
             $m->isHTML(true);
-            $m->Body = $mail['html'];
+            $m->Body = self::embedLogo($m, $mail['html']);
             $m->AltBody = $mail['text'];
             $m->send();
             return [true, '', $messageId];
