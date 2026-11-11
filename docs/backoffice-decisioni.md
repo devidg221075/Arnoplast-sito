@@ -77,3 +77,13 @@ Variazione al progetto: niente WordPress. Il sito resta statico; i contenuti si 
 - Condizioni generali: testo fisso fornito da ARNOplast (italiano e inglese), da inserire in «Condizioni PDF»; finché è vuoto il PDF parte senza e il backoffice lo segnala prima dell'invio.
 - Prezzi inseriti a mano (nessun listino): nessun controllo dei codici articolo sul catalogo.
 - PDF in italiano o in inglese secondo la lingua della richiesta.
+
+
+## Tappa 4 — Contenuti e pubblicazione (in corso)
+
+- Ordine scelto: Fiere e Open Day, Pagine istituzionali, Galleria e video, Download e area riservata. Il catalogo viene più avanti.
+- 4a (fatta per le fiere): bozza, anteprima, stato per scheda; nessuna modifica al sito. Archivio generico `content` (bozza/pubblicato) pronto per le altre sezioni.
+- 4b (da fare): «Pubblica» = salvataggio dei file dati nel repository GitHub, ricostruzione con GitHub Actions e consegna sul server. **Da decidere:** consegna via FTP automatico (consigliata), cPanel Git o zip manuale.
+- Inglese: campi accanto all'italiano; «Traduzione richiesta» segna le schede che Claude traduce su richiesta (non c'è traduzione automatica nel backoffice).
+- L'Open Day è una pagina con testi fissi: va con le pagine istituzionali.
+- Solo l'amministratore modifica i contenuti (il ruolo ARNOplast vede richieste e preventivi).

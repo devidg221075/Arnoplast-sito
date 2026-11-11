@@ -2,6 +2,7 @@
 
 Backoffice riusabile per siti statici. Tappa 1: ricezione dei moduli (contatti e preventivo), e-mail al cliente e
 all'azienda con modelli grafici, registro delle richieste con stato e note interne, utenti con due ruoli, registro delle attività.
+Tappa 4a: fiere modificabili in bozza (nuove, modificate, eliminate), con anteprima; il sito cambia solo con «Pubblica» (tappa 4b).
 Tappa 3: preventivo con prezzi, sconti, trasporto, IVA e PDF allegato all'e-mail.
 Tappa 2: risposte al cliente dalla scheda della richiesta e lettura delle risposte dalla casella (conversazione completa in un solo posto).
 
@@ -15,6 +16,7 @@ Non servono SSH né Composer sull'hosting: la cartella `vendor/` è già nel rep
 | `public/` | L'unica cartella esposta al web: `index.php` (backoffice), `api/submit.php` (riceve i moduli), `assets/` |
 | `src/` | Codice: `App` (configurazione, database, limiti), `Auth` (accesso), `Submit` (controlli e salvataggio), `Mailer` (SMTP), `Conversation` (risposte e collegamento ai messaggi), `Imap` e `Mime` (lettura della posta), `Inbox` (controllo della casella) |
 | `src/Quote*.php` | Preventivo: calcolo (`Quote`), PDF (`QuotePdf`, libreria FPDF), schermata nella scheda richiesta (`QuoteView`) |
+| `src/Content.php`, `Fairs*.php` | Archivio delle bozze/pubblicato (riusabile per galleria, pagine, download) e gestione delle fiere; `seed/fiere.json` = copia di `data/fiere.json` da importare |
 | `bin/` | `fetch-mail.php`: controllo della casella, da lanciare con una pianificazione (cron) |
 | `tests/` | `php tests/inbox_test.php`: prova della conversazione con un server di posta finto (serve `python3`) |
 | `emails/` | Modelli e-mail e anteprima (`php emails/preview.php <cartella>`) |
@@ -32,6 +34,13 @@ Non servono SSH né Composer sull'hosting: la cartella `vendor/` è già nel rep
 6. **Sito**: ricostruisci il sito con `ARNO_FORMS_ENDPOINT=https://gestione.<dominio>/api/submit.php`. I moduli spediscono al backoffice e
    la politica di sicurezza del sito (CSP) lo consente. Senza la variabile i moduli aprono il programma di posta, come prima.
 7. **Origini**: in `config.php`, `allowed_origins` deve elencare gli indirizzi del sito da cui partono i moduli.
+
+## Fiere (tappa 4a)
+
+Menu **Fiere** (amministratore): «Importa le fiere del sito» (una volta) porta nel backoffice le schede di `data/fiere.json` (`seed/fiere.json`, deve restare identico: lo controlla un test).
+Ogni scheda ha una bozza e la versione pubblicata: «Nuova», «Modificata», «Pubblicata», «Da eliminare». I controlli sono quelli della build (date, link https, identificativo,
+foto JPG/PNG/WebP entro 6 MB riconosciuta dal contenuto). Le foto caricate si conservano in `var/content/fiere/` in attesa della pubblicazione. Inglese: campi
+dedicati e casella «Traduzione richiesta a Claude» (la traduzione si fa in chat, il backoffice non traduce).
 
 ## Preventivi con prezzi (tappa 3)
 

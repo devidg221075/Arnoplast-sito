@@ -70,6 +70,8 @@ final class App
             "CREATE TABLE IF NOT EXISTS quotes (id $id, request_id INT NOT NULL, rev INT NOT NULL DEFAULT 1, status VARCHAR(10) NOT NULL DEFAULT 'bozza',
                 data $long NOT NULL, net BIGINT NOT NULL DEFAULT 0, vat BIGINT NOT NULL DEFAULT 0, total BIGINT NOT NULL DEFAULT 0,
                 created_by INT NULL, created_at DATETIME NOT NULL, updated_at DATETIME NOT NULL, sent_at DATETIME NULL, pdf_file VARCHAR(120) NOT NULL DEFAULT '')$end",
+            "CREATE TABLE IF NOT EXISTS content (id $id, kind VARCHAR(20) NOT NULL, item_id VARCHAR(80) NOT NULL, draft $long NOT NULL, published $long NULL,
+                deleted TINYINT NOT NULL DEFAULT 0, meta $long NULL, updated_by INT NULL, updated_at DATETIME NOT NULL, UNIQUE (kind, item_id))$end",
             "CREATE TABLE IF NOT EXISTS throttle (id $id, bucket VARCHAR(120) NOT NULL, created_at DATETIME NOT NULL)$end",
         ];
         foreach ($tables as $sql) {

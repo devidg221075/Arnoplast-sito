@@ -64,3 +64,7 @@ details pre { margin-top: 8px; }
 .quote-form { margin-top: 12px; }
 .totals { max-width: 420px; margin: 8px 0 14px auto; }
 .totals td { text-align: right; }
+label.inline { display: inline-flex; align-items: center; gap: 8px; font-weight: 400; }
+label.inline input { display: inline-block; width: auto; margin: 0; }
+.actions { display: flex; flex-wrap: wrap; gap: 18px; align-items: center; margin-top: 16px; }
+code { font: 13px ui-monospace, Menlo, Consolas, monospace; background: var(--line); padding: 1px 5px; border-radius: 3px; }

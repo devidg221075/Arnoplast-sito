@@ -6,6 +6,9 @@ use Backoffice\App;
 use Backoffice\Auth;
 use Backoffice\Conversation;
 use Backoffice\Inbox;
+use Backoffice\Content;
+use Backoffice\Fairs;
+use Backoffice\FairsView;
 use Backoffice\Mime;
 use Backoffice\Quote;
 use Backoffice\QuoteView;
@@ -42,7 +45,7 @@ $say = static function (string $text, bool $ok = true): void {
 $render = static function (string $title, string $body, ?array $user = null) use ($e, $url, $flash): never {
     $nav = '';
     if ($user) {
-        $links = ['requests' => 'Richieste'] + (Auth::isAdmin($user) ? ['mail' => 'Posta', 'conditions' => 'Condizioni PDF', 'users' => 'Utenti', 'activity' => 'Registro attività'] : []) + ['account' => 'Il mio accesso'];
+        $links = ['requests' => 'Richieste'] + (Auth::isAdmin($user) ? ['fairs' => 'Fiere', 'mail' => 'Posta', 'conditions' => 'Condizioni PDF', 'users' => 'Utenti', 'activity' => 'Registro attività'] : []) + ['account' => 'Il mio accesso'];
         foreach ($links as $p => $label) {
             $nav .= '<a href="' . $e($url($p)) . '">' . $e($label) . '</a>';
         }
@@ -137,6 +140,66 @@ if ($page === 'quote_pdf') {
     header('Content-Length: ' . strlen($pdf));
     echo $pdf;
     exit;
+}
+
+// --- Fiere e Open Day (solo amministratore): elenco e scheda di modifica. Le modifiche restano in bozza.
+if (($page === 'fairs' || $page === 'fair') && $admin) {
+    if ($page === 'fairs') {
+        if ($isPost && ($_POST['action'] ?? '') === 'import') {
+            $n = Fairs::importSeed();
+            App::log($uid, 'fiere.importate', '', (string) $n);
+            $say($n > 0 ? "Importate $n fiere dal sito." : 'Nessuna fiera nuova da importare.');
+            $go($url('fairs'));
+        }
+        $render('Fiere', FairsView::list(Auth::csrf(), $url('fairs')), $user);
+    }
+    $row = isset($_GET['id']) ? Content::find(Fairs::KIND, (string) $_GET['id']) : null;
+    if (isset($_GET['id']) && !$row) {
+        http_response_code(404);
+        $render('Fiera non trovata', '<p><a href="' . $e($url('fairs')) . '">Torna alle fiere</a></p>', $user);
+    }
+    $self = $url('fair', $row ? ['id' => $row['item_id']] : ['new' => 1]);
+    if ($isPost) {
+        $action = (string) ($_POST['action'] ?? '');
+        if ($row && $action === 'delete') {
+            Content::markDeleted(Fairs::KIND, $row['item_id'], $uid);
+            App::log($uid, 'fiera.eliminata', $row['item_id']);
+            $say('Fiera segnata per l\'eliminazione: sparirà dal sito alla prossima pubblicazione.');
+            $go($url('fairs'));
+        }
+        if ($row && $action === 'revert') {
+            Content::revert(Fairs::KIND, $row['item_id'], $uid);
+            App::log($uid, 'fiera.annullata', $row['item_id']);
+            $say('Modifiche annullate.');
+            $go($self);
+        }
+        [$fair, $errors] = Fairs::fromForm($_POST, $row['draft'] ?? null);
+        $newId = (string) $fair['id'];
+        if (!$row && $newId !== '' && Content::find(Fairs::KIND, $newId)) {
+            $errors[] = 'Esiste già una fiera con questo nome e questo anno: aprila dall\'elenco.';
+        }
+        [$photo, $photoError] = $errors || $newId === '' ? [null, null] : Fairs::storeImage($_FILES['photo'] ?? null, $newId);
+        if ($photoError) {
+            $errors[] = $photoError;
+        }
+        if (!$errors && $photo !== null) {
+            $fair['immagine'] = $photo;
+        }
+        $errors = array_merge($errors, $errors ? [] : Fairs::validate($fair));
+        if ($errors) {
+            $_SESSION['fair_form'] = $_POST;
+            $say(implode(' ', array_slice($errors, 0, 3)), false);
+            $go($self);
+        }
+        $meta = ['translate' => (($_POST['translate'] ?? '') === '1')];
+        $created = Content::saveDraft(Fairs::KIND, $fair['id'], $fair, $uid, $meta);
+        App::log($uid, $created ? 'fiera.creata' : 'fiera.salvata', $fair['id']);
+        $say($created ? 'Fiera creata (bozza).' : 'Bozza salvata.');
+        $go($url('fair', ['id' => $fair['id']]));
+    }
+    $raw = $_SESSION['fair_form'] ?? null;
+    unset($_SESSION['fair_form']);
+    $render($row ? 'Fiera: ' . ($row['draft']['nome'] ?? $row['item_id']) : 'Nuova fiera', FairsView::form($row, Auth::csrf(), is_array($raw) ? $raw : null), $user);
 }
 
 // --- Condizioni generali del PDF (testo del cliente, in italiano e in inglese). Solo amministratore.
