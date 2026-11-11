@@ -43,3 +43,13 @@ Variazione al progetto: niente WordPress. Il sito resta statico; i contenuti si 
 - Disco all'82,7% (12,12 su 14,65 GB).
 - Tra circa due settimane: passaggio a un nuovo VPS con PHP 8.5 e più spazio. Da sapere: accesso root/SSH e possibilità di installare Python.
 - Scelte conseguenti: backoffice compatibile con PHP 8.3–8.5; rigenerazione del sito fuori dall'hosting (GitHub Actions) con consegna via Git o FTP, da rivalutare sul nuovo VPS.
+- Nuovo VPS: solo cPanel, senza root né SSH (confermato). Quindi: rigenerazione del sito fuori dall'hosting (GitHub Actions), consegna via Git Version Control o FTP. Dominio definitivo: `www.arnoplast.it`; backoffice su indirizzo separato (es. `gestione.arnoplast.it`).
+
+## Piano a tappe (proposta)
+
+1. **Moduli ed e-mail**: contatti e preventivo che spediscono via SMTP; quattro modelli e-mail con la grafica del sito (cliente e ARNOplast, IT/EN); registro delle richieste; accesso al backoffice con ruoli e registro attività. `.htaccess` con reindirizzamenti e intestazioni di sicurezza.
+2. **Conversazioni**: risposte dal backoffice, lettura della posta in arrivo (cron), allegati, stati e note, esportazione.
+3. **Preventivi con prezzi**: compilazione riga per riga, PDF, invio e storico.
+4. **Contenuti e pubblicazione**: pagine, fiere, galleria, video, download; bozza, anteprima, Pubblica; sincronizzazione con il repository; storico e ripristino.
+5. **Catalogo**: modifica a mano, importazione Excel/CSV, caricamento PDF con confronto e approvazione; sfogliatore e download.
+6. **Rifiniture e riuso**: copie di sicurezza automatiche, area riservata, guida d'uso, installazione su un secondo sito.
