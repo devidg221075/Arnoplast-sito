@@ -51,3 +51,5 @@ small { color: var(--muted); }
 .bad { color: var(--red); }
 pre { margin: 0; white-space: pre-wrap; overflow-wrap: anywhere; font: 15px/1.5 var(--font); }
 details pre { margin-top: 8px; }
+.status.todo { background: #fff3c4; color: #6b5200; }
+.msg.out { border-left-color: #2b7a2b; }

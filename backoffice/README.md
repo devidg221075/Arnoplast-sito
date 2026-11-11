@@ -2,6 +2,7 @@
 
 Backoffice riusabile per siti statici. Tappa 1: ricezione dei moduli (contatti e preventivo), e-mail al cliente e
 all'azienda con modelli grafici, registro delle richieste con stato e note interne, utenti con due ruoli, registro delle attività.
+Tappa 2: risposte al cliente dalla scheda della richiesta e lettura delle risposte dalla casella (conversazione completa in un solo posto).
 
 Requisiti: PHP 8.3 o successivo (provato con 8.3; pensato anche per 8.5), MySQL, estensioni `pdo_mysql`, `mbstring`, `openssl`.
 Non servono SSH né Composer sull'hosting: la cartella `vendor/` è già nel repository.
@@ -11,7 +12,9 @@ Non servono SSH né Composer sull'hosting: la cartella `vendor/` è già nel rep
 | Cartella | Contenuto |
 |---|---|
 | `public/` | L'unica cartella esposta al web: `index.php` (backoffice), `api/submit.php` (riceve i moduli), `assets/` |
-| `src/` | Codice: `App` (configurazione, database, limiti), `Auth` (accesso), `Submit` (controlli e salvataggio), `Mailer` (SMTP) |
+| `src/` | Codice: `App` (configurazione, database, limiti), `Auth` (accesso), `Submit` (controlli e salvataggio), `Mailer` (SMTP), `Conversation` (risposte e collegamento ai messaggi), `Imap` e `Mime` (lettura della posta), `Inbox` (controllo della casella) |
+| `bin/` | `fetch-mail.php`: controllo della casella, da lanciare con una pianificazione (cron) |
+| `tests/` | `php tests/inbox_test.php`: prova della conversazione con un server di posta finto (serve `python3`) |
 | `emails/` | Modelli e-mail e anteprima (`php emails/preview.php <cartella>`) |
 | `config.sample.php` | Modello della configurazione. `config.php` non va mai nel repository |
 
@@ -27,6 +30,23 @@ Non servono SSH né Composer sull'hosting: la cartella `vendor/` è già nel rep
 6. **Sito**: ricostruisci il sito con `ARNO_FORMS_ENDPOINT=https://gestione.<dominio>/api/submit.php`. I moduli spediscono al backoffice e
    la politica di sicurezza del sito (CSP) lo consente. Senza la variabile i moduli aprono il programma di posta, come prima.
 7. **Origini**: in `config.php`, `allowed_origins` deve elencare gli indirizzi del sito da cui partono i moduli.
+
+## Risposte dei clienti: lettura della casella (tappa 2)
+
+Il backoffice legge la casella `mail.user` (la stessa da cui spedisce) via IMAP, senza estensioni: prende solo i messaggi con un riferimento
+(`C-AAAA-NNNN` o `P-AAAA-NNNN`) nell'oggetto, oppure che rispondono a una conversazione già avviata. Gli altri non si toccano:
+si leggono senza segnarli come letti e non si spostano né si cancellano. Risposte automatiche, bollettini e posta di liste si ignorano.
+Gli allegati non si copiano: il messaggio li segnala e restano nella casella.
+
+Per il controllo automatico, in cPanel → **Processi Cron** aggiungi, ogni 5 minuti:
+
+```
+/usr/local/bin/ea-php83 /home/<utente-cpanel>/backoffice/bin/fetch-mail.php >> /home/<utente-cpanel>/backoffice/var/fetch.log 2>&1
+```
+
+(se `ea-php83` non esiste, il percorso del PHP 8.3 si legge in cPanel → Gestione MultiPHP). In alternativa, o per provare, la pagina **Posta**
+(amministratore) ha il pulsante «Controlla la posta ora». Impostazioni facoltative in `config.php`: `imap` con `host`, `port`, `user`, `password`,
+`encryption` (`ssl`), `verify_peer`, `folder`; se manca si usano i dati di `mail`.
 
 ## Sicurezza
 

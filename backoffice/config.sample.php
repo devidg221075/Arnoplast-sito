@@ -20,6 +20,8 @@ return [
         'from_name' => 'ARNOplast',
         'notify_to' => ['info@arnoplast.it'],            // chi riceve la notifica di una nuova richiesta
     ],
+    // Lettura delle risposte dei clienti (facoltativa: se manca si usano host, utente e password di 'mail').
+    // 'imap' => ['host' => 'mail.arnoplast.it', 'port' => 993, 'encryption' => 'ssl', 'folder' => 'INBOX'],
     'secret' => 'STRINGA_CASUALE_LUNGA_ALMENO_32_CARATTERI', // per rendere anonimi gli indirizzi IP nel registro
     'setup_token' => 'STRINGA_CASUALE_PER_CREARE_IL_PRIMO_UTENTE', // serve una volta sola, poi svuotala
     'contact_types' => ['Privato/Altro', 'Azienda Agricola', 'Garden/Vivaio', 'Riv. Macc. Agr./Officina', 'Agraria/Consorzio Agrario',

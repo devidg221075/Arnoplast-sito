@@ -14,21 +14,22 @@ final class Mailer
     /**
      * @param string[] $to
      * @param array{subject:string, html:string, text:string} $mail
+     * @param array<string,string> $headers intestazioni in più (In-Reply-To, References) per tenere unita la conversazione
      * @return array{0:bool, 1:string, 2:string}
      */
-    public static function send(array $to, array $mail, string $ref, ?string $replyTo = null): array
+    public static function send(array $to, array $mail, string $ref, ?string $replyTo = null, array $headers = []): array
     {
         $cfg = App::config('mail');
         $host = parse_url((string) App::config('admin_url', 'https://localhost'), PHP_URL_HOST) ?: 'localhost';
         $messageId = sprintf('<%s.%s@%s>', preg_replace('/[^A-Za-z0-9-]/', '', $ref), bin2hex(random_bytes(8)), $host);
         if (self::$transport !== null) {
-            return [(bool) (self::$transport)($to, $mail, $ref, $replyTo), '', $messageId];
+            return [(bool) (self::$transport)($to, $mail, $ref, $replyTo, $headers), '', $messageId];
         }
         // Solo per le prove: con mail.dump_dir i messaggi si scrivono in una cartella e non partono.
         $dump = App::config('mail.dump_dir');
         if (is_string($dump) && $dump !== '') {
             file_put_contents(rtrim($dump, '/') . '/' . microtime(true) . '-' . bin2hex(random_bytes(3)) . '.json',
-                json_encode(['to' => $to, 'reply_to' => $replyTo, 'ref' => $ref] + $mail, JSON_UNESCAPED_UNICODE));
+                json_encode(['to' => $to, 'reply_to' => $replyTo, 'ref' => $ref, 'headers' => $headers] + $mail, JSON_UNESCAPED_UNICODE));
             return [true, '', $messageId];
         }
         try {
@@ -48,6 +49,9 @@ final class Mailer
                 $m->addAddress($addr);
             }
             $m->MessageID = $messageId;
+            foreach ($headers as $name => $value) {
+                $m->addCustomHeader($name, preg_replace('/[\r\n]+/', ' ', $value));
+            }
             $m->Subject = $mail['subject'];
             $m->isHTML(true);
             $m->Body = $mail['html'];

@@ -45,6 +45,10 @@ const TEXTS = [
         'reply_hint' => 'Per aggiungere informazioni puoi rispondere a questa e-mail.',
         'site' => 'Vai al sito',
         'why' => 'Ricevi questa e-mail perché hai inviato una richiesta dal sito www.arnoplast.it.',
+        'reply_title' => 'La nostra risposta',
+        'reply_subject' => 'Risposta alla tua richiesta',
+        'reply_continue' => 'Per continuare la conversazione rispondi a questa e-mail: la nostra casella la riceve insieme al riferimento.',
+        'regards' => 'Cordiali saluti',
         'name' => 'Nome', 'company' => 'Azienda', 'email' => 'Email', 'phone' => 'Telefono',
         'country' => 'Paese', 'type' => 'Tipologia', 'address' => 'Indirizzo', 'contact' => 'Referente',
     ],
@@ -65,6 +69,10 @@ const TEXTS = [
         'reply_hint' => 'To add information, simply reply to this email.',
         'site' => 'Visit the website',
         'why' => 'You are receiving this email because you sent a request from www.arnoplast.it.',
+        'reply_title' => 'Our reply',
+        'reply_subject' => 'Reply to your request',
+        'reply_continue' => 'To continue the conversation, simply reply to this email: our mailbox receives it together with the reference.',
+        'regards' => 'Kind regards',
         'name' => 'Name', 'company' => 'Company', 'email' => 'Email', 'phone' => 'Phone',
         'country' => 'Country', 'type' => 'Customer type', 'address' => 'Address', 'contact' => 'Contact person',
     ],
@@ -307,5 +315,39 @@ function quoteStaff(array $d, array $items, string $ref, string $adminUrl, strin
         'html' => layout(['lang' => 'it', 'title' => 'Nuova richiesta di preventivo', 'preheader' => $name . ': ' . count($items) . ' articoli', 'body' => $body, 'site_url' => $site,
             'footer_note' => 'Notifica automatica del sito. Rispondi dal backoffice per tenere tutta la conversazione in un solo posto.']),
         'text' => plain('Nuova richiesta di preventivo', ["Articoli:\n" . plainItems($items, 'it'), $notes === '' ? '' : "Note:\n" . $notes, plainRows($pairs), 'Apri nel backoffice: ' . $adminUrl]),
+    ];
+}
+
+/** 5. Risposta di ARNOplast al cliente, scritta dal backoffice (nella lingua della richiesta). */
+function reply(string $text, string $customerName, string $ref, string $lang, string $signer, string $subject, string $site = 'https://www.arnoplast.it'): array
+{
+    $hello = sprintf(t($lang, 'hello'), line($customerName));
+    $sign = line($signer) === '' ? 'ARNOplast' : line($signer) . ' - ARNOplast';
+    $paragraphs = '';
+    foreach (preg_split("/\n{2,}/", trim($text)) ?: [] as $p) {
+        $paragraphs .= paragraph($p);
+    }
+    $body = paragraph($hello) . $paragraphs . paragraph(t($lang, 'regards') . ",\n" . $sign)
+        . '<p style="margin:26px 0 0;padding-top:14px;border-top:1px solid ' . LINE . ';font:13px/1.5 ' . FONT . ';color:' . MUTED . '">'
+        . e(t($lang, 'reference')) . ': <strong>' . e($ref) . '</strong><br>' . e(t($lang, 'reply_continue')) . '</p>';
+    return [
+        'subject' => $subject,
+        'html' => layout(['lang' => $lang, 'title' => t($lang, 'reply_title'), 'preheader' => mb_substr(line($text), 0, 110), 'body' => $body, 'site_url' => $site, 'footer_note' => t($lang, 'why')]),
+        'text' => plain(t($lang, 'reply_title'), [$hello, trim($text), t($lang, 'regards') . ",\n" . $sign, t($lang, 'reference') . ': ' . $ref . "\n" . t($lang, 'reply_continue')]),
+    ];
+}
+
+/** 6. Notifica ad ARNOplast: il cliente ha risposto (sempre in italiano). */
+function customerReplyNotice(string $customerName, string $text, string $ref, string $adminUrl, int $attachments = 0, string $site = 'https://www.arnoplast.it'): array
+{
+    $name = line($customerName);
+    $body = paragraph($name . ' ha risposto alla richiesta ' . $ref . '.') . quoteBox($text)
+        . ($attachments > 0 ? paragraph('Il messaggio contiene ' . $attachments . ($attachments === 1 ? ' allegato' : ' allegati') . ': non vengono copiati nel backoffice, aprili dalla casella richieste@arnoplast.it.') : '')
+        . button('Apri la conversazione', $adminUrl);
+    return [
+        'subject' => 'Risposta del cliente: ' . $name . ' [' . $ref . ']',
+        'html' => layout(['lang' => 'it', 'title' => 'Risposta del cliente', 'preheader' => $name . ': ' . mb_substr(line($text), 0, 90), 'body' => $body, 'site_url' => $site,
+            'footer_note' => 'Notifica automatica. Rispondi dal backoffice per tenere tutta la conversazione in un solo posto.']),
+        'text' => plain('Risposta del cliente', [$name . ' ha risposto alla richiesta ' . $ref . ".\n\n" . trim($text), $attachments > 0 ? "Allegati nel messaggio: $attachments (aprili dalla casella richieste@arnoplast.it)." : '', 'Apri la conversazione: ' . $adminUrl]),
     ];
 }

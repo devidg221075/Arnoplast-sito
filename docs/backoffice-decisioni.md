@@ -59,3 +59,12 @@ Variazione al progetto: niente WordPress. Il sito resta statico; i contenuti si 
 - Casella di invio: `noreply@arnoplast.it`. Server `mail.arnoplast.it`: SMTP 465 (SSL), IMAP 993, POP3 995, con autenticazione.
 - La password non va mai scritta nel repository: sta solo nel file di configurazione sull'hosting. Quella comunicata in chat va cambiata.
 - Mittente e casella delle risposte: `richieste@arnoplast.it` (già attiva). Il backoffice legge solo questa casella. `noreply@` non si usa per le conversazioni.
+
+
+## Tappa 2 — Conversazioni (fatta)
+
+- Risposta al cliente dalla scheda della richiesta: modello grafico di ARNOplast, nella lingua della richiesta, firmata con il nome di chi scrive; oggetto con il riferimento; intestazioni `In-Reply-To`/`References` per tenere unito il filo nella posta del cliente.
+- Lettura della casella `richieste@arnoplast.it` via IMAP (senza estensioni), ogni 5 minuti con cron o a mano dalla pagina Posta. Solo i messaggi con riferimento o in risposta a una conversazione nostra; il resto non si tocca (nessun segno di «letto», nessuno spostamento).
+- Risposte automatiche e posta di liste ignorate; stessi messaggi mai importati due volte; una richiesta chiusa o con preventivo inviato torna «in lavorazione» se il cliente riscrive; notifica a `notify_to` per ogni risposta.
+- Nell'elenco il segnale «Da rispondere» compare quando l'ultimo messaggio è del cliente.
+- Limite noto: gli allegati dei clienti non si copiano nel backoffice (si segnalano; restano nella casella). Da decidere con la tappa 3 (preventivi) se servono.

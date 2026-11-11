@@ -65,6 +65,7 @@ final class App
                 error VARCHAR(500) NOT NULL DEFAULT '', created_at DATETIME NOT NULL)$end",
             "CREATE TABLE IF NOT EXISTS activity (id $id, user_id INT NULL, action VARCHAR(60) NOT NULL, target VARCHAR(120) NOT NULL DEFAULT '',
                 detail VARCHAR(500) NOT NULL DEFAULT '', ip_hash CHAR(64) NOT NULL DEFAULT '', created_at DATETIME NOT NULL)$end",
+            "CREATE TABLE IF NOT EXISTS state (k VARCHAR(60) NOT NULL PRIMARY KEY, v VARCHAR(500) NOT NULL DEFAULT '')$end",
             "CREATE TABLE IF NOT EXISTS throttle (id $id, bucket VARCHAR(120) NOT NULL, created_at DATETIME NOT NULL)$end",
         ];
         foreach ($tables as $sql) {
@@ -76,6 +77,29 @@ final class App
                 $pdo->exec("CREATE INDEX $name ON $on");
             } catch (\PDOException) {
                 // l'indice esiste già
+            }
+        }
+    }
+
+    public static function state(string $key, string $default = ''): string
+    {
+        $st = self::db()->prepare('SELECT v FROM state WHERE k = ?');
+        $st->execute([$key]);
+        $v = $st->fetchColumn();
+        return $v === false ? $default : (string) $v;
+    }
+
+    public static function setState(string $key, string $value): void
+    {
+        $pdo = self::db();
+        $st = $pdo->prepare('UPDATE state SET v = ? WHERE k = ?');
+        $st->execute([mb_substr($value, 0, 500), $key]);
+        if ($st->rowCount() === 0) {
+            try {
+                $pdo->prepare('INSERT INTO state (k, v) VALUES (?, ?)')->execute([$key, mb_substr($value, 0, 500)]);
+            } catch (\PDOException) {
+                // un altro processo l'ha inserita un attimo prima: basta riprovare l'aggiornamento
+                $pdo->prepare('UPDATE state SET v = ? WHERE k = ?')->execute([mb_substr($value, 0, 500), $key]);
             }
         }
     }

@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 use Backoffice\App;
 use Backoffice\Auth;
+use Backoffice\Conversation;
+use Backoffice\Inbox;
+use Backoffice\Mime;
 
 require __DIR__ . '/../src/bootstrap.php';
 
@@ -37,7 +40,7 @@ $say = static function (string $text, bool $ok = true): void {
 $render = static function (string $title, string $body, ?array $user = null) use ($e, $url, $flash): never {
     $nav = '';
     if ($user) {
-        $links = ['requests' => 'Richieste'] + (Auth::isAdmin($user) ? ['users' => 'Utenti', 'activity' => 'Registro attività'] : []) + ['account' => 'Il mio accesso'];
+        $links = ['requests' => 'Richieste'] + (Auth::isAdmin($user) ? ['mail' => 'Posta', 'users' => 'Utenti', 'activity' => 'Registro attività'] : []) + ['account' => 'Il mio accesso'];
         foreach ($links as $p => $label) {
             $nav .= '<a href="' . $e($url($p)) . '">' . $e($label) . '</a>';
         }
@@ -114,6 +117,15 @@ if (!$user) {
 $uid = (int) $user['id'];
 $admin = Auth::isAdmin($user);
 
+/** Testo di un messaggio: per le risposte dei clienti la parte nuova in chiaro e il testo citato ripiegato. */
+$showText = static function (array $m) use ($e): string {
+    if ($m['direction'] !== 'in') {
+        return '<pre>' . $e($m['body_text']) . '</pre>';
+    }
+    [$new, $quoted] = Mime::splitQuote((string) $m['body_text']);
+    return '<pre>' . $e($new) . '</pre>' . ($quoted === '' ? '' : '<details><summary>Mostra il testo citato</summary><pre>' . $e($quoted) . '</pre></details>');
+};
+
 // --- Scheda di una richiesta: dati, articoli, conversazione, stato e note interne.
 if ($page === 'request') {
     $st = App::db()->prepare('SELECT * FROM requests WHERE id = ?');
@@ -129,6 +141,11 @@ if ($page === 'request') {
             App::db()->prepare('UPDATE requests SET status = ?, updated_at = ? WHERE id = ?')->execute([$_POST['status'], App::now(), $r['id']]);
             App::log($uid, 'richiesta.stato', $r['ref'], $r['status'] . ' → ' . $_POST['status']);
             $say('Stato aggiornato.');
+        }
+        if (($_POST['action'] ?? '') === 'reply') {
+            $res = Conversation::reply($r, $user, (string) ($_POST['subject'] ?? ''), (string) ($_POST['text'] ?? ''));
+            $say($res['ok'] ? 'Risposta inviata al cliente.' : $res['error'], $res['ok']);
+            $go($self);
         }
         $note = trim((string) ($_POST['note'] ?? ''));
         if ($note !== '') {
@@ -179,9 +196,30 @@ if ($page === 'request') {
         $body .= '<li class="msg ' . $e($m['direction']) . '"><p class="who">' . $e($who) . ' <time>' . $e($date($m['created_at'])) . '</time>'
             . ((int) $m['sent_ok'] === 1 ? '' : ' <strong class="bad">NON INVIATA: ' . $e($m['error']) . '</strong>') . '</p>'
             . ($m['subject'] !== '' ? '<p class="subj">' . $e($m['subject']) . '</p>' : '')
-            . ($m['direction'] === 'auto' ? '<details><summary>Mostra il testo</summary><pre>' . $e($m['body_text']) . '</pre></details>' : '<pre>' . $e($m['body_text']) . '</pre>') . '</li>';
+            . ($m['direction'] === 'auto' ? '<details><summary>Mostra il testo</summary><pre>' . $e($m['body_text']) . '</pre></details>' : $showText($m)) . '</li>';
     }
-    $render('Richiesta di ' . $r['name'], $body . '</ol>', $user);
+    $lang = $r['lang'] === 'en' ? 'en' : 'it';
+    $defaultSubject = ($lang === 'en' ? 'Reply to your request' : 'Risposta alla tua richiesta') . ' [' . $r['ref'] . ']';
+    $body .= '</ol><h2>Rispondi al cliente</h2><form method="post" action="' . $e($self) . '" class="card">' . $csrfField() . '<input type="hidden" name="action" value="reply">'
+        . '<p class="meta">Scrivi in ' . ($lang === 'en' ? 'inglese: il cliente ha scritto dalla pagina inglese' : 'italiano') . '. L\'e-mail parte da ' . $e(App::config('mail.from', '')) . ' con la grafica di ARNOplast, a ' . $e($r['email']) . '.</p>'
+        . '<label>Oggetto<input name="subject" maxlength="200" value="' . $e($defaultSubject) . '"></label>'
+        . '<label>Testo della risposta<textarea name="text" rows="9" maxlength="' . Conversation::MAX_REPLY . '" required></textarea></label><button class="btn">Invia la risposta</button></form>';
+    $render('Richiesta di ' . $r['name'], $body, $user);
+}
+
+// --- Posta: stato della lettura della casella e controllo manuale (solo amministratore).
+if ($page === 'mail' && $admin) {
+    if ($isPost) {
+        $res = Inbox::run();
+        App::log($uid, 'posta.controllo', '', $res['error'] !== '' ? $res['error'] : $res['imported'] . ' aggiunti');
+        $say($res['error'] !== '' ? 'Controllo non riuscito: ' . $res['error'] : sprintf('Controllo fatto: %d messaggi controllati, %d aggiunti alle richieste.', $res['checked'], $res['imported']), $res['error'] === '');
+        $go($url('mail'));
+    }
+    $last = App::state('imap_last_run');
+    $render('Posta', '<section class="card"><p>Casella letta: <strong>' . $e(App::config('imap.user', App::config('mail.user', ''))) . '</strong></p>'
+        . '<p>Ultimo controllo: ' . ($last === '' ? '<em>mai</em>' : $e($date($last))) . '<br><small>' . $e(App::state('imap_last_result')) . '</small></p>'
+        . '<p class="meta">Il backoffice prende solo i messaggi con un riferimento (per esempio C-2026-0001) nell\'oggetto, o che rispondono a una conversazione già avviata. Gli altri restano nella casella, senza essere segnati come letti. Il controllo automatico si imposta con una pianificazione (cron) sul server: vedi il file README.</p>'
+        . '<form method="post" action="' . $e($url('mail')) . '">' . $csrfField() . '<button class="btn">Controlla la posta ora</button></form></section>', $user);
 }
 
 // --- Utenti (solo amministratore).
@@ -276,7 +314,7 @@ if ($q !== '') {
     $like = '%' . str_replace(['\\', '%', '_'], ['\\\\', '\\%', '\\_'], mb_substr($q, 0, 100)) . '%';
     array_push($args, $like, $like, $like, $like);
 }
-$st = App::db()->prepare('SELECT id, ref, kind, status, name, email, company, created_at FROM requests' . ($where ? ' WHERE ' . implode(' AND ', $where) : '') . ' ORDER BY id DESC LIMIT 200');
+$st = App::db()->prepare('SELECT id, ref, kind, status, name, email, company, created_at, (SELECT direction FROM messages m WHERE m.request_id = requests.id AND m.direction IN (\'in\', \'out\') ORDER BY m.id DESC LIMIT 1) AS last_dir FROM requests' . ($where ? ' WHERE ' . implode(' AND ', $where) : '') . ' ORDER BY id DESC LIMIT 200');
 $st->execute($args);
 $list = $st->fetchAll();
 $opt = static function (array $map, string $cur, string $all) use ($e): string {
@@ -296,7 +334,7 @@ if (!$list) {
     foreach ($list as $r) {
         $body .= '<tr><td><a href="' . $e($url('request', ['id' => $r['id']])) . '">' . $e($r['ref']) . '</a></td><td><span class="tag ' . $e($r['kind']) . '">' . $e(KINDS[$r['kind']] ?? $r['kind']) . '</span></td>'
             . '<td>' . $e($r['name']) . ($r['company'] !== '' ? ' · ' . $e($r['company']) : '') . '<br><small>' . $e($r['email']) . '</small></td>'
-            . '<td><span class="status ' . $e($r['status']) . '">' . $e(STATUSES[$r['status']] ?? $r['status']) . '</span></td><td>' . $e($date($r['created_at'])) . '</td></tr>';
+            . '<td><span class="status ' . $e($r['status']) . '">' . $e(STATUSES[$r['status']] ?? $r['status']) . '</span>' . ($r['last_dir'] === 'in' && $r['status'] !== 'chiusa' ? ' <span class="status todo">Da rispondere</span>' : '') . '</td><td>' . $e($date($r['created_at'])) . '</td></tr>';
     }
     $body .= '</table>' . (count($list) === 200 ? '<p class="meta">Mostrate le 200 più recenti: usa i filtri per restringere.</p>' : '');
 }
