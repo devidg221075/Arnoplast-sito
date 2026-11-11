@@ -284,6 +284,7 @@ EN = {
     "ct.city": "City",
     "ct.zip": "Postcode",
     "ct.country": "Country",
+    "ct.country_default": "Italy",
     "ct.message": "Describe your request",
     "ct.privacy": "I have read the privacy policy and I consent to the processing of my data to answer my request.",
     "ct.privacy_short": "Privacy consent",

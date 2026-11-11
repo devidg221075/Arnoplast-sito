@@ -281,6 +281,7 @@ STRINGS = {
         "ct.city": "Località",
         "ct.zip": "CAP / Codice postale",
         "ct.country": "Nazione",
+        "ct.country_default": "Italia",
         "ct.message": "Descrivi la tua richiesta",
         "ct.privacy": "Ho letto l'informativa sulla privacy e acconsento al trattamento dei dati per rispondere alla mia richiesta.",
         "ct.privacy_short": "Consenso privacy",

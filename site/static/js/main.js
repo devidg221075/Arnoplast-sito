@@ -4,10 +4,32 @@ import { addItem, canAdd, setQty, removeItem, isValidQty, load, save, emailBody,
 import { buildIndex, search } from './search.js';
 
 const LANG = document.documentElement.lang || 'it';
-// Testi dell'interfaccia generati da JS (italiano; le traduzioni arrivano con WordPress).
+const EN = LANG === 'en';
 /** Confezione e prodotto di origine di una voce, es. "conf. da 40 – Prisma". */
-const meta = (i) => [i.conf ? `conf. da ${i.conf}` : '', i.product || ''].filter(Boolean).join(' – ');
-const MSG = {
+const packOf = (n) => (EN ? `pack of ${n}` : `conf. da ${n}`);
+const meta = (i) => [i.conf ? packOf(i.conf) : '', i.product || ''].filter(Boolean).join(' – ');
+// Testi dell'interfaccia generati da JS, nella lingua della pagina. L'email di richiesta resta in italiano
+// (la legge ARNOplast).
+const MSG = EN ? {
+  qtyInvalid: `Invalid quantity: enter a whole number from 1 to ${QTY_MAX}.`,
+  qtyOverMax: (have) => `Maximum quantity per line: ${QTY_MAX.toLocaleString('en-GB')} (you already have ${have.toLocaleString('en-GB')}).`,
+  added: (code, qty) => `${code} added to the request (quantity ${qty}).`,
+  removed: (code) => `${code} removed from the request.`,
+  qtyUpdated: (code, qty) => `Quantity of ${code} updated to ${qty}.`,
+  qtyLabel: 'Qty',
+  qtyAria: (i) => `Quantity ${i.code}${meta(i) ? ` (${meta(i)})` : ''}`,
+  remove: (i) => `Remove ${i.code}${meta(i) ? ` (${meta(i)})` : ''}`,
+  emptyList: 'The list is empty: add at least one item from the product pages before sending.',
+  name: 'Enter your first and last name.',
+  email: 'Enter a valid email address.',
+  privacy: 'To send the request you must accept the privacy policy.',
+  fix: 'Please check the highlighted fields:',
+  thanks: 'We tried to open your email program with the request already filled in. If it does not open, write to info@arnoplast.it and paste the text below. Your list stays saved.',
+  copyLabel: 'Text of the request, to copy',
+  noResults: 'No results.',
+  kindFamily: 'Family',
+  kindProduct: 'Product',
+} : {
   qtyInvalid: `Quantità non valida: inserisci un numero intero da 1 a ${QTY_MAX}.`,
   qtyOverMax: (have) => `Quantità massima per riga: ${QTY_MAX.toLocaleString('it-IT')} (ne hai già ${have.toLocaleString('it-IT')}).`,
   added: (code, qty) => `${code} aggiunto alla richiesta (quantità ${qty}).`,
@@ -172,7 +194,7 @@ function renderQuote() {
     if (meta(item)) {
       const m = document.createElement('small');
       m.className = 'ql-meta';
-      m.textContent = item.conf ? `conf. da ${item.conf}` : '';
+      m.textContent = item.conf ? packOf(item.conf) : '';
       if (item.product) {
         const pr = document.createElement('span');
         pr.className = 'ql-prod';
@@ -322,6 +344,8 @@ if (form) {
       if (firstBad) firstBad.focus({ preventScroll: true });
       return;
     }
+    const trap = field('website');
+    if (trap && trap.value) return; // trappola antispam: i visitatori veri non la compilano
     const data = {};
     for (const k of ['name', 'company', 'email', 'phone', 'country', 'notes']) {
       const el = field(k);

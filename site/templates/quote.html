@@ -18,14 +18,15 @@
   <section class="quote-form-wrap" aria-labelledby="quote-form-title">
     <h2 id="quote-form-title" class="section-title">{{ t('quote.form') }}</h2>
     <form id="quote-form" novalidate>
-      <div class="field"><label for="q-name">{{ t('quote.name') }} <abbr title="{{ t('quote.required') }}">*</abbr></label> <input type="text" id="q-name" name="name" required autocomplete="name"></div>
-      <div class="field"><label for="q-company">{{ t('quote.company') }}</label> <input type="text" id="q-company" name="company" autocomplete="organization"></div>
-      <div class="field"><label for="q-email">{{ t('quote.email') }} <abbr title="{{ t('quote.required') }}">*</abbr></label> <input type="email" id="q-email" name="email" required autocomplete="email"></div>
+      <div class="field"><label for="q-name">{{ t('quote.name') }} <abbr title="{{ t('quote.required') }}">*</abbr></label> <input type="text" id="q-name" maxlength="150" name="name" required autocomplete="name"></div>
+      <div class="field"><label for="q-company">{{ t('quote.company') }}</label> <input type="text" id="q-company" maxlength="150" name="company" autocomplete="organization"></div>
+      <div class="field"><label for="q-email">{{ t('quote.email') }} <abbr title="{{ t('quote.required') }}">*</abbr></label> <input type="email" id="q-email" maxlength="254" name="email" required autocomplete="email"></div>
       <div class="field-row">
-        <div class="field"><label for="q-phone">{{ t('quote.phone') }}</label> <input type="tel" id="q-phone" name="phone" autocomplete="tel"></div>
-        <div class="field"><label for="q-country">{{ t('quote.country') }}</label> <input type="text" id="q-country" name="country" autocomplete="country-name"></div>
+        <div class="field"><label for="q-phone">{{ t('quote.phone') }}</label> <input type="tel" id="q-phone" maxlength="40" name="phone" autocomplete="tel"></div>
+        <div class="field"><label for="q-country">{{ t('quote.country') }}</label> <input type="text" id="q-country" maxlength="80" name="country" autocomplete="country-name"></div>
       </div>
-      <div class="field"><label for="q-notes">{{ t('quote.notes') }}</label> <textarea id="q-notes" name="notes" rows="4"></textarea></div>
+      <div class="field"><label for="q-notes">{{ t('quote.notes') }}</label> <textarea id="q-notes" name="notes" rows="4" maxlength="4000"></textarea></div>
+      <div class="field hp" aria-hidden="true"><label for="q-web">Web</label> <input type="text" id="q-web" name="website" maxlength="100" tabindex="-1" autocomplete="off"></div>
       <div class="field check"><label><input type="checkbox" id="q-privacy" name="privacy" required> <span>{{ t('quote.privacy') }}</span></label>
          <a href="{{ privacy_url }}" target="_blank" rel="noopener">{{ t('quote.privacy_link') }}</a></div>
       <div id="form-message" class="form-message" role="alert" tabindex="-1" hidden></div>
