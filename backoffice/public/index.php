@@ -7,6 +7,8 @@ use Backoffice\Auth;
 use Backoffice\Conversation;
 use Backoffice\Inbox;
 use Backoffice\Mime;
+use Backoffice\Quote;
+use Backoffice\QuoteView;
 
 require __DIR__ . '/../src/bootstrap.php';
 
@@ -40,7 +42,7 @@ $say = static function (string $text, bool $ok = true): void {
 $render = static function (string $title, string $body, ?array $user = null) use ($e, $url, $flash): never {
     $nav = '';
     if ($user) {
-        $links = ['requests' => 'Richieste'] + (Auth::isAdmin($user) ? ['mail' => 'Posta', 'users' => 'Utenti', 'activity' => 'Registro attività'] : []) + ['account' => 'Il mio accesso'];
+        $links = ['requests' => 'Richieste'] + (Auth::isAdmin($user) ? ['mail' => 'Posta', 'conditions' => 'Condizioni PDF', 'users' => 'Utenti', 'activity' => 'Registro attività'] : []) + ['account' => 'Il mio accesso'];
         foreach ($links as $p => $label) {
             $nav .= '<a href="' . $e($url($p)) . '">' . $e($label) . '</a>';
         }
@@ -117,6 +119,42 @@ if (!$user) {
 $uid = (int) $user['id'];
 $admin = Auth::isAdmin($user);
 
+// --- PDF di un preventivo: quello inviato (copia esatta) oppure l'anteprima della bozza.
+if ($page === 'quote_pdf') {
+    $q = Quote::find((int) ($_GET['id'] ?? 0));
+    $rq = $q ? App::db()->prepare('SELECT * FROM requests WHERE id = ?') : null;
+    $rq?->execute([$q['request_id'] ?? 0]);
+    $req = $rq ? $rq->fetch() : false;
+    if (!$q || !$req) {
+        http_response_code(404);
+        $render('Preventivo non trovato', '<p><a href="' . $e($url('requests')) . '">Torna all\'elenco</a></p>', $user);
+    }
+    $file = dirname(__DIR__) . '/var/quotes/' . basename((string) $q['pdf_file']);
+    $pdf = $q['status'] === 'inviato' && $q['pdf_file'] !== '' && is_file($file) ? (string) file_get_contents($file) : Quote::pdf($req, $q);
+    header_remove('Content-Security-Policy');
+    header('Content-Type: application/pdf');
+    header('Content-Disposition: inline; filename="' . preg_replace('/[^A-Za-z0-9._-]/', '', $req['ref'] . '-rev' . $q['rev'] . ($q['status'] === 'bozza' ? '-bozza' : '')) . '.pdf"');
+    header('Content-Length: ' . strlen($pdf));
+    echo $pdf;
+    exit;
+}
+
+// --- Condizioni generali del PDF (testo del cliente, in italiano e in inglese). Solo amministratore.
+if ($page === 'conditions' && $admin) {
+    if ($isPost) {
+        foreach (['it', 'en'] as $l) {
+            App::setSetting('conditions_' . $l, mb_substr(trim(str_replace(["\r\n", "\r"], "\n", (string) ($_POST['conditions_' . $l] ?? ''))), 0, 8000));
+        }
+        App::log($uid, 'condizioni.salvate');
+        $say('Condizioni generali salvate.');
+        $go($url('conditions'));
+    }
+    $render('Condizioni generali del preventivo', '<p class="meta">Questo testo compare in fondo a ogni PDF di preventivo, nella lingua della richiesta. Va fornito e verificato da ARNOplast: non viene scritto dal backoffice. Se lo lasci vuoto, il PDF parte senza condizioni.</p>'
+        . '<form method="post" action="' . $e($url('conditions')) . '" class="card">' . $csrfField()
+        . '<label>Italiano<textarea name="conditions_it" rows="12" maxlength="8000">' . $e(App::setting('conditions_it')) . '</textarea></label>'
+        . '<label>Inglese<textarea name="conditions_en" rows="12" maxlength="8000">' . $e(App::setting('conditions_en')) . '</textarea></label><button class="btn">Salva</button></form>', $user);
+}
+
 /** Testo di un messaggio: per le risposte dei clienti la parte nuova in chiaro e il testo citato ripiegato. */
 $showText = static function (array $m) use ($e): string {
     if ($m['direction'] !== 'in') {
@@ -137,6 +175,47 @@ if ($page === 'request') {
     }
     $self = $url('request', ['id' => $r['id']]);
     if ($isPost) {
+        $action = (string) ($_POST['action'] ?? '');
+        if (in_array($action, ['quote_new', 'quote_save', 'quote_send'], true)) {
+            $qid = (int) ($_POST['quote_id'] ?? 0);
+            $q = $qid ? Quote::find($qid) : null;
+            if ($q && (int) $q['request_id'] !== (int) $r['id']) {
+                $q = null;
+            }
+            if ($action === 'quote_new') {
+                $quotes = Quote::forRequest((int) $r['id']);
+                $hasDraft = array_filter($quotes, static fn (array $x): bool => $x['status'] === 'bozza');
+                if (!$hasDraft) {
+                    $base = $quotes ? Quote::data($quotes[0]) : Quote::draftFromRequest($r);
+                    $newId = Quote::saveDraft((int) $r['id'], $base, $uid);
+                    App::log($uid, 'preventivo.bozza', $r['ref'], 'rev ' . ($quotes ? (int) $quotes[0]['rev'] + 1 : 1));
+                    $go($self . '&q=' . $newId . '#preventivo');
+                }
+                $go($self . '#preventivo');
+            }
+            if (!$q || $q['status'] !== 'bozza') {
+                $say('Questo preventivo non si può più modificare.', false);
+                $go($self . '#preventivo');
+            }
+            if ($action === 'quote_save') {
+                [$data, $errors] = Quote::fromForm($_POST);
+                if ($errors) {
+                    $_SESSION['quote_form'] = $_POST;
+                    $say(implode(' ', array_slice($errors, 0, 4)), false);
+                    $go($self . '&q=' . $q['id'] . '#preventivo');
+                }
+                Quote::saveDraft((int) $r['id'], $data, $uid, (int) $q['id']);
+                App::log($uid, 'preventivo.salvato', $r['ref']);
+                if (($_POST['do'] ?? '') === 'send') {
+                    $go($self . '&confirm=' . $q['id'] . '#preventivo');
+                }
+                $say('Bozza salvata.');
+                $go($self . '&q=' . $q['id'] . '#preventivo');
+            }
+            $res = Quote::send($r, $q, $user, (string) ($_POST['message'] ?? ''));
+            $say($res['ok'] ? 'Preventivo inviato al cliente.' : $res['error'], $res['ok']);
+            $go($self . '#preventivo');
+        }
         if (isset($_POST['status'], STATUSES[$_POST['status']]) && $_POST['status'] !== $r['status']) {
             App::db()->prepare('UPDATE requests SET status = ?, updated_at = ? WHERE id = ?')->execute([$_POST['status'], App::now(), $r['id']]);
             App::log($uid, 'richiesta.stato', $r['ref'], $r['status'] . ' → ' . $_POST['status']);
@@ -183,6 +262,9 @@ if ($page === 'request') {
         $body .= '<option value="' . $e($k) . '"' . ($k === $r['status'] ? ' selected' : '') . '>' . $e($label) . '</option>';
     }
     $body .= '</select></label><label>Nota interna (non viene inviata al cliente)<textarea name="note" rows="4" maxlength="5000"></textarea></label><button class="btn">Salva</button></form></section></div>';
+    $raw = $_SESSION['quote_form'] ?? null;
+    unset($_SESSION['quote_form']);
+    $body .= QuoteView::render($r, $self, Auth::csrf(), is_array($raw) ? $raw : null, isset($_GET['q']) ? (int) $_GET['q'] : null, isset($_GET['confirm']) ? (int) $_GET['confirm'] : null);
     $ms = App::db()->prepare('SELECT m.*, u.name AS author FROM messages m LEFT JOIN users u ON u.id = m.user_id WHERE m.request_id = ? ORDER BY m.id');
     $ms->execute([$r['id']]);
     $body .= '<h2>Conversazione</h2><ol class="thread">';

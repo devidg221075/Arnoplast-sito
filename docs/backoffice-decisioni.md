@@ -68,3 +68,12 @@ Variazione al progetto: niente WordPress. Il sito resta statico; i contenuti si 
 - Risposte automatiche e posta di liste ignorate; stessi messaggi mai importati due volte; una richiesta chiusa o con preventivo inviato torna «in lavorazione» se il cliente riscrive; notifica a `notify_to` per ogni risposta.
 - Nell'elenco il segnale «Da rispondere» compare quando l'ultimo messaggio è del cliente.
 - Limite noto: gli allegati dei clienti non si copiano nel backoffice (si segnalano; restano nella casella). Da decidere con la tappa 3 (preventivi) se servono.
+
+
+## Tappa 3 — Preventivi con prezzi (fatta)
+
+- Formato: PDF allegato a una e-mail breve con la grafica del sito. Numero = riferimento della richiesta; rifatto dopo la modifica diventa «rev. 2».
+- Voci: prezzo unitario e sconto per riga, trasporto/imballo, IVA a scelta (22, 10, 4, 0), validità, pagamento, consegna, note; totali calcolati dal programma.
+- Condizioni generali: testo fisso fornito da ARNOplast (italiano e inglese), da inserire in «Condizioni PDF»; finché è vuoto il PDF parte senza e il backoffice lo segnala prima dell'invio.
+- Prezzi inseriti a mano (nessun listino): nessun controllo dei codici articolo sul catalogo.
+- PDF in italiano o in inglese secondo la lingua della richiesta.

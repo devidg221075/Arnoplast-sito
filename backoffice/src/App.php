@@ -66,13 +66,17 @@ final class App
             "CREATE TABLE IF NOT EXISTS activity (id $id, user_id INT NULL, action VARCHAR(60) NOT NULL, target VARCHAR(120) NOT NULL DEFAULT '',
                 detail VARCHAR(500) NOT NULL DEFAULT '', ip_hash CHAR(64) NOT NULL DEFAULT '', created_at DATETIME NOT NULL)$end",
             "CREATE TABLE IF NOT EXISTS state (k VARCHAR(60) NOT NULL PRIMARY KEY, v VARCHAR(500) NOT NULL DEFAULT '')$end",
+            "CREATE TABLE IF NOT EXISTS settings (k VARCHAR(60) NOT NULL PRIMARY KEY, v $long NOT NULL)$end",
+            "CREATE TABLE IF NOT EXISTS quotes (id $id, request_id INT NOT NULL, rev INT NOT NULL DEFAULT 1, status VARCHAR(10) NOT NULL DEFAULT 'bozza',
+                data $long NOT NULL, net BIGINT NOT NULL DEFAULT 0, vat BIGINT NOT NULL DEFAULT 0, total BIGINT NOT NULL DEFAULT 0,
+                created_by INT NULL, created_at DATETIME NOT NULL, updated_at DATETIME NOT NULL, sent_at DATETIME NULL, pdf_file VARCHAR(120) NOT NULL DEFAULT '')$end",
             "CREATE TABLE IF NOT EXISTS throttle (id $id, bucket VARCHAR(120) NOT NULL, created_at DATETIME NOT NULL)$end",
         ];
         foreach ($tables as $sql) {
             $pdo->exec($sql);
         }
         foreach (['requests_created' => 'requests (created_at)', 'messages_request' => 'messages (request_id)',
-            'throttle_bucket' => 'throttle (bucket, created_at)', 'activity_created' => 'activity (created_at)'] as $name => $on) {
+            'throttle_bucket' => 'throttle (bucket, created_at)', 'quotes_request' => 'quotes (request_id)', 'activity_created' => 'activity (created_at)'] as $name => $on) {
             try {
                 $pdo->exec("CREATE INDEX $name ON $on");
             } catch (\PDOException) {
@@ -100,6 +104,28 @@ final class App
             } catch (\PDOException) {
                 // un altro processo l'ha inserita un attimo prima: basta riprovare l'aggiornamento
                 $pdo->prepare('UPDATE state SET v = ? WHERE k = ?')->execute([mb_substr($value, 0, 500), $key]);
+            }
+        }
+    }
+
+    public static function setting(string $key, string $default = ''): string
+    {
+        $st = self::db()->prepare('SELECT v FROM settings WHERE k = ?');
+        $st->execute([$key]);
+        $v = $st->fetchColumn();
+        return $v === false ? $default : (string) $v;
+    }
+
+    public static function setSetting(string $key, string $value): void
+    {
+        $pdo = self::db();
+        $st = $pdo->prepare('UPDATE settings SET v = ? WHERE k = ?');
+        $st->execute([$value, $key]);
+        if ($st->rowCount() === 0) {
+            try {
+                $pdo->prepare('INSERT INTO settings (k, v) VALUES (?, ?)')->execute([$key, $value]);
+            } catch (\PDOException) {
+                $pdo->prepare('UPDATE settings SET v = ? WHERE k = ?')->execute([$value, $key]);
             }
         }
     }

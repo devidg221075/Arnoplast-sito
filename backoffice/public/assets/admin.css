@@ -53,3 +53,14 @@ pre { margin: 0; white-space: pre-wrap; overflow-wrap: anywhere; font: 15px/1.5 
 details pre { margin-top: 8px; }
 .status.todo { background: #fff3c4; color: #6b5200; }
 .msg.out { border-left-color: #2b7a2b; }
+.btn.dark { background: var(--black); }
+.grid2 { display: grid; gap: 0 16px; grid-template-columns: 1fr; }
+@media (min-width: 760px) { .grid2 { grid-template-columns: 1fr 1fr; } }
+.qtable td { padding: 6px 8px; }
+.qtable input { margin: 0; padding: 7px 8px; font-size: 15px; }
+.qtable input.n { text-align: right; min-width: 70px; }
+.qtable td:nth-child(1) { min-width: 120px; }
+.qtable td:nth-child(2) { min-width: 220px; }
+.quote-form { margin-top: 12px; }
+.totals { max-width: 420px; margin: 8px 0 14px auto; }
+.totals td { text-align: right; }

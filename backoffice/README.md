@@ -2,6 +2,7 @@
 
 Backoffice riusabile per siti statici. Tappa 1: ricezione dei moduli (contatti e preventivo), e-mail al cliente e
 all'azienda con modelli grafici, registro delle richieste con stato e note interne, utenti con due ruoli, registro delle attività.
+Tappa 3: preventivo con prezzi, sconti, trasporto, IVA e PDF allegato all'e-mail.
 Tappa 2: risposte al cliente dalla scheda della richiesta e lettura delle risposte dalla casella (conversazione completa in un solo posto).
 
 Requisiti: PHP 8.3 o successivo (provato con 8.3; pensato anche per 8.5), MySQL, estensioni `pdo_mysql`, `mbstring`, `openssl`.
@@ -13,6 +14,7 @@ Non servono SSH né Composer sull'hosting: la cartella `vendor/` è già nel rep
 |---|---|
 | `public/` | L'unica cartella esposta al web: `index.php` (backoffice), `api/submit.php` (riceve i moduli), `assets/` |
 | `src/` | Codice: `App` (configurazione, database, limiti), `Auth` (accesso), `Submit` (controlli e salvataggio), `Mailer` (SMTP), `Conversation` (risposte e collegamento ai messaggi), `Imap` e `Mime` (lettura della posta), `Inbox` (controllo della casella) |
+| `src/Quote*.php` | Preventivo: calcolo (`Quote`), PDF (`QuotePdf`, libreria FPDF), schermata nella scheda richiesta (`QuoteView`) |
 | `bin/` | `fetch-mail.php`: controllo della casella, da lanciare con una pianificazione (cron) |
 | `tests/` | `php tests/inbox_test.php`: prova della conversazione con un server di posta finto (serve `python3`) |
 | `emails/` | Modelli e-mail e anteprima (`php emails/preview.php <cartella>`) |
@@ -30,6 +32,14 @@ Non servono SSH né Composer sull'hosting: la cartella `vendor/` è già nel rep
 6. **Sito**: ricostruisci il sito con `ARNO_FORMS_ENDPOINT=https://gestione.<dominio>/api/submit.php`. I moduli spediscono al backoffice e
    la politica di sicurezza del sito (CSP) lo consente. Senza la variabile i moduli aprono il programma di posta, come prima.
 7. **Origini**: in `config.php`, `allowed_origins` deve elencare gli indirizzi del sito da cui partono i moduli.
+
+## Preventivi con prezzi (tappa 3)
+
+Dalla scheda di una richiesta: «Prepara il preventivo» (parte dagli articoli chiesti dal cliente) → prezzi, sconti, trasporto/imballo, aliquota IVA, validità,
+pagamento, consegna, note → «Salva e vai all'invio» → controllo del PDF → invio con il PDF allegato a un'e-mail con la grafica del sito.
+Il numero è quello della richiesta (P-AAAA-NNNN); un preventivo inviato non si modifica: si crea una nuova revisione («rev. 2»). Gli importi si
+salvano in centesimi. La copia esatta del PDF inviato resta in `var/quotes/` (fuori dal web). Le condizioni generali (italiano e inglese) si inseriscono
+nella pagina **Condizioni PDF** (amministratore): il backoffice non le scrive.
 
 ## Risposte dei clienti: lettura della casella (tappa 2)
 

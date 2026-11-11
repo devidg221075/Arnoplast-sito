@@ -2,7 +2,13 @@
     "name": "idealogy/backoffice",
     "description": "Backoffice riusabile per siti statici: richieste, conversazioni, modelli e-mail.",
     "type": "project",
-    "require": { "php": ">=8.3", "ext-pdo": "*", "ext-mbstring": "*", "phpmailer/phpmailer": "^7.0" },
+    "require": {
+        "php": ">=8.3",
+        "ext-mbstring": "*",
+        "ext-pdo": "*",
+        "phpmailer/phpmailer": "^7.0",
+        "setasign/fpdf": "^1.8"
+    },
     "autoload": { "psr-4": { "Backoffice\\": "src/" }, "files": ["emails/templates.php"] },
     "config": { "sort-packages": true }
 }

@@ -49,6 +49,12 @@ const TEXTS = [
         'reply_subject' => 'Risposta alla tua richiesta',
         'reply_continue' => 'Per continuare la conversazione rispondi a questa e-mail: la nostra casella la riceve insieme al riferimento.',
         'regards' => 'Cordiali saluti',
+        'offer_title' => 'Il tuo preventivo',
+        'offer_subject' => 'Il tuo preventivo ARNOplast',
+        'offer_intro' => 'in allegato trovi il preventivo che ci hai richiesto, in formato PDF.',
+        'offer_summary' => 'Riepilogo', 'offer_net' => 'Imponibile', 'offer_vat' => 'IVA', 'offer_total' => 'Totale', 'offer_valid' => 'Validità dell\'offerta', 'offer_days' => '%d giorni',
+        'offer_attached' => 'Allegato',
+        'offer_questions' => 'Per confermare l\'ordine o chiedere modifiche rispondi a questa e-mail.',
         'name' => 'Nome', 'company' => 'Azienda', 'email' => 'Email', 'phone' => 'Telefono',
         'country' => 'Paese', 'type' => 'Tipologia', 'address' => 'Indirizzo', 'contact' => 'Referente',
     ],
@@ -73,6 +79,12 @@ const TEXTS = [
         'reply_subject' => 'Reply to your request',
         'reply_continue' => 'To continue the conversation, simply reply to this email: our mailbox receives it together with the reference.',
         'regards' => 'Kind regards',
+        'offer_title' => 'Your quotation',
+        'offer_subject' => 'Your ARNOplast quotation',
+        'offer_intro' => 'please find attached the quotation you requested, as a PDF file.',
+        'offer_summary' => 'Summary', 'offer_net' => 'Taxable amount', 'offer_vat' => 'VAT', 'offer_total' => 'Total', 'offer_valid' => 'Offer validity', 'offer_days' => '%d days',
+        'offer_attached' => 'Attachment',
+        'offer_questions' => 'To confirm the order or ask for changes, simply reply to this email.',
         'name' => 'Name', 'company' => 'Company', 'email' => 'Email', 'phone' => 'Phone',
         'country' => 'Country', 'type' => 'Customer type', 'address' => 'Address', 'contact' => 'Contact person',
     ],
@@ -349,5 +361,28 @@ function customerReplyNotice(string $customerName, string $text, string $ref, st
         'html' => layout(['lang' => 'it', 'title' => 'Risposta del cliente', 'preheader' => $name . ': ' . mb_substr(line($text), 0, 90), 'body' => $body, 'site_url' => $site,
             'footer_note' => 'Notifica automatica. Rispondi dal backoffice per tenere tutta la conversazione in un solo posto.']),
         'text' => plain('Risposta del cliente', [$name . ' ha risposto alla richiesta ' . $ref . ".\n\n" . trim($text), $attachments > 0 ? "Allegati nel messaggio: $attachments (aprili dalla casella richieste@arnoplast.it)." : '', 'Apri la conversazione: ' . $adminUrl]),
+    ];
+}
+
+/** 7. Preventivo con prezzi: e-mail al cliente, con il PDF allegato (nella lingua della richiesta). */
+function quoteOffer(string $message, string $customerName, string $ref, int $rev, string $lang, string $signer, string $total, string $net, string $vat, int $days, string $file, string $site = 'https://www.arnoplast.it'): array
+{
+    $hello = sprintf(t($lang, 'hello'), line($customerName));
+    $sign = line($signer) === '' ? 'ARNOplast' : line($signer) . ' - ARNOplast';
+    $pairs = [t($lang, 'reference') => $ref . ($rev > 1 ? ' rev. ' . $rev : ''), t($lang, 'offer_net') => $net, t($lang, 'offer_vat') => $vat,
+        t($lang, 'offer_total') => $total, t($lang, 'offer_valid') => sprintf(t($lang, 'offer_days'), $days), t($lang, 'offer_attached') => $file];
+    $custom = '';
+    foreach (preg_split("/\n{2,}/", trim($message)) ?: [] as $p) {
+        $custom .= $p === '' ? '' : paragraph($p);
+    }
+    $body = paragraph($hello) . paragraph(t($lang, 'offer_intro')) . $custom
+        . heading(t($lang, 'offer_summary')) . rows($pairs)
+        . '<p style="margin:22px 0 14px;font:14px/1.5 ' . FONT . ';color:' . MUTED . '">' . e(t($lang, 'offer_questions')) . '</p>'
+        . paragraph(t($lang, 'regards') . ",\n" . $sign);
+    $subject = t($lang, 'offer_subject') . ($rev > 1 ? ' rev. ' . $rev : '') . ' [' . $ref . ']';
+    return [
+        'subject' => $subject,
+        'html' => layout(['lang' => $lang, 'title' => t($lang, 'offer_title'), 'preheader' => t($lang, 'offer_intro'), 'body' => $body, 'site_url' => $site, 'footer_note' => t($lang, 'why')]),
+        'text' => plain(t($lang, 'offer_title'), [$hello, t($lang, 'offer_intro'), trim($message), plainRows($pairs), t($lang, 'offer_questions'), t($lang, 'regards') . ",\n" . $sign]),
     ];
 }
