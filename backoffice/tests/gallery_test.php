@@ -18,6 +18,7 @@ function check(bool $ok, string $what): void
 $work = sys_get_temp_dir() . '/bo-gal-' . bin2hex(random_bytes(4));
 mkdir($work);
 App::boot(['site_url' => 'https://www.arnoplast.it', 'secret' => 'test-secret-test-secret-test-secret', 'db' => ['dsn' => 'sqlite:' . $work . '/db.sqlite']]);
+Gallery::useDir($work . '/originali');
 $seed = Gallery::seedItems();
 check(count($seed) === 145, count($seed) . ' foto nel file del sito');
 check(Gallery::importSeed() === 145 && Gallery::importSeed() === 0, 'importazione una volta sola');
@@ -70,7 +71,6 @@ check(Content::find(Gallery::KIND, '146') === null && Gallery::original('146') =
 Gallery::delete('010', 1);
 check(Content::status(Content::find(Gallery::KIND, '010')) === Content::REMOVED && count(Gallery::export()['foto']) === 145 - 1 + 1, 'foto pubblicata: "da eliminare", esce dalla bozza');
 check(in_array('010', array_column(Gallery::export(true)['foto'], 'id'), true), 'nel pubblicato c\'è ancora');
-@unlink(Gallery::dir() . '/147.jpg');
 
 echo $fails === 0 ? "\nTutti i controlli superati\n" : "\n$fails controlli falliti\n";
 exit($fails === 0 ? 0 : 1);

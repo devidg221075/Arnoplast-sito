@@ -150,9 +150,17 @@ final class Gallery
         Content::markDeleted(self::KIND, $id, $userId);
     }
 
+    private static ?string $dir = null;
+
+    /** Solo per le prove: cartella degli originali diversa da quella vera. */
+    public static function useDir(?string $dir): void
+    {
+        self::$dir = $dir;
+    }
+
     public static function dir(): string
     {
-        return dirname(__DIR__) . '/var/content/galleria';
+        return self::$dir ?? dirname(__DIR__) . '/var/content/galleria';
     }
 
     /**
