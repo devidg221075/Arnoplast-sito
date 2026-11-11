@@ -58,4 +58,4 @@ Variazione al progetto: niente WordPress. Il sito resta statico; i contenuti si 
 
 - Casella di invio: `noreply@arnoplast.it`. Server `mail.arnoplast.it`: SMTP 465 (SSL), IMAP 993, POP3 995, con autenticazione.
 - La password non va mai scritta nel repository: sta solo nel file di configurazione sull'hosting. Quella comunicata in chat va cambiata.
-- Da decidere: a quale casella arrivano le risposte dei clienti (per farle rientrare nelle conversazioni).
+- Mittente e casella delle risposte: `richieste@arnoplast.it` (già attiva). Il backoffice legge solo questa casella. `noreply@` non si usa per le conversazioni.
