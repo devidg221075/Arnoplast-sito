@@ -68,3 +68,7 @@ label.inline { display: inline-flex; align-items: center; gap: 8px; font-weight:
 label.inline input { display: inline-block; width: auto; margin: 0; }
 .actions { display: flex; flex-wrap: wrap; gap: 18px; align-items: center; margin-top: 16px; }
 code { font: 13px ui-monospace, Menlo, Consolas, monospace; background: var(--line); padding: 1px 5px; border-radius: 3px; }
+.texttable td { padding: 6px 10px; width: 50%; }
+.texttable .tkey { background: var(--paper); padding: 8px 10px; border-top: 1px solid var(--line); }
+.texttable input, .texttable textarea { margin-top: 0; }
+.texttable small { display: block; margin-top: 4px; }

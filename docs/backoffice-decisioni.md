@@ -87,3 +87,4 @@ Variazione al progetto: niente WordPress. Il sito resta statico; i contenuti si 
 - Inglese: campi accanto all'italiano; «Traduzione richiesta» segna le schede che Claude traduce su richiesta (non c'è traduzione automatica nel backoffice).
 - L'Open Day è una pagina con testi fissi: va con le pagine istituzionali.
 - Solo l'amministratore modifica i contenuti (il ruolo ARNOplast vede richieste e preventivi).
+- Pagine istituzionali (4a, fatta): i testi fissi del sito si correggono con uno strato `data/testi.json` applicato dalla build sopra gli originali (`arnoplast/site/texts.py`); il backoffice lo gestisce per gruppi di pagina (voce «Testi»). Testi legali esclusi. **Ancora da fare:** storia dell'azienda (testo lungo con tappe) e imballaggi, che non sono testi fissi singoli.

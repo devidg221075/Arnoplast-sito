@@ -1,0 +1,1811 @@
+{
+ "groups": [
+  {
+   "id": "home",
+   "name": "Home: testata e primo schermo",
+   "help": "Titolo, sottotitolo e scritte della prima schermata della home.",
+   "keys": [
+    "home.title",
+    "home.tagline",
+    "home.lines",
+    "home.products_count",
+    "home.search_prompt",
+    "home.kicker",
+    "home.cta",
+    "home.families_count",
+    "home.family_count",
+    "hs.label",
+    "hs.of",
+    "hs.more",
+    "hs.prev",
+    "hs.next",
+    "hs.dots",
+    "hs.pause",
+    "hs.play",
+    "hs.title.agricoltura",
+    "hs.title.garden",
+    "hs.title.olive",
+    "hs.title.azienda",
+    "hs.lead.agricoltura",
+    "hs.lead.garden",
+    "hs.lead.olive",
+    "hs.lead.azienda",
+    "hs.fair",
+    "hs.fair_kicker",
+    "hs.fair_more",
+    "home.h1",
+    "home.fact_firenze",
+    "home.fact_reach",
+    "home.fact_oceano",
+    "home.h2_lines"
+   ]
+  },
+  {
+   "id": "home2",
+   "name": "Home: sezioni",
+   "help": "Le sezioni sotto la testata: ricerca, preventivo in tre passi, famiglie, azienda.",
+   "keys": [
+    "hv.discover",
+    "hv.quote_cta",
+    "hv.search_cta",
+    "hv.search_sub",
+    "hv.codes",
+    "hv.products",
+    "hv.families",
+    "hv.family",
+    "hv.lines",
+    "hv.steps_title",
+    "hv.step1",
+    "hv.step1_text",
+    "hv.step2",
+    "hv.step2_text",
+    "hv.step3",
+    "hv.step3_text",
+    "hv.stampi_eyebrow",
+    "hv.stampi_text",
+    "hv.idea_title",
+    "hv.idea_text",
+    "hv.idea_1",
+    "hv.idea_2",
+    "hv.idea_3",
+    "hv.contacts_title",
+    "hv.contacts_text",
+    "hv.write",
+    "hv.call",
+    "hv.where",
+    "hv.reach",
+    "hv.video_eyebrow",
+    "hv.video_title",
+    "hv.video_text",
+    "hv.video_play",
+    "hv.video_all",
+    "hv.app_eyebrow",
+    "hv.app_title"
+   ]
+  },
+  {
+   "id": "company",
+   "name": "Azienda",
+   "help": "Etichette della pagina Azienda (la storia in sé si modifica a parte).",
+   "keys": [
+    "co.timeline",
+    "co.packaging_title",
+    "co.packaging_text",
+    "co.packaging_cta",
+    "co.visit",
+    "co.source",
+    "co.mix_t",
+    "co.area_t",
+    "co.agri",
+    "co.garden",
+    "co.italy",
+    "co.abroad"
+   ]
+  },
+  {
+   "id": "contacts",
+   "name": "Contatti",
+   "help": "Pagina Contatti e modulo di contatto.",
+   "keys": [
+    "contacts.address",
+    "contacts.phone",
+    "contacts.email",
+    "contacts.web",
+    "contacts.maps",
+    "contacts.legal",
+    "ct.lead",
+    "ct.noscript",
+    "ct.write",
+    "ct.call",
+    "ct.how",
+    "ct.phones",
+    "ct.mail",
+    "ct.where",
+    "ct.legal",
+    "ct.follow",
+    "ct.form",
+    "ct.form_note",
+    "ct.name",
+    "ct.surname",
+    "ct.email",
+    "ct.phone",
+    "ct.company",
+    "ct.contact",
+    "ct.type",
+    "ct.address",
+    "ct.city",
+    "ct.zip",
+    "ct.country",
+    "ct.country_default",
+    "ct.message",
+    "ct.privacy",
+    "ct.privacy_short",
+    "ct.privacy_link",
+    "ct.submit",
+    "ct.err_required",
+    "ct.err_email",
+    "ct.sent",
+    "ct.proto",
+    "ct.map",
+    "ct.map_load",
+    "ct.map_note",
+    "ct.map_title",
+    "ct.commercial_t",
+    "ct.commercial"
+   ]
+  },
+  {
+   "id": "quote",
+   "name": "Preventivo e moduli",
+   "help": "Pagina Richiesta di preventivo, messaggi dei moduli.",
+   "keys": [
+    "card.view",
+    "card.video",
+    "card.videos",
+    "card.photo_of",
+    "qty.label",
+    "quote.title",
+    "quote.intro",
+    "quote.empty",
+    "quote.name",
+    "quote.company",
+    "quote.email",
+    "quote.phone",
+    "quote.country",
+    "quote.notes",
+    "quote.privacy",
+    "quote.privacy_link",
+    "quote.submit",
+    "quote.list",
+    "quote.form",
+    "quote.required",
+    "form.ok",
+    "form.fail",
+    "form.busy"
+   ]
+  },
+  {
+   "id": "fairs",
+   "name": "Fiere",
+   "help": "Testi della pagina Fiere (le singole fiere sono in «Fiere»).",
+   "keys": [
+    "fairs.kicker",
+    "fairs.intro",
+    "fairs.upcoming",
+    "fairs.none",
+    "fairs.site",
+    "fairs.new_tab",
+    "fairs.past",
+    "fairs.meet",
+    "fairs.stand",
+    "fairs.when",
+    "fairs.where",
+    "fairs.more",
+    "fairs.source",
+    "fairs.openday",
+    "fairs.openday_text"
+   ]
+  },
+  {
+   "id": "openday",
+   "name": "Open Day",
+   "help": "Testo della pagina Open Day.",
+   "keys": [
+    "od.text"
+   ]
+  },
+  {
+   "id": "gallery",
+   "name": "Galleria",
+   "help": "Testi della pagina Galleria.",
+   "keys": [
+    "gallery.lead",
+    "gallery.count",
+    "gallery.all",
+    "gallery.cat_impianti",
+    "gallery.cat_serre",
+    "gallery.cat_dettagli",
+    "gallery.cat_disegni",
+    "gallery.filter",
+    "gallery.close",
+    "gallery.prev",
+    "gallery.next",
+    "gallery.open"
+   ]
+  },
+  {
+   "id": "videos",
+   "name": "Video e tutorial",
+   "help": "Testi della pagina Video e tutorial.",
+   "keys": [
+    "video.external",
+    "vid.lead",
+    "vid.sum_video",
+    "vid.sum_tut",
+    "vid.lib",
+    "vid.filter",
+    "vid.f_all",
+    "vid.f_video",
+    "vid.f_agri",
+    "vid.f_garden",
+    "vid.f_olive",
+    "vid.c_video",
+    "vid.c_agricoltura",
+    "vid.c_garden",
+    "vid.c_olive",
+    "vid.search",
+    "vid.search_ph",
+    "vid.count",
+    "vid.count_one",
+    "vid.watch",
+    "vid.on",
+    "vid.duration",
+    "vid.product",
+    "vid.open",
+    "vid.privacy",
+    "vid.none",
+    "vid.none_text",
+    "vid.reset",
+    "vid.close",
+    "vid.fallback"
+   ]
+  },
+  {
+   "id": "catalogs",
+   "name": "Cataloghi e sfoglia catalogo",
+   "help": "Pagina Cataloghi e download, visualizzatore sfogliabile.",
+   "keys": [
+    "cat.intro",
+    "cat.download",
+    "cat.it_only",
+    "cat.catalog",
+    "cat.app_title",
+    "cat.see_line",
+    "cat.browse",
+    "flip.prev",
+    "flip.next",
+    "flip.pages",
+    "flip.page",
+    "flip.thumbs",
+    "flip.full",
+    "flip.go"
+   ]
+  },
+  {
+   "id": "products",
+   "name": "Prodotti, famiglie e linee",
+   "help": "Etichette delle schede prodotto, famiglie e linee.",
+   "keys": [
+    "family.products",
+    "family.families",
+    "family.codes",
+    "family.code",
+    "product.features",
+    "product.dimensions",
+    "product.materials",
+    "product.video",
+    "product.videos",
+    "product.videos_intro",
+    "product.catalog_page",
+    "product.catalog_page_hint",
+    "product.articles",
+    "product.no_articles",
+    "col.code",
+    "col.description",
+    "col.conf",
+    "col.imb",
+    "col.pallet",
+    "col.qty",
+    "line.kicker",
+    "line.download",
+    "family.kicker",
+    "product.code_hint",
+    "pk.code"
+   ]
+  },
+  {
+   "id": "reserved",
+   "name": "Area riservata",
+   "help": "Pagina di accesso e informazioni dell'area riservata.",
+   "keys": [
+    "reserved.notice",
+    "rs.lead",
+    "rs.login",
+    "rs.password",
+    "rs.submit",
+    "rs.proto",
+    "rs.what_t",
+    "rs.what_text",
+    "rs.ask_t",
+    "rs.ask_text",
+    "rs.ask_cta"
+   ]
+  },
+  {
+   "id": "press",
+   "name": "Rassegna stampa e social",
+   "help": "Blocchi «Dicono di noi» e «Seguici».",
+   "keys": [
+    "press.eyebrow",
+    "press.title",
+    "press.text",
+    "press.source",
+    "press.link",
+    "so.eyebrow",
+    "so.title",
+    "so.text",
+    "so.privacy",
+    "so.load",
+    "so.frame"
+   ]
+  },
+  {
+   "id": "footer",
+   "name": "Piè di pagina e menu",
+   "help": "Menu principale e piè di pagina.",
+   "keys": [
+    "site.name",
+    "menu.home",
+    "menu.company",
+    "menu.about",
+    "menu.packaging",
+    "menu.fairs",
+    "menu.products",
+    "menu.agricoltura",
+    "menu.garden",
+    "menu.olive",
+    "menu.catalogs",
+    "menu.gallery",
+    "menu.videos",
+    "menu.contacts",
+    "menu.reserved",
+    "menu.quote",
+    "menu.label",
+    "menu.toggle",
+    "menu.sub_of",
+    "footer.label",
+    "footer.company",
+    "footer.contacts",
+    "footer.follow",
+    "footer.app",
+    "footer.app_text",
+    "footer.privacy",
+    "footer.cookie",
+    "footer.rights",
+    "footer.vat",
+    "footer.rea",
+    "footer.capital",
+    "footer.new_tab"
+   ]
+  },
+  {
+   "id": "general",
+   "name": "Altri testi",
+   "help": "Nomi delle pagine, pulsanti, ricerca, messaggi generali e descrizioni delle immagini.",
+   "keys": [
+    "lang.label",
+    "lang.it",
+    "lang.en",
+    "skip",
+    "search.label",
+    "search.placeholder",
+    "search.results",
+    "breadcrumb.home",
+    "kind.optional",
+    "kind.spare",
+    "action.add",
+    "action.added",
+    "action.on_request",
+    "action.on_request_cta",
+    "noscript.product",
+    "noscript.quote",
+    "page.contacts",
+    "page.company",
+    "page.gallery",
+    "page.videos",
+    "page.openday",
+    "page.fairs",
+    "page.packaging",
+    "page.catalogs",
+    "page.reserved",
+    "page.placeholder",
+    "soon.title",
+    "soon.text",
+    "alt.idea_1",
+    "alt.idea_2",
+    "alt.idea_3",
+    "alt.sede",
+    "alt.gallery"
+   ]
+  }
+ ],
+ "texts": {
+  "site.name": {
+   "it": "ARNOplast",
+   "en": "ARNOplast"
+  },
+  "menu.home": {
+   "it": "Home",
+   "en": "Home"
+  },
+  "menu.company": {
+   "it": "Azienda",
+   "en": "Company"
+  },
+  "menu.about": {
+   "it": "Chi siamo",
+   "en": "About us"
+  },
+  "menu.packaging": {
+   "it": "Imballaggi",
+   "en": "Packaging"
+  },
+  "menu.fairs": {
+   "it": "Fiere",
+   "en": "Trade fairs"
+  },
+  "menu.products": {
+   "it": "Prodotti",
+   "en": "Products"
+  },
+  "menu.agricoltura": {
+   "it": "Agricoltura",
+   "en": "Agriculture"
+  },
+  "menu.garden": {
+   "it": "Garden",
+   "en": "Garden"
+  },
+  "menu.olive": {
+   "it": "Raccolta olive",
+   "en": "Olive harvest"
+  },
+  "menu.catalogs": {
+   "it": "Cataloghi e download",
+   "en": "Catalogues and downloads"
+  },
+  "menu.gallery": {
+   "it": "Galleria",
+   "en": "Gallery"
+  },
+  "menu.videos": {
+   "it": "Video e Tutorial",
+   "en": "Videos and tutorials"
+  },
+  "menu.contacts": {
+   "it": "Contatti",
+   "en": "Contacts"
+  },
+  "menu.reserved": {
+   "it": "Area riservata",
+   "en": "Restricted area"
+  },
+  "menu.quote": {
+   "it": "Richiesta preventivo",
+   "en": "Quote request"
+  },
+  "menu.label": {
+   "it": "Menu principale",
+   "en": "Main menu"
+  },
+  "menu.toggle": {
+   "it": "Menu",
+   "en": "Menu"
+  },
+  "menu.sub_of": {
+   "it": "Sottomenu",
+   "en": "Submenu"
+  },
+  "lang.label": {
+   "it": "Lingua",
+   "en": "Language"
+  },
+  "lang.it": {
+   "it": "Italiano",
+   "en": "Italiano"
+  },
+  "lang.en": {
+   "it": "English",
+   "en": "English"
+  },
+  "footer.label": {
+   "it": "Menu del piè di pagina",
+   "en": "Footer menu"
+  },
+  "footer.company": {
+   "it": "Dati societari",
+   "en": "Company details"
+  },
+  "footer.contacts": {
+   "it": "Contatti",
+   "en": "Contacts"
+  },
+  "footer.follow": {
+   "it": "Seguici",
+   "en": "Follow us"
+  },
+  "footer.app": {
+   "it": "Scarica l'app",
+   "en": "Download the app"
+  },
+  "footer.app_text": {
+   "it": "Scarica la nostra app per visualizzare in modo interattivo e aggiornato tutti i nostri articoli.",
+   "en": "Download our new APP to view all our articles in an interactive and updated way."
+  },
+  "footer.privacy": {
+   "it": "Privacy policy",
+   "en": "Privacy policy"
+  },
+  "footer.cookie": {
+   "it": "Cookie",
+   "en": "Cookies"
+  },
+  "footer.rights": {
+   "it": "Tutti i diritti riservati.",
+   "en": "All rights reserved."
+  },
+  "footer.vat": {
+   "it": "P.IVA",
+   "en": "VAT no."
+  },
+  "footer.rea": {
+   "it": "Iscr. Rea",
+   "en": "REA no."
+  },
+  "footer.capital": {
+   "it": "Cap. Soc.",
+   "en": "Share capital"
+  },
+  "footer.new_tab": {
+   "it": "si apre in una nuova scheda",
+   "en": "opens in a new tab"
+  },
+  "skip": {
+   "it": "Vai al contenuto",
+   "en": "Skip to content"
+  },
+  "search.label": {
+   "it": "Cerca un codice o una descrizione",
+   "en": "Search for a code or a description"
+  },
+  "search.placeholder": {
+   "it": "Cerca codice o descrizione",
+   "en": "Search by code or description"
+  },
+  "search.results": {
+   "it": "Risultati di ricerca",
+   "en": "Search results"
+  },
+  "home.title": {
+   "it": "Accessori in plastica per agricoltura, giardino e olivicoltura",
+   "en": "Plastic accessories for agriculture, gardening and olive growing"
+  },
+  "home.tagline": {
+   "it": "Dal 1975 progettiamo e stampiamo a Rignano sull'Arno accessori in plastica per chi lavora la terra.",
+   "en": "Since 1975 we have designed and moulded plastic accessories in Rignano sull'Arno, for those who work the land."
+  },
+  "home.lines": {
+   "it": "Le nostre linee",
+   "en": "Our product lines"
+  },
+  "home.products_count": {
+   "it": "prodotti",
+   "en": "products"
+  },
+  "home.search_prompt": {
+   "it": "Hai già un codice? Cercalo qui sopra: ti portiamo alla scheda del prodotto.",
+   "en": "Already have a code? Search for it above and we will take you to the product page."
+  },
+  "breadcrumb.home": {
+   "it": "Home",
+   "en": "Home"
+  },
+  "family.products": {
+   "it": "Prodotti della famiglia",
+   "en": "Products in the family"
+  },
+  "family.families": {
+   "it": "Famiglie",
+   "en": "Families"
+  },
+  "family.codes": {
+   "it": "codici",
+   "en": "codes"
+  },
+  "family.code": {
+   "it": "codice",
+   "en": "code"
+  },
+  "product.features": {
+   "it": "Caratteristiche",
+   "en": "Features"
+  },
+  "product.dimensions": {
+   "it": "Dimensioni",
+   "en": "Dimensions"
+  },
+  "product.materials": {
+   "it": "Materiali",
+   "en": "Materials"
+  },
+  "product.video": {
+   "it": "Guarda il video",
+   "en": "Watch the video"
+  },
+  "product.videos": {
+   "it": "Video",
+   "en": "Videos"
+  },
+  "product.videos_intro": {
+   "it": "Montaggio e utilizzo, sul canale YouTube ARNOplast.",
+   "en": "Assembly and use, on the ARNOplast YouTube channel."
+  },
+  "video.external": {
+   "it": "YouTube, si apre in una nuova scheda",
+   "en": "YouTube, opens in a new tab"
+  },
+  "product.catalog_page": {
+   "it": "Pagina del catalogo",
+   "en": "Catalogue page"
+  },
+  "product.catalog_page_hint": {
+   "it": "tabelle e disegni tecnici",
+   "en": "tables and technical drawings"
+  },
+  "card.view": {
+   "it": "Vedi prodotto",
+   "en": "View product"
+  },
+  "card.video": {
+   "it": "Video",
+   "en": "Video"
+  },
+  "card.videos": {
+   "it": "video",
+   "en": "videos"
+  },
+  "card.photo_of": {
+   "it": "Foto di",
+   "en": "Photo of"
+  },
+  "product.articles": {
+   "it": "Articoli",
+   "en": "Items"
+  },
+  "product.no_articles": {
+   "it": "Gli articoli di questo prodotto sono in fase di inserimento. Contattaci per informazioni.",
+   "en": "The items for this product are being added. Contact us for more information."
+  },
+  "col.code": {
+   "it": "Codice",
+   "en": "Code"
+  },
+  "col.description": {
+   "it": "Descrizione",
+   "en": "Description"
+  },
+  "col.conf": {
+   "it": "Conf.",
+   "en": "Pack"
+  },
+  "col.imb": {
+   "it": "Imb.",
+   "en": "Box"
+  },
+  "col.pallet": {
+   "it": "Pallet",
+   "en": "Pallet"
+  },
+  "col.qty": {
+   "it": "Quantità",
+   "en": "Quantity"
+  },
+  "kind.optional": {
+   "it": "optional",
+   "en": "optional"
+  },
+  "kind.spare": {
+   "it": "ricambio",
+   "en": "spare part"
+  },
+  "action.add": {
+   "it": "Aggiungi alla richiesta",
+   "en": "Add to request"
+  },
+  "action.added": {
+   "it": "Aggiunto",
+   "en": "Added"
+  },
+  "action.on_request": {
+   "it": "Su richiesta:",
+   "en": "On request:"
+  },
+  "action.on_request_cta": {
+   "it": "contattaci",
+   "en": "contact us"
+  },
+  "noscript.product": {
+   "it": "Per aggiungere articoli alla richiesta serve JavaScript. Senza JavaScript scrivi a",
+   "en": "JavaScript is needed to add items to the request. Without JavaScript, write to"
+  },
+  "noscript.quote": {
+   "it": "Per comporre la richiesta serve JavaScript. Senza JavaScript scrivici indicando codici e quantità in confezioni:",
+   "en": "JavaScript is needed to compose the request. Without JavaScript, write to us with the codes and quantities in packs:"
+  },
+  "qty.label": {
+   "it": "Quantità",
+   "en": "Quantity"
+  },
+  "quote.title": {
+   "it": "Richiesta preventivo",
+   "en": "Quote request"
+  },
+  "quote.intro": {
+   "it": "Aggiungi gli articoli che ti interessano e invia la richiesta: ti risponderemo con un'offerta.",
+   "en": "Add the items you are interested in and send the request: we will reply with an offer."
+  },
+  "quote.empty": {
+   "it": "La tua richiesta è vuota. Aggiungi gli articoli dalle schede prodotto.",
+   "en": "Your request is empty. Add items from the product pages."
+  },
+  "quote.name": {
+   "it": "Nome e cognome",
+   "en": "Full name"
+  },
+  "quote.company": {
+   "it": "Azienda",
+   "en": "Company"
+  },
+  "quote.email": {
+   "it": "Email",
+   "en": "Email"
+  },
+  "quote.phone": {
+   "it": "Telefono",
+   "en": "Phone"
+  },
+  "quote.country": {
+   "it": "Paese",
+   "en": "Country"
+  },
+  "quote.notes": {
+   "it": "Note",
+   "en": "Notes"
+  },
+  "quote.privacy": {
+   "it": "Ho letto l'informativa sulla privacy e acconsento al trattamento dei dati per rispondere alla mia richiesta.",
+   "en": "I have read the privacy policy and I consent to the processing of my data to answer my request."
+  },
+  "quote.privacy_link": {
+   "it": "Informativa privacy",
+   "en": "Privacy policy"
+  },
+  "quote.submit": {
+   "it": "Invia richiesta",
+   "en": "Send request"
+  },
+  "quote.list": {
+   "it": "Articoli nella richiesta",
+   "en": "Items in the request"
+  },
+  "quote.form": {
+   "it": "I tuoi dati",
+   "en": "Your details"
+  },
+  "quote.required": {
+   "it": "Campi obbligatori",
+   "en": "Required fields"
+  },
+  "home.kicker": {
+   "it": "Dal 1975 · Made in Italy",
+   "en": "Since 1975 · Made in Italy"
+  },
+  "home.cta": {
+   "it": "Scopri la linea",
+   "en": "Discover the range"
+  },
+  "home.families_count": {
+   "it": "famiglie",
+   "en": "families"
+  },
+  "home.family_count": {
+   "it": "famiglia",
+   "en": "family"
+  },
+  "line.kicker": {
+   "it": "Linea",
+   "en": "Range"
+  },
+  "line.download": {
+   "it": "Scarica il catalogo",
+   "en": "Download the catalogue"
+  },
+  "family.kicker": {
+   "it": "Famiglia",
+   "en": "Family"
+  },
+  "product.code_hint": {
+   "it": "Quantità in confezioni. Aggiungi i codici alla richiesta di preventivo.",
+   "en": "Quantity in packs. Add the codes to the quote request."
+  },
+  "page.contacts": {
+   "it": "Contatti",
+   "en": "Contacts"
+  },
+  "page.company": {
+   "it": "Azienda",
+   "en": "Company"
+  },
+  "page.gallery": {
+   "it": "Galleria",
+   "en": "Gallery"
+  },
+  "page.videos": {
+   "it": "Video e Tutorial",
+   "en": "Videos and tutorials"
+  },
+  "page.openday": {
+   "it": "Open Day",
+   "en": "Open Day"
+  },
+  "od.text": {
+   "it": "Struttura aperta alle visite del pubblico – COMING SOON",
+   "en": "Open to public visits – COMING SOON"
+  },
+  "page.fairs": {
+   "it": "Fiere",
+   "en": "Trade fairs"
+  },
+  "page.packaging": {
+   "it": "Imballaggi",
+   "en": "Packaging"
+  },
+  "page.catalogs": {
+   "it": "Cataloghi e download",
+   "en": "Catalogues and downloads"
+  },
+  "page.reserved": {
+   "it": "Area riservata",
+   "en": "Restricted area"
+  },
+  "page.placeholder": {
+   "it": "Questa sezione è in preparazione nel prototipo.",
+   "en": "This section is being prepared in the prototype."
+  },
+  "reserved.notice": {
+   "it": "Accesso riservato a rivenditori e clienti: sarà attivo nella versione WordPress.",
+   "en": "Access reserved to resellers and customers: it will be active in the WordPress version."
+  },
+  "contacts.address": {
+   "it": "Indirizzo",
+   "en": "Address"
+  },
+  "contacts.phone": {
+   "it": "Tel.",
+   "en": "Tel."
+  },
+  "contacts.email": {
+   "it": "Email",
+   "en": "Email"
+  },
+  "contacts.web": {
+   "it": "Web",
+   "en": "Web"
+  },
+  "contacts.maps": {
+   "it": "Apri in Google Maps",
+   "en": "Open in Google Maps"
+  },
+  "contacts.legal": {
+   "it": "Dati societari",
+   "en": "Company details"
+  },
+  "co.timeline": {
+   "it": "La nostra storia",
+   "en": "Our history"
+  },
+  "co.packaging_title": {
+   "it": "Imballaggi",
+   "en": "Packaging"
+  },
+  "co.packaging_text": {
+   "it": "Scopri anche la pagina dedicata agli imballaggi.",
+   "en": "Discover also the page dedicated to packaging."
+  },
+  "co.packaging_cta": {
+   "it": "Vai a Imballaggi",
+   "en": "Go to Packaging"
+  },
+  "co.visit": {
+   "it": "Vieni a trovarci",
+   "en": "Come and visit us"
+  },
+  "co.source": {
+   "it": "Testi dal sito ARNOplast.",
+   "en": "Texts from the ARNOplast website."
+  },
+  "soon.title": {
+   "it": "Contenuto in arrivo",
+   "en": "Content coming soon"
+  },
+  "soon.text": {
+   "it": "Stiamo preparando questa pagina. Per informazioni scrivici o chiamaci, oppure componi una richiesta di preventivo con i codici che ti interessano.",
+   "en": "We are preparing this page. For information, write or call us, or make a quote request with the codes you are interested in."
+  },
+  "fairs.kicker": {
+   "it": "Eventi",
+   "en": "Events"
+  },
+  "fairs.intro": {
+   "it": "Le fiere in cui potete incontrarci e l'archivio delle fiere a cui abbiamo partecipato.",
+   "en": "The trade fairs where you can meet us, and the archive of the fairs we have attended."
+  },
+  "fairs.upcoming": {
+   "it": "Prossime fiere",
+   "en": "Upcoming fairs"
+  },
+  "fairs.none": {
+   "it": "Nessuna fiera in programma al momento.",
+   "en": "No fairs scheduled at the moment."
+  },
+  "fairs.site": {
+   "it": "Sito della fiera",
+   "en": "Fair website"
+  },
+  "fairs.new_tab": {
+   "it": "si apre in una nuova scheda",
+   "en": "opens in a new tab"
+  },
+  "fairs.past": {
+   "it": "Fiere passate",
+   "en": "Past fairs"
+  },
+  "fairs.meet": {
+   "it": "Vuoi incontrarci in fiera? Scrivici",
+   "en": "Would you like to meet us at a fair? Write to us"
+  },
+  "fairs.stand": {
+   "it": "Stand",
+   "en": "Stand"
+  },
+  "fairs.when": {
+   "it": "Date",
+   "en": "Dates"
+  },
+  "fairs.where": {
+   "it": "Luogo",
+   "en": "Location"
+  },
+  "fairs.more": {
+   "it": "Leggi la presentazione",
+   "en": "Read the presentation"
+  },
+  "fairs.source": {
+   "it": "Fonte: sito ARNOplast",
+   "en": "Source: ARNOplast website"
+  },
+  "fairs.openday": {
+   "it": "Open Day",
+   "en": "Open Day"
+  },
+  "fairs.openday_text": {
+   "it": "Struttura aperta alle visite del pubblico — in arrivo.",
+   "en": "Open to public visits — coming soon."
+  },
+  "cat.intro": {
+   "it": "I cataloghi ARNOplast in PDF, da scaricare e consultare anche senza connessione.",
+   "en": "ARNOplast catalogues in PDF, to download and read even without a connection."
+  },
+  "cat.download": {
+   "it": "Scarica il PDF",
+   "en": "Download the PDF"
+  },
+  "cat.it_only": {
+   "it": "Solo in italiano",
+   "en": "Italian only"
+  },
+  "cat.catalog": {
+   "it": "Catalogo",
+   "en": "Catalogue"
+  },
+  "cat.app_title": {
+   "it": "L'app ARNOplast",
+   "en": "The ARNOplast app"
+  },
+  "cat.see_line": {
+   "it": "Vedi i prodotti online",
+   "en": "See the products online"
+  },
+  "hv.discover": {
+   "it": "Scopri i prodotti",
+   "en": "Discover the products"
+  },
+  "hv.quote_cta": {
+   "it": "Richiedi un preventivo",
+   "en": "Request a quote"
+  },
+  "hv.search_cta": {
+   "it": "Hai un codice?",
+   "en": "Have a code?"
+  },
+  "hv.search_sub": {
+   "it": "Cerca tra",
+   "en": "Search among"
+  },
+  "hv.codes": {
+   "it": "codici",
+   "en": "codes"
+  },
+  "hv.products": {
+   "it": "prodotti",
+   "en": "products"
+  },
+  "hv.families": {
+   "it": "famiglie",
+   "en": "families"
+  },
+  "hv.family": {
+   "it": "famiglia",
+   "en": "family"
+  },
+  "hv.lines": {
+   "it": "linee",
+   "en": "ranges"
+  },
+  "hv.steps_title": {
+   "it": "Il preventivo in tre passi",
+   "en": "Your quote in three steps"
+  },
+  "hv.step1": {
+   "it": "Scegli i codici",
+   "en": "Choose the codes"
+  },
+  "hv.step1_text": {
+   "it": "Cerca per codice o sfoglia linee e famiglie fino alla scheda del prodotto.",
+   "en": "Search by code or browse ranges and families until you reach the product page."
+  },
+  "hv.step2": {
+   "it": "Aggiungi alla richiesta",
+   "en": "Add to the request"
+  },
+  "hv.step2_text": {
+   "it": "Indica le quantità in confezioni accanto a ogni codice: la lista resta salvata su questo dispositivo.",
+   "en": "Enter the quantities in packs next to each code: the list stays saved on this device."
+  },
+  "hv.step3": {
+   "it": "Ricevi il preventivo",
+   "en": "Receive the quote"
+  },
+  "hv.step3_text": {
+   "it": "Invia la richiesta con i tuoi dati: ti rispondiamo con un'offerta.",
+   "en": "Send the request with your details: we will reply with an offer."
+  },
+  "press.eyebrow": {
+   "it": "Dicono di noi",
+   "en": "What they say about us"
+  },
+  "press.title": {
+   "it": "La componentistica per frutteti si adegua alle esigenze del mercato globale",
+   "en": "Orchard components adapt to the demands of the global market"
+  },
+  "press.text": {
+   "it": "L'esperienza nel settore nasce nel 1975 con la progettazione e la costruzione di stampi per iniezione e soffiaggio.",
+   "en": "Our experience in the sector goes back to 1975, with the design and construction of injection and blow moulds."
+  },
+  "press.source": {
+   "it": "FreshPlaza",
+   "en": "FreshPlaza"
+  },
+  "press.link": {
+   "it": "Leggi l'articolo",
+   "en": "Read the article"
+  },
+  "hv.stampi_eyebrow": {
+   "it": "Stampi",
+   "en": "Design and construction"
+  },
+  "hv.stampi_text": {
+   "it": "Disegno e costruzione stampi ad iniezione e soffiaggio per materie plastiche.",
+   "en": "injection molds and blow molds for plastic materials."
+  },
+  "hv.idea_title": {
+   "it": "Dall'idea al prodotto finito",
+   "en": "From the idea to the finished product"
+  },
+  "hv.idea_text": {
+   "it": "Nati nel 1975 come officina di stampi per iniezione e soffiaggio, dal 1983 seguiamo ogni articolo dalla progettazione al prodotto finito, nei nostri stabilimenti di Rignano sull'Arno.",
+   "en": "Founded in 1975 as a workshop for injection and blow moulds, since 1983 we have followed every article from design to the finished product, at our plants in Rignano sull'Arno."
+  },
+  "hv.idea_1": {
+   "it": "Progettazione",
+   "en": "Design"
+  },
+  "hv.idea_2": {
+   "it": "Stampaggio a iniezione",
+   "en": "Injection moulding"
+  },
+  "hv.idea_3": {
+   "it": "Magazzino e spedizione",
+   "en": "Warehouse and shipping"
+  },
+  "hv.contacts_title": {
+   "it": "Parliamo del tuo progetto",
+   "en": "Let's talk about your project"
+  },
+  "hv.contacts_text": {
+   "it": "Rivenditori e clienti: scrivici o chiamaci per informazioni sui prodotti, sui cataloghi e per un'offerta.",
+   "en": "Resellers and customers: write or call us for information on products and catalogues, and for an offer."
+  },
+  "hv.write": {
+   "it": "Scrivici",
+   "en": "Write to us"
+  },
+  "hv.call": {
+   "it": "Chiamaci",
+   "en": "Call us"
+  },
+  "hv.where": {
+   "it": "Dove siamo",
+   "en": "Where we are"
+  },
+  "hv.reach": {
+   "it": "Venduti in tutta Europa, nel Mediterraneo e oltre oceano",
+   "en": "Sold across Europe, in the Mediterranean and overseas"
+  },
+  "hs.label": {
+   "it": "Le sezioni del sito",
+   "en": "The sections of the site"
+  },
+  "hs.of": {
+   "it": "di",
+   "en": "of"
+  },
+  "hs.more": {
+   "it": "Scopri",
+   "en": "Discover"
+  },
+  "hs.prev": {
+   "it": "Foto precedente",
+   "en": "Previous photo"
+  },
+  "hs.next": {
+   "it": "Foto successiva",
+   "en": "Next photo"
+  },
+  "hs.dots": {
+   "it": "Scegli la foto",
+   "en": "Choose the photo"
+  },
+  "hs.pause": {
+   "it": "Ferma la rotazione delle foto",
+   "en": "Pause the photo rotation"
+  },
+  "hs.play": {
+   "it": "Riprendi la rotazione delle foto",
+   "en": "Resume the photo rotation"
+  },
+  "hs.title.agricoltura": {
+   "it": "Per chi lavora la terra",
+   "en": "For those who work the land"
+  },
+  "hs.title.garden": {
+   "it": "Per il tuo giardino",
+   "en": "For your garden"
+  },
+  "hs.title.olive": {
+   "it": "Per la raccolta delle olive",
+   "en": "For the olive harvest"
+  },
+  "hs.title.azienda": {
+   "it": "Dal 1975 a Rignano sull'Arno",
+   "en": "Since 1975 in Rignano sull'Arno"
+  },
+  "hs.lead.agricoltura": {
+   "it": "Dal 1975 progettiamo e stampiamo a Rignano sull'Arno accessori in plastica per l'agricoltura.",
+   "en": "Since 1975 we have designed and moulded plastic accessories for agriculture in Rignano sull'Arno."
+  },
+  "hs.lead.garden": {
+   "it": "Dal 1975 progettiamo e stampiamo a Rignano sull'Arno accessori in plastica per il giardino.",
+   "en": "Since 1975 we have designed and moulded plastic accessories for the garden in Rignano sull'Arno."
+  },
+  "hs.lead.olive": {
+   "it": "Dal 1975 progettiamo e stampiamo a Rignano sull'Arno accessori in plastica per la raccolta delle olive.",
+   "en": "Since 1975 we have designed and moulded plastic accessories for the olive harvest in Rignano sull'Arno."
+  },
+  "hs.lead.azienda": {
+   "it": "Dal 1975 progettiamo e stampiamo a Rignano sull'Arno accessori in plastica per chi lavora la terra.",
+   "en": "Since 1975 we have designed and moulded plastic accessories for those who work the land, in Rignano sull'Arno."
+  },
+  "so.eyebrow": {
+   "it": "Seguici",
+   "en": "Follow us"
+  },
+  "so.title": {
+   "it": "I nostri post social",
+   "en": "Our social posts"
+  },
+  "so.text": {
+   "it": "Gli ultimi aggiornamenti dalla nostra pagina Facebook: novità, fiere, lavori in corso. Ci trovi anche su LinkedIn e Instagram.",
+   "en": "The latest updates from our Facebook page: news, fairs, work in progress. You can also find us on LinkedIn and Instagram."
+  },
+  "so.privacy": {
+   "it": "Finché non clicchi, nessun servizio esterno viene contattato. Caricando i post ti colleghi a Facebook, che può usare i propri cookie.",
+   "en": "Until you click, no external service is contacted. When you load the posts you connect to Facebook, which may use its own cookies."
+  },
+  "so.load": {
+   "it": "Mostra gli ultimi post",
+   "en": "Show the latest posts"
+  },
+  "so.frame": {
+   "it": "Ultimi post della pagina Facebook di ARNOplast",
+   "en": "Latest posts from the ARNOplast Facebook page"
+  },
+  "gallery.lead": {
+   "it": "Esempi di impiego degli accessori ARNOplast su impianti realizzati.",
+   "en": "Examples of use of ARNOplast accessories on installations."
+  },
+  "gallery.count": {
+   "it": "foto",
+   "en": "photos"
+  },
+  "gallery.all": {
+   "it": "Tutte",
+   "en": "All"
+  },
+  "gallery.cat_impianti": {
+   "it": "Impianti in campo",
+   "en": "Installations in the field"
+  },
+  "gallery.cat_serre": {
+   "it": "Serre e tunnel",
+   "en": "Greenhouses and tunnels"
+  },
+  "gallery.cat_dettagli": {
+   "it": "Dettagli e accessori",
+   "en": "Details and accessories"
+  },
+  "gallery.cat_disegni": {
+   "it": "Disegni tecnici",
+   "en": "Technical drawings"
+  },
+  "gallery.filter": {
+   "it": "Filtra per tipo",
+   "en": "Filter by type"
+  },
+  "gallery.close": {
+   "it": "Chiudi",
+   "en": "Close"
+  },
+  "gallery.prev": {
+   "it": "Foto precedente",
+   "en": "Previous photo"
+  },
+  "gallery.next": {
+   "it": "Foto successiva",
+   "en": "Next photo"
+  },
+  "gallery.open": {
+   "it": "Ingrandisci la foto",
+   "en": "Enlarge the photo"
+  },
+  "cat.browse": {
+   "it": "Sfoglia il catalogo",
+   "en": "Browse the catalogue"
+  },
+  "flip.prev": {
+   "it": "Pagina precedente",
+   "en": "Previous page"
+  },
+  "flip.next": {
+   "it": "Pagina successiva",
+   "en": "Next page"
+  },
+  "flip.pages": {
+   "it": "Pagine",
+   "en": "Pages"
+  },
+  "flip.page": {
+   "it": "Pagina",
+   "en": "Page"
+  },
+  "flip.thumbs": {
+   "it": "Miniature",
+   "en": "Thumbnails"
+  },
+  "flip.full": {
+   "it": "Schermo intero",
+   "en": "Full screen"
+  },
+  "flip.go": {
+   "it": "Vai a pagina",
+   "en": "Go to page"
+  },
+  "vid.lead": {
+   "it": "Guarda i prodotti al lavoro. Segui il montaggio, passo dopo passo.",
+   "en": "Watch our products at work. Follow the assembly, step by step."
+  },
+  "vid.sum_video": {
+   "it": "video aziendali e applicazioni",
+   "en": "company and application videos"
+  },
+  "vid.sum_tut": {
+   "it": "tutorial di prodotto",
+   "en": "product tutorials"
+  },
+  "vid.lib": {
+   "it": "Videoteca ARNOplast",
+   "en": "ARNOplast video library"
+  },
+  "vid.filter": {
+   "it": "Filtra per sezione",
+   "en": "Filter by section"
+  },
+  "vid.f_all": {
+   "it": "Tutti",
+   "en": "All"
+  },
+  "vid.f_video": {
+   "it": "Video",
+   "en": "Videos"
+  },
+  "vid.f_agri": {
+   "it": "Agricoltura",
+   "en": "Agriculture"
+  },
+  "vid.f_garden": {
+   "it": "Garden",
+   "en": "Garden"
+  },
+  "vid.f_olive": {
+   "it": "Raccolta olive",
+   "en": "Olive harvest"
+  },
+  "vid.c_video": {
+   "it": "Azienda e applicazioni",
+   "en": "Company and applications"
+  },
+  "vid.c_agricoltura": {
+   "it": "Tutorial · Agricoltura",
+   "en": "Tutorial · Agriculture"
+  },
+  "vid.c_garden": {
+   "it": "Tutorial · Garden",
+   "en": "Tutorial · Garden"
+  },
+  "vid.c_olive": {
+   "it": "Tutorial · Raccolta olive",
+   "en": "Tutorial · Olive harvest"
+  },
+  "vid.search": {
+   "it": "Cerca nella videoteca",
+   "en": "Search the video library"
+  },
+  "vid.search_ph": {
+   "it": "Es. Monviso, Elektra, montaggio…",
+   "en": "E.g. Monviso, Elektra, assembly…"
+  },
+  "vid.count": {
+   "it": "video disponibili",
+   "en": "videos available"
+  },
+  "vid.count_one": {
+   "it": "video disponibile",
+   "en": "video available"
+  },
+  "vid.watch": {
+   "it": "Guarda",
+   "en": "Watch"
+  },
+  "vid.on": {
+   "it": "su",
+   "en": "on"
+  },
+  "vid.duration": {
+   "it": "Durata",
+   "en": "Length"
+  },
+  "vid.product": {
+   "it": "Scheda prodotto",
+   "en": "Product page"
+  },
+  "vid.open": {
+   "it": "Apri su",
+   "en": "Open on"
+  },
+  "vid.privacy": {
+   "it": "YouTube e Vimeo si caricano solo quando apri un video e possono utilizzare cookie. Per la riproduzione serve una connessione Internet.",
+   "en": "YouTube and Vimeo load only when you open a video, and may use cookies. Playback requires an Internet connection."
+  },
+  "vid.none": {
+   "it": "Nessun video trovato",
+   "en": "No videos found"
+  },
+  "vid.none_text": {
+   "it": "Prova con un altro nome o cambia sezione.",
+   "en": "Try another name or change section."
+  },
+  "vid.reset": {
+   "it": "Mostra tutti i video",
+   "en": "Show all videos"
+  },
+  "vid.close": {
+   "it": "Chiudi il video",
+   "en": "Close the video"
+  },
+  "vid.fallback": {
+   "it": "Il video non si avvia? Guardalo sul canale originale.",
+   "en": "The video does not start? Watch it on the original channel."
+  },
+  "ct.lead": {
+   "it": "Compila il modulo per richiedere informazioni o preventivi: sarai ricontattato prima possibile. Oppure scrivici o chiamaci.",
+   "en": "Fill in the form to request information or quotes: we will get back to you as soon as possible. Or write or call us."
+  },
+  "ct.noscript": {
+   "it": "Per inviare il modulo serve JavaScript. Senza JavaScript scrivici o chiamaci:",
+   "en": "JavaScript is needed to send the form. Without JavaScript, write or call us:"
+  },
+  "ct.write": {
+   "it": "Scrivici",
+   "en": "Write to us"
+  },
+  "ct.call": {
+   "it": "Chiamaci",
+   "en": "Call us"
+  },
+  "ct.how": {
+   "it": "Come contattarci",
+   "en": "How to contact us"
+  },
+  "ct.phones": {
+   "it": "Telefono",
+   "en": "Phone"
+  },
+  "ct.mail": {
+   "it": "Email",
+   "en": "Email"
+  },
+  "ct.where": {
+   "it": "Dove siamo",
+   "en": "Where we are"
+  },
+  "ct.legal": {
+   "it": "Dati societari",
+   "en": "Company details"
+  },
+  "ct.follow": {
+   "it": "Seguici",
+   "en": "Follow us"
+  },
+  "ct.form": {
+   "it": "Richiedici un contatto",
+   "en": "Contact us"
+  },
+  "ct.form_note": {
+   "it": "I campi con * sono obbligatori.",
+   "en": "Fields marked with * are required."
+  },
+  "ct.name": {
+   "it": "Nome",
+   "en": "First name"
+  },
+  "ct.surname": {
+   "it": "Cognome",
+   "en": "Last name"
+  },
+  "ct.email": {
+   "it": "Email",
+   "en": "Email"
+  },
+  "ct.phone": {
+   "it": "Telefono",
+   "en": "Phone"
+  },
+  "ct.company": {
+   "it": "Ragione sociale",
+   "en": "Company name"
+  },
+  "ct.contact": {
+   "it": "Referente aziendale",
+   "en": "Company contact person"
+  },
+  "ct.type": {
+   "it": "Tipologia utente",
+   "en": "User type"
+  },
+  "ct.address": {
+   "it": "Indirizzo (via/piazza/corso e numero civico)",
+   "en": "Address (street and number)"
+  },
+  "ct.city": {
+   "it": "Località",
+   "en": "City"
+  },
+  "ct.zip": {
+   "it": "CAP / Codice postale",
+   "en": "Postcode"
+  },
+  "ct.country": {
+   "it": "Nazione",
+   "en": "Country"
+  },
+  "ct.country_default": {
+   "it": "Italia",
+   "en": "Italy"
+  },
+  "ct.message": {
+   "it": "Descrivi la tua richiesta",
+   "en": "Describe your request"
+  },
+  "ct.privacy": {
+   "it": "Ho letto l'informativa sulla privacy e acconsento al trattamento dei dati per rispondere alla mia richiesta.",
+   "en": "I have read the privacy policy and I consent to the processing of my data to answer my request."
+  },
+  "ct.privacy_short": {
+   "it": "Consenso privacy",
+   "en": "Privacy consent"
+  },
+  "ct.privacy_link": {
+   "it": "Informativa privacy",
+   "en": "Privacy policy"
+  },
+  "ct.submit": {
+   "it": "Invia la richiesta",
+   "en": "Send the request"
+  },
+  "ct.err_required": {
+   "it": "Compila i campi obbligatori:",
+   "en": "Please fill in the required fields:"
+  },
+  "form.ok": {
+   "it": "Richiesta inviata. Ti abbiamo mandato una e-mail di conferma con il riferimento",
+   "en": "Request sent. We have emailed you a confirmation with the reference"
+  },
+  "form.fail": {
+   "it": "Non siamo riusciti a inviare la richiesta. Riprova tra poco oppure scrivi a",
+   "en": "We could not send your request. Please try again shortly or write to"
+  },
+  "form.busy": {
+   "it": "Invio in corso…",
+   "en": "Sending…"
+  },
+  "ct.err_email": {
+   "it": "Controlla l'indirizzo email.",
+   "en": "Please check the email address."
+  },
+  "ct.sent": {
+   "it": "Si apre il tuo programma di posta con la richiesta già compilata: premi Invia per spedirla. In alternativa scrivi a",
+   "en": "Your email program opens with the request already filled in: press Send to deliver it. Alternatively, write to"
+  },
+  "ct.proto": {
+   "it": "Versione di prova: l'invio diretto dal sito arriverà con il sito definitivo.",
+   "en": "Test version: direct sending from the site will be available with the final site."
+  },
+  "ct.map": {
+   "it": "La nostra sede",
+   "en": "Our headquarters"
+  },
+  "ct.map_load": {
+   "it": "Mostra la mappa",
+   "en": "Show the map"
+  },
+  "ct.map_note": {
+   "it": "Finché non clicchi, nessun servizio esterno viene contattato. Caricando la mappa ti colleghi a Google, che può usare i propri cookie.",
+   "en": "Until you click, no external service is contacted. When you load the map you connect to Google, which may use its own cookies."
+  },
+  "ct.map_title": {
+   "it": "Mappa della sede ARNOplast a Rignano sull'Arno",
+   "en": "Map of the ARNOplast headquarters in Rignano sull'Arno"
+  },
+  "alt.idea_1": {
+   "it": "Progettazione al computer di un articolo",
+   "en": "Computer-aided design of an article"
+  },
+  "alt.idea_2": {
+   "it": "Pressa a iniezione nello stabilimento",
+   "en": "Injection moulding press in the plant"
+  },
+  "alt.idea_3": {
+   "it": "Magazzino con scaffalature e pallet",
+   "en": "Warehouse with shelving and pallets"
+  },
+  "alt.sede": {
+   "it": "La sede ARNOplast a Rignano sull'Arno",
+   "en": "The ARNOplast headquarters in Rignano sull'Arno"
+  },
+  "alt.gallery": {
+   "it": "Accessori ARNOplast su un impianto realizzato",
+   "en": "ARNOplast accessories on an installed system"
+  },
+  "ct.commercial_t": {
+   "it": "ARNOcommerciale",
+   "en": "ARNOcommerciale"
+  },
+  "ct.commercial": {
+   "it": "ARNOcommerciale ha conquistato una posizione nel mercato italiano dei sistemi per il giardinaggio e l'agricoltura ed è arrivata a commercializzare i propri prodotti in tutta Europa, nel Bacino del Mediterraneo e in alcuni Paesi oltre oceano.",
+   "en": "ARNOcommerciale has established a position in the Italian market for gardening and agriculture systems and now sells its products across Europe, in the Mediterranean basin and in some countries overseas."
+  },
+  "hv.video_eyebrow": {
+   "it": "Video",
+   "en": "Video"
+  },
+  "hv.video_title": {
+   "it": "ARNOplast in video",
+   "en": "ARNOplast on video"
+  },
+  "hv.video_text": {
+   "it": "Guarda il video dell'azienda. Nella pagina Video e Tutorial trovi tutti i nostri filmati e i tutorial di montaggio.",
+   "en": "Watch the company video. On the Videos and tutorials page you will find all our films and assembly tutorials."
+  },
+  "hv.video_play": {
+   "it": "Guarda il video",
+   "en": "Watch the video"
+  },
+  "hv.video_all": {
+   "it": "Tutti i video e tutorial",
+   "en": "All videos and tutorials"
+  },
+  "hv.app_eyebrow": {
+   "it": "App ARNOplast",
+   "en": "ARNOplast app"
+  },
+  "hv.app_title": {
+   "it": "I nostri articoli sempre con te",
+   "en": "Our articles, always with you"
+  },
+  "rs.lead": {
+   "it": "Listini vari, documentazione commerciale e promozionale.",
+   "en": "Various price lists, commercial and promotional documentation."
+  },
+  "rs.login": {
+   "it": "Accesso",
+   "en": "Login"
+  },
+  "rs.password": {
+   "it": "Password",
+   "en": "Password"
+  },
+  "rs.submit": {
+   "it": "Entra",
+   "en": "Enter"
+  },
+  "rs.proto": {
+   "it": "Anteprima grafica: nel prototipo l'accesso non è attivo. La protezione vera (password sul server) arriva con il sito definitivo.",
+   "en": "Graphic preview: in the prototype the login is not active. The real protection (password on the server) comes with the final site."
+  },
+  "rs.what_t": {
+   "it": "Cosa trovi dentro",
+   "en": "What you will find inside"
+  },
+  "rs.what_text": {
+   "it": "Listini e documenti commerciali e promozionali riservati a rivenditori e clienti.",
+   "en": "Price lists and commercial and promotional documents reserved for resellers and customers."
+  },
+  "rs.ask_t": {
+   "it": "Non hai la password?",
+   "en": "Don't have the password?"
+  },
+  "rs.ask_text": {
+   "it": "Scrivici o chiamaci: te la comunichiamo dopo aver verificato la tua richiesta.",
+   "en": "Write or call us: we will send it to you after checking your request."
+  },
+  "rs.ask_cta": {
+   "it": "Vai ai contatti",
+   "en": "Go to contacts"
+  },
+  "hs.fair": {
+   "it": "Fiera",
+   "en": "Fair"
+  },
+  "hs.fair_kicker": {
+   "it": "Ci trovi a",
+   "en": "Find us at"
+  },
+  "hs.fair_more": {
+   "it": "Scopri",
+   "en": "Discover"
+  },
+  "pk.code": {
+   "it": "Codice materiale: ",
+   "en": "Material code: "
+  },
+  "co.mix_t": {
+   "it": "Prodotti commercializzati",
+   "en": "Products marketed"
+  },
+  "co.area_t": {
+   "it": "Copertura territoriale",
+   "en": "Territorial coverage"
+  },
+  "co.agri": {
+   "it": "Agricoltura",
+   "en": "Agriculture"
+  },
+  "co.garden": {
+   "it": "Giardinaggio",
+   "en": "Gardening"
+  },
+  "co.italy": {
+   "it": "Italia",
+   "en": "Italy"
+  },
+  "co.abroad": {
+   "it": "Estero",
+   "en": "Abroad"
+  },
+  "home.h1": {
+   "it": "Accessori in plastica per chi lavora la terra",
+   "en": "Plastic accessories for those who work the land"
+  },
+  "home.fact_firenze": {
+   "it": "Firenze",
+   "en": "Florence"
+  },
+  "home.fact_reach": {
+   "it": "Europa · Mediterraneo",
+   "en": "Europe · Mediterranean"
+  },
+  "home.fact_oceano": {
+   "it": "e oltre oceano",
+   "en": "and overseas"
+  },
+  "home.h2_lines": {
+   "it": "Tre linee per il campo, il giardino e l'oliveto",
+   "en": "Three ranges for the field, the garden and the olive grove"
+  }
+ },
+ "max_len": 400,
+ "legal_excluded": [
+  "ck.brief_1",
+  "ck.brief_2",
+  "ck.brief_3",
+  "ck.brief_t",
+  "ck.clear_t",
+  "ck.clear_text",
+  "ck.col_policy",
+  "ck.col_service",
+  "ck.col_what",
+  "ck.col_when",
+  "ck.col_where",
+  "ck.col_why",
+  "ck.ext_fb",
+  "ck.ext_intro",
+  "ck.ext_maps",
+  "ck.ext_t",
+  "ck.ext_vimeo",
+  "ck.ext_yt",
+  "ck.lead",
+  "ck.links_t",
+  "ck.links_text",
+  "ck.policy_link",
+  "ck.privacy_cta",
+  "ck.privacy_t",
+  "ck.privacy_text",
+  "ck.store_intro",
+  "ck.store_quote",
+  "ck.store_quote_where",
+  "ck.store_quote_why",
+  "ck.store_t",
+  "page.cookie",
+  "page.cookie_text"
+ ]
+}

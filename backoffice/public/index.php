@@ -10,6 +10,8 @@ use Backoffice\Content;
 use Backoffice\Fairs;
 use Backoffice\FairsView;
 use Backoffice\Mime;
+use Backoffice\Texts;
+use Backoffice\TextsView;
 use Backoffice\Quote;
 use Backoffice\QuoteView;
 
@@ -45,7 +47,7 @@ $say = static function (string $text, bool $ok = true): void {
 $render = static function (string $title, string $body, ?array $user = null) use ($e, $url, $flash): never {
     $nav = '';
     if ($user) {
-        $links = ['requests' => 'Richieste'] + (Auth::isAdmin($user) ? ['fairs' => 'Fiere', 'mail' => 'Posta', 'conditions' => 'Condizioni PDF', 'users' => 'Utenti', 'activity' => 'Registro attività'] : []) + ['account' => 'Il mio accesso'];
+        $links = ['requests' => 'Richieste'] + (Auth::isAdmin($user) ? ['fairs' => 'Fiere', 'texts' => 'Testi', 'mail' => 'Posta', 'conditions' => 'Condizioni PDF', 'users' => 'Utenti', 'activity' => 'Registro attività'] : []) + ['account' => 'Il mio accesso'];
         foreach ($links as $p => $label) {
             $nav .= '<a href="' . $e($url($p)) . '">' . $e($label) . '</a>';
         }
@@ -200,6 +202,27 @@ if (($page === 'fairs' || $page === 'fair') && $admin) {
     $raw = $_SESSION['fair_form'] ?? null;
     unset($_SESSION['fair_form']);
     $render($row ? 'Fiera: ' . ($row['draft']['nome'] ?? $row['item_id']) : 'Nuova fiera', FairsView::form($row, Auth::csrf(), is_array($raw) ? $raw : null), $user);
+}
+
+// --- Testi fissi del sito, per pagina (solo amministratore). Le modifiche restano in bozza.
+if (($page === 'texts' || $page === 'text_group') && $admin) {
+    if ($page === 'texts') {
+        $render('Testi del sito', TextsView::index(trim(is_string($_GET['q'] ?? null) ? mb_substr($_GET['q'], 0, 80) : '')), $user);
+    }
+    $g = Texts::group(is_string($_GET['g'] ?? null) ? $_GET['g'] : '');
+    if (!$g) {
+        http_response_code(404);
+        $render('Gruppo non trovato', '<p><a href="' . $e($url('texts')) . '">Torna ai testi</a></p>', $user);
+    }
+    if ($isPost) {
+        $it = is_array($_POST['it'] ?? null) ? $_POST['it'] : [];
+        $en = is_array($_POST['en'] ?? null) ? $_POST['en'] : [];
+        $errors = Texts::saveGroup($g['id'], $it, $en, $uid);
+        App::log($uid, 'testi.salvati', $g['id']);
+        $say($errors ? implode(' ', array_slice($errors, 0, 3)) : 'Bozza salvata.', !$errors);
+        $go($url('text_group', ['g' => $g['id']]));
+    }
+    $render($g['name'], TextsView::group($g, Auth::csrf(), null), $user);
 }
 
 // --- Condizioni generali del PDF (testo del cliente, in italiano e in inglese). Solo amministratore.

@@ -375,5 +375,9 @@ from arnoplast.site.i18n_en import EN  # noqa: E402  (stringhe inglesi, vedi il 
 STRINGS["en"] = EN
 
 
+# Correzioni di data/testi.json (vedi texts.py): hanno la precedenza sugli originali.
+OVERRIDES: dict[str, dict[str, str]] = {}
+
+
 def t(key: str, lang: str) -> str:
-    return STRINGS.get(lang, {}).get(key) or STRINGS["it"].get(key, key)
+    return OVERRIDES.get(lang, {}).get(key) or STRINGS.get(lang, {}).get(key) or STRINGS["it"].get(key, key)

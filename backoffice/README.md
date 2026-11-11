@@ -35,6 +35,12 @@ Non servono SSH né Composer sull'hosting: la cartella `vendor/` è già nel rep
    la politica di sicurezza del sito (CSP) lo consente. Senza la variabile i moduli aprono il programma di posta, come prima.
 7. **Origini**: in `config.php`, `allowed_origins` deve elencare gli indirizzi del sito da cui partono i moduli.
 
+## Testi del sito (tappa 4a)
+
+Menu **Testi**: i 333 testi fissi del sito (titoli, pulsanti, descrizioni), raggruppati per pagina, in italiano e inglese. Il campo vuoto = testo originale; si salvano
+solo le correzioni, in bozza. Gli originali stanno in `seed/testi.json`, generato dal sito con `python tools/export_testi.py` (un test controlla che sia aggiornato).
+In pubblicazione le correzioni diventano `data/testi.json`, che la build applica sopra gli originali. I testi legali (privacy, cookie, banner) non sono modificabili.
+
 ## Fiere (tappa 4a)
 
 Menu **Fiere** (amministratore): «Importa le fiere del sito» (una volta) porta nel backoffice le schede di `data/fiere.json` (`seed/fiere.json`, deve restare identico: lo controlla un test).

@@ -1,0 +1,5 @@
+{
+ "_nota": "Correzioni ai testi fissi del sito (modificabili dal backoffice, voce «Testi»). Solo le voci cambiate: {\"it\": {chiave: testo}, \"en\": {...}}. Vedi arnoplast/site/texts.py.",
+ "it": {},
+ "en": {}
+}

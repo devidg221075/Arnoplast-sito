@@ -17,6 +17,7 @@ from markupsafe import Markup
 
 from arnoplast.catalog import Catalog, load_catalog, text
 from arnoplast.site import fair_images as FI
+from arnoplast.site import texts as TX
 from arnoplast.site.i18n import t
 from arnoplast.site.redirects import load_redirects, netlify_rules
 
@@ -1268,6 +1269,9 @@ def main(out: Path | None = None, sources: Path | None = None, catalog_path: Pat
         print(f"ATTENZIONE: {n} prodotti senza immagine: {d} {why}. Le pagine saranno "
               "generate senza foto. Rigenerale con: python -m arnoplast.extract.build --images-only",
               file=sys.stderr)
+    n_texts = TX.apply_overrides(DATA_DIR / "testi.json")  # errore prima di cancellare `out`
+    if n_texts:
+        print(f"{n_texts} testi corretti da data/testi.json")
     videos = load_videos()
     product_videos(c, videos)  # chiavi di videos.json non valide: errore prima di cancellare `out`
     clean_dir(out)
