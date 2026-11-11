@@ -3,7 +3,7 @@
         'name' => 'idealogy/backoffice',
         'pretty_version' => 'dev-claude/restyling-spec',
         'version' => 'dev-claude/restyling-spec',
-        'reference' => '83bd8dd6cea5c2954201a62699009a3ae93eeb23',
+        'reference' => '232a2a20ef762f9f2f7a973b713a1696d486b2d8',
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -13,7 +13,7 @@
         'idealogy/backoffice' => array(
             'pretty_version' => 'dev-claude/restyling-spec',
             'version' => 'dev-claude/restyling-spec',
-            'reference' => '83bd8dd6cea5c2954201a62699009a3ae93eeb23',
+            'reference' => '232a2a20ef762f9f2f7a973b713a1696d486b2d8',
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
