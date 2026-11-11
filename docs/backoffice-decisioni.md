@@ -35,3 +35,11 @@ Variazione al progetto: niente WordPress. Il sito resta statico; i contenuti si 
 4. Preventivo in PDF: intestazione, condizioni, IVA, validità, numerazione.
 5. Privacy: tempi di conservazione di richieste e conversazioni (non scelta la scadenza automatica); informativa da aggiornare con il consulente.
 6. Area riservata: accessi per singolo cliente o password unica.
+
+## Hosting verificato (11 novembre 2026)
+
+- Sito di lavoro: sottodominio `nuovo.arnoplast.it`, PHP 8.3. `arnoplast.it` (WordPress attuale) è su PHP 8.0.
+- cPanel: presenti MySQL, Processi Cron, Git Version Control, Gestione MultiPHP. Assenti Setup Python App, Terminal, SSH Access.
+- Disco all'82,7% (12,12 su 14,65 GB).
+- Tra circa due settimane: passaggio a un nuovo VPS con PHP 8.5 e più spazio. Da sapere: accesso root/SSH e possibilità di installare Python.
+- Scelte conseguenti: backoffice compatibile con PHP 8.3–8.5; rigenerazione del sito fuori dall'hosting (GitHub Actions) con consegna via Git o FTP, da rivalutare sul nuovo VPS.
