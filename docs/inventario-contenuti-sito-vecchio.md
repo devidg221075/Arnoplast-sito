@@ -57,7 +57,7 @@ Visore "Sfoglia il catalogo online senza effettuare il download" (Agricoltura 20
 "Esempi di impiego accessori Arnoplast su impianti realizzati": **145 foto** senza didascalie, nomi di file da fotocamera/WhatsApp. Gia' scaricate 5 in prova. Nuovo: ➕ Galleria nel menu, con ingrandimento; foto prima dal vecchio, poi sostituite dalle HD.
 
 ### Download area (/area-download, /en/download-area)  ✅ decisa 2026-11-05: pagina pubblica "Cataloghi e download" con PDF e app; listini nell'area riservata
-App (iOS/Android); **cataloghi PDF** (Agricoltura 2026 8,9 MB, Garden 2026 4,9 MB, Raccolta olive 2025 1,65 MB); pagine singole di download (anche in EN) per: cataloghi 2021, **listino Agricoltura 2018, listino Garden 2018, listino Martino 2018, ricambi Oleo 2016, ricambi Oleo Carbonio 2016, ricambi Facilitatore Martino 2018, corda elastica 2018**. I listini sono documenti commerciali: **vanno nell'area riservata** o restano pubblici? (da decidere). ⛔ alcune pagine di download bloccate.
+App (iOS/Android); **cataloghi PDF** (Agricoltura 2026 8,9 MB, Garden 2026 4,9 MB, Raccolta olive 2025 1,65 MB); pagine singole di download (anche in EN) per: cataloghi 2021, **listino Agricoltura 2018, listino Garden 2018, listino Martino 2018, ricambi Oleo 2016, ricambi Oleo Carbonio 2016, ricambi Facilitatore Martino 2018, corda elastica 2018**. Decisione del cliente (13 nov 2026): nell'area riservata vanno **solo i listini con i prezzi, riservati ai commerciali**. Da decidere per gli altri documenti (cataloghi 2021, ricambi, corda elastica). ⛔ alcune pagine di download bloccate.
 Nuovo: ✔ PDF dei cataloghi sulle pagine linea; ➕ pagina Download, app, listini.
 
 ### Video (/video-arno-plast)  ✅
