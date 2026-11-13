@@ -15,6 +15,10 @@ class ComposerStaticInitfe99255164953f8812bcfbc9851a19fe
         array (
             'PHPMailer\\PHPMailer\\' => 20,
         ),
+        'M' => 
+        array (
+            'MaxMind\\Db\\' => 11,
+        ),
         'B' => 
         array (
             'Backoffice\\' => 11,
@@ -25,6 +29,10 @@ class ComposerStaticInitfe99255164953f8812bcfbc9851a19fe
         'PHPMailer\\PHPMailer\\' => 
         array (
             0 => __DIR__ . '/..' . '/phpmailer/phpmailer/src',
+        ),
+        'MaxMind\\Db\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/maxmind-db/reader/src/MaxMind/Db',
         ),
         'Backoffice\\' => 
         array (

@@ -17,6 +17,8 @@ use Backoffice\TextsView;
 use Backoffice\Quote;
 use Backoffice\QuoteView;
 use Backoffice\Listini;
+use Backoffice\Stats;
+use Backoffice\StatsView;
 use Backoffice\ListiniView;
 use Backoffice\Videos;
 use Backoffice\VideosView;
@@ -58,7 +60,7 @@ $render = static function (string $title, string $body, ?array $user = null) use
         if ($user['role'] === 'commerciale') {
             $links = ['listini' => 'Listini', 'account' => 'Il mio accesso'];
         } else {
-        $links = ['requests' => 'Richieste'] + (Auth::isAdmin($user) ? ['fairs' => 'Fiere', 'gallery' => 'Galleria', 'videos' => 'Video', 'listini' => 'Listini', 'texts' => 'Testi', 'mail' => 'Posta', 'conditions' => 'Condizioni PDF', 'users' => 'Utenti', 'activity' => 'Registro attività'] : []) + ['account' => 'Il mio accesso'];
+        $links = ['requests' => 'Richieste'] + (Auth::isAdmin($user) ? ['fairs' => 'Fiere', 'gallery' => 'Galleria', 'videos' => 'Video', 'listini' => 'Listini', 'stats' => 'Statistiche', 'texts' => 'Testi', 'mail' => 'Posta', 'conditions' => 'Condizioni PDF', 'users' => 'Utenti', 'activity' => 'Registro attività'] : []) + ['account' => 'Il mio accesso'];
         }
         foreach ($links as $p => $label) {
             $nav .= '<a href="' . $e($url($p)) . '">' . $e($label) . '</a>';
@@ -392,6 +394,12 @@ if ($page === 'listini') {
         }
     }
     $render('Listini riservati', ListiniView::page($admin, Listini::current(), Auth::csrf(), $url('listini')), $user);
+}
+
+// --- Statistiche del sito (solo amministratore): senza cookie, nessun IP salvato.
+if ($page === 'stats' && $admin) {
+    $days = in_array((int) ($_GET['d'] ?? 30), [7, 30, 90], true) ? (int) $_GET['d'] : 30;
+    $render('Statistiche', StatsView::page(Stats::summary($days)), $user);
 }
 
 if (($page === 'texts' || $page === 'text_group') && $admin) {

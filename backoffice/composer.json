@@ -6,6 +6,7 @@
         "php": ">=8.3",
         "ext-mbstring": "*",
         "ext-pdo": "*",
+        "maxmind-db/reader": "^1.11",
         "phpmailer/phpmailer": "^7.0",
         "setasign/fpdf": "^1.8"
     },

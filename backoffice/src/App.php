@@ -72,6 +72,8 @@ final class App
                 created_by INT NULL, created_at DATETIME NOT NULL, updated_at DATETIME NOT NULL, sent_at DATETIME NULL, pdf_file VARCHAR(120) NOT NULL DEFAULT '')$end",
             "CREATE TABLE IF NOT EXISTS content (id $id, kind VARCHAR(20) NOT NULL, item_id VARCHAR(80) NOT NULL, draft $long NOT NULL, published $long NULL,
                 deleted TINYINT NOT NULL DEFAULT 0, meta $long NULL, updated_by INT NULL, updated_at DATETIME NOT NULL, UNIQUE (kind, item_id))$end",
+            "CREATE TABLE IF NOT EXISTS hits (id $id, day DATE NOT NULL, at DATETIME NOT NULL, visitor VARCHAR(32) NOT NULL, path VARCHAR(200) NOT NULL,
+                ref_kind VARCHAR(12) NOT NULL, ref VARCHAR(120) NOT NULL, device VARCHAR(12) NOT NULL, browser VARCHAR(12) NOT NULL, country CHAR(2) NULL)$end",
             "CREATE TABLE IF NOT EXISTS throttle (id $id, bucket VARCHAR(120) NOT NULL, created_at DATETIME NOT NULL)$end",
         ];
         foreach ($tables as $sql) {

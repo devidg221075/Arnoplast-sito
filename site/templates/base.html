@@ -28,6 +28,7 @@
   <link rel="stylesheet" href="/static/css/nav.css">
   <link rel="stylesheet" href="/static/css/motion.css">
   <script type="module" src="/static/js/main.js"></script>
+  {% if stats_url %}<script src="/static/js/stats.js" data-endpoint="{{ stats_url }}" defer></script>{% endif %}
   {# anim.js pubblicato contiene anche nav.js (menu): un solo script classico, una richiesta in meno. #}
   <script src="/static/js/anim.js" defer></script>
   {% block head_extra %}{% endblock %}
