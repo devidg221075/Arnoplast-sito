@@ -99,7 +99,7 @@ final class StatsView
         }
         $every = max(1, (int) ceil($count / 8));
         foreach ($daily as $i => $d) {
-            if ($i % $every === 0 || $i === $count - 1) {
+            if ($i % $every === 0) { // un'etichetta ogni $every giorni: niente sovrapposizioni
                 $svg .= '<text class="tick" x="' . round($pad + $i * $step, 1) . '" y="' . ($hgt - 6) . '" text-anchor="middle">' . substr($d['day'], 8, 2) . '/' . substr($d['day'], 5, 2) . '</text>';
             }
         }
