@@ -39,7 +39,8 @@ final class TextsView
         $e = App::e(...);
         $seed = Texts::seed()['texts'];
         $drafts = Texts::drafts();
-        $h = '<p><a href="index.php?p=texts">← Tutti i testi</a></p><p class="meta">' . $e($g['help']) . ' Lascia un campo vuoto per usare il testo originale. Su una riga sola, al massimo '
+        $live = Texts::overrides(true);
+        $h = '<p><a href="index.php?p=texts">← Tutti i testi</a></p><p class="meta">' . $e($g['help']) . ' Sopra ogni campo c\'è il testo che il sito mostra ora. Scrivi nel campo solo se vuoi cambiarlo; lascia vuoto per non cambiare. Su una riga sola, al massimo '
             . (int) Texts::seed()['max_len'] . ' caratteri.</p><form method="post" action="index.php?p=text_group&amp;g=' . $e($g['id']) . '" class="card">'
             . '<input type="hidden" name="csrf" value="' . $e($csrf) . '"><input type="hidden" name="action" value="save">'
             . '<table class="list texttable"><tr><th>Italiano</th><th>Inglese</th></tr>';
@@ -51,10 +52,11 @@ final class TextsView
             $h .= '<tr id="t-' . $e(strtr($k, '.', '-')) . '"><td colspan="2" class="tkey"><code>' . $e($k) . '</code>' . ($modified ? ' <span class="status todo">Modificato</span>' : '') . '</td></tr><tr>';
             foreach (['it', 'en'] as $lang) {
                 $long = mb_strlen($base[$lang]) > 80;
+                $shown = $live[$lang][$k] ?? $base[$lang];
                 $field = $long
-                    ? '<textarea name="' . $lang . '[' . $e($k) . ']" rows="3" maxlength="400" placeholder="' . $e($base[$lang]) . '">' . $e($cur[$lang]) . '</textarea>'
-                    : '<input name="' . $lang . '[' . $e($k) . ']" maxlength="400" value="' . $e($cur[$lang]) . '" placeholder="' . $e($base[$lang]) . '">';
-                $h .= '<td>' . $field . ($cur[$lang] !== '' ? '<small>Originale: ' . $e($base[$lang]) . '</small>' : '') . '</td>';
+                    ? '<textarea name="' . $lang . '[' . $e($k) . ']" rows="3" maxlength="400" aria-label="Nuovo testo, ' . $lang . '">' . $e($cur[$lang]) . '</textarea>'
+                    : '<input name="' . $lang . '[' . $e($k) . ']" maxlength="400" value="' . $e($cur[$lang]) . '" aria-label="Nuovo testo, ' . $lang . '">';
+                $h .= '<td><p class="meta"><small>Sul sito ora:</small>' . $e($shown) . '</p>' . '<small>Nuovo testo:</small>' . $field . '</td>';
             }
             $h .= '</tr>';
         }
