@@ -479,12 +479,20 @@ def forms_endpoint() -> str:
     return url
 
 
+def listini_url() -> str:
+    """Pagina di accesso dei listini nel backoffice (stesso server dei moduli): vuota se i moduli non sono collegati."""
+    endpoint = forms_endpoint()
+    if not endpoint:
+        return ""
+    return re.match(r"^https?://[^/]+", endpoint).group(0) + "/index.php?p=listini"
+
+
 def _env(lang: str) -> Environment:
     env = Environment(loader=FileSystemLoader(SITE_DIR / "templates"),
                       autoescape=select_autoescape(["html"], default=True),
                       trim_blocks=True, lstrip_blocks=True)
     env.filters["rich"] = rich
-    env.globals.update(lang=lang, contacts=CONTACTS, forms_endpoint=forms_endpoint(), t=lambda k: t(k, lang), text=lambda d: text(d, lang),
+    env.globals.update(lang=lang, contacts=CONTACTS, forms_endpoint=forms_endpoint(), listini_url=listini_url(), t=lambda k: t(k, lang), text=lambda d: text(d, lang),
                        menu=menu_items(lang), nav_state=lambda path: nav_state(path, lang), social=SOCIAL, apps=APPS,
                        privacy_url=privacy_url_for(lang), year=build_date().year, maps_url=MAPS_URL,
                        og_image=SITE_URL + "/static/img/home/sede-giorno-1280.webp")

@@ -336,11 +336,22 @@ def test_security_headers_file_with_inline_hashes(tmp_path):
         assert host in hdr
 
 
-def test_reserved_area_is_noindex_preview_without_documents(tmp_path):
+def test_reserved_area_is_noindex_and_has_no_fake_password(tmp_path, monkeypatch):
+    monkeypatch.setenv("ARNO_FORMS_ENDPOINT", "https://gestione.arnoplast.it/api/submit.php")
     c = load_catalog(Path(__file__).resolve().parent.parent / "data" / "catalog.json")
     build_site(c, tmp_path)
     h = (tmp_path / "it" / "area-riservata" / "index.html").read_text(encoding="utf-8")
-    assert 'content="noindex"' in h and 'type="password"' in h and "reserved.js" in h
+    assert 'content="noindex"' in h
+    assert 'type="password"' not in h and "reserved.js" not in h  # nessuna password finta nel codice del sito
     assert "Listini vari, documentazione commerciale e promozionale" in h and "/it/contatti/" in h
+    assert 'href="https://gestione.arnoplast.it/index.php?p=listini"' in h  # accesso vero al backoffice
     assert ".pdf" not in h  # nessun documento nel sito pubblico
+
+
+def test_reserved_area_without_backoffice_has_no_login_link(tmp_path, monkeypatch):
+    monkeypatch.delenv("ARNO_FORMS_ENDPOINT", raising=False)
+    c = load_catalog(Path(__file__).resolve().parent.parent / "data" / "catalog.json")
+    build_site(c, tmp_path)
+    h = (tmp_path / "it" / "area-riservata" / "index.html").read_text(encoding="utf-8")
+    assert "index.php?p=listini" not in h and 'type="password"' not in h
     assert "/it/area-riservata/" not in (tmp_path / "sitemap.xml").read_text(encoding="utf-8")

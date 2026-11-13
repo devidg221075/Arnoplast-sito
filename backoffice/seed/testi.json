@@ -334,6 +334,7 @@
     "rs.password",
     "rs.submit",
     "rs.proto",
+    "rs.enter",
     "rs.what_t",
     "rs.what_text",
     "rs.ask_t",
@@ -1689,8 +1690,12 @@
    "en": "Enter"
   },
   "rs.proto": {
-   "it": "Anteprima grafica: nel prototipo l'accesso non è attivo. La protezione vera (password sul server) arriva con il sito definitivo.",
-   "en": "Graphic preview: in the prototype the login is not active. The real protection (password on the server) comes with the final site."
+   "it": "Ti servono le credenziali che ARNOplast ti ha comunicato. Senza credenziali, scrivici.",
+   "en": "You need the login details ARNOplast gave you. Without them, write to us."
+  },
+  "rs.enter": {
+   "it": "Accedi all'area riservata",
+   "en": "Log in to the restricted area"
   },
   "rs.what_t": {
    "it": "Cosa trovi dentro",

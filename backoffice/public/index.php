@@ -16,6 +16,8 @@ use Backoffice\Texts;
 use Backoffice\TextsView;
 use Backoffice\Quote;
 use Backoffice\QuoteView;
+use Backoffice\Listini;
+use Backoffice\ListiniView;
 use Backoffice\Videos;
 use Backoffice\VideosView;
 
@@ -53,7 +55,11 @@ $say = static function (string $text, bool $ok = true): void {
 $render = static function (string $title, string $body, ?array $user = null) use ($e, $url, $flash): never {
     $nav = '';
     if ($user) {
-        $links = ['requests' => 'Richieste'] + (Auth::isAdmin($user) ? ['fairs' => 'Fiere', 'gallery' => 'Galleria', 'videos' => 'Video', 'texts' => 'Testi', 'mail' => 'Posta', 'conditions' => 'Condizioni PDF', 'users' => 'Utenti', 'activity' => 'Registro attività'] : []) + ['account' => 'Il mio accesso'];
+        if ($user['role'] === 'commerciale') {
+            $links = ['listini' => 'Listini', 'account' => 'Il mio accesso'];
+        } else {
+        $links = ['requests' => 'Richieste'] + (Auth::isAdmin($user) ? ['fairs' => 'Fiere', 'gallery' => 'Galleria', 'videos' => 'Video', 'listini' => 'Listini', 'texts' => 'Testi', 'mail' => 'Posta', 'conditions' => 'Condizioni PDF', 'users' => 'Utenti', 'activity' => 'Registro attività'] : []) + ['account' => 'Il mio accesso'];
+        }
         foreach ($links as $p => $label) {
             $nav .= '<a href="' . $e($url($p)) . '">' . $e($label) . '</a>';
         }
@@ -133,6 +139,9 @@ if (!$user) {
 }
 $uid = (int) $user['id'];
 $admin = Auth::isAdmin($user);
+if (!Auth::canOpen($user, $page)) {
+    $go($url('listini'));
+}
 
 // --- PDF di un preventivo: quello inviato (copia esatta) oppure l'anteprima della bozza.
 if ($page === 'quote_pdf') {
@@ -343,6 +352,46 @@ if (($page === 'videos' || $page === 'video') && $admin) {
     $raw = $_SESSION['video_form'] ?? null;
     unset($_SESSION['video_form']);
     $render('Video: ' . ($row['draft']['titolo'] ?? $row['item_id']), VideosView::form($row, Auth::csrf(), is_array($raw) ? $raw : null), $user);
+}
+
+// --- Listini riservati (tutti gli utenti interni, commerciali compresi): elenco e download. Caricare o togliere: solo amministratore.
+if ($page === 'listino_file') {
+    $id = is_string($_GET['id'] ?? null) ? $_GET['id'] : '';
+    $path = Listini::path($id);
+    $row = $path !== null ? Content::find(Listini::KIND, $id) : null;
+    if ($path === null || !$row) {
+        http_response_code(404);
+        $render('Listino non trovato', '<p><a href="' . $e($url('listini')) . '">Torna ai listini</a></p>', $user);
+    }
+    App::log($uid, 'listino.scaricato', $id, (string) $row['published']['titolo']);
+    header('Content-Type: application/pdf');
+    header('Content-Length: ' . (string) filesize($path));
+    header('Content-Disposition: attachment; filename="' . (string) $row['published']['nome_file'] . '"');
+    header('X-Content-Type-Options: nosniff');
+    header('Cache-Control: private, no-store');
+    readfile($path);
+    exit;
+}
+if ($page === 'listini') {
+    if ($isPost) {
+        $action = (string) ($_POST['action'] ?? '');
+        if ($admin && $action === 'upload') {
+            $f = $_FILES['pdf'] ?? null;
+            if (!is_array($f) || ($f['error'] ?? UPLOAD_ERR_NO_FILE) !== UPLOAD_ERR_OK) {
+                $say('Caricamento non riuscito: scegli un file PDF.', false);
+                $go($url('listini'));
+            }
+            [, $error] = Listini::save((string) $f['tmp_name'], (int) $f['size'], (string) $f['name'], (string) ($_POST['titolo'] ?? ''), (string) ($_POST['lingua'] ?? ''), $uid);
+            $say($error ?? 'Listino caricato: ora è disponibile ai commerciali.', $error === null);
+            $go($url('listini'));
+        }
+        if ($admin && $action === 'remove') {
+            Listini::remove((string) ($_POST['id'] ?? ''), $uid);
+            $say('Listino tolto dall\'area riservata.');
+            $go($url('listini'));
+        }
+    }
+    $render('Listini riservati', ListiniView::page($admin, Listini::current(), Auth::csrf(), $url('listini')), $user);
 }
 
 if (($page === 'texts' || $page === 'text_group') && $admin) {
@@ -571,7 +620,7 @@ if ($page === 'users' && $admin) {
     }
     $body .= '</table><h2>Nuovo utente</h2><form method="post" action="' . $e($url('users')) . '" class="card narrow">' . $csrfField() . '<input type="hidden" name="action" value="create">'
         . '<label>Nome<input name="name" required maxlength="150"></label><label>E-mail<input type="email" name="email" required maxlength="190"></label>'
-        . '<label>Ruolo<select name="role"><option value="staff">ARNOplast (richieste e preventivi)</option><option value="admin">Amministratore (tutto)</option></select></label>'
+        . '<label>Ruolo<select name="role"><option value="staff">ARNOplast (richieste e preventivi)</option><option value="admin">Amministratore (tutto)</option><option value="commerciale">Commerciale (solo listini riservati)</option></select></label>'
         . '<label>Password (almeno ' . Auth::MIN_PASSWORD . ' caratteri)<input type="password" name="password" required minlength="' . Auth::MIN_PASSWORD . '" autocomplete="new-password"></label><button class="btn">Crea utente</button></form>';
     $render('Utenti', $body, $user);
 }

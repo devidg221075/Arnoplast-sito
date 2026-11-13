@@ -6,7 +6,9 @@ namespace Backoffice;
 /** Accesso al backoffice: sessione, ruoli (admin, staff), protezione dei moduli (CSRF), limite ai tentativi. */
 final class Auth
 {
-    public const ROLES = ['admin' => 'Amministratore', 'staff' => 'ARNOplast'];
+    public const ROLES = ['admin' => 'Amministratore', 'staff' => 'ARNOplast', 'commerciale' => 'Commerciale'];
+    /** Pagine che un commerciale può aprire: solo i listini, il proprio accesso e l'uscita. */
+    public const COMMERCIAL_PAGES = ['listini', 'listino_file', 'account', 'logout'];
     public const MIN_PASSWORD = 12;
     private const IDLE_SECONDS = 7200;
 
@@ -37,6 +39,11 @@ final class Auth
         $st->execute([$_SESSION['uid']]);
         $u = $st->fetch();
         return $u && (int) $u['active'] === 1 ? $u : null;
+    }
+
+    public static function canOpen(array $user, string $page): bool
+    {
+        return $user['role'] !== 'commerciale' || in_array($page, self::COMMERCIAL_PAGES, true);
     }
 
     public static function isAdmin(?array $user): bool

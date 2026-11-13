@@ -1,9 +1,8 @@
 {% extends "base.html" %}
-{% block head_extra %}<link rel="stylesheet" href="/static/css/pages.css"><link rel="stylesheet" href="/static/css/contacts.css"><script src="/static/js/reserved.js" defer></script>{% endblock %}
+{% block head_extra %}<link rel="stylesheet" href="/static/css/pages.css"><link rel="stylesheet" href="/static/css/contacts.css">{% endblock %}
 {% block main %}
-{# Area riservata (come sul sito vecchio: una pagina con password per listini e documentazione). In questo prototipo
-   statico l'accesso e' solo una anteprima grafica: un sito statico non puo' proteggere file; la protezione vera e' lato
-   server (WordPress). I documenti NON vanno mai messi qui nel sito pubblico. #}
+{# Area riservata: l'accesso va al backoffice (stesso server dei moduli), che controlla le credenziali e serve i
+   listini solo dopo l'accesso. Nessun documento sta nel sito pubblico. #}
 <section class="page-head">
   <div class="wrap">
     <nav class="breadcrumb" aria-label="Breadcrumb"><a href="/{{ lang }}/">{{ t('breadcrumb.home') }}</a></nav>
@@ -14,12 +13,8 @@
 <div class="wrap section ct-grid">
   <section class="ct-form-wrap" aria-labelledby="rs-login-t">
     <h2 id="rs-login-t">{{ t('rs.login') }}</h2>
-    <form id="reserved-form" novalidate>
-      <div class="field"><label for="rs-pw">{{ t('rs.password') }}</label> <input type="password" id="rs-pw" name="password" autocomplete="current-password" required></div>
-      <div id="reserved-message" class="form-message" role="status" tabindex="-1" hidden></div>
-      <p><button type="submit" class="btn btn-primary">{{ t('rs.submit') }}</button></p>
-      <p class="ct-note">{{ t('rs.proto') }}</p>
-    </form>
+    <p>{{ t('rs.proto') }}</p>
+    {% if listini_url %}<p><a class="btn btn-primary" href="{{ listini_url }}">{{ t('rs.enter') }}</a></p>{% endif %}
   </section>
   <section class="ct-info" aria-labelledby="rs-what-t">
     <h2 id="rs-what-t">{{ t('rs.what_t') }}</h2>
