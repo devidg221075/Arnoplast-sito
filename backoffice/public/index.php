@@ -57,11 +57,9 @@ $say = static function (string $text, bool $ok = true): void {
 $render = static function (string $title, string $body, ?array $user = null) use ($e, $url, $flash): never {
     $nav = '';
     if ($user) {
-        if ($user['role'] === 'commerciale') {
-            $links = ['listini' => 'Listini', 'account' => 'Il mio accesso'];
-        } else {
-        $links = ['requests' => 'Richieste'] + (Auth::isAdmin($user) ? ['fairs' => 'Fiere', 'gallery' => 'Galleria', 'videos' => 'Video', 'listini' => 'Listini', 'stats' => 'Statistiche', 'texts' => 'Testi', 'mail' => 'Posta', 'conditions' => 'Condizioni PDF', 'users' => 'Utenti', 'activity' => 'Registro attività'] : []) + ['account' => 'Il mio accesso'];
-        }
+        $all = ['requests' => 'Richieste', 'fairs' => 'Fiere', 'gallery' => 'Galleria', 'videos' => 'Video', 'listini' => 'Listini', 'stats' => 'Statistiche',
+            'texts' => 'Testi', 'mail' => 'Posta', 'conditions' => 'Condizioni PDF', 'users' => 'Utenti', 'activity' => 'Registro attività'];
+        $links = array_filter($all, static fn (string $p): bool => Auth::canOpen($user, $p), ARRAY_FILTER_USE_KEY) + ['account' => 'Il mio accesso'];
         foreach ($links as $p => $label) {
             $nav .= '<a href="' . $e($url($p)) . '">' . $e($label) . '</a>';
         }
@@ -140,9 +138,8 @@ if (!$user) {
         . '<label>Password<input type="password" name="password" required autocomplete="current-password"></label><button class="btn">Accedi</button></form>');
 }
 $uid = (int) $user['id'];
-$admin = Auth::isAdmin($user);
 if (!Auth::canOpen($user, $page)) {
-    $go($url('listini'));
+    $go($url(Auth::home($user)));
 }
 
 // --- PDF di un preventivo: quello inviato (copia esatta) oppure l'anteprima della bozza.
@@ -166,7 +163,7 @@ if ($page === 'quote_pdf') {
 }
 
 // --- Fiere e Open Day (solo amministratore): elenco e scheda di modifica. Le modifiche restano in bozza.
-if (($page === 'fairs' || $page === 'fair') && $admin) {
+if (($page === 'fairs' || $page === 'fair') && Auth::can($user, 'content')) {
     if ($page === 'fairs') {
         if ($isPost && ($_POST['action'] ?? '') === 'import') {
             $n = Fairs::importSeed();
@@ -226,7 +223,7 @@ if (($page === 'fairs' || $page === 'fair') && $admin) {
 }
 
 // --- Galleria (solo amministratore): griglia, aggiunta, scheda di una foto. Le modifiche restano in bozza.
-if (($page === 'gallery' || $page === 'gallery_photo' || $page === 'gallery_img') && $admin) {
+if (($page === 'gallery' || $page === 'gallery_photo' || $page === 'gallery_img') && Auth::can($user, 'content')) {
     if ($page === 'gallery_img') { // originale di una foto nuova (non ancora sul sito), solo per chi ha fatto l'accesso
         $f = Gallery::original((string) ($_GET['id'] ?? ''));
         if ($f === null) {
@@ -298,7 +295,7 @@ if (($page === 'gallery' || $page === 'gallery_photo' || $page === 'gallery_img'
 
 // --- Testi fissi del sito, per pagina (solo amministratore). Le modifiche restano in bozza.
 // --- Video e tutorial (solo amministratore): elenco con gruppi, aggiunta, scheda di un video. Le modifiche restano in bozza.
-if (($page === 'videos' || $page === 'video') && $admin) {
+if (($page === 'videos' || $page === 'video') && Auth::can($user, 'content')) {
     Videos::importSeed();
     if ($page === 'videos') {
         if ($isPost) {
@@ -377,7 +374,7 @@ if ($page === 'listino_file') {
 if ($page === 'listini') {
     if ($isPost) {
         $action = (string) ($_POST['action'] ?? '');
-        if ($admin && $action === 'upload') {
+        if (Auth::can($user, 'listini.manage') && $action === 'upload') {
             $f = $_FILES['pdf'] ?? null;
             if (!is_array($f) || ($f['error'] ?? UPLOAD_ERR_NO_FILE) !== UPLOAD_ERR_OK) {
                 $say('Caricamento non riuscito: scegli un file PDF.', false);
@@ -387,22 +384,22 @@ if ($page === 'listini') {
             $say($error ?? 'Listino caricato: ora è disponibile ai commerciali.', $error === null);
             $go($url('listini'));
         }
-        if ($admin && $action === 'remove') {
+        if (Auth::can($user, 'listini.manage') && $action === 'remove') {
             Listini::remove((string) ($_POST['id'] ?? ''), $uid);
             $say('Listino tolto dall\'area riservata.');
             $go($url('listini'));
         }
     }
-    $render('Listini riservati', ListiniView::page($admin, Listini::current(), Auth::csrf(), $url('listini')), $user);
+    $render('Listini riservati', ListiniView::page(Auth::can($user, 'listini.manage'), Listini::current(), Auth::csrf(), $url('listini')), $user);
 }
 
 // --- Statistiche del sito (solo amministratore): senza cookie, nessun IP salvato.
-if ($page === 'stats' && $admin) {
+if ($page === 'stats' && Auth::can($user, 'stats')) {
     $days = in_array((int) ($_GET['d'] ?? 30), [7, 30, 90], true) ? (int) $_GET['d'] : 30;
     $render('Statistiche', StatsView::page(Stats::summary($days)), $user);
 }
 
-if (($page === 'texts' || $page === 'text_group') && $admin) {
+if (($page === 'texts' || $page === 'text_group') && Auth::can($user, 'content')) {
     if ($page === 'texts') {
         $render('Testi del sito', TextsView::index(trim(is_string($_GET['q'] ?? null) ? mb_substr($_GET['q'], 0, 80) : '')), $user);
     }
@@ -429,7 +426,7 @@ if (($page === 'texts' || $page === 'text_group') && $admin) {
 }
 
 // --- Condizioni generali del PDF (testo del cliente, in italiano e in inglese). Solo amministratore.
-if ($page === 'conditions' && $admin) {
+if ($page === 'conditions' && Auth::can($user, 'conditions')) {
     if ($isPost) {
         foreach (['it', 'en'] as $l) {
             App::setSetting('conditions_' . $l, mb_substr(trim(str_replace(["\r\n", "\r"], "\n", (string) ($_POST['conditions_' . $l] ?? ''))), 0, 8000));
@@ -579,7 +576,7 @@ if ($page === 'request') {
 }
 
 // --- Posta: stato della lettura della casella e controllo manuale (solo amministratore).
-if ($page === 'mail' && $admin) {
+if ($page === 'mail' && Auth::can($user, 'mail')) {
     if ($isPost) {
         $res = Inbox::run();
         App::log($uid, 'posta.controllo', '', $res['error'] !== '' ? $res['error'] : $res['imported'] . ' aggiunti');
@@ -594,7 +591,7 @@ if ($page === 'mail' && $admin) {
 }
 
 // --- Utenti (solo amministratore).
-if ($page === 'users' && $admin) {
+if ($page === 'users' && Auth::can($user, 'users')) {
     if ($isPost) {
         $action = $_POST['action'] ?? '';
         if ($action === 'create') {
@@ -613,6 +610,23 @@ if ($page === 'users' && $admin) {
                 App::log($uid, 'utente.creato', $email, (string) ($_POST['role'] ?? 'staff'));
                 $say('Utente creato.');
             }
+        } elseif ($action === 'role' && (int) ($_POST['id'] ?? 0) !== $uid && isset(Auth::ROLES[(string) ($_POST['role'] ?? '')])) {
+            $target = (int) $_POST['id'];
+            $newRole = (string) $_POST['role'];
+            $cur = App::db()->prepare('SELECT role, email FROM users WHERE id = ?');
+            $cur->execute([$target]);
+            $row = $cur->fetch();
+            $lastAdmin = $row && $row['role'] === 'admin' && $newRole !== 'admin'
+                && (int) App::db()->query("SELECT COUNT(*) FROM users WHERE role = 'admin' AND active = 1")->fetchColumn() <= 1;
+            if (!$row) {
+                $say('Utente non trovato.', false);
+            } elseif ($lastAdmin) {
+                $say('Non si può togliere il ruolo all\'ultimo amministratore attivo.', false);
+            } else {
+                App::db()->prepare('UPDATE users SET role = ? WHERE id = ?')->execute([$newRole, $target]);
+                App::log($uid, 'utente.ruolo', (string) $row['email'], $row['role'] . ' → ' . $newRole);
+                $say('Ruolo aggiornato.');
+            }
         } elseif ($action === 'toggle' && (int) ($_POST['id'] ?? 0) !== $uid) {
             App::db()->prepare('UPDATE users SET active = 1 - active WHERE id = ?')->execute([(int) $_POST['id']]);
             App::log($uid, 'utente.attivo', (string) (int) $_POST['id']);
@@ -622,19 +636,22 @@ if ($page === 'users' && $admin) {
     }
     $body = '<table class="list"><tr><th>Nome</th><th>E-mail</th><th>Ruolo</th><th>Ultimo accesso</th><th>Stato</th><th></th></tr>';
     foreach (App::db()->query('SELECT * FROM users ORDER BY name') as $u) {
-        $body .= '<tr><td>' . $e($u['name']) . '</td><td>' . $e($u['email']) . '</td><td>' . $e(Auth::ROLES[$u['role']] ?? $u['role']) . '</td><td>' . $e($date($u['last_login_at']))
+        $body .= '<tr><td>' . $e($u['name']) . '</td><td>' . $e($u['email']) . '</td><td>' . $e(Auth::ROLES[$u['role']] ?? $u['role']) . '</td><td>' . ((int) $u['id'] === $uid ? $e(Auth::ROLES[$u['role']] ?? $u['role']) : '<form method="post" action="' . $e($url('users')) . '" class="inline-form">' . $csrfField()
+            . '<input type="hidden" name="action" value="role"><input type="hidden" name="id" value="' . (int) $u['id'] . '"><select name="role" aria-label="Ruolo di ' . $e($u['name']) . '">'
+            . implode('', array_map(static fn (string $k, string $label): string => '<option value="' . $e($k) . '"' . ($k === $u['role'] ? ' selected' : '') . '>' . $e($label) . '</option>', array_keys(Auth::ROLES), Auth::ROLES))
+            . '</select> <button class="link">Cambia</button></form>') . '</td><td>' . $e($date($u['last_login_at']))
             . '</td><td>' . ((int) $u['active'] ? 'Attivo' : 'Disattivato') . '</td><td>' . ((int) $u['id'] === $uid ? '' : '<form method="post" action="' . $e($url('users')) . '">' . $csrfField()
             . '<input type="hidden" name="action" value="toggle"><input type="hidden" name="id" value="' . (int) $u['id'] . '"><button class="link">' . ((int) $u['active'] ? 'Disattiva' : 'Riattiva') . '</button></form>') . '</td></tr>';
     }
     $body .= '</table><h2>Nuovo utente</h2><form method="post" action="' . $e($url('users')) . '" class="card narrow">' . $csrfField() . '<input type="hidden" name="action" value="create">'
         . '<label>Nome<input name="name" required maxlength="150"></label><label>E-mail<input type="email" name="email" required maxlength="190"></label>'
-        . '<label>Ruolo<select name="role"><option value="staff">ARNOplast (richieste e preventivi)</option><option value="admin">Amministratore (tutto)</option><option value="commerciale">Commerciale (solo listini riservati)</option></select></label>'
+        . '<label>Ruolo<select name="role">' . implode('', array_map(static fn (string $k, string $label): string => '<option value="' . $e($k) . '">' . $e($label) . '</option>', array_keys(Auth::ROLES), Auth::ROLES)) . '</select></label>'
         . '<label>Password (almeno ' . Auth::MIN_PASSWORD . ' caratteri)<input type="password" name="password" required minlength="' . Auth::MIN_PASSWORD . '" autocomplete="new-password"></label><button class="btn">Crea utente</button></form>';
     $render('Utenti', $body, $user);
 }
 
 // --- Registro delle attività (solo amministratore).
-if ($page === 'activity' && $admin) {
+if ($page === 'activity' && Auth::can($user, 'activity')) {
     $body = '<table class="list"><tr><th>Quando</th><th>Chi</th><th>Azione</th><th>Oggetto</th><th>Dettaglio</th></tr>';
     foreach (App::db()->query('SELECT a.*, u.name FROM activity a LEFT JOIN users u ON u.id = a.user_id ORDER BY a.id DESC LIMIT 300') as $a) {
         $body .= '<tr><td>' . $e($date($a['created_at'])) . '</td><td>' . $e($a['name'] ?? 'sito') . '</td><td>' . $e($a['action']) . '</td><td>' . $e($a['target']) . '</td><td>' . $e($a['detail']) . '</td></tr>';

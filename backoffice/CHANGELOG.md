@@ -13,6 +13,8 @@ Formato: versione, data, cosa cambia. La versione sta nel file `VERSION` e compa
 - **Fiere e Open Day**: schede in bozza con modifica e annullamento.
 - **Nuova grafica**: barra superiore scura, carte, tabelle, pulsanti e campi; versione per telefono.
 
+- **Ruolistica interna**: quattro ruoli (Amministratore, Redattore contenuti, ARNOplast vendite, Commerciale) con una tabella unica dei permessi. Cambio ruolo dalla pagina «Utenti», con protezione dell'ultimo amministratore; ogni cambio finisce nel registro.
+
 ### Sicurezza
 - Il backoffice non salva l'indirizzo IP dei visitatori: serve solo a un'impronta giornaliera.
 - Le segnalazioni di pagina non usano cookie e rispettano «Non tracciare».

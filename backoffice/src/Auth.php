@@ -6,9 +6,28 @@ namespace Backoffice;
 /** Accesso al backoffice: sessione, ruoli (admin, staff), protezione dei moduli (CSRF), limite ai tentativi. */
 final class Auth
 {
-    public const ROLES = ['admin' => 'Amministratore', 'staff' => 'ARNOplast', 'commerciale' => 'Commerciale'];
-    /** Pagine che un commerciale può aprire: solo i listini, il proprio accesso e l'uscita. */
-    public const COMMERCIAL_PAGES = ['listini', 'listino_file', 'account', 'logout'];
+    /** Ruoli interni: un ruolo per persona. «staff» è il ruolo ARNOplast (vendite). */
+    public const ROLES = ['admin' => 'Amministratore', 'redattore' => 'Redattore contenuti', 'staff' => 'ARNOplast (vendite)', 'commerciale' => 'Commerciale'];
+
+    /** Permessi per ruolo. Cambiare qui è l'unico modo di cambiare cosa può fare un ruolo. */
+    public const PERMISSIONS = [
+        'admin' => ['requests', 'quotes', 'content', 'listini', 'listini.manage', 'stats', 'mail', 'users', 'activity', 'conditions'],
+        'redattore' => ['content', 'listini'],
+        'staff' => ['requests', 'quotes', 'mail', 'listini'],
+        'commerciale' => ['listini'],
+    ];
+
+    /** Permesso richiesto da ogni pagina. Le pagine non elencate qui sono vietate. */
+    public const PAGE_PERMISSION = [
+        'requests' => 'requests', 'request' => 'requests', 'quote_pdf' => 'quotes',
+        'fairs' => 'content', 'fair' => 'content', 'gallery' => 'content', 'gallery_photo' => 'content', 'gallery_img' => 'content',
+        'videos' => 'content', 'video' => 'content', 'texts' => 'content', 'text_group' => 'content',
+        'listini' => 'listini', 'listino_file' => 'listini',
+        'stats' => 'stats', 'mail' => 'mail', 'users' => 'users', 'activity' => 'activity', 'conditions' => 'conditions',
+    ];
+
+    /** Pagine che tutti gli utenti possono aprire, a prescindere dal ruolo. */
+    public const ALWAYS = ['account', 'logout'];
     public const MIN_PASSWORD = 12;
     private const IDLE_SECONDS = 7200;
 
@@ -41,9 +60,27 @@ final class Auth
         return $u && (int) $u['active'] === 1 ? $u : null;
     }
 
+    public static function can(array $user, string $permission): bool
+    {
+        return in_array($permission, self::PERMISSIONS[$user['role']] ?? [], true);
+    }
+
     public static function canOpen(array $user, string $page): bool
     {
-        return $user['role'] !== 'commerciale' || in_array($page, self::COMMERCIAL_PAGES, true);
+        if (in_array($page, self::ALWAYS, true)) {
+            return true;
+        }
+        return isset(self::PAGE_PERMISSION[$page]) && self::can($user, self::PAGE_PERMISSION[$page]);
+    }
+
+    /** Pagina di partenza di ogni ruolo, dopo l'accesso. */
+    public static function home(array $user): string
+    {
+        return match ($user['role']) {
+            'redattore' => 'fairs',
+            'commerciale' => 'listini',
+            default => 'requests',
+        };
     }
 
     public static function isAdmin(?array $user): bool
