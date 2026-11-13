@@ -19,6 +19,7 @@
   (chiave a permessi minimi creata dal cliente, mai in chat o nel repository) e dove vivono gli originali delle foto nuove nel repository.
 
 ## Da ricevere dal cliente
+- **Da chiedere al cliente, da ricordare alla ripresa:** i PDF di ricambi Oleo 2016, ricambi Oleo Carbonio 2016, ricambi Facilitatore Martino 2018 e corda elastica 2018. Serve sapere se contengono prezzi: se sì, vanno nell'area riservata; se no, restano pubblici. Il cliente li manda prossimamente.
 - Condizioni generali del preventivo, italiano e inglese (pagina «Condizioni PDF» del backoffice).
 - Contenuti già in elenco in `docs/riepilogo-per-il-cliente.md` (8 fiere passate, listini/area riservata, tutorial, banner cookie, ecc.).
 - IDML del Garden 2026 per correggere i refusi; conferma sulla pagina 29 (gamma filo).
