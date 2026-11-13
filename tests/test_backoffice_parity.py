@@ -10,6 +10,13 @@ from arnoplast.site.build import ROOT, fair_dates
 PHP = shutil.which("php")
 
 
+def test_video_seed_is_the_site_videos():
+    """seed/video.json deve contenere le stesse voci video di data/tutorial.json (sezione «video»)."""
+    seed = json.loads((ROOT / "backoffice" / "seed" / "video.json").read_text(encoding="utf-8"))
+    data = json.loads((ROOT / "data" / "tutorial.json").read_text(encoding="utf-8"))["video"]
+    assert seed == data, "rigenerare backoffice/seed/video.json da data/tutorial.json (sezione video)"
+
+
 @pytest.mark.skipif(PHP is None, reason="php non installato")
 def test_fair_dates_match_between_backoffice_and_build():
     fairs = json.loads((ROOT / "data" / "fiere.json").read_text(encoding="utf-8"))["fiere"]

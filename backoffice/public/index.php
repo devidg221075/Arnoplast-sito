@@ -16,6 +16,8 @@ use Backoffice\Texts;
 use Backoffice\TextsView;
 use Backoffice\Quote;
 use Backoffice\QuoteView;
+use Backoffice\Videos;
+use Backoffice\VideosView;
 
 require __DIR__ . '/../src/bootstrap.php';
 
@@ -51,7 +53,7 @@ $say = static function (string $text, bool $ok = true): void {
 $render = static function (string $title, string $body, ?array $user = null) use ($e, $url, $flash): never {
     $nav = '';
     if ($user) {
-        $links = ['requests' => 'Richieste'] + (Auth::isAdmin($user) ? ['fairs' => 'Fiere', 'gallery' => 'Galleria', 'texts' => 'Testi', 'mail' => 'Posta', 'conditions' => 'Condizioni PDF', 'users' => 'Utenti', 'activity' => 'Registro attività'] : []) + ['account' => 'Il mio accesso'];
+        $links = ['requests' => 'Richieste'] + (Auth::isAdmin($user) ? ['fairs' => 'Fiere', 'gallery' => 'Galleria', 'videos' => 'Video', 'texts' => 'Testi', 'mail' => 'Posta', 'conditions' => 'Condizioni PDF', 'users' => 'Utenti', 'activity' => 'Registro attività'] : []) + ['account' => 'Il mio accesso'];
         foreach ($links as $p => $label) {
             $nav .= '<a href="' . $e($url($p)) . '">' . $e($label) . '</a>';
         }
@@ -284,6 +286,65 @@ if (($page === 'gallery' || $page === 'gallery_photo' || $page === 'gallery_img'
 }
 
 // --- Testi fissi del sito, per pagina (solo amministratore). Le modifiche restano in bozza.
+// --- Video e tutorial (solo amministratore): elenco con gruppi, aggiunta, scheda di un video. Le modifiche restano in bozza.
+if (($page === 'videos' || $page === 'video') && $admin) {
+    Videos::importSeed();
+    if ($page === 'videos') {
+        if ($isPost) {
+            [$item, $errors] = Videos::fromForm($_POST, null);
+            if ($errors) {
+                $_SESSION['video_form'] = $_POST;
+                $say(implode(' ', array_slice($errors, 0, 3)), false);
+                $go($url('videos'));
+            }
+            $key = Videos::key($item['servizio'], $item['id']);
+            Content::saveDraft(Videos::KIND, $key, $item, $uid);
+            App::log($uid, 'video.aggiunto', $key);
+            $say('Video aggiunto (bozza).');
+            $go($url('video', ['id' => $key]));
+        }
+        $raw = $_SESSION['video_form'] ?? null;
+        unset($_SESSION['video_form']);
+        $group = is_string($_GET['g'] ?? null) && isset(Videos::GROUPS[$_GET['g']]) ? $_GET['g'] : '';
+        $render('Video e tutorial', VideosView::list(Auth::csrf(), $group, Videos::rows(), is_array($raw) ? $raw : null), $user);
+    }
+    $id = is_string($_GET['id'] ?? null) ? $_GET['id'] : '';
+    $row = $id !== '' ? Content::find(Videos::KIND, $id) : null;
+    if (!$row) {
+        http_response_code(404);
+        $render('Video non trovato', '<p><a href="' . $e($url('videos')) . '">Torna ai video</a></p>', $user);
+    }
+    $self = $url('video', ['id' => $row['item_id']]);
+    if ($isPost) {
+        $action = (string) ($_POST['action'] ?? '');
+        if ($action === 'delete') {
+            Content::markDeleted(Videos::KIND, $row['item_id'], $uid);
+            App::log($uid, 'video.eliminato', $row['item_id']);
+            $say('Video segnato per l\'eliminazione: sparirà dal sito alla prossima pubblicazione.');
+            $go($url('videos'));
+        }
+        if ($action === 'revert') {
+            Content::revert(Videos::KIND, $row['item_id'], $uid);
+            App::log($uid, 'video.annullato', $row['item_id']);
+            $say('Modifiche annullate.');
+            $go($self);
+        }
+        [$item, $errors] = Videos::fromForm($_POST, $row['draft'] ?: ($row['published'] ?? null));
+        if ($errors) {
+            $_SESSION['video_form'] = $_POST;
+            $say(implode(' ', array_slice($errors, 0, 3)), false);
+            $go($self);
+        }
+        Content::saveDraft(Videos::KIND, $row['item_id'], $item, $uid);
+        App::log($uid, 'video.salvato', $row['item_id']);
+        $say('Bozza salvata.');
+        $go($self);
+    }
+    $raw = $_SESSION['video_form'] ?? null;
+    unset($_SESSION['video_form']);
+    $render('Video: ' . ($row['draft']['titolo'] ?? $row['item_id']), VideosView::form($row, Auth::csrf(), is_array($raw) ? $raw : null), $user);
+}
+
 if (($page === 'texts' || $page === 'text_group') && $admin) {
     if ($page === 'texts') {
         $render('Testi del sito', TextsView::index(trim(is_string($_GET['q'] ?? null) ? mb_substr($_GET['q'], 0, 80) : '')), $user);

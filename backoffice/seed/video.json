@@ -1,0 +1,285 @@
+[
+ {
+  "gruppo": "video",
+  "servizio": "youtube",
+  "id": "6t_hUfHWVwQ",
+  "titolo": "ARNOplast: video aziendale",
+  "_nota": "Video della vecchia home (titolo originale 'Video ARNOPLAST LUNGO Mod'); titolo da confermare",
+  "titolo_en": "ARNOplast: company video"
+ },
+ {
+  "gruppo": "video",
+  "servizio": "vimeo",
+  "id": "684684219",
+  "titolo": "ARNOplast: la nostra azienda",
+  "durata": "1:38",
+  "titolo_en": "ARNOplast: our company"
+ },
+ {
+  "gruppo": "video",
+  "servizio": "vimeo",
+  "id": "268614956",
+  "titolo": "Oleo Carbon",
+  "durata": "0:10",
+  "prodotto": "olive/agevolatori-e-macchine/oleo-carbon"
+ },
+ {
+  "gruppo": "video",
+  "servizio": "vimeo",
+  "id": "268615335",
+  "titolo": "Oleo",
+  "durata": "0:02"
+ },
+ {
+  "gruppo": "video",
+  "servizio": "vimeo",
+  "id": "268616891",
+  "titolo": "Ligatex",
+  "durata": "6:54",
+  "prodotto": "agricoltura/sistemi-di-legatura/ligatex"
+ },
+ {
+  "gruppo": "video",
+  "servizio": "vimeo",
+  "id": "268615341",
+  "titolo": "Sostituzione bobinetta Ligatex",
+  "durata": "0:32",
+  "prodotto": "agricoltura/sistemi-di-legatura/ligatex",
+  "titolo_en": "Replacing the Ligatex spool"
+ },
+ {
+  "gruppo": "video",
+  "servizio": "vimeo",
+  "id": "268615369",
+  "titolo": "Test vento",
+  "durata": "0:47",
+  "titolo_en": "Wind test"
+ },
+ {
+  "gruppo": "video",
+  "servizio": "vimeo",
+  "id": "268615395",
+  "titolo": "GEN60",
+  "durata": "1:32"
+ },
+ {
+  "gruppo": "video",
+  "servizio": "vimeo",
+  "id": "268615061",
+  "titolo": "Video d’archivio 01",
+  "durata": "0:50",
+  "titolo_en": "Archive video 01"
+ },
+ {
+  "gruppo": "video",
+  "servizio": "vimeo",
+  "id": "268615238",
+  "titolo": "Exp Agro",
+  "durata": "4:55"
+ },
+ {
+  "gruppo": "video",
+  "servizio": "vimeo",
+  "id": "337220625",
+  "titolo": "Video d’archivio 02",
+  "durata": "0:52",
+  "titolo_en": "Archive video 02"
+ },
+ {
+  "gruppo": "agricoltura",
+  "servizio": "youtube",
+  "id": "yMqD2nmIcNs",
+  "titolo": "Copripalo Monviso · 1",
+  "prodotto": "agricoltura/copripalo/copripalo-monviso",
+  "titolo_en": "Post Cap Monviso · 1"
+ },
+ {
+  "gruppo": "agricoltura",
+  "servizio": "youtube",
+  "id": "2r0ehZ8YO4A",
+  "titolo": "Copripalo Monviso · 2",
+  "prodotto": "agricoltura/copripalo/copripalo-monviso",
+  "titolo_en": "Post Cap Monviso · 2"
+ },
+ {
+  "gruppo": "agricoltura",
+  "servizio": "youtube",
+  "id": "PVakNgUmaSY",
+  "titolo": "Copripalo Latina",
+  "prodotto": "agricoltura/copripalo/copripalo-latina",
+  "titolo_en": "Post Cap Latina"
+ },
+ {
+  "gruppo": "agricoltura",
+  "servizio": "youtube",
+  "id": "Rcb9Lx205Kg",
+  "titolo": "Copripalo FG · 1",
+  "prodotto": "agricoltura/copripalo/copripalo-fg-40-50-60-65-80",
+  "titolo_en": "Post Cap FG · 1"
+ },
+ {
+  "gruppo": "agricoltura",
+  "servizio": "youtube",
+  "id": "psdy6Xum578",
+  "titolo": "Copripalo FG · 2",
+  "prodotto": "agricoltura/copripalo/copripalo-fg-40-50-60-65-80",
+  "titolo_en": "Post Cap FG · 2"
+ },
+ {
+  "gruppo": "agricoltura",
+  "servizio": "youtube",
+  "id": "IbH_X4Tl_Gw",
+  "titolo": "Copripalo Prisma · GZ",
+  "prodotto": "agricoltura/copripalo/copripalo-prisma",
+  "titolo_en": "Post Cap Prisma · GZ"
+ },
+ {
+  "gruppo": "agricoltura",
+  "servizio": "youtube",
+  "id": "8WScqK19s7c",
+  "titolo": "Copripalo Qubo",
+  "prodotto": "agricoltura/copripalo/copripalo-qubo",
+  "titolo_en": "Post Cap Qubo"
+ },
+ {
+  "gruppo": "agricoltura",
+  "servizio": "youtube",
+  "id": "5oI5c3nFZL8",
+  "titolo": "Copripalo Reno · Vit. RP.",
+  "prodotto": "agricoltura/copripalo/copripalo-reno",
+  "titolo_en": "Post Cap Reno · Flat-net screws"
+ },
+ {
+  "gruppo": "agricoltura",
+  "servizio": "youtube",
+  "id": "GxILx63co0I",
+  "titolo": "Copripalo Reno · Vit. CAP.",
+  "prodotto": "agricoltura/copripalo/copripalo-reno",
+  "titolo_en": "Post Cap Reno · Capannina screws"
+ },
+ {
+  "gruppo": "agricoltura",
+  "servizio": "youtube",
+  "id": "dRiyTutWAog",
+  "titolo": "Copripalo Sphera",
+  "prodotto": "agricoltura/copripalo/copripalo-sphera",
+  "titolo_en": "Post Cap Sphera"
+ },
+ {
+  "gruppo": "agricoltura",
+  "servizio": "youtube",
+  "id": "qcVIm53kEQc",
+  "titolo": "Copripalo Zephiro",
+  "prodotto": "agricoltura/copripalo/copripalo-zephiro",
+  "titolo_en": "Post Cap Zephiro"
+ },
+ {
+  "gruppo": "agricoltura",
+  "servizio": "youtube",
+  "id": "f-EpVzYPkmM",
+  "titolo": "Clip Roma",
+  "prodotto": "agricoltura/placchette/placchetta-roma"
+ },
+ {
+  "gruppo": "agricoltura",
+  "servizio": "youtube",
+  "id": "BtfcNetEmmM",
+  "titolo": "Clip Rania",
+  "prodotto": "agricoltura/placchette/placchetta-rania"
+ },
+ {
+  "gruppo": "agricoltura",
+  "servizio": "youtube",
+  "id": "JIMPRHkMmBM",
+  "titolo": "Clip Resia",
+  "prodotto": "agricoltura/placchette/placchetta-resia"
+ },
+ {
+  "gruppo": "agricoltura",
+  "servizio": "youtube",
+  "id": "a5IaUnDxuyg",
+  "titolo": "Clip Riva",
+  "prodotto": "agricoltura/placchette/placchetta-riva-riva-jr"
+ },
+ {
+  "gruppo": "agricoltura",
+  "servizio": "youtube",
+  "id": "8okx9uadQDM",
+  "titolo": "Clip Start",
+  "prodotto": "agricoltura/placchette/placchetta-start"
+ },
+ {
+  "gruppo": "agricoltura",
+  "servizio": "youtube",
+  "id": "HgPj1oBXUZE",
+  "titolo": "Clip Morsa",
+  "prodotto": "agricoltura/ferma-teli-e-reti/clips-morsa-50"
+ },
+ {
+  "gruppo": "agricoltura",
+  "servizio": "youtube",
+  "id": "wjMZ590X2r0",
+  "titolo": "Stop.net",
+  "prodotto": "agricoltura/placchette/new-stop-net"
+ },
+ {
+  "gruppo": "agricoltura",
+  "servizio": "youtube",
+  "id": "_5HaygxJv94",
+  "titolo": "Stop.film",
+  "prodotto": "agricoltura/ferma-teli-e-reti/stop-film-70"
+ },
+ {
+  "gruppo": "agricoltura",
+  "servizio": "youtube",
+  "id": "qvP-yg3tPuI",
+  "titolo": "Moschettone",
+  "prodotto": "agricoltura/moschettoni-e-tiranti/mosch-autobloccante-elefante",
+  "titolo_en": "Snap hook"
+ },
+ {
+  "gruppo": "agricoltura",
+  "servizio": "youtube",
+  "id": "y2fjs31LI58",
+  "titolo": "Ancora.net",
+  "prodotto": "agricoltura/placchette/ancora-net"
+ },
+ {
+  "gruppo": "garden",
+  "servizio": "youtube",
+  "id": "I5Yv9WzYzLo",
+  "titolo": "Testina Elektra · Montaggio 1",
+  "prodotto": "garden/testine/testina-batti-e-vai-elektra",
+  "titolo_en": "Elektra head · Assembly 1"
+ },
+ {
+  "gruppo": "garden",
+  "servizio": "youtube",
+  "id": "JRgh6-y4b44",
+  "titolo": "Testina Elektra · Montaggio 2",
+  "prodotto": "garden/testine/testina-batti-e-vai-elektra",
+  "titolo_en": "Elektra head · Assembly 2"
+ },
+ {
+  "gruppo": "garden",
+  "servizio": "youtube",
+  "id": "6sbdI6YYLSY",
+  "titolo": "Testina Vega · Montaggio 1",
+  "prodotto": "garden/testine/testina-vega-multifilo",
+  "titolo_en": "Vega head · Assembly 1"
+ },
+ {
+  "gruppo": "garden",
+  "servizio": "youtube",
+  "id": "rKYen5uid5w",
+  "titolo": "Testina Vega · Montaggio 2",
+  "prodotto": "garden/testine/testina-vega-multifilo",
+  "titolo_en": "Vega head · Assembly 2"
+ },
+ {
+  "gruppo": "olive",
+  "servizio": "youtube",
+  "id": "wGBNoeV_srQ",
+  "titolo": "Martino"
+ }
+]
