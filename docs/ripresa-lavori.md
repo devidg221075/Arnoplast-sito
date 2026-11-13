@@ -5,6 +5,7 @@
   lettura delle risposte dalla casella `richieste@arnoplast.it` (cron ogni 5 minuti), preventivo con prezzi e PDF allegato.
 - Sito di prova su `nuovo.arnoplast.it` con `.htaccess` e moduli collegati al backoffice.
 - Tappa 4a (bozze, senza «Pubblica») provate sul server: **Fiere** (modifica e annullamento), **Testi** (campi precompilati col testo attuale, «Annulla modifiche di questa pagina»), **Galleria** (miniature visibili; modifica e annullamento confermati).
+- Video e tutorial (4a, bozze): elenco per gruppo nel backoffice, aggiunta da link YouTube/Vimeo, modifica, eliminazione e annullamento. Provato sul server. Manca: ordine delle voci (su/giù) e la lista Garden, bloccata sul sito vecchio.
 - Pulizia di sicurezza fatta: `diag*.php` cancellati, `backoffice_old` cancellata, `setup_token` svuotato, password di `noreply@arnoplast.it` cambiata.
 
 ## Da fare, in ordine
@@ -12,7 +13,8 @@
 2. Proteggere `nuovo.arnoplast.it` dai motori di ricerca finché è in prova.
 
 ## Tappa 4 — prossime sezioni (una per volta)
-- Video e tutorial; download e area riservata; storia dell'azienda e imballaggi (testi lunghi, non voci singole). Il catalogo viene più avanti.
+- Download e area riservata; poi storia dell'azienda e imballaggi (testi lunghi, non voci singole). Il catalogo viene più avanti.
+
 - **4b «Pubblica»**: da decidere la consegna dei file sul server (FTP automatico da GitHub Actions — consigliata —, cPanel Git o zip manuale), l'accesso del backoffice a GitHub
   (chiave a permessi minimi creata dal cliente, mai in chat o nel repository) e dove vivono gli originali delle foto nuove nel repository.
 
