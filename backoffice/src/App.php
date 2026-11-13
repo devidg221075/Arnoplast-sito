@@ -18,6 +18,13 @@ final class App
         date_default_timezone_set('Europe/Rome');
     }
 
+    /** Versione del backoffice (file VERSION). */
+    public static function version(): string
+    {
+        $f = dirname(__DIR__) . '/VERSION';
+        return is_file($f) ? trim((string) file_get_contents($f)) : '';
+    }
+
     public static function config(string $key, mixed $default = null): mixed
     {
         $v = self::$config;

@@ -71,7 +71,7 @@ $render = static function (string $title, string $body, ?array $user = null) use
     echo '<!doctype html><html lang="it"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">'
         . '<meta name="robots" content="noindex, nofollow"><title>' . $e($title) . ' · Backoffice ' . $e(App::config('site_name', '')) . '</title>'
         . '<link rel="stylesheet" href="assets/admin.css"></head><body>'
-        . '<header class="top"><a class="brand" href="' . $e($url('requests')) . '">' . $e(App::config('site_name', '')) . ' <span>backoffice</span></a>' . $nav . '</header>'
+        . '<header class="top"><a class="brand" href="' . $e($url('requests')) . '">' . $e(App::config('site_name', '')) . ' <span>backoffice' . (App::version() !== '' ? ' v' . $e(App::version()) : '') . '</span></a>' . $nav . '</header>'
         . '<main class="wrap">' . ($flash ? '<p class="flash' . ($flash[1] ? ' ok' : '') . '" role="status">' . $e($flash[0]) . '</p>' : '')
         . '<h1>' . $e($title) . '</h1>' . $body . '</main></body></html>';
     exit;
