@@ -48,5 +48,10 @@ Texts::saveGroup('openday', [], [], 1);
 $row = Content::find(Texts::KIND, $k);
 check($row !== null && $row['draft'] === [] && Content::status($row) === Content::CHANGED, 'testo già pubblicato ripristinato: modifica in sospeso');
 
+// annulla modifiche di una pagina: tutte le correzioni sparite
+Texts::saveGroup('openday', [$k => 'Aperto il sabato'], ['od.text' => 'Open on Saturday'], 1);
+Texts::saveGroup('openday', [], [], 1);
+check((Content::find(Texts::KIND, $k)['draft'] ?? []) === [], 'annulla modifiche: bozza della pagina svuotata');
+
 echo $fails === 0 ? "\nTutti i controlli superati\n" : "\n$fails controlli falliti\n";
 exit($fails === 0 ? 0 : 1);

@@ -60,6 +60,9 @@ final class TextsView
             }
             $h .= '</tr>';
         }
-        return $h . '</table><p><button class="btn">Salva bozza</button></p></form>';
+        $h .= '</table><p><button class="btn">Salva bozza</button></p></form>';
+        return $h . '<details class="card"><summary>Annulla modifiche di questa pagina</summary><form method="post" action="index.php?p=text_group&amp;g=' . $e($g['id']) . '">'
+            . '<input type="hidden" name="csrf" value="' . $e($csrf) . '"><input type="hidden" name="action" value="revert">'
+            . '<p>Toglie tutte le correzioni non ancora pubblicate di questa pagina e, per quelle già pubblicate, le riporta all\'originale al prossimo «Pubblica». Il sito non cambia finché non pubblichi.</p><button class="btn dark">Sì, annulla le modifiche</button></form></details>';
     }
 }

@@ -296,6 +296,12 @@ if (($page === 'texts' || $page === 'text_group') && $admin) {
     if ($isPost) {
         $it = is_array($_POST['it'] ?? null) ? $_POST['it'] : [];
         $en = is_array($_POST['en'] ?? null) ? $_POST['en'] : [];
+        if (($_POST['action'] ?? '') === 'revert') {
+            Texts::saveGroup($g['id'], [], [], $uid); // campi vuoti: tolte tutte le correzioni della pagina
+            App::log($uid, 'testi.annullati', $g['id']);
+            $say('Modifiche di questa pagina annullate.');
+            $go($url('text_group', ['g' => $g['id']]));
+        }
         $errors = Texts::saveGroup($g['id'], $it, $en, $uid);
         App::log($uid, 'testi.salvati', $g['id']);
         $say($errors ? implode(' ', array_slice($errors, 0, 3)) : 'Bozza salvata.', !$errors);
