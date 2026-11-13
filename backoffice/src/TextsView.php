@@ -40,23 +40,31 @@ final class TextsView
         $seed = Texts::seed()['texts'];
         $drafts = Texts::drafts();
         $live = Texts::overrides(true);
-        $h = '<p><a href="index.php?p=texts">← Tutti i testi</a></p><p class="meta">' . $e($g['help']) . ' Sopra ogni campo c\'è il testo che il sito mostra ora. Scrivi nel campo solo se vuoi cambiarlo; lascia vuoto per non cambiare. Su una riga sola, al massimo '
+        $h = '<p><a href="index.php?p=texts">← Tutti i testi</a></p><p class="meta">' . $e($g['help']) . ' Ogni campo contiene il testo che il sito mostra ora: modificalo direttamente. Se svuoti un campo, la correzione di quel testo viene tolta. Su una riga sola, al massimo '
             . (int) Texts::seed()['max_len'] . ' caratteri.</p><form method="post" action="index.php?p=text_group&amp;g=' . $e($g['id']) . '" class="card">'
             . '<input type="hidden" name="csrf" value="' . $e($csrf) . '"><input type="hidden" name="action" value="save">'
             . '<table class="list texttable"><tr><th>Italiano</th><th>Inglese</th></tr>';
         foreach ($g['keys'] as $k) {
             $base = $seed[$k];
             $d = $drafts[$k]['draft'] ?? [];
-            $cur = ['it' => (string) ($raw['it'][$k] ?? $d['it'] ?? ''), 'en' => (string) ($raw['en'][$k] ?? $d['en'] ?? '')];
-            $modified = isset($drafts[$k]) && $d !== [];
-            $h .= '<tr id="t-' . $e(strtr($k, '.', '-')) . '"><td colspan="2" class="tkey"><code>' . $e($k) . '</code>' . ($modified ? ' <span class="status todo">Modificato</span>' : '') . '</td></tr><tr>';
+            $pendingRevert = isset($drafts[$k]) && $drafts[$k]['published'] !== null && $d === [];
+            $h .= '<tr id="t-' . $e(strtr($k, '.', '-')) . '"><td colspan="2" class="tkey"><code>' . $e($k) . '</code>' . (($d !== [] || $pendingRevert) ? ' <span class="status todo">Modificato</span>' : '') . '</td></tr><tr>';
             foreach (['it', 'en'] as $lang) {
+                // Il campo parte dal testo che il sito mostra (o dalla bozza già scritta); l'originale è il riferimento.
+                if (isset($raw[$lang][$k])) {
+                    $cur = (string) $raw[$lang][$k];
+                } elseif (isset($d[$lang])) {
+                    $cur = $d[$lang];
+                } elseif ($pendingRevert) {
+                    $cur = $base[$lang];
+                } else {
+                    $cur = $live[$lang][$k] ?? $base[$lang];
+                }
                 $long = mb_strlen($base[$lang]) > 80;
-                $shown = $live[$lang][$k] ?? $base[$lang];
                 $field = $long
-                    ? '<textarea name="' . $lang . '[' . $e($k) . ']" rows="3" maxlength="400" aria-label="Nuovo testo, ' . $lang . '">' . $e($cur[$lang]) . '</textarea>'
-                    : '<input name="' . $lang . '[' . $e($k) . ']" maxlength="400" value="' . $e($cur[$lang]) . '" aria-label="Nuovo testo, ' . $lang . '">';
-                $h .= '<td><p class="meta"><small>Sul sito ora:</small>' . $e($shown) . '</p>' . '<small>Nuovo testo:</small>' . $field . '</td>';
+                    ? '<textarea name="' . $lang . '[' . $e($k) . ']" rows="3" maxlength="400" aria-label="Testo, ' . $lang . '">' . $e($cur) . '</textarea>'
+                    : '<input name="' . $lang . '[' . $e($k) . ']" maxlength="400" value="' . $e($cur) . '" aria-label="Testo, ' . $lang . '">';
+                $h .= '<td>' . $field . ($cur !== $base[$lang] ? '<small>Originale: ' . $e($base[$lang]) . '</small>' : '') . '</td>';
             }
             $h .= '</tr>';
         }

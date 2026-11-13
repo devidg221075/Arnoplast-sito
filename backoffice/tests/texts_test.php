@@ -53,5 +53,11 @@ Texts::saveGroup('openday', [$k => 'Aperto il sabato'], ['od.text' => 'Open on S
 Texts::saveGroup('openday', [], [], 1);
 check((Content::find(Texts::KIND, $k)['draft'] ?? []) === [], 'annulla modifiche: bozza della pagina svuotata');
 
+// campi precompilati col testo attuale: salvare senza cambiare non crea modifiche
+$cIt = []; $cEn = [];
+foreach (Texts::group('contacts')['keys'] as $ck) { $cIt[$ck] = $seed['texts'][$ck]['it']; $cEn[$ck] = $seed['texts'][$ck]['en']; }
+Texts::saveGroup('contacts', $cIt, $cEn, 1);
+check(Texts::pendingByGroup()['contacts'] === 0, 'salvare senza cambiare: nessuna modifica in sospeso');
+
 echo $fails === 0 ? "\nTutti i controlli superati\n" : "\n$fails controlli falliti\n";
 exit($fails === 0 ? 0 : 1);
