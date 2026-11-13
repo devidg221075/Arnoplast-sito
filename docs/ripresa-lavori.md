@@ -1,21 +1,15 @@
-# Dove siamo (11 novembre 2026) e da dove si riprende
+# Dove siamo (13 novembre 2026) e da dove si riprende
 
 ## Fatto e provato sul server vero
-- Backoffice su `gestione.arnoplast.it` (PHP 8.3, MySQL): richieste dai moduli del sito, e-mail al cliente e ad ARNOplast con logo incorporato, risposte dal backoffice,
-  lettura delle risposte dalla casella `richieste@arnoplast.it` (cron ogni 5 minuti attivo), preventivo con prezzi e PDF allegato.
+- Backoffice su `gestione.arnoplast.it` (PHP 8.3, MySQL): richieste dai moduli, e-mail al cliente e ad ARNOplast con logo incorporato, risposte dal backoffice,
+  lettura delle risposte dalla casella `richieste@arnoplast.it` (cron ogni 5 minuti), preventivo con prezzi e PDF allegato.
 - Sito di prova su `nuovo.arnoplast.it` con `.htaccess` e moduli collegati al backoffice.
+- Tappa 4a (bozze, senza «Pubblica») provate sul server: **Fiere** (modifica e annullamento), **Testi** (campi precompilati col testo attuale, «Annulla modifiche di questa pagina»), **Galleria** (miniature visibili; modifica e annullamento confermati).
+- Pulizia di sicurezza fatta: `diag*.php` cancellati, `backoffice_old` cancellata, `setup_token` svuotato, password di `noreply@arnoplast.it` cambiata.
 
-## Fatto in locale, caricato nello zip ma da verificare sul server
-- Tappa 4a (bozze, senza «Pubblica»): **Fiere**, **Testi** del sito per pagina (include l'Open Day), **Galleria**.
-- Galleria: verificare che le miniature compaiano (in `config.php` ora c'è `assets_url`). Se sono rotte: aprire `https://nuovo.arnoplast.it/static/img/galleria/001-t.webp`.
-
-## Da fare per primi, domani
-1. Verifica miniature della Galleria (sopra) e prova delle schermate Fiere, Testi, Galleria sul server.
-2. Pulizia di sicurezza: cancellare dal server i file `diag*.php` in `backoffice/public`; cancellare la cartella `backoffice_old` (vecchio `config.php` con password);
-   svuotare `setup_token` in `config.php`; **cambiare la password della casella `noreply@arnoplast.it`** (era finita in chat).
-3. Inglese: il cliente aveva chiesto di **ricordare** la verifica dello zip del sito (`arnoplast-sito-pubblicazione.zip`) per poi rendere indicizzata la versione inglese
-   (togliere `noindex`, aggiungere sitemap e hreflang, rigenerare lo zip). Chiedere come è andata la verifica.
-4. Proteggere `nuovo.arnoplast.it` dai motori di ricerca finché è in prova.
+## Da fare, in ordine
+1. Inglese: verifica dello zip del sito da parte del cliente, poi indicizzazione della versione inglese (togliere `noindex`, sitemap, hreflang).
+2. Proteggere `nuovo.arnoplast.it` dai motori di ricerca finché è in prova.
 
 ## Tappa 4 — prossime sezioni (una per volta)
 - Video e tutorial; download e area riservata; storia dell'azienda e imballaggi (testi lunghi, non voci singole). Il catalogo viene più avanti.
