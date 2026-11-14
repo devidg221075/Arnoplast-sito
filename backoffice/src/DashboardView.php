@@ -41,12 +41,14 @@ final class DashboardView
         $e = App::e(...);
         $h = '<div class="hello"><p class="hello-title">Buongiorno, ' . $e(explode(' ', trim($name))[0]) . '</p><p class="hello-sub">Ecco la panoramica di ARNOplast.</p></div>';
         $h .= '<div class="kpi-row">';
-        $tones = ['quotes' => 'tint-green', 'orders' => 'tint-red', 'new' => 'tint-cream', 'clients' => 'tint-pink'];
-        $icons = ['quotes' => 'doc', 'orders' => 'cart', 'new' => 'mail', 'clients' => 'users'];
+        $tones = ['quotes' => 'tint-green', 'orders' => 'tint-red', 'products' => 'tint-cream', 'new' => 'tint-pink'];
+        $icons = ['quotes' => 'doc', 'orders' => 'cart', 'products' => 'box', 'new' => 'mail'];
         foreach ($d['kpis'] as $k => $v) {
+            $placeholder = $v['value'] === null;
             $h .= '<div class="kpi-card ' . $tones[$k] . '"><div class="kpi-ic">' . self::icon($icons[$k]) . '</div><div class="kpi-body">'
-                . '<div class="kpi-label">' . $e($v['label']) . '</div><div class="kpi-num">' . $e((string) $v['value']) . '</div></div>'
-                . self::delta($v['delta'], $k === 'new') . '</div>';
+                . '<div class="kpi-label">' . $e($v['label']) . '</div><div class="kpi-num">' . ($placeholder ? '—' : $e((string) $v['value'])) . '</div>'
+                . '<div class="kpi-hint">' . $e($v['hint']) . '</div></div>'
+                . ($placeholder ? '' : self::delta($v['delta'], $v['delta'] === null)) . '</div>';
         }
         $h .= '</div>';
 

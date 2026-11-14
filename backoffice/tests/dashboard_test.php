@@ -42,9 +42,9 @@ $pdo->prepare('INSERT INTO orders (quote_id, request_id, ref, status, total, cre
 
 $k = Dashboard::kpis();
 check($k['quotes']['value'] === 1, 'preventivi da completare: 1 (la bozza)');
-check($k['orders']['value'] === 1 && $k['orders']['delta'] === null, 'ordini: 1 nel periodo, nessun confronto (il periodo precedente è vuoto)');
-check($k['new']['value'] === 2, 'richieste nuove: 2');
-check($k['clients']['value'] === 2 && $k['clients']['delta'] === 100.0, 'nuovi clienti: 2 contro 1 (+100%)');
+check($k['orders']['value'] === 1 && $k['orders']['delta'] === null, 'ordini aperti: 1, nessun confronto (il periodo precedente è vuoto)');
+check($k['new']['value'] === 2 && $k['products']['value'] === null, 'contatti da gestire: 2; prodotti segnaposto');
+check(Dashboard::newClients()['value'] === 2 && Dashboard::newClients()['delta'] === 100.0, 'nuovi clienti: 2 contro 1 (+100%)');
 check(Dashboard::delta(5, 4) === 25.0 && Dashboard::delta(3, 0) === null && Dashboard::delta(0, 4) === -100.0, 'variazione percentuale');
 
 $latest = Dashboard::latest(5);

@@ -69,7 +69,7 @@ $render = static function (string $title, string $body, ?array $user = null) use
             'home' => 'M3 11l9-8 9 8v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z', 'doc' => 'M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z M14 2v6h6',
             'cart' => 'M3 3h2l2.4 12.6A2 2 0 0 0 9.4 17H18a2 2 0 0 0 2-1.6L21 8H6', 'box' => 'M21 8l-9-5-9 5 9 5 9-5z M3 8v8l9 5 9-5V8',
             'list' => 'M8 6h13 M8 12h13 M8 18h13 M3 6h.01 M3 12h.01 M3 18h.01', 'chart' => 'M18 20V10 M12 20V4 M6 20v-6',
-            'shield' => 'M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z', 'gear' => 'M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6z'][$n] . '"/></svg>';
+            'shield' => 'M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z', 'gear' => 'M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6z', 'users' => 'M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2 M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8'][$n] . '"/></svg>';
         $links = array_filter($all, static fn (string $p): bool => Auth::canOpen($user, $p), ARRAY_FILTER_USE_KEY);
         $current = $_GET['p'] ?? 'requests';
         foreach ($links as $p => [$label, $ic]) {

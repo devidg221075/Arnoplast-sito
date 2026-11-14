@@ -41,20 +41,28 @@ final class Dashboard
         $q = static fn (string $t, string $from, ?string $to = null): int => $to === null
             ? self::count("SELECT COUNT(*) FROM $t WHERE created_at >= ?", [$from])
             : self::count("SELECT COUNT(*) FROM $t WHERE created_at >= ? AND created_at < ?", [$from, $to]);
-        $newClients = static fn (string $from, ?string $to = null): int => self::count(
-            'SELECT COUNT(DISTINCT email) FROM requests WHERE created_at >= ?' . ($to ? ' AND created_at < ?' : ''), $to ? [$from, $to] : [$from]);
         $quotesNow = $q('quotes', $w['from']);
         $quotesPrev = $q('quotes', $w['prev_from'], $w['from']);
         $ordersNow = $q('orders', $w['from']);
         $ordersPrev = $q('orders', $w['prev_from'], $w['from']);
-        $clientsNow = $newClients($w['from']);
-        $clientsPrev = $newClients($w['prev_from'], $w['from']);
         return [
-            'quotes' => ['label' => 'Preventivi da completare', 'value' => self::count("SELECT COUNT(*) FROM quotes WHERE status = 'bozza'"), 'delta' => self::delta($quotesNow, $quotesPrev)],
-            'orders' => ['label' => 'Ordini ricevuti', 'value' => $ordersNow, 'delta' => self::delta($ordersNow, $ordersPrev)],
-            'new' => ['label' => 'Richieste nuove', 'value' => self::count("SELECT COUNT(*) FROM requests WHERE status = 'nuova'"), 'delta' => null],
-            'clients' => ['label' => 'Nuovi clienti', 'value' => $clientsNow, 'delta' => self::delta($clientsNow, $clientsPrev)],
+            'quotes' => ['label' => 'Preventivi da gestire', 'value' => self::count("SELECT COUNT(*) FROM quotes WHERE status = 'bozza'"),
+                'delta' => self::delta($quotesNow, $quotesPrev), 'hint' => 'In attesa di una tua azione'],
+            'orders' => ['label' => 'Ordini aperti', 'value' => self::count("SELECT COUNT(*) FROM orders WHERE status <> 'chiuso'"),
+                'delta' => self::delta($ordersNow, $ordersPrev), 'hint' => 'Confermati e in preparazione'],
+            'products' => ['label' => 'Prodotti nel catalogo', 'value' => null, 'delta' => null, 'hint' => 'Arriva con il catalogo'],
+            'new' => ['label' => 'Contatti da gestire', 'value' => self::count("SELECT COUNT(*) FROM requests WHERE status = 'nuova'"),
+                'delta' => null, 'hint' => 'Richieste aperte dal sito'],
         ];
+    }
+
+    /** Nuovi clienti nel periodo, con variazione: per il riquadro delle metriche. */
+    public static function newClients(): array
+    {
+        $w = self::window();
+        $now = self::count('SELECT COUNT(DISTINCT email) FROM requests WHERE created_at >= ?', [$w['from']]);
+        $prev = self::count('SELECT COUNT(DISTINCT email) FROM requests WHERE created_at >= ? AND created_at < ?', [$w['prev_from'], $w['from']]);
+        return ['value' => $now, 'delta' => self::delta($now, $prev)];
     }
 
     /** Ultime richieste con l'importo dell'ultimo preventivo. */
