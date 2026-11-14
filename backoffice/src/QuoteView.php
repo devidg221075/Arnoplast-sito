@@ -26,13 +26,25 @@ final class QuoteView
         if ($quotes) {
             $html .= '<table class="list"><tr><th>Versione</th><th>Stato</th><th class="num">Totale</th><th>Data</th><th></th></tr>';
             foreach ($quotes as $q) {
-                $sent = $q['status'] === 'inviato';
-                $html .= '<tr><td>' . $e(Quote::number($r, $q)) . '</td><td><span class="status ' . ($sent ? 'chiusa' : 'todo') . '">' . ($sent ? 'Inviato' : 'Bozza') . '</span></td>'
+                $sent = in_array($q['status'], ['inviato', 'accettato'], true);
+                $html .= '<tr><td>' . $e(Quote::number($r, $q)) . '</td><td><span class="status ' . ($sent ? 'chiusa' : 'todo') . '">' . ($q['status'] === 'accettato' ? 'Accettato' : ($sent ? 'Inviato' : 'Bozza')) . '</span></td>'
                     . '<td class="num">' . $e(Quote::money((int) $q['total'], 'it')) . '</td><td>' . $e(date('d/m/Y H:i', strtotime((string) ($q['sent_at'] ?: $q['updated_at'])))) . '</td><td>'
                     . '<a href="index.php?p=quote_pdf&amp;id=' . (int) $q['id'] . '" target="_blank" rel="noopener">' . ($sent ? 'Apri il PDF inviato' : 'Anteprima PDF') . '</a>'
                     . ($sent ? '' : ' · <a href="' . $e($self . '&q=' . (int) $q['id']) . '#preventivo">Modifica</a>') . '</td></tr>';
             }
             $html .= '</table>';
+        }
+        // Accettazione: il cliente ha risposto sì al preventivo inviato. Crea l'ordine (una sola volta per richiesta).
+        $accepted = array_values(array_filter($quotes, static fn (array $x): bool => $x['status'] === 'accettato'));
+        $toAccept = array_values(array_filter($quotes, static fn (array $x): bool => $x['status'] === 'inviato'));
+        if ($accepted) {
+            $html .= '<p class="flash ok">Preventivo accettato: ordine <strong>' . $e(Orders::number($r)) . '</strong> · <a href="index.php?p=orders">Vai agli ordini</a></p>';
+        } elseif ($toAccept) {
+            $html .= '<form method="post" action="' . $e($self) . '" class="card narrow"><input type="hidden" name="csrf" value="' . $e($csrf) . '">'
+                . '<input type="hidden" name="action" value="quote_accept"><input type="hidden" name="quote_id" value="' . (int) $toAccept[0]['id'] . '">'
+                . '<h2>Il cliente ha accettato?</h2><p class="meta">Quando il cliente conferma (per e-mail o telefono), segna qui il preventivo come accettato: nasce l\'ordine.</p>'
+                . '<label>Note sulla conferma (facoltative)<textarea name="note" rows="2" maxlength="2000"></textarea></label>'
+                . '<button class="btn">Segna come accettato e crea l\'ordine</button></form>';
         }
         $draft = null;
         foreach ($quotes as $q) {

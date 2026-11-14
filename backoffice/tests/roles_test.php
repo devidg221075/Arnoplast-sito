@@ -18,7 +18,7 @@ $pages = array_keys(Auth::PAGE_PERMISSION);
 $expect = [
     'admin' => $pages,
     'redattore' => ['fairs', 'fair', 'gallery', 'gallery_photo', 'gallery_img', 'videos', 'video', 'texts', 'text_group', 'listini', 'listino_file'],
-    'staff' => ['requests', 'request', 'quote_pdf', 'mail', 'listini', 'listino_file'],
+    'staff' => ['requests', 'request', 'quote_pdf', 'orders', 'order', 'mail', 'listini', 'listino_file'],
     'commerciale' => ['listini', 'listino_file'],
 ];
 foreach ($expect as $role => $allowed) {

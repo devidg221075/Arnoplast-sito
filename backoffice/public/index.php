@@ -17,6 +17,7 @@ use Backoffice\TextsView;
 use Backoffice\Quote;
 use Backoffice\QuoteView;
 use Backoffice\Listini;
+use Backoffice\Orders;
 use Backoffice\Stats;
 use Backoffice\StatsView;
 use Backoffice\ListiniView;
@@ -57,7 +58,7 @@ $say = static function (string $text, bool $ok = true): void {
 $render = static function (string $title, string $body, ?array $user = null) use ($e, $url, $flash): never {
     $nav = '';
     if ($user) {
-        $all = ['requests' => 'Richieste', 'fairs' => 'Fiere', 'gallery' => 'Galleria', 'videos' => 'Video', 'listini' => 'Listini', 'stats' => 'Statistiche',
+        $all = ['requests' => 'Richieste', 'orders' => 'Ordini', 'fairs' => 'Fiere', 'gallery' => 'Galleria', 'videos' => 'Video', 'listini' => 'Listini', 'stats' => 'Statistiche',
             'texts' => 'Testi', 'mail' => 'Posta', 'conditions' => 'Condizioni PDF', 'users' => 'Utenti', 'activity' => 'Registro attività'];
         $links = array_filter($all, static fn (string $p): bool => Auth::canOpen($user, $p), ARRAY_FILTER_USE_KEY) + ['account' => 'Il mio accesso'];
         foreach ($links as $p => $label) {
@@ -399,6 +400,56 @@ if ($page === 'stats' && Auth::can($user, 'stats')) {
     $render('Statistiche', StatsView::page(Stats::summary($days)), $user);
 }
 
+// --- Ordini (nascono dai preventivi accettati). Lo stato va solo avanti.
+if ($page === 'orders') {
+    $st = is_string($_GET['s'] ?? null) ? $_GET['s'] : '';
+    $rows = Orders::list($st);
+    $body = '<div class="chips"><a class="chip' . ($st === '' ? ' on' : '') . '" href="' . $e($url('orders')) . '">Tutti</a>';
+    foreach (Orders::STATES as $k => $label) {
+        $body .= '<a class="chip' . ($st === $k ? ' on' : '') . '" href="' . $e($url('orders', ['s' => $k])) . '">' . $e($label) . '</a>';
+    }
+    $body .= '</div><table class="list"><tr><th>Ordine</th><th>Cliente</th><th class="num">Totale IVA esclusa</th><th>Stato</th><th>Aggiornato</th></tr>';
+    foreach ($rows as $o) {
+        $body .= '<tr><td><a href="' . $e($url('order', ['id' => $o['id']])) . '">' . $e($o['ref']) . '</a></td><td>' . $e($o['name'] . ($o['company'] !== '' ? ' · ' . $o['company'] : ''))
+            . '</td><td class="num">' . $e(Quote::money((int) $o['total'])) . '</td><td><span class="status">' . $e(Orders::STATES[$o['status']] ?? $o['status']) . '</span></td><td>' . $e($date($o['updated_at'])) . '</td></tr>';
+    }
+    if (!$rows) {
+        $body .= '<tr><td colspan="5" class="empty">Nessun ordine.</td></tr>';
+    }
+    $render('Ordini', $body . '</table>', $user);
+}
+if ($page === 'order') {
+    $oid = (int) ($_GET['id'] ?? 0);
+    $o = $oid ? Orders::find($oid) : null;
+    if (!$o) {
+        http_response_code(404);
+        $render('Ordine non trovato', '<p><a href="' . $e($url('orders')) . '">Torna agli ordini</a></p>', $user);
+    }
+    $self = $url('order', ['id' => $oid]);
+    if ($isPost && ($_POST['action'] ?? '') === 'state') {
+        $err = Orders::advance($oid, (string) ($_POST['state'] ?? ''), $uid, trim((string) ($_POST['note'] ?? '')));
+        $say($err ?? 'Stato dell\'ordine aggiornato.', $err === null);
+        $go($self);
+    }
+    $keys = array_keys(Orders::STATES);
+    $next = array_slice($keys, array_search($o['status'], $keys, true) + 1);
+    $body = '<p class="meta">Dal preventivo <a href="' . $e($url('request', ['id' => $o['request_id']])) . '#preventivo">' . $e($o['request_ref']) . '</a> · '
+        . $e($o['name']) . ($o['company'] !== '' ? ' · ' . $e($o['company']) : '') . ' · ' . $e($o['email']) . '</p>'
+        . '<section class="card narrow"><table class="kv"><tr><th>Ordine</th><td>' . $e($o['ref']) . '</td></tr><tr><th>Totale IVA esclusa</th><td>' . $e(Quote::money((int) $o['total'])) . '</td></tr>'
+        . '<tr><th>Stato</th><td><span class="status">' . $e(Orders::STATES[$o['status']]) . '</span></td></tr><tr><th>Creato</th><td>' . $e($date($o['created_at'])) . '</td></tr></table>';
+    if ($o['note']) {
+        $body .= '<p class="meta">Note: ' . $e($o['note']) . '</p>';
+    }
+    if ($next) {
+        $body .= '<form method="post" action="' . $e($self) . '" class="actions">' . $csrfField() . '<input type="hidden" name="action" value="state">'
+            . '<label>Passa a<select name="state">' . implode('', array_map(static fn (string $k): string => '<option value="' . $e($k) . '">' . $e(Orders::STATES[$k]) . '</option>', $next)) . '</select></label>'
+            . '<label>Note (facoltative)<input name="note" maxlength="2000"></label><button class="btn">Aggiorna stato</button></form>';
+    } else {
+        $body .= '<p class="meta">Ordine concluso.</p>';
+    }
+    $render('Ordine ' . $o['ref'], $body . '</section>', $user);
+}
+
 if (($page === 'texts' || $page === 'text_group') && Auth::can($user, 'content')) {
     if ($page === 'texts') {
         $render('Testi del sito', TextsView::index(trim(is_string($_GET['q'] ?? null) ? mb_substr($_GET['q'], 0, 80) : '')), $user);
@@ -462,6 +513,16 @@ if ($page === 'request') {
     $self = $url('request', ['id' => $r['id']]);
     if ($isPost) {
         $action = (string) ($_POST['action'] ?? '');
+        if ($action === 'quote_accept' && Auth::can($user, 'quotes')) {
+            $aq = Quote::find((int) ($_POST['quote_id'] ?? 0));
+            if (!$aq || (int) $aq['request_id'] !== (int) $r['id']) {
+                $say('Preventivo non trovato.', false);
+                $go($self . '#preventivo');
+            }
+            [$oid, $err] = Orders::accept($r, $aq, $uid, mb_substr(trim((string) ($_POST['note'] ?? '')), 0, 2000));
+            $say($err ?? 'Preventivo accettato: ordine creato.', $err === null);
+            $go($err === null ? $url('order', ['id' => $oid]) : $self . '#preventivo');
+        }
         if (in_array($action, ['quote_new', 'quote_save', 'quote_send'], true)) {
             $qid = (int) ($_POST['quote_id'] ?? 0);
             $q = $qid ? Quote::find($qid) : null;
