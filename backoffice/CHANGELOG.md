@@ -1,6 +1,15 @@
 # Changelog del backoffice ARNOplast
 
-Formato: versione, data, cosa cambia. La versione sta nel file `VERSION` e compare nella barra in alto.
+Formato: versione, data, cosa cambia. La versione sta nel file `VERSION` e compare in basso nella barra laterale: cliccandola si apre questa pagina («Novità»).
+
+## 0.9.1 — 14 novembre 2026
+
+### Novità
+- **Grafica del kit**: il backoffice adotta i fogli CSS del kit grafico (`admin.css` e `premium.css`): barra laterale antracite con voce attiva verde, barra in alto con ricerca, indicatori verdi e pesca, tabelle, grafico e attività come nel mockup. Icone dallo sprite del kit.
+- **Pagina «Novità»**: le note di versione si leggono dentro il backoffice, aperta a tutti gli utenti. Si raggiunge cliccando la versione in basso a sinistra o il link nel piè di pagina.
+
+### Tecnico
+- Nuovo `extra.css` per le aggiunte ARNOplast sopra i fogli del kit; `Changelog.php` e `tests/changelog_test.php`.
 
 ## 0.9.0 — 13 novembre 2026 (prova sul server, non ancora definitiva)
 
@@ -15,7 +24,7 @@ Formato: versione, data, cosa cambia. La versione sta nel file `VERSION` e compa
 
 - **Ordini**: il preventivo inviato si segna come accettato e crea l'ordine (O-AAAA-NNNN). Stati confermato, in lavorazione, spedito, chiuso, solo in avanti.
 - **Dashboard iniziale**: indicatori con variazione rispetto al periodo precedente, ultime richieste, andamento preventivi e ordini, attività recenti e metriche, tutti dai dati reali.
-- **Nuova interfaccia**: barra laterale verde con il menu, barra in alto con ricerca, notifiche e utente, colori e decorazioni del mockup.
+- **Nuova interfaccia**: barra laterale con il menu, barra in alto con ricerca, notifiche e utente, colori e decorazioni del mockup.
 - **Ruolistica interna**: quattro ruoli (Amministratore, Redattore contenuti, ARNOplast vendite, Commerciale) con una tabella unica dei permessi. Cambio ruolo dalla pagina «Utenti», con protezione dell'ultimo amministratore; ogni cambio finisce nel registro.
 
 ### Sicurezza

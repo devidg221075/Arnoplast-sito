@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use Backoffice\App;
 use Backoffice\Auth;
+use Backoffice\Changelog;
 use Backoffice\Conversation;
 use Backoffice\Inbox;
 use Backoffice\Content;
@@ -56,44 +57,47 @@ $say = static function (string $text, bool $ok = true): void {
     $_SESSION['flash'] = [$text, $ok];
 };
 
-/** Impaginazione comune. */
+/** Impaginazione comune (grafica del kit: barra laterale, barra in alto, contenuto, piè di pagina). */
 $render = static function (string $title, string $body, ?array $user = null) use ($e, $url, $flash): never {
-    $side = '';
-    $top = '';
-    if ($user) {
-        $all = ['dashboard' => ['Dashboard', 'home'], 'products' => ['Prodotti', 'box'], 'requests' => ['Preventivi e richieste', 'doc'], 'orders' => ['Ordini', 'cart'], 'clients' => ['Clienti', 'users'],
-            'fairs' => ['Fiere', 'list'], 'gallery' => ['Galleria', 'box'], 'videos' => ['Video', 'list'], 'texts' => ['Testi', 'doc'],
-            'listini' => ['Listini', 'box'], 'stats' => ['Statistiche', 'chart'], 'mail' => ['Posta', 'list'], 'conditions' => ['Condizioni PDF', 'doc'],
-            'users' => ['Utenti e ruoli', 'shield'], 'activity' => ['Registro attività', 'list']];
-        $icon = static fn (string $n): string => '<svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="' . [
-            'home' => 'M3 11l9-8 9 8v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z', 'doc' => 'M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z M14 2v6h6',
-            'cart' => 'M3 3h2l2.4 12.6A2 2 0 0 0 9.4 17H18a2 2 0 0 0 2-1.6L21 8H6', 'box' => 'M21 8l-9-5-9 5 9 5 9-5z M3 8v8l9 5 9-5V8',
-            'list' => 'M8 6h13 M8 12h13 M8 18h13 M3 6h.01 M3 12h.01 M3 18h.01', 'chart' => 'M18 20V10 M12 20V4 M6 20v-6',
-            'shield' => 'M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z', 'gear' => 'M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6z', 'users' => 'M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2 M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8'][$n] . '"/></svg>';
-        $links = array_filter($all, static fn (string $p): bool => Auth::canOpen($user, $p), ARRAY_FILTER_USE_KEY);
-        $current = $_GET['p'] ?? 'requests';
-        foreach ($links as $p => [$label, $ic]) {
-            $on = $p === $current ? ' class="on"' : '';
-            $side .= '<a' . $on . ' href="' . $e($url($p)) . '">' . $icon($ic) . '<span>' . $e($label) . '</span></a>';
-        }
-        $side .= '<a' . ('account' === $current ? ' class="on"' : '') . ' href="' . $e($url('account')) . '">' . $icon('gear') . '<span>Il mio accesso</span></a>';
-        $top = '<form class="search" method="get" action="index.php"><input type="hidden" name="p" value="requests">'
-            . '<label class="sr">Cerca</label><input type="search" name="q" maxlength="80" placeholder="Cerca richieste, clienti, riferimenti…"></form>'
-            . '<div class="top-right"><a class="bell" href="' . $e($url('requests')) . '" aria-label="Richieste da gestire"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9 M13.7 21a2 2 0 0 1-3.4 0"/></svg></a>'
-            . '<details class="menu-user"><summary><span class="avatar">' . $e(mb_strtoupper(mb_substr((string) $user['name'], 0, 1))) . '</span><span>' . $e($user['name']) . '</span></summary>'
-            . '<div class="menu-box"><p class="sub">' . $e(Auth::ROLES[$user['role']] ?? $user['role']) . '</p>'
-            . '<form method="post" action="' . $e($url('logout')) . '"><input type="hidden" name="csrf" value="' . $e(Auth::csrf()) . '"><button class="menu-out">Esci</button></form></div></details></div>';
-    }
+    $icon = static fn (string $n): string => '<svg class="icon" aria-hidden="true" focusable="false"><use href="#' . $n . '"/></svg>';
     $flashHtml = $flash ? '<p class="flash' . ($flash[1] ? ' ok' : '') . '" role="status">' . $e($flash[0]) . '</p>' : '';
-    $version = App::version() !== '' ? ' <span class="ver">v' . $e(App::version()) . '</span>' : '';
-    echo '<!doctype html><html lang="it"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">'
+    $head = '<!doctype html><html lang="it"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">'
         . '<meta name="robots" content="noindex, nofollow"><title>' . $e($title) . ' · Backoffice ' . $e(App::config('site_name', '')) . '</title>'
-        . '<link rel="stylesheet" href="assets/admin.css"></head><body' . ($user ? ' class="app"' : '') . '>'
-        . ($user ? '<aside class="side"><a class="brand" href="' . $e($url('dashboard')) . '"><img src="assets/logo-negativo.svg" alt="ARNOplast" width="170" height="31"></a><nav class="nav-side" aria-label="Menu">' . $side . '</nav>'
-            . '<img class="deco-side" src="assets/deco-side.webp" alt="" width="272" height="189"><div class="side-foot">Backoffice' . $version . '</div></aside>'
-            . '<div class="main"><header class="topbar">' . $top . '</header>' : '')
-        . '<main class="wrap">' . $flashHtml . (($user && ($_GET['p'] ?? '') === 'dashboard') ? '' : '<h1>' . $e($title) . '</h1>') . $body . '</main>'
-        . ($user ? '</div>' : '') . '</body></html>';
+        . '<link rel="stylesheet" href="assets/admin.css"><link rel="stylesheet" href="assets/premium.css"><link rel="stylesheet" href="assets/extra.css"></head>';
+    if (!$user) {
+        echo $head . '<body class="premium login-page"><main><img class="login-logo" src="assets/logo-negativo.svg" alt="ARNOplast">'
+            . $flashHtml . '<h1>' . $e($title) . '</h1>' . $body . '</main></body></html>';
+        exit;
+    }
+    $all = ['dashboard' => ['Dashboard', 'dashboard'], 'products' => ['Prodotti', 'products'], 'requests' => ['Preventivi e richieste', 'requests'], 'orders' => ['Ordini', 'orders'],
+        'clients' => ['Clienti', 'clients'], 'fairs' => ['Fiere', 'content'], 'gallery' => ['Galleria', 'eye'], 'videos' => ['Video', 'arrow-right'], 'texts' => ['Testi', 'content'],
+        'listini' => ['Listini riservati', 'listini'], 'stats' => ['Statistiche', 'stats'], 'mail' => ['Posta', 'mail'], 'conditions' => ['Condizioni PDF', 'requests'],
+        'users' => ['Utenti e ruoli', 'users'], 'activity' => ['Registro attività', 'activity']];
+    $links = array_filter($all, static fn (string $p): bool => Auth::canOpen($user, $p), ARRAY_FILTER_USE_KEY);
+    $links['account'] = ['Il mio accesso', 'account'];
+    $current = $_GET['p'] ?? 'requests';
+    $nav = '';
+    foreach ($links as $p => [$label, $ic]) {
+        $nav .= '<a' . ($p === $current ? ' class="active" aria-current="page"' : '') . ' href="' . $e($url($p)) . '">' . $icon($ic) . '<span>' . $e($label) . '</span></a>';
+    }
+    $sprite = (string) preg_replace('/^<svg[^>]*>/', '<svg hidden aria-hidden="true" width="0" height="0" focusable="false">', (string) file_get_contents(__DIR__ . '/assets/sprite.svg'));
+    $version = App::version();
+    $verLink = '<a class="version" href="' . $e($url('changelog')) . '"><span class="online-dot"></span>Backoffice' . ($version !== '' ? ' v' . $e($version) : '') . '<small>Cosa c\'è di nuovo</small></a>';
+    $siteUrl = (string) App::config('site_url', '');
+    $siteLink = $siteUrl !== '' ? '<a class="site-link" href="' . $e($siteUrl) . '" target="_blank" rel="noopener">Visita il sito ' . $icon('external-link') . '</a>' : '';
+    $heading = ($current === 'dashboard') ? '' : '<div class="page-heading"><div><h1>' . $e($title) . '</h1></div></div>';
+    echo $head . '<body class="premium"><a class="skip-link" href="#main">Vai al contenuto</a>' . $sprite
+        . '<aside class="sidebar"><a class="brand-logo" href="' . $e($url('dashboard')) . '"><img src="assets/logo-negativo.svg" alt="ARNOplast" width="198" height="37"></a>'
+        . '<div class="workspace-caption">BUSINESS WORKSPACE</div><details class="mobile-nav"><summary>Menu</summary></details>'
+        . '<nav class="side-nav" aria-label="Menu">' . $nav . '</nav>'
+        . '<div class="sidebar-bottom">' . $verLink . '<img class="deco-side" src="assets/deco-side.webp" alt="" width="272" height="189"></div></aside>'
+        . '<div class="workspace"><header class="workspace-top"><form class="global-search" role="search" method="get" action="index.php"><input type="hidden" name="p" value="requests">'
+        . $icon('search') . '<input type="search" name="q" maxlength="80" placeholder="Cerca richieste, clienti, riferimenti…" aria-label="Cerca"></form>' . $siteLink
+        . '<a class="profile" href="' . $e($url('account')) . '"><span class="avatar">' . $e(mb_strtoupper(mb_substr((string) $user['name'], 0, 1))) . '</span><span><strong>' . $e($user['name']) . '</strong>'
+        . '<small>' . $e(Auth::ROLES[$user['role']] ?? $user['role']) . '</small></span></a></header>'
+        . '<main class="main" id="main">' . $flashHtml . $heading . $body . '</main>'
+        . '<footer class="workspace-footer"><span>ARNOplast · Business workspace</span><span class="footer-right"><a href="' . $e($url('changelog')) . '">Novità' . ($version !== '' ? ' della versione ' . $e($version) : '') . '</a>'
+        . '<form method="post" action="' . $e($url('logout')) . '"><input type="hidden" name="csrf" value="' . $e(Auth::csrf()) . '"><button class="link">Esci</button></form></span></footer></div></body></html>';
     exit;
 };
 $csrfField = static fn (): string => '<input type="hidden" name="csrf" value="' . $e(Auth::csrf()) . '">';
@@ -426,7 +430,7 @@ if ($page === 'dashboard') {
     $data = ['kpis' => Dashboard::kpis(), 'latest' => Dashboard::latest(5), 'weekly' => Dashboard::weekly(8),
         'activity' => Auth::can($user, 'activity') ? Dashboard::activity(6) : [], 'metrics' => Dashboard::metrics()];
     $stats = Auth::can($user, 'stats') ? Stats::summary(30) : null;
-    $render('Dashboard', DashboardView::page($data, Auth::can($user, 'activity'), (string) $user['name'], $url('dashboard'), $stats), $user);
+    $render('Dashboard', DashboardView::page($data, Auth::can($user, 'activity'), (string) $user['name'], $url('dashboard'), $stats, static fn (string $p): bool => Auth::canOpen($user, $p)), $user);
 }
 
 // --- Segnaposto: le sezioni arrivano con la tappa del catalogo e con l'elenco clienti.
@@ -757,6 +761,11 @@ if ($page === 'activity' && Auth::can($user, 'activity')) {
         $body .= '<tr><td>' . $e($date($a['created_at'])) . '</td><td>' . $e($a['name'] ?? 'sito') . '</td><td>' . $e($a['action']) . '</td><td>' . $e($a['target']) . '</td><td>' . $e($a['detail']) . '</td></tr>';
     }
     $render('Registro attività', $body . '</table><p class="meta">Ultime 300 voci.</p>', $user);
+}
+
+// --- Novità del backoffice: le note di versione (CHANGELOG.md).
+if ($page === 'changelog') {
+    $render('Novità del backoffice', '<section class="card changelog">' . Changelog::html() . '</section>', $user);
 }
 
 // --- Cambio della propria password.

@@ -1,0 +1,43 @@
+/* Aggiunte ARNOplast sopra i fogli del kit grafico (admin.css, premium.css): nessuno stile inline, per la CSP. */
+.side-nav a { min-height: 38px; padding: 8px 15px; }
+.side-nav { gap: 2px; }
+.sidebar-bottom { padding: 18px 22px 0; min-height: 180px; }
+.sidebar-bottom .version { position: relative; z-index: 1; display: block; color: #eef1e8; text-decoration: none; font-size: 12px; font-weight: 600; line-height: 1.4; }
+.sidebar-bottom .version small { color: #c8cfbd; margin: 3px 0 0 12px; font-weight: 400; text-decoration: underline; text-underline-offset: 3px; }
+.sidebar-bottom .version:hover small, .sidebar-bottom .version:focus-visible small { color: #fff; }
+.deco-side { position: absolute; left: 0; bottom: 0; width: 100%; height: auto; pointer-events: none; }
+.heading-date .date-line { display: inline-flex; align-items: center; gap: 8px; font-size: 13px; color: #4f5848; }
+.heading-date .date-line .icon { width: 17px; height: 17px; }
+.heading-date { min-width: 340px; }
+.heading-date .deco-top { display: block; width: 100%; max-width: 420px; height: auto; margin: 6px 0 0 auto; }
+.page-heading h1 { margin-bottom: 4px; }
+.kpi-delta { position: absolute; right: 12px; top: 12px; padding: 2px 9px; border-radius: 999px; font-size: 11px; font-weight: 700; background: #fff; color: #466d28; }
+.kpi-delta.down { color: #ba3c26; }
+.dashboard-kpi > div { min-width: 0; }
+.dashboard-panel + .dashboard-panel, .dashboard-middle + .dashboard-panel { margin-top: 0; }
+.stats-panel { margin-bottom: 20px; }
+.stat-mini { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; margin-bottom: 20px; }
+.stat-mini-item { background: #f6f4ec; border-radius: 12px; padding: 14px 16px; }
+.stat-mini-num { font-size: 24px; font-weight: 700; color: #172413; font-variant-numeric: tabular-nums; }
+.stats-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 22px; }
+.mini-h { font-size: 14px; font-weight: 700; color: #24451d; margin: 0 0 10px; }
+.sub { color: var(--muted); font-size: 12px; }
+.activity-chart .dot-q { fill: #4f7b28; }
+.activity-chart .dot-o { fill: #c54b30; }
+.chart-note { color: var(--muted); font-size: 11px; margin: 6px 0 0 10px; }
+.placeholder { max-width: 680px; }
+.placeholder h2 { margin-top: 0; }
+.changelog { max-width: 820px; }
+.changelog h2 { color: #24451d; margin: 28px 0 6px; font-size: 20px; }
+.changelog h2:first-child { margin-top: 0; }
+.changelog h3 { margin: 18px 0 6px; font-size: 14px; color: #466d28; text-transform: uppercase; letter-spacing: .6px; }
+.changelog ul { margin: 0 0 6px; padding-left: 20px; }
+.changelog li { margin: 5px 0; }
+.workspace-footer a { color: #647055; }
+.workspace-footer .footer-right { display: flex; gap: 18px; align-items: center; }
+@media (max-width: 1250px) { .stat-mini { grid-template-columns: repeat(2, minmax(0, 1fr)); } .stats-grid { grid-template-columns: minmax(0, 1fr); } .heading-date { min-width: 0; } }
+@media (max-width: 760px) { .heading-date { display: none; } }
+body > svg[hidden] { display: block; position: absolute; width: 0; height: 0; overflow: hidden; }
+.mobile-nav summary { color: #eef1e8; }
+.login-logo { display: block; height: auto; box-sizing: border-box; padding: 16px 20px; width: 260px; }
+.login-page h1 { margin-top: 0; }

@@ -27,7 +27,7 @@ final class Auth
     ];
 
     /** Pagine che tutti gli utenti possono aprire, a prescindere dal ruolo. */
-    public const ALWAYS = ['account', 'logout'];
+    public const ALWAYS = ['account', 'logout', 'changelog'];
     public const MIN_PASSWORD = 12;
     private const IDLE_SECONDS = 7200;
 

@@ -6,21 +6,18 @@ namespace Backoffice;
 /** Pagina iniziale del backoffice: layout del mockup (indicatori, ultime richieste, andamento, attività, metriche). */
 final class DashboardView
 {
-    private const STATUS = [
-        'nuova' => ['Da gestire', 'amber'], 'in_lavorazione' => ['In lavorazione', 'blue'],
-        'preventivo_inviato' => ['Preventivo inviato', 'violet'], 'chiusa' => ['Chiusa', 'green'],
-    ];
+    private const STATUS = ['nuova' => 'Da gestire', 'in_lavorazione' => 'In lavorazione', 'preventivo_inviato' => 'Preventivo inviato', 'chiusa' => 'Chiusa'];
 
     /** Riepilogo statistiche del sito (ultimi 30 giorni), dalla stessa fonte della pagina Statistiche. */
     public static function statsPanel(array $s): string
     {
         $e = App::e(...);
         if ($s['pages'] === 0) {
-            return '<section class="panel stats-panel"><div class="panel-head"><h2>Statistiche del sito <small>ultimi 30 giorni</small></h2><a class="more" href="index.php?p=stats">Vedi tutte →</a></div>'
+            return '<section class="dashboard-panel stats-panel"><header><h2>Statistiche del sito <small>ultimi 30 giorni</small></h2><a href="index.php?p=stats">Vedi tutte →</a></header>'
                 . '<p class="empty">Ancora nessuna visita registrata.</p></section>';
         }
         $kp = [['Pagine viste', $s['pages']], ['Visite', $s['visits']], ['Visitatori stimati', $s['visitors']], ['Pagine per visita', $s['pages_per_visit']]];
-        $h = '<section class="panel stats-panel"><div class="panel-head"><h2>Statistiche del sito <small>ultimi 30 giorni</small></h2><a class="more" href="index.php?p=stats">Vedi tutte le statistiche →</a></div>'
+        $h = '<section class="dashboard-panel stats-panel"><header><h2>Statistiche del sito <small>ultimi 30 giorni</small></h2><a href="index.php?p=stats">Vedi tutte le statistiche →</a></header>'
             . '<div class="stat-mini">';
         foreach ($kp as [$label, $v]) {
             $h .= '<div class="stat-mini-item"><div class="stat-mini-num">' . $e(is_float($v) ? str_replace('.', ',', (string) $v) : number_format((int) $v, 0, ',', '.')) . '</div><div class="sub">' . $e($label) . '</div></div>';
@@ -36,47 +33,56 @@ final class DashboardView
         return $h;
     }
 
-    public static function page(array $d, bool $admin, string $name, string $self, ?array $stats = null): string
+    public static function page(array $d, bool $admin, string $name, string $self, ?array $stats = null, ?callable $can = null): string
     {
         $e = App::e(...);
-        $h = '<div class="hello"><p class="hello-title">Buongiorno, ' . $e(explode(' ', trim($name))[0]) . '</p><p class="hello-sub">Ecco la panoramica di ARNOplast.</p></div>';
-        $h .= '<div class="kpi-row">';
-        $tones = ['quotes' => 'tint-green', 'orders' => 'tint-red', 'products' => 'tint-cream', 'new' => 'tint-pink'];
-        $icons = ['quotes' => 'doc', 'orders' => 'cart', 'products' => 'box', 'new' => 'mail'];
+        $can ??= static fn (string $p): bool => true;
+        $first = explode(' ', trim($name))[0];
+        $h = '<div class="page-heading"><div><h1>Dashboard</h1><p>Buongiorno ' . $e($first) . ', ecco la panoramica di ARNOplast.</p></div>'
+            . '<div class="heading-date"><span class="date-line">' . $e(date('d.m.Y')) . '</span>'
+            . '<img class="deco-top" src="assets/deco-top.webp" alt="" width="566" height="70"></div></div>';
+
+        $h .= '<div class="dashboard-kpis">';
+        $tones = ['quotes' => 'green', 'orders' => 'peach', 'products' => 'green', 'new' => 'peach'];
+        $icons = ['quotes' => 'requests', 'orders' => 'orders', 'products' => 'products', 'new' => 'mail'];
+        $pages = ['quotes' => 'requests', 'orders' => 'orders', 'products' => 'products', 'new' => 'requests'];
         foreach ($d['kpis'] as $k => $v) {
             $placeholder = $v['value'] === null;
-            $h .= '<div class="kpi-card ' . $tones[$k] . '"><div class="kpi-ic">' . self::icon($icons[$k]) . '</div><div class="kpi-body">'
-                . '<div class="kpi-label">' . $e($v['label']) . '</div><div class="kpi-num">' . ($placeholder ? '—' : $e((string) $v['value'])) . '</div>'
-                . '<div class="kpi-hint">' . $e($v['hint']) . '</div></div>'
-                . ($placeholder ? '' : self::delta($v['delta'], $v['delta'] === null)) . '</div>';
+            $tag = $can($pages[$k]) ? 'a' : 'div';
+            $href = $tag === 'a' ? ' href="index.php?p=' . $pages[$k] . '"' : '';
+            $h .= '<' . $tag . ' class="dashboard-kpi ' . $tones[$k] . '"' . $href . '>' . self::icon($icons[$k])
+                . '<div><span>' . $e($v['label']) . '</span><strong>' . ($placeholder ? '—' : $e((string) $v['value'])) . '</strong><small>' . $e($v['hint']) . '</small></div>'
+                . ($placeholder ? '' : self::delta($v['delta'])) . ($tag === 'a' ? '<span class="kpi-arrow" aria-hidden="true">→</span>' : '') . '</' . $tag . '>';
         }
         $h .= '</div>';
 
-        $h .= '<div class="dash-grid">'
-            . '<section class="panel span-2"><div class="panel-head"><h2>Ultime richieste</h2><a class="more" href="index.php?p=requests">Vedi tutte le richieste →</a></div>'
+        $h .= '<div class="dashboard-middle">'
+            . '<section class="dashboard-panel"><header><h2>Ultime richieste</h2><a href="index.php?p=requests">Vedi tutte le richieste →</a></header>'
             . self::latest($d['latest'], $e) . '</section>'
-            . '<section class="panel"><div class="panel-head"><h2>Andamento preventivi e ordini</h2><span class="legend-inline"><span class="dot-red"></span>Ordini <span class="dot-green"></span>Preventivi</span></div>'
-            . self::chart($d['weekly']) . '<p class="muted">Ultime 8 settimane</p></section>'
+            . '<section class="dashboard-panel"><header><h2>Andamento preventivi e ordini</h2></header>'
+            . '<div class="chart-legend"><span class="green-dot"></span>Preventivi<span class="red-dot"></span>Ordini</div>'
+            . self::chart($d['weekly']) . '<p class="chart-note">Ultime 8 settimane</p></section>'
             . '</div>';
 
         if ($stats !== null) {
             $h .= self::statsPanel($stats);
         }
-        $h .= '<div class="dash-grid bottom">'
-            . ($admin ? '<section class="panel"><div class="panel-head"><h2>Attività recenti</h2><a class="more" href="index.php?p=activity">Vedi tutte →</a></div>' . self::activity($d['activity'], $e) . '</section>' : '')
-            . ($admin ? '<section class="panel"><div class="panel-head"><h2>Altre metriche <small>ultimi 30 giorni</small></h2></div>' . self::metrics($d['metrics'], $e) . '</section>' : '')
-            . '</div>';
+        if ($admin) {
+            $h .= '<div class="dashboard-bottom">'
+                . '<section class="dashboard-panel"><header><h2>Attività recenti</h2><a href="index.php?p=activity">Vedi tutte →</a></header>' . self::activity($d['activity'], $e) . '</section>'
+                . '<section class="dashboard-panel"><header><h2>Altre metriche</h2><small>ultimi 30 giorni</small></header>' . self::metrics($d['metrics'], $e) . '</section>'
+                . '</div>';
+        }
         return $h;
     }
 
-    private static function delta(?float $v, bool $none): string
+    private static function delta(?float $v): string
     {
-        if ($none || $v === null) {
-            return '<span class="delta flat">' . ($none ? '—' : 'nuovo') . '</span>';
+        if ($v === null) {
+            return '';
         }
-        $cls = $v > 0 ? 'up' : ($v < 0 ? 'down' : 'flat');
         $txt = ($v > 0 ? '+' : '') . str_replace('.', ',', (string) $v) . '%';
-        return '<span class="delta ' . $cls . '">' . App::e($txt) . '</span>';
+        return '<span class="kpi-delta' . ($v < 0 ? ' down' : '') . '" title="Rispetto al periodo precedente">' . App::e($txt) . '</span>';
     }
 
     private static function latest(array $rows, callable $e): string
@@ -84,14 +90,14 @@ final class DashboardView
         if (!$rows) {
             return '<p class="empty">Nessuna richiesta ancora.</p>';
         }
-        $h = '<div class="table-scroll"><table class="latest"><tr><th>Riferimento</th><th>Cliente</th><th>Tipo</th><th class="num">Importo</th><th>Stato</th><th>Data</th></tr>';
+        $h = '<div class="table-scroll"><table class="dashboard-table"><tr><th>Riferimento</th><th>Cliente</th><th>Tipo</th><th>Importo</th><th>Stato</th><th>Data</th></tr>';
         foreach ($rows as $r) {
-            [$label, $tone] = self::STATUS[$r['status']] ?? [ucfirst((string) $r['status']), 'grey'];
+            $label = self::STATUS[$r['status']] ?? ucfirst((string) $r['status']);
             $h .= '<tr><td><a href="index.php?p=request&amp;id=' . (int) $r['id'] . '">' . $e($r['ref']) . '</a></td>'
                 . '<td>' . $e($r['name']) . ($r['company'] !== '' ? '<span class="sub"> · ' . $e($r['company']) . '</span>' : '') . '</td>'
                 . '<td>' . ($r['kind'] === 'quote' ? 'Preventivo' : 'Contatto') . '</td>'
-                . '<td class="num">' . ($r['total'] !== false && $r['total'] !== null ? $e(Quote::money((int) $r['total'])) : '—') . '</td>'
-                . '<td><span class="pill pill-' . $tone . '">' . $e($label) . '</span></td><td>' . $e(date('d/m/Y', strtotime((string) $r['created_at']))) . '</td></tr>';
+                . '<td class="money">' . ($r['total'] !== false && $r['total'] !== null ? $e(Quote::money((int) $r['total'])) : '—') . '</td>'
+                . '<td><span class="status ' . $e((string) $r['status']) . '">' . $e($label) . '</span></td><td>' . $e(date('d/m/Y', strtotime((string) $r['created_at']))) . '</td></tr>';
         }
         return $h . '</table></div>';
     }
@@ -110,18 +116,18 @@ final class DashboardView
             }
             return implode(' ', $out);
         };
-        $svg = '<svg class="chart" viewBox="0 0 ' . $w . ' ' . $hgt . '" role="img" aria-label="Andamento settimanale di preventivi e ordini">';
+        $svg = '<svg class="activity-chart" viewBox="0 0 ' . $w . ' ' . $hgt . '" role="img" aria-label="Andamento settimanale di preventivi e ordini">';
         for ($g = 0; $g <= 4; $g++) {
             $y = round($hgt - $pad - $g / 4 * ($hgt - 2 * $pad), 1);
-            $svg .= '<line class="grid" x1="' . $pad . '" x2="' . ($w - $pad) . '" y1="' . $y . '" y2="' . $y . '"/><text class="tick" x="' . ($pad - 8) . '" y="' . ($y + 4) . '" text-anchor="end">' . round($max * $g / 4) . '</text>';
+            $svg .= '<line class="chart-grid" x1="' . $pad . '" x2="' . ($w - $pad) . '" y1="' . $y . '" y2="' . $y . '"/><text x="' . ($pad - 8) . '" y="' . ($y + 4) . '" text-anchor="end">' . round($max * $g / 4) . '</text>';
         }
         foreach ($weeks as $i => $x) {
-            $svg .= '<text class="tick" x="' . round($pad + $i * $step, 1) . '" y="' . ($hgt - 8) . '" text-anchor="middle">' . App::e($x['label']) . '</text>';
+            $svg .= '<text x="' . round($pad + $i * $step, 1) . '" y="' . ($hgt - 8) . '" text-anchor="middle">' . App::e($x['label']) . '</text>';
         }
-        $svg .= '<polyline class="ln-orders" fill="none" points="' . $pts('orders') . '"/><polyline class="ln-quotes" fill="none" points="' . $pts('quotes') . '"/>';
+        $svg .= '<polyline class="chart-b" points="' . $pts('orders') . '"/><polyline class="chart-a" points="' . $pts('quotes') . '"/>';
         foreach ($weeks as $i => $x) {
-            $svg .= '<circle class="dot-orders" cx="' . round($pad + $i * $step, 1) . '" cy="' . round($hgt - $pad - ($x['orders'] / $max) * ($hgt - 2 * $pad), 1) . '" r="4"/>'
-                . '<circle class="dot-quotes" cx="' . round($pad + $i * $step, 1) . '" cy="' . round($hgt - $pad - ($x['quotes'] / $max) * ($hgt - 2 * $pad), 1) . '" r="4"/>';
+            $svg .= '<circle class="dot-o" cx="' . round($pad + $i * $step, 1) . '" cy="' . round($hgt - $pad - ($x['orders'] / $max) * ($hgt - 2 * $pad), 1) . '" r="4"/>'
+                . '<circle class="dot-q" cx="' . round($pad + $i * $step, 1) . '" cy="' . round($hgt - $pad - ($x['quotes'] / $max) * ($hgt - 2 * $pad), 1) . '" r="4"/>';
         }
         return $svg . '</svg>';
     }
@@ -131,10 +137,10 @@ final class DashboardView
         if (!$rows) {
             return '<p class="empty">Nessuna attività.</p>';
         }
-        $h = '<ul class="feed">';
+        $h = '<ul class="activity-list">';
         foreach ($rows as $a) {
-            $h .= '<li><span class="feed-ic">' . self::icon($a['icon']) . '</span><div><div class="feed-text">' . $e($a['text']) . '</div>'
-                . '<div class="sub">' . $e($a['who']) . ' · ' . $e(date('d/m H:i', strtotime((string) $a['at']))) . '</div></div></li>';
+            $h .= '<li><span class="activity-icon">' . self::icon($a['icon']) . '</span><div><strong>' . $e($a['text']) . '</strong>'
+                . '<small>' . $e($a['who']) . ' · ' . $e(date('d/m H:i', strtotime((string) $a['at']))) . '</small></div></li>';
         }
         return $h . '</ul>';
     }
@@ -142,30 +148,19 @@ final class DashboardView
     private static function metrics(array $m, callable $e): string
     {
         $items = [['Visite al sito', $m['visits'], 'eye'], ['Listini scaricati', $m['downloads'], 'download'], ['Nuovi clienti', $m['clients'], 'users']];
-        $h = '<ul class="metrics">';
+        $h = '';
         foreach ($items as [$label, $v, $ic]) {
-            $h .= '<li><span class="feed-ic">' . self::icon($ic) . '</span><div><div class="metric-num">' . $e(number_format((int) $v, 0, ',', '.')) . '</div><div class="sub">' . $e($label) . '</div></div></li>';
+            $h .= '<div class="metric-row">' . self::icon($ic) . '<div><strong>' . $e(number_format((int) $v, 0, ',', '.')) . '</strong><small>' . $e($label) . '</small></div></div>';
         }
-        return $h . '</ul>';
+        return $h;
     }
 
+    /** Icona dallo sprite del kit grafico, incluso una volta sola nella pagina. */
     private static function icon(string $name): string
     {
-        $paths = [
-            'doc' => 'M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z M14 2v6h6',
-            'cart' => 'M3 3h2l2.4 12.6A2 2 0 0 0 9.4 17H18a2 2 0 0 0 2-1.6L21 8H6',
-            'mail' => 'M3 5h18v14H3z M3 5l9 7 9-7',
-            'users' => 'M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2 M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8 M23 21v-2a4 4 0 0 0-3-3.9',
-            'eye' => 'M1 12s4-7 11-7 11 7 11 7-4 7-11 7S1 12 1 12z M12 9a3 3 0 1 0 0 6 3 3 0 0 0 0-6z',
-            'download' => 'M12 3v12 M7 10l5 5 5-5 M5 21h14',
-            'dot' => 'M12 12m-3 0a3 3 0 1 0 6 0 3 3 0 1 0-6 0',
-            'home' => 'M3 11l9-8 9 8v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z',
-            'box' => 'M21 8l-9-5-9 5 9 5 9-5z M3 8v8l9 5 9-5V8',
-            'list' => 'M8 6h13 M8 12h13 M8 18h13 M3 6h.01 M3 12h.01 M3 18h.01',
-            'chart' => 'M18 20V10 M12 20V4 M6 20v-6',
-            'shield' => 'M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z',
-            'gear' => 'M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6z',
-        ];
-        return '<svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="' . ($paths[$name] ?? $paths['dot']) . '"/></svg>';
+        $map = ['doc' => 'requests', 'cart' => 'orders', 'mail' => 'mail', 'users' => 'clients', 'eye' => 'eye', 'download' => 'download', 'dot' => 'activity',
+            'home' => 'dashboard', 'box' => 'products', 'list' => 'activity', 'chart' => 'stats', 'shield' => 'account', 'gear' => 'modules'];
+        $id = $map[$name] ?? $name;
+        return '<svg class="icon" aria-hidden="true" focusable="false"><use href="#' . $id . '"/></svg>';
     }
 }
