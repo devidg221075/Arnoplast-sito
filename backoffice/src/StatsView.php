@@ -76,7 +76,7 @@ final class StatsView
     }
 
     /** @param array<int, array{day:string, pages:int, visits:int}> $daily */
-    private static function line(array $daily): string
+    public static function line(array $daily): string
     {
         $w = 720; $hgt = 220; $pad = 28;
         $max = max(1, max(array_map(static fn (array $d): int => max($d['pages'], $d['visits']), $daily)));
@@ -114,7 +114,7 @@ final class StatsView
     }
 
     /** Barre orizzontali: ogni riga mostra la quota sul totale. */
-    private static function bars(array $rows, int $total, string $empty, bool $wide = false): string
+    public static function bars(array $rows, int $total, string $empty, bool $wide = false): string
     {
         $e = App::e(...);
         if (!$rows) {

@@ -89,7 +89,7 @@ $render = static function (string $title, string $body, ?array $user = null) use
     echo '<!doctype html><html lang="it"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">'
         . '<meta name="robots" content="noindex, nofollow"><title>' . $e($title) . ' · Backoffice ' . $e(App::config('site_name', '')) . '</title>'
         . '<link rel="stylesheet" href="assets/admin.css"></head><body' . ($user ? ' class="app"' : '') . '>'
-        . ($user ? '<aside class="side"><a class="brand" href="' . $e($url('dashboard')) . '"><span class="logo"><b>ARNO</b>plast</span></a><nav class="nav-side" aria-label="Menu">' . $side . '</nav>'
+        . ($user ? '<aside class="side"><a class="brand" href="' . $e($url('dashboard')) . '"><img src="assets/logo-negativo.svg" alt="ARNOplast" width="170" height="31"></a><nav class="nav-side" aria-label="Menu">' . $side . '</nav>'
             . '<img class="deco-side" src="assets/deco-side.svg" alt="" width="250" height="170"><div class="side-foot">Backoffice' . $version . '</div></aside>'
             . '<div class="main"><header class="topbar">' . $top . '</header>' : '')
         . '<main class="wrap">' . $flashHtml . (($user && ($_GET['p'] ?? '') === 'dashboard') ? '' : '<h1>' . $e($title) . '</h1>') . $body . '</main>'
@@ -425,7 +425,8 @@ if ($page === 'stats' && Auth::can($user, 'stats')) {
 if ($page === 'dashboard') {
     $data = ['kpis' => Dashboard::kpis(), 'latest' => Dashboard::latest(5), 'weekly' => Dashboard::weekly(8),
         'activity' => Auth::can($user, 'activity') ? Dashboard::activity(6) : [], 'metrics' => Dashboard::metrics()];
-    $render('Dashboard', DashboardView::page($data, Auth::can($user, 'activity'), (string) $user['name'], $url('dashboard')), $user);
+    $stats = Auth::can($user, 'stats') ? Stats::summary(30) : null;
+    $render('Dashboard', DashboardView::page($data, Auth::can($user, 'activity'), (string) $user['name'], $url('dashboard'), $stats), $user);
 }
 
 // --- Ordini (nascono dai preventivi accettati). Lo stato va solo avanti.

@@ -11,7 +11,32 @@ final class DashboardView
         'preventivo_inviato' => ['Preventivo inviato', 'violet'], 'chiusa' => ['Chiusa', 'green'],
     ];
 
-    public static function page(array $d, bool $admin, string $name, string $self): string
+    /** Riepilogo statistiche del sito (ultimi 30 giorni), dalla stessa fonte della pagina Statistiche. */
+    public static function statsPanel(array $s): string
+    {
+        $e = App::e(...);
+        if ($s['pages'] === 0) {
+            return '<section class="panel stats-panel"><div class="panel-head"><h2>Statistiche del sito <small>ultimi 30 giorni</small></h2><a class="more" href="index.php?p=stats">Vedi tutte →</a></div>'
+                . '<p class="empty">Ancora nessuna visita registrata.</p></section>';
+        }
+        $kp = [['Pagine viste', $s['pages']], ['Visite', $s['visits']], ['Visitatori stimati', $s['visitors']], ['Pagine per visita', $s['pages_per_visit']]];
+        $h = '<section class="panel stats-panel"><div class="panel-head"><h2>Statistiche del sito <small>ultimi 30 giorni</small></h2><a class="more" href="index.php?p=stats">Vedi tutte le statistiche →</a></div>'
+            . '<div class="stat-mini">';
+        foreach ($kp as [$label, $v]) {
+            $h .= '<div class="stat-mini-item"><div class="stat-mini-num">' . $e(is_float($v) ? str_replace('.', ',', (string) $v) : number_format((int) $v, 0, ',', '.')) . '</div><div class="sub">' . $e($label) . '</div></div>';
+        }
+        $h .= '</div><div class="stats-grid">'
+            . '<div><h3 class="mini-h">Andamento giornaliero</h3>' . StatsView::line($s['daily']) . '</div>'
+            . '<div><h3 class="mini-h">Pagine più viste</h3>' . StatsView::bars(array_slice($s['top_pages'], 0, 5), $s['pages'], 'Nessun dato.') . '</div>'
+            . '<div><h3 class="mini-h">Da dove arrivano</h3>' . StatsView::bars(array_map(static fn (array $r): array => ['label' => match ($r['kind']) {
+                'diretto' => 'Accesso diretto', 'motore' => 'Motori di ricerca', 'social' => 'Social network', 'interno' => 'Pagine del sito', default => $r['label']}, 'n' => $r['n']], array_slice($s['sources'], 0, 5)), $s['pages'], 'Nessun dato.') . '</div>'
+            . '<div><h3 class="mini-h">Dispositivi</h3>' . StatsView::bars($s['devices'], $s['pages'], 'Nessun dato.') . '</div>'
+            . '<div><h3 class="mini-h">Paesi</h3>' . ($s['countries'] ? StatsView::bars(array_slice($s['countries'], 0, 5), $s['pages'], 'Nessun dato.') : '<p class="sub">' . ($s['geo_available'] ? 'Nessun dato.' : 'Disponibile con il database geografico (GeoLite2).') . '</p>') . '</div>'
+            . '</div></section>';
+        return $h;
+    }
+
+    public static function page(array $d, bool $admin, string $name, string $self, ?array $stats = null): string
     {
         $e = App::e(...);
         $h = '<div class="hello"><p class="hello-title">Buongiorno, ' . $e(explode(' ', trim($name))[0]) . '</p><p class="hello-sub">Ecco la panoramica di ARNOplast.</p></div>';
@@ -32,6 +57,9 @@ final class DashboardView
             . self::chart($d['weekly']) . '<p class="muted">Ultime 8 settimane</p></section>'
             . '</div>';
 
+        if ($stats !== null) {
+            $h .= self::statsPanel($stats);
+        }
         $h .= '<div class="dash-grid bottom">'
             . ($admin ? '<section class="panel"><div class="panel-head"><h2>Attività recenti</h2><a class="more" href="index.php?p=activity">Vedi tutte →</a></div>' . self::activity($d['activity'], $e) . '</section>' : '')
             . ($admin ? '<section class="panel"><div class="panel-head"><h2>Altre metriche <small>ultimi 30 giorni</small></h2></div>' . self::metrics($d['metrics'], $e) . '</section>' : '')
