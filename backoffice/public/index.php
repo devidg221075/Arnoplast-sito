@@ -5,6 +5,9 @@ declare(strict_types=1);
 use Backoffice\App;
 use Backoffice\Auth;
 use Backoffice\Changelog;
+use Backoffice\GitHub;
+use Backoffice\Publisher;
+use Backoffice\PublishView;
 use Backoffice\Conversation;
 use Backoffice\Inbox;
 use Backoffice\Content;
@@ -71,7 +74,7 @@ $render = static function (string $title, string $body, ?array $user = null) use
     }
     $all = ['dashboard' => ['Dashboard', 'dashboard'], 'products' => ['Prodotti', 'products'], 'requests' => ['Preventivi e richieste', 'requests'], 'orders' => ['Ordini', 'orders'],
         'clients' => ['Clienti', 'clients'], 'fairs' => ['Fiere', 'content'], 'gallery' => ['Galleria', 'eye'], 'videos' => ['Video', 'arrow-right'], 'texts' => ['Testi', 'content'],
-        'listini' => ['Listini riservati', 'listini'], 'stats' => ['Statistiche', 'stats'], 'mail' => ['Posta', 'mail'], 'conditions' => ['Condizioni PDF', 'requests'],
+        'listini' => ['Listini riservati', 'listini'], 'stats' => ['Statistiche', 'stats'], 'mail' => ['Posta', 'mail'], 'conditions' => ['Condizioni PDF', 'requests'], 'publish' => ['Pubblica', 'external-link'],
         'users' => ['Utenti e ruoli', 'users'], 'activity' => ['Registro attività', 'activity']];
     $links = array_filter($all, static fn (string $p): bool => Auth::canOpen($user, $p), ARRAY_FILTER_USE_KEY);
     $links['account'] = ['Il mio accesso', 'account'];
@@ -761,6 +764,25 @@ if ($page === 'activity' && Auth::can($user, 'activity')) {
         $body .= '<tr><td>' . $e($date($a['created_at'])) . '</td><td>' . $e($a['name'] ?? 'sito') . '</td><td>' . $e($a['action']) . '</td><td>' . $e($a['target']) . '</td><td>' . $e($a['detail']) . '</td></tr>';
     }
     $render('Registro attività', $body . '</table><p class="meta">Ultime 300 voci.</p>', $user);
+}
+
+// --- Pubblica: le bozze vanno nel repository del sito; GitHub Actions ricostruisce e consegna via FTP.
+if ($page === 'publish') {
+    $gh = GitHub::fromConfig();
+    if ($isPost && ($_POST['action'] ?? '') === 'publish') {
+        if ($gh === null) {
+            $say('La pubblicazione non è ancora collegata a GitHub.', false);
+        } else {
+            try {
+                [, $sections] = Publisher::publish($gh, $uid);
+                $say('Pubblicato: ' . implode(', ', $sections) . '. Il sito si aggiorna entro pochi minuti.');
+            } catch (\Throwable $ex) {
+                $say($ex->getMessage(), false);
+            }
+        }
+        $go($url('publish'));
+    }
+    $render('Pubblica', PublishView::page(Publisher::pending(), $gh, Auth::csrf(), $gh?->lastRun()), $user);
 }
 
 // --- Novità del backoffice: le note di versione (CHANGELOG.md).

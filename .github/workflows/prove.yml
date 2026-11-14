@@ -1,0 +1,41 @@
+# Prove automatiche su ogni modifica (anche sulle richieste di unione): Python, JavaScript e backoffice PHP.
+name: Prove
+
+on:
+  push:
+    branches-ignore: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  prove:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+          cache: pip
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+          extensions: mbstring, pdo_sqlite, curl, gd, zip
+      - run: sudo apt-get update && sudo apt-get install -y --no-install-recommends poppler-utils
+      - run: pip install -r requirements.txt
+      - run: python -m pytest -q
+      - run: npm run test:js
+      - name: Prove del backoffice
+        run: |
+          bad=0
+          for t in backoffice/tests/*_test.php; do
+            out=$(php "$t" 2>&1) || bad=1
+            echo "$out" | grep -E '^(FAIL|Fatal|PHP )' && bad=1
+            echo "$(basename "$t"): $(echo "$out" | grep -c '^ok') ok"
+          done
+          exit $bad

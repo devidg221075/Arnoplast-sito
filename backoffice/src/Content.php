@@ -85,6 +85,15 @@ final class Content
         }
     }
 
+    /** Pubblica tutte le voci di un tipo: la bozza diventa la versione pubblicata e le voci da eliminare spariscono. */
+    public static function publishAll(string $kind): void
+    {
+        $pdo = App::db();
+        $pdo->prepare('DELETE FROM content WHERE kind = ? AND deleted = 1')->execute([$kind]);
+        $pdo->prepare('UPDATE content SET published = draft WHERE kind = ?')->execute([$kind]);
+        $pdo->prepare("DELETE FROM content WHERE kind = ? AND draft = '[]'")->execute([$kind]);
+    }
+
     /** nuova / pubblicata / modificata / da eliminare. */
     public static function status(array $row): string
     {

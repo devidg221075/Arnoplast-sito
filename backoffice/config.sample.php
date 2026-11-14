@@ -6,6 +6,8 @@ return [
     'assets_url' => 'https://www.arnoplast.it',         // dove stanno le immagini del sito (per le anteprime della galleria); finché il sito è in prova: https://nuovo.arnoplast.it
     'admin_url' => 'https://gestione.arnoplast.it',     // indirizzo di questo backoffice
     'allowed_origins' => ['https://www.arnoplast.it', 'https://nuovo.arnoplast.it'], // siti che possono inviare i moduli
+    // «Pubblica» (docs/pubblicazione-ftp.md): chiave di GitHub a permessi minimi, creata dal cliente. Mai nel repository.
+    // 'github' => ['repo' => 'proprietario/nome-repository', 'branch' => 'main', 'token' => 'github_pat_…'],
     'db' => [
         'dsn' => 'mysql:host=localhost;dbname=NOME_DATABASE;charset=utf8mb4',
         'user' => 'UTENTE_DATABASE',

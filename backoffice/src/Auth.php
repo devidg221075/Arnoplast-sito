@@ -11,7 +11,7 @@ final class Auth
 
     /** Permessi per ruolo. Cambiare qui è l'unico modo di cambiare cosa può fare un ruolo. */
     public const PERMISSIONS = [
-        'admin' => ['dashboard', 'requests', 'quotes', 'orders', 'clients', 'content', 'listini', 'listini.manage', 'stats', 'mail', 'users', 'activity', 'conditions'],
+        'admin' => ['dashboard', 'requests', 'quotes', 'orders', 'clients', 'content', 'listini', 'listini.manage', 'stats', 'mail', 'users', 'activity', 'conditions', 'publish'],
         'redattore' => ['content', 'listini'],
         'staff' => ['dashboard', 'requests', 'quotes', 'orders', 'clients', 'mail', 'listini'],
         'commerciale' => ['listini'],
@@ -23,7 +23,7 @@ final class Auth
         'fairs' => 'content', 'fair' => 'content', 'gallery' => 'content', 'gallery_photo' => 'content', 'gallery_img' => 'content',
         'videos' => 'content', 'video' => 'content', 'texts' => 'content', 'text_group' => 'content',
         'listini' => 'listini', 'listino_file' => 'listini',
-        'stats' => 'stats', 'mail' => 'mail', 'users' => 'users', 'activity' => 'activity', 'conditions' => 'conditions',
+        'stats' => 'stats', 'mail' => 'mail', 'users' => 'users', 'activity' => 'activity', 'conditions' => 'conditions', 'publish' => 'publish',
     ];
 
     /** Pagine che tutti gli utenti possono aprire, a prescindere dal ruolo. */

@@ -1,0 +1,60 @@
+# Costruisce il sito e lo consegna via FTP. Parte da sola quando il backoffice salva un contenuto («Pubblica»)
+# o quando si unisce una modifica al ramo main, ogni notte (le fiere finite passano fra le «passate») e a mano.
+# Istruzioni e segreti da creare: docs/pubblicazione-ftp.md
+name: Costruisci e pubblica il sito
+
+on:
+  push:
+    branches: [main]
+  schedule:
+    - cron: '10 1 * * *'
+  workflow_dispatch:
+
+concurrency:
+  group: pubblica
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  pubblica:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+          cache: pip
+
+      - name: Strumenti per leggere i cataloghi PDF
+        run: sudo apt-get update && sudo apt-get install -y --no-install-recommends poppler-utils
+
+      - run: pip install -r requirements.txt
+
+      - name: Immagini dei prodotti dai cataloghi
+        run: python -m arnoplast.extract.build --images-only
+
+      - name: Foto nuove della galleria
+        run: python tools/galleria_apply.py
+
+      - name: Costruzione del sito
+        env:
+          ARNO_FORMS_ENDPOINT: ${{ vars.ARNO_FORMS_ENDPOINT || 'https://gestione.arnoplast.it/api/submit.php' }}
+        run: python -m arnoplast.site.build
+
+      - name: Consegna via FTP
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          protocol: ftps
+          port: 21
+          local-dir: ./dist/
+          server-dir: ${{ vars.FTP_DIR || '/' }}
+          exclude: |
+            **/.git*
+            **/.git*/**

@@ -2,6 +2,16 @@
 
 Formato: versione, data, cosa cambia. La versione sta nel file `VERSION` e compare in basso nella barra laterale: cliccandola si apre questa pagina («Novità»).
 
+## 0.10.0 — 14 novembre 2026
+
+### Novità
+- **Pubblica**: nuova voce del menu (solo amministratore). Mostra le modifiche in bozza di Testi, Fiere, Galleria e Video e, dopo la conferma, le salva nel repository del sito in un solo commit (file dati e foto nuove). GitHub Actions ricostruisce il sito e lo consegna via FTP in pochi minuti; la schermata mostra lo stato dell'ultima costruzione.
+- **Costruzione automatica del sito** (GitHub Actions): a ogni pubblicazione, ogni notte (le fiere finite passano fra le «passate») e a mano. Le prove automatiche girano su ogni modifica.
+- Le pubblicazioni finiscono nel registro attività («sito.pubblicato») con il collegamento al commit.
+
+### Tecnico
+- `GitHub.php`, `Publisher.php`, `PublishView.php`, `Content::publishAll`; chiave GitHub a permessi minimi solo in `config.php` (`github`); guida in `docs/pubblicazione-ftp.md`; `tests/publish_test.php`.
+
 ## 0.9.1 — 14 novembre 2026
 
 ### Novità
