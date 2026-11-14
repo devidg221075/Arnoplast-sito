@@ -68,3 +68,72 @@ def apply_pack(pack: dict, lang: str, kinds: dict[str, str] | None = None) -> di
     return {**pack, "titolo": _ov("pack.title", lang, pack["titolo"]), "sezione": _ov("pack.section", lang, pack["sezione"]),
             "nota": _ov("pack.note", lang, pack["nota"]),
             "paragrafi": [_ov(f"pack.p{i}", lang, p) for i, p in enumerate(pack["paragrafi"], 1)], "tabella": rows}
+
+
+# --- Altri testi e dati delle pagine di servizio: dati societari, collegamenti, tipologie utente, alt delle foto, descrizioni ---
+ov = _ov
+CORP = [("name", "Ragione sociale"), ("street", "Indirizzo: via e numero"), ("city", "CAP e città"), ("country", "Nazione"),
+        ("phone1", "Telefono principale"), ("phone2", "Secondo telefono"), ("email", "E-mail"), ("vat", "Partita IVA"),
+        ("rea", "Numero REA"), ("capital", "Capitale sociale"), ("web", "Sito web")]
+LINKS = [("facebook", "Facebook: indirizzo della pagina"), ("linkedin", "LinkedIn: indirizzo della pagina"), ("instagram", "Instagram: indirizzo del profilo"),
+         ("apple", "App Store: indirizzo dell'app"), ("play", "Google Play: indirizzo dell'app")]
+HERO_NAMES = {"agricoltura": "Agricoltura", "garden": "Garden", "olive": "Raccolta olive", "azienda": "Azienda (sede)", "imballaggi": "Imballaggi"}
+META_NAMES = {"fairs": "Fiere", "catalogs": "Cataloghi e download"}
+
+
+def labels(heroes: dict | None = None, n_types: int = 0) -> dict[str, str]:
+    """Etichette per il backoffice (al posto del nome tecnico della chiave)."""
+    out = {f"corp.{k}": v for k, v in CORP} | {f"link.{k}": v for k, v in LINKS} | {f"meta.{k}": f"Descrizione per i motori di ricerca: {v}" for k, v in META_NAMES.items()}
+    out |= {f"hero.{k}.alt": f"Testo alternativo della foto di testata: {HERO_NAMES.get(k, k)}" for k in (heroes or HERO_NAMES)}
+    out |= {f"ut.{i}": f"Menu «Tipologia utente», voce {i}" for i in range(1, n_types + 1)}
+    return out
+
+
+def _tel(phone: str) -> str:
+    import re
+    digits = re.sub(r"\D", "", phone)
+    return ("+" if phone.strip().startswith("+") else "") + digits
+
+
+def register_site(contacts: dict, social: list, apps: list, user_types: list[str], user_types_en: dict, heroes: dict,
+                  hero_alt_en: dict, meta: dict[str, tuple[str, str]]) -> None:
+    """Chiavi per dati societari (corp.*), collegamenti (link.*), tipologie utente (ut.N), alt delle foto (hero.*.alt) e descrizioni (meta.*)."""
+    it: dict[str, str] = {"corp.name": contacts["name"], "corp.street": contacts["street"], "corp.city": contacts["city"], "corp.country": contacts["country"],
+                          "corp.phone1": contacts["phones"][0][0], "corp.phone2": contacts["phones"][1][0], "corp.email": contacts["email"],
+                          "corp.vat": contacts["vat"], "corp.rea": contacts["rea"], "corp.capital": contacts["capital"], "corp.web": contacts["web"]}
+    for _, url, icon in [*social, *apps]:
+        it[f"link.{icon}"] = url
+    en = dict(it)  # dati neutri rispetto alla lingua: lo stesso valore
+    for i, u in enumerate(user_types, 1):
+        it[f"ut.{i}"], en[f"ut.{i}"] = u, user_types_en.get(u, u)
+    for key, vals in heroes.items():
+        alt = vals[2]  # HEROES: (foto, ritaglio verticale, testo alternativo)
+        it[f"hero.{key}.alt"], en[f"hero.{key}.alt"] = alt, hero_alt_en.get(alt, alt)
+    for key, (d_it, d_en) in meta.items():
+        it[f"meta.{key}"], en[f"meta.{key}"] = d_it, d_en
+    i18n.STRINGS["it"].update(it)
+    i18n.STRINGS["en"].update(en)
+
+
+def apply_contacts(c: dict) -> None:
+    """Dati societari con le correzioni (valgono per tutte le lingue: si legge la colonna italiana)."""
+    for field in ("name", "street", "city", "country", "email", "vat", "rea", "capital", "web"):
+        c[field] = _ov(f"corp.{field}", "it", c[field])
+    p1 = _ov("corp.phone1", "it", c["phones"][0][0])
+    p2 = _ov("corp.phone2", "it", c["phones"][1][0])
+    c["phones"] = [(p1, _tel(p1)), (p2, _tel(p2))]
+    c["phone"], c["phone_tel"] = p1, _tel(p1)
+    c["address"] = f"{c['street']}, {c['city']} - {c['country']}"
+
+
+def apply_links(items: list) -> list:
+    return [(name, _ov(f"link.{icon}", "it", url), icon) for name, url, icon in items]
+
+
+def apply_user_types(types: list[str], en_map: dict, lang: str) -> list[tuple[str, str]]:
+    """[(valore inviato, etichetta mostrata)]: il valore è sempre quello italiano (anche corretto)."""
+    out = []
+    for i, u in enumerate(types, 1):
+        value = _ov(f"ut.{i}", "it", u)
+        out.append((value, value if lang == "it" else _ov(f"ut.{i}", "en", en_map.get(u, u))))
+    return out

@@ -498,9 +498,12 @@ if ($page === 'order') {
 
 if (($page === 'texts' || $page === 'text_group') && Auth::can($user, 'content')) {
     if ($page === 'texts') {
-        $render('Testi del sito', TextsView::index(trim(is_string($_GET['q'] ?? null) ? mb_substr($_GET['q'], 0, 80) : '')), $user);
+        $render('Testi del sito', TextsView::index(trim(is_string($_GET['q'] ?? null) ? mb_substr($_GET['q'], 0, 80) : ''), Auth::can($user, 'users')), $user);
     }
     $g = Texts::group(is_string($_GET['g'] ?? null) ? $_GET['g'] : '');
+    if ($g && !Texts::canEdit($g, Auth::can($user, 'users'))) {
+        $g = null; // dati societari e collegamenti: solo amministratore
+    }
     if (!$g) {
         http_response_code(404);
         $render('Gruppo non trovato', '<p><a href="' . $e($url('texts')) . '">Torna ai testi</a></p>', $user);

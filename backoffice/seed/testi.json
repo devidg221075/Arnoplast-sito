@@ -5,6 +5,7 @@
    "name": "Home: testata e primo schermo",
    "help": "Titolo, sottotitolo e scritte della prima schermata della home.",
    "keys": [
+    "home.made",
     "home.title",
     "home.tagline",
     "home.lines",
@@ -231,6 +232,80 @@
    ]
   },
   {
+   "id": "corp",
+   "name": "Dati societari e contatti",
+   "help": "Ragione sociale, indirizzo, telefoni, e-mail, partita IVA, REA, capitale sociale: compaiono nel piè di pagina, in Contatti, nella home e nei dati per i motori di ricerca. Valgono per italiano e inglese. Solo amministratore.",
+   "keys": [
+    "corp.name",
+    "corp.street",
+    "corp.city",
+    "corp.country",
+    "corp.phone1",
+    "corp.phone2",
+    "corp.email",
+    "corp.vat",
+    "corp.rea",
+    "corp.capital",
+    "corp.web"
+   ],
+   "neutral": true,
+   "admin_only": true
+  },
+  {
+   "id": "links",
+   "name": "Collegamenti social e app",
+   "help": "Indirizzi di Facebook, LinkedIn, Instagram, App Store e Google Play (devono iniziare con https://). Valgono per italiano e inglese. Solo amministratore.",
+   "keys": [
+    "link.facebook",
+    "link.linkedin",
+    "link.instagram",
+    "link.apple",
+    "link.play"
+   ],
+   "neutral": true,
+   "admin_only": true
+  },
+  {
+   "id": "usertypes",
+   "name": "Contatti: tipologia utente",
+   "help": "Le voci del menu «Tipologia utente» del modulo Contatti: il testo italiano è anche quello che arriva nella richiesta.",
+   "keys": [
+    "ut.1",
+    "ut.2",
+    "ut.3",
+    "ut.4",
+    "ut.5",
+    "ut.6",
+    "ut.7",
+    "ut.8",
+    "ut.9",
+    "ut.10",
+    "ut.11",
+    "ut.12"
+   ]
+  },
+  {
+   "id": "heroalt",
+   "name": "Testi alternativi delle foto di testata",
+   "help": "Descrizioni (per chi non vede le immagini e per i motori di ricerca) delle grandi foto in alto nelle pagine.",
+   "keys": [
+    "hero.agricoltura.alt",
+    "hero.garden.alt",
+    "hero.olive.alt",
+    "hero.azienda.alt",
+    "hero.imballaggi.alt"
+   ]
+  },
+  {
+   "id": "meta",
+   "name": "Descrizioni per i motori di ricerca",
+   "help": "Il breve testo che i motori di ricerca mostrano sotto il titolo delle pagine Fiere e Cataloghi.",
+   "keys": [
+    "meta.fairs",
+    "meta.catalogs"
+   ]
+  },
+  {
    "id": "quote",
    "name": "Preventivo e moduli",
    "help": "Pagina Richiesta di preventivo, messaggi dei moduli.",
@@ -423,6 +498,7 @@
    "name": "Rassegna stampa e social",
    "help": "Blocchi «Dicono di noi» e «Seguici».",
    "keys": [
+    "so.name",
     "press.eyebrow",
     "press.title",
     "press.text",
@@ -461,6 +537,7 @@
     "menu.toggle",
     "menu.sub_of",
     "footer.label",
+    "footer.made",
     "footer.company",
     "footer.contacts",
     "footer.follow",
@@ -608,6 +685,18 @@
   "footer.label": {
    "it": "Menu del piè di pagina",
    "en": "Footer menu"
+  },
+  "footer.made": {
+   "it": "Made in Italy",
+   "en": "Made in Italy"
+  },
+  "home.made": {
+   "it": "Made in Italy",
+   "en": "Made in Italy"
+  },
+  "so.name": {
+   "it": "Facebook · ARNOplast",
+   "en": "Facebook · ARNOplast"
   },
   "footer.company": {
    "it": "Dati societari",
@@ -2100,9 +2189,186 @@
   "pack.r14.raccolta": {
    "it": "Raccolta Plastica",
    "en": "Plastic collection"
+  },
+  "corp.name": {
+   "it": "ARNO PLAST S.r.l.",
+   "en": "ARNO PLAST S.r.l."
+  },
+  "corp.street": {
+   "it": "Via Comunale dell'Isola 65/B/C/D",
+   "en": "Via Comunale dell'Isola 65/B/C/D"
+  },
+  "corp.city": {
+   "it": "50067 Rignano sull'Arno (FI)",
+   "en": "50067 Rignano sull'Arno (FI)"
+  },
+  "corp.country": {
+   "it": "ITALY",
+   "en": "ITALY"
+  },
+  "corp.phone1": {
+   "it": "+39 055 83 47 031",
+   "en": "+39 055 83 47 031"
+  },
+  "corp.phone2": {
+   "it": "+39 055 83 47 033",
+   "en": "+39 055 83 47 033"
+  },
+  "corp.email": {
+   "it": "info@arnoplast.it",
+   "en": "info@arnoplast.it"
+  },
+  "corp.vat": {
+   "it": "01987190483",
+   "en": "01987190483"
+  },
+  "corp.rea": {
+   "it": "FI355293",
+   "en": "FI355293"
+  },
+  "corp.capital": {
+   "it": "49.580,00 i.v.",
+   "en": "49.580,00 i.v."
+  },
+  "corp.web": {
+   "it": "www.arnoplast.it",
+   "en": "www.arnoplast.it"
+  },
+  "link.facebook": {
+   "it": "https://www.facebook.com/arnoplast",
+   "en": "https://www.facebook.com/arnoplast"
+  },
+  "link.linkedin": {
+   "it": "https://it.linkedin.com/company/arnoplast-s-r-l",
+   "en": "https://it.linkedin.com/company/arnoplast-s-r-l"
+  },
+  "link.instagram": {
+   "it": "https://www.instagram.com/arnoplast/",
+   "en": "https://www.instagram.com/arnoplast/"
+  },
+  "link.apple": {
+   "it": "https://apps.apple.com/it/app/arno-plast/id1534894744",
+   "en": "https://apps.apple.com/it/app/arno-plast/id1534894744"
+  },
+  "link.play": {
+   "it": "https://play.google.com/store/search?q=arno%20plast&c=apps",
+   "en": "https://play.google.com/store/search?q=arno%20plast&c=apps"
+  },
+  "ut.1": {
+   "it": "Privato/Altro",
+   "en": "Private / Other"
+  },
+  "ut.2": {
+   "it": "Azienda Agricola",
+   "en": "Farm"
+  },
+  "ut.3": {
+   "it": "Garden/Vivaio",
+   "en": "Garden centre / Nursery"
+  },
+  "ut.4": {
+   "it": "Riv. Macc. Agr./Officina",
+   "en": "Agricultural machinery dealer / Workshop"
+  },
+  "ut.5": {
+   "it": "Agraria/Consorzio Agrario",
+   "en": "Agricultural supplier / Farmers' cooperative"
+  },
+  "ut.6": {
+   "it": "Ferramenta/Fai da te",
+   "en": "Hardware store / DIY"
+  },
+  "ut.7": {
+   "it": "Manutentori/Giardinieri",
+   "en": "Maintenance / Gardeners"
+  },
+  "ut.8": {
+   "it": "Grossa Distrib. Spec.",
+   "en": "Large specialised retailer"
+  },
+  "ut.9": {
+   "it": "Ingrosso/Consulente",
+   "en": "Wholesaler / Consultant"
+  },
+  "ut.10": {
+   "it": "Installatore/Importatore",
+   "en": "Installer / Importer"
+  },
+  "ut.11": {
+   "it": "Edile",
+   "en": "Construction"
+  },
+  "ut.12": {
+   "it": "Ente",
+   "en": "Public body"
+  },
+  "hero.agricoltura.alt": {
+   "it": "Frutteto coperto dalla rete antigrandine tesa sui pali",
+   "en": "Orchard covered by anti-hail netting stretched over the posts"
+  },
+  "hero.garden.alt": {
+   "it": "Prato e alberi in una giornata di sole",
+   "en": "Lawn and trees on a sunny day"
+  },
+  "hero.olive.alt": {
+   "it": "Raccolta delle olive con l'abbacchiatore",
+   "en": "Olive harvest with a harvesting aid"
+  },
+  "hero.azienda.alt": {
+   "it": "La sede ARNOplast a Rignano sull'Arno",
+   "en": "The ARNOplast headquarters in Rignano sull'Arno"
+  },
+  "hero.imballaggi.alt": {
+   "it": "Filari di un frutteto sotto la rete di protezione",
+   "en": "Rows of an orchard under the protective netting"
+  },
+  "meta.fairs": {
+   "it": "Le fiere a cui partecipa ARNOplast: prossimi appuntamenti e archivio delle fiere passate.",
+   "en": "The trade fairs ARNOplast attends: upcoming events and archive of past fairs."
+  },
+  "meta.catalogs": {
+   "it": "Cataloghi ARNOplast in PDF da scaricare (Agricoltura, Garden, Raccolta olive) e app ARNOplast.",
+   "en": "ARNOplast catalogues in PDF to download (Agriculture, Garden, Olive harvest) and the ARNOplast app."
   }
  },
  "max_len": 400,
+ "labels": {
+  "corp.name": "Ragione sociale",
+  "corp.street": "Indirizzo: via e numero",
+  "corp.city": "CAP e città",
+  "corp.country": "Nazione",
+  "corp.phone1": "Telefono principale",
+  "corp.phone2": "Secondo telefono",
+  "corp.email": "E-mail",
+  "corp.vat": "Partita IVA",
+  "corp.rea": "Numero REA",
+  "corp.capital": "Capitale sociale",
+  "corp.web": "Sito web",
+  "link.facebook": "Facebook: indirizzo della pagina",
+  "link.linkedin": "LinkedIn: indirizzo della pagina",
+  "link.instagram": "Instagram: indirizzo del profilo",
+  "link.apple": "App Store: indirizzo dell'app",
+  "link.play": "Google Play: indirizzo dell'app",
+  "meta.fairs": "Descrizione per i motori di ricerca: Fiere",
+  "meta.catalogs": "Descrizione per i motori di ricerca: Cataloghi e download",
+  "hero.agricoltura.alt": "Testo alternativo della foto di testata: Agricoltura",
+  "hero.garden.alt": "Testo alternativo della foto di testata: Garden",
+  "hero.olive.alt": "Testo alternativo della foto di testata: Raccolta olive",
+  "hero.azienda.alt": "Testo alternativo della foto di testata: Azienda (sede)",
+  "hero.imballaggi.alt": "Testo alternativo della foto di testata: Imballaggi",
+  "ut.1": "Menu «Tipologia utente», voce 1",
+  "ut.2": "Menu «Tipologia utente», voce 2",
+  "ut.3": "Menu «Tipologia utente», voce 3",
+  "ut.4": "Menu «Tipologia utente», voce 4",
+  "ut.5": "Menu «Tipologia utente», voce 5",
+  "ut.6": "Menu «Tipologia utente», voce 6",
+  "ut.7": "Menu «Tipologia utente», voce 7",
+  "ut.8": "Menu «Tipologia utente», voce 8",
+  "ut.9": "Menu «Tipologia utente», voce 9",
+  "ut.10": "Menu «Tipologia utente», voce 10",
+  "ut.11": "Menu «Tipologia utente», voce 11",
+  "ut.12": "Menu «Tipologia utente», voce 12"
+ },
  "max_len_long": 3000,
  "long_prefixes": [
   "story.",

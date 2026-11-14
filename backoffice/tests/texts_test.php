@@ -69,5 +69,17 @@ check(Texts::saveGroup('story', [$sk => str_repeat('x', 3001)], [], 1) !== [], '
 $long2 = Texts::saveGroup('packaging', ['pack.r1.codice' => 'ZZ 99'], [], 1);
 check($long2 === [] && Texts::overrides()['it']['pack.r1.codice'] === 'ZZ 99', 'cella della tabella imballaggi corretta');
 
+// --- Dati societari (una colonna, solo amministratore), collegamenti, tipologie utente, alt e descrizioni
+$corp = Texts::group('corp');
+check($corp !== null && ($corp['neutral'] ?? false) && ($corp['admin_only'] ?? false) && count($corp['keys']) === 11, 'gruppo «Dati societari»: 11 voci, una colonna, solo amministratore');
+check(!Texts::canEdit($corp, false) && Texts::canEdit($corp, true) && Texts::canEdit(Texts::group('openday'), false), 'il redattore non modifica i dati societari');
+check(Texts::saveGroup('corp', ['corp.phone1' => '+39 055 111 222'], [], 1) === [] && Texts::overrides()['it']['corp.phone1'] === '+39 055 111 222' && Texts::overrides()['en']['corp.phone1'] === '+39 055 111 222', 'telefono salvato per italiano e inglese insieme');
+check(Texts::saveGroup('corp', ['corp.email' => 'non-una-email'], [], 1) !== [], 'e-mail non valida rifiutata');
+check(Texts::saveGroup('corp', ['corp.email' => 'vendite@arnoplast.it'], [], 1) === [], 'e-mail valida accettata');
+check(Texts::saveGroup('links', ['link.facebook' => 'http://insicuro.example'], [], 1) !== [], 'collegamento senza https rifiutato');
+check(Texts::saveGroup('links', ['link.facebook' => 'https://www.facebook.com/arnoplast-nuova'], [], 1) === [], 'collegamento https accettato');
+check(count(Texts::group('usertypes')['keys']) === 12 && count(Texts::group('heroalt')['keys']) === 5 && count(Texts::group('meta')['keys']) === 2, 'gruppi tipologie utente (12), alt delle testate (5), descrizioni (2)');
+check(count(Texts::search('Rea', 60, false)) < count(Texts::search('Rea', 60, true)) || Texts::search('numero rea', 60, false) === [], 'la ricerca non mostra i dati societari al redattore');
+
 echo $fails === 0 ? "\nTutti i controlli superati\n" : "\n$fails controlli falliti\n";
 exit($fails === 0 ? 0 : 1);

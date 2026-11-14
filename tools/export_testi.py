@@ -13,7 +13,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT))
 
-from arnoplast.site import build, i18n, pagetexts, texts  # noqa: E402,F401  (build registra i testi della storia e degli imballaggi)
+from arnoplast.site import build as site_build, i18n, pagetexts, texts  # noqa: E402,F401  (build registra i testi della storia e degli imballaggi)
 
 # (id, nome per il cliente, a cosa serve, prefissi delle chiavi)
 GROUPS = [
@@ -23,6 +23,11 @@ GROUPS = [
     ("story", "Azienda: la storia", "Titoli e testi della storia dell'azienda (pagina Azienda): tappe 1975, 1983, anni Ottanta e Novanta, e «Oggi».", ("story.",)),
     ("packaging", "Azienda: imballaggi", "Pagina Imballaggi: titolo, paragrafi, righe della tabella (imballaggio, codice, raccolta) e nota. Nei paragrafi **parola** diventa grassetto.", ("pack.",)),
     ("contacts", "Contatti", "Pagina Contatti e modulo di contatto.", ("ct.", "contacts.")),
+    ("corp", "Dati societari e contatti", "Ragione sociale, indirizzo, telefoni, e-mail, partita IVA, REA, capitale sociale: compaiono nel piè di pagina, in Contatti, nella home e nei dati per i motori di ricerca. Valgono per italiano e inglese. Solo amministratore.", ("corp.",)),
+    ("links", "Collegamenti social e app", "Indirizzi di Facebook, LinkedIn, Instagram, App Store e Google Play (devono iniziare con https://). Valgono per italiano e inglese. Solo amministratore.", ("link.",)),
+    ("usertypes", "Contatti: tipologia utente", "Le voci del menu «Tipologia utente» del modulo Contatti: il testo italiano è anche quello che arriva nella richiesta.", ("ut.",)),
+    ("heroalt", "Testi alternativi delle foto di testata", "Descrizioni (per chi non vede le immagini e per i motori di ricerca) delle grandi foto in alto nelle pagine.", ("hero.",)),
+    ("meta", "Descrizioni per i motori di ricerca", "Il breve testo che i motori di ricerca mostrano sotto il titolo delle pagine Fiere e Cataloghi.", ("meta.",)),
     ("quote", "Preventivo e moduli", "Pagina Richiesta di preventivo, messaggi dei moduli.", ("quote.", "form.", "qty.", "card.")),
     ("fairs", "Fiere", "Testi della pagina Fiere (le singole fiere sono in «Fiere»).", ("fairs.",)),
     ("openday", "Open Day", "Testo della pagina Open Day.", ("od.",)),
@@ -45,12 +50,12 @@ def build() -> dict:
     for gid, name, help_, prefixes in GROUPS:
         ks = [k for k in keys if k.startswith(prefixes)]
         used.update(ks)
-        groups.append({"id": gid, "name": name, "help": help_, "keys": ks})
+        groups.append({"id": gid, "name": name, "help": help_, "keys": ks, **({"neutral": True, "admin_only": True} if gid in ("corp", "links") else {})})
     rest = [k for k in keys if k not in used]
     if rest:
         raise SystemExit(f"Testi senza gruppo: {rest}: aggiungere il prefisso in GROUPS")
     return {"groups": groups, "texts": {k: {"it": it[k], "en": en[k]} for k in keys}, "max_len": texts.MAX_LEN,
-            "max_len_long": pagetexts.LONG_MAX, "long_prefixes": list(pagetexts.LONG_PREFIXES),
+            "labels": {k: v for k, v in pagetexts.labels(site_build.HEROES, len(site_build.USER_TYPES)).items() if k in it}, "max_len_long": pagetexts.LONG_MAX, "long_prefixes": list(pagetexts.LONG_PREFIXES),
             "legal_excluded": sorted(k for k in it if texts.is_legal(k))}
 
 

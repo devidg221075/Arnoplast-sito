@@ -53,6 +53,24 @@ final class Texts
         return $out;
     }
 
+    /** Gruppi riservati all'amministratore (dati societari, collegamenti): il redattore non li vede né li modifica. */
+    public static function canEdit(array $group, bool $admin): bool
+    {
+        return $admin || !($group['admin_only'] ?? false);
+    }
+
+    /** Controlli di formato dei valori che non sono frasi (stessi della build): indirizzi https ed e-mail. */
+    public static function valueProblem(string $key, string $v): ?string
+    {
+        if (str_starts_with($key, 'link.') && !preg_match('#^https://[^\s<>"\']{4,300}$#', $v)) {
+            return 'deve essere un indirizzo che inizia con https://';
+        }
+        if ($key === 'corp.email' && !filter_var($v, FILTER_VALIDATE_EMAIL)) {
+            return 'deve essere un indirizzo e-mail valido';
+        }
+        return null;
+    }
+
     /** Lunghezza massima di un testo: una riga breve, oppure più lungo per i paragrafi (storia, imballaggi). */
     public static function maxLen(string $key): int
     {
@@ -79,6 +97,9 @@ final class Texts
         }
         $seed = self::seed();
         $errors = [];
+        if ($g['neutral'] ?? false) {
+            $en = $it; // dati uguali per ogni lingua: una sola colonna
+        }
         foreach ($g['keys'] as $key) {
             $base = $seed['texts'][$key];
             $max = self::maxLen($key);
@@ -90,6 +111,10 @@ final class Texts
                 }
                 if (mb_strlen($v) > $max || preg_match('/[\x00-\x1F\x7F]/u', $v)) {
                     $errors[$key] = "«{$key}» ({$lang}): massimo {$max} caratteri.";
+                    continue 2;
+                }
+                if (($problem = self::valueProblem($key, $v)) !== null) {
+                    $errors[$key] = "«{$key}»: {$problem}.";
                     continue 2;
                 }
                 $draft[$lang] = $v;
@@ -131,7 +156,7 @@ final class Texts
     }
 
     /** Ricerca nei testi (originali e correzioni): [chiave, gruppo, it, en]. */
-    public static function search(string $q, int $limit = 60): array
+    public static function search(string $q, int $limit = 60, bool $admin = true): array
     {
         $q = mb_strtolower(trim($q));
         if ($q === '') {
@@ -147,6 +172,9 @@ final class Texts
         }
         $out = [];
         foreach ($seed['texts'] as $k => $t) {
+            if (!$admin && ($byKey[$k]['admin_only'] ?? false)) {
+                continue; // dati societari e collegamenti: solo amministratore
+            }
             $it = $drafts[$k]['draft']['it'] ?? $t['it'];
             $en = $drafts[$k]['draft']['en'] ?? $t['en'];
             if (str_contains(mb_strtolower($k . ' ' . $it . ' ' . $en), $q)) {

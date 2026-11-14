@@ -23,6 +23,19 @@ def max_len(key: str) -> int:
     return pagetexts.LONG_MAX if key.startswith(pagetexts.LONG_PREFIXES) else MAX_LEN
 
 
+_URL = re.compile(r"^https://[^\s<>\"']{4,300}$")
+_EMAIL = re.compile(r"^[^\s@<>]+@[^\s@<>]+\.[^\s@<>]+$")
+
+
+def value_problem(key: str, text: str) -> str | None:
+    """Controlli di formato per i valori che non sono frasi: indirizzi web (https) ed e-mail."""
+    if key.startswith("link.") and not _URL.match(text):
+        return "deve essere un indirizzo che inizia con https://"
+    if key == "corp.email" and not _EMAIL.match(text):
+        return "deve essere un indirizzo e-mail valido"
+    return None
+
+
 def is_legal(key: str) -> bool:
     return key.startswith(LEGAL_PREFIXES)
 
@@ -47,6 +60,10 @@ def load_overrides(path: Path) -> dict[str, dict[str, str]]:
                 raise ValueError(f"{path.name}: testo vuoto o non valido per {key!r} ({lang})")
             if len(text) > max_len(key) or _CONTROL.search(text) or "\n" in text:
                 raise ValueError(f"{path.name}: testo non valido per {key!r} ({lang}): una riga, al massimo {max_len(key)} caratteri")
+        for key, text in rows.items():
+            problem = value_problem(key, text.strip())
+            if problem:
+                raise ValueError(f"{path.name}: {key!r} ({lang}) {problem}")
         out[lang] = {k: v.strip() for k, v in rows.items()}
     return out
 
