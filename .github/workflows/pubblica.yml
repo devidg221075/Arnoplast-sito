@@ -1,5 +1,6 @@
 # Costruisce il sito e lo consegna via FTP. Parte da sola quando il backoffice salva un contenuto («Pubblica»)
-# o quando si unisce una modifica al ramo main, ogni notte (le fiere finite passano fra le «passate») e a mano.
+# o quando si unisce una modifica al ramo main, a mano e ogni notte: la notte però solo se serve davvero
+# (ieri è finita una fiera, o è il primo gennaio), altrimenti si ferma dopo pochi secondi senza costruire né caricare.
 # Istruzioni e segreti da creare: docs/pubblicazione-ftp.md
 name: Costruisci e pubblica il sito
 
@@ -18,7 +19,30 @@ permissions:
   contents: read
 
 jobs:
+  verifica:
+    # Ogni notte: si ricostruisce solo se serve (ieri è finita una fiera, o è il primo gennaio). Negli altri casi
+    # (pubblicazione dal backoffice, modifica su main, avvio a mano) si costruisce sempre.
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    outputs:
+      build: ${{ steps.serve.outputs.build }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout: |
+            tools/needs_rebuild.py
+            data/fiere.json
+      - id: serve
+        run: |
+          if [ "${{ github.event_name }}" = "schedule" ]; then
+            python3 tools/needs_rebuild.py >> "$GITHUB_OUTPUT"
+          else
+            echo "build=yes" >> "$GITHUB_OUTPUT"
+          fi
+
   pubblica:
+    needs: verifica
+    if: needs.verifica.outputs.build == 'yes'
     runs-on: ubuntu-24.04
     timeout-minutes: 30
     steps:

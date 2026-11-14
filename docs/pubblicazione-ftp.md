@@ -4,7 +4,7 @@ Come funziona:
 1. In **Pubblica** (backoffice) l'amministratore vede le modifiche in bozza (testi, fiere, galleria, video) e conferma.
 2. Il backoffice salva i file dati e le foto nuove nel repository GitHub, in **un solo commit** sul ramo `main`.
 3. GitHub Actions (`.github/workflows/pubblica.yml`) costruisce il sito e lo carica via FTP sul server. Ci vogliono pochi minuti.
-4. Lo stesso lavoro parte ogni notte (alle 01:10 UTC): le fiere finite passano da sole fra le «passate».
+4. Ogni notte (01:10 UTC) un controllo di pochi secondi verifica se serve ricostruire: solo se ieri è finita una fiera (passa fra le «passate») o se è il primo gennaio (anno del piè di pagina). Altrimenti non si costruisce né si carica nulla. Il pulsante «Pubblica» non fa nulla se non ci sono modifiche, e l'FTP carica solo i file cambiati.
 
 Nessuna password sta nel repository: i segreti stanno in GitHub (FTP) e in `config.php` sul server (chiave GitHub).
 
