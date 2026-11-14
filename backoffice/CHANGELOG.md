@@ -2,6 +2,26 @@
 
 Formato: versione, data, cosa cambia. La versione sta nel file `VERSION` e compare in basso nella barra laterale: cliccandola si apre questa pagina («Novità»).
 
+## 0.10.2 — 14 novembre 2026
+
+### Novità
+- **Testi: controllo su tutte le pagine di servizio**. Nuovi gruppi in «Testi»: «Dati societari e contatti» (ragione sociale, indirizzo, telefoni, e-mail, partita IVA, REA, capitale sociale, sito), «Collegamenti social e app» (Facebook, LinkedIn, Instagram, App Store, Google Play), «Contatti: tipologia utente» (12 voci del menu del modulo), «Testi alternativi delle foto di testata» e «Descrizioni per i motori di ricerca» (Fiere e Cataloghi). «Made in Italy» e il titolo del riquadro Facebook della home entrano nei testi del piè di pagina, della home e della sezione social.
+- **Dati societari e collegamenti solo per l'amministratore**: il redattore non li vede né li modifica; valgono per italiano e inglese (una sola colonna). Indirizzi web solo https, e-mail controllata.
+- Nel backoffice i campi hanno un'etichetta chiara (per esempio «Telefono principale»), accanto al nome tecnico.
+- Senza correzioni il sito costruito resta identico (verificato confrontando tutte le pagine).
+
+### Tecnico
+- `pagetexts.py` (chiavi `corp.*`, `link.*`, `ut.N`, `hero.*.alt`, `meta.*`), `refresh_contacts()` nella build, controlli di formato in Python e PHP, test dedicati.
+
+## 0.10.1 — 14 novembre 2026
+
+### Novità
+- **Testi: tutta la pagina Azienda**. Nuovi gruppi «Azienda: la storia» (titoli, tappe 1975, 1983, anni Ottanta e Novanta, «Oggi», in italiano e inglese) e «Azienda: imballaggi» (titolo, paragrafi, righe della tabella e nota). I paragrafi lunghi accettano fino a 3000 caratteri.
+- Per le pagine di servizio restano fuori, per ora, i **dati societari** (indirizzo, telefoni, e-mail, partita IVA) e le voci del modulo contatti.
+
+### Tecnico
+- `arnoplast/site/pagetexts.py` (chiavi `story.*` e `pack.*`), limite per tipo di testo, seed dei testi aggiornato, `tests/test_pagetexts.py`.
+
 ## 0.10.0 — 14 novembre 2026
 
 ### Novità

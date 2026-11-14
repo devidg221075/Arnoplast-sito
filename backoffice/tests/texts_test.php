@@ -59,5 +59,27 @@ foreach (Texts::group('contacts')['keys'] as $ck) { $cIt[$ck] = $seed['texts'][$
 Texts::saveGroup('contacts', $cIt, $cEn, 1);
 check(Texts::pendingByGroup()['contacts'] === 0, 'salvare senza cambiare: nessuna modifica in sospeso');
 
+// --- Testi lunghi: storia dell'azienda e imballaggi
+check(Texts::maxLen('story.s1.text') === 3000 && Texts::maxLen('pack.p1') === 3000 && Texts::maxLen('od.text') === 400, 'limiti: 3000 per storia e imballaggi, 400 per gli altri');
+check(Texts::group('story') !== null && count(Texts::group('story')['keys']) === 14 && count(Texts::group('packaging')['keys']) === 48, 'gruppi «Azienda: la storia» (14 testi) e «Azienda: imballaggi» (48)');
+$sk = 'story.s1.text';
+$long = str_repeat('Storia aggiornata dal test. ', 60);
+check(Texts::saveGroup('story', [$sk => $long], [], 1) === [] && Texts::overrides()['it'][$sk] === trim($long), 'paragrafo lungo (oltre 400 caratteri) salvato');
+check(Texts::saveGroup('story', [$sk => str_repeat('x', 3001)], [], 1) !== [], 'oltre 3000 caratteri: rifiutato');
+$long2 = Texts::saveGroup('packaging', ['pack.r1.codice' => 'ZZ 99'], [], 1);
+check($long2 === [] && Texts::overrides()['it']['pack.r1.codice'] === 'ZZ 99', 'cella della tabella imballaggi corretta');
+
+// --- Dati societari (una colonna, solo amministratore), collegamenti, tipologie utente, alt e descrizioni
+$corp = Texts::group('corp');
+check($corp !== null && ($corp['neutral'] ?? false) && ($corp['admin_only'] ?? false) && count($corp['keys']) === 11, 'gruppo «Dati societari»: 11 voci, una colonna, solo amministratore');
+check(!Texts::canEdit($corp, false) && Texts::canEdit($corp, true) && Texts::canEdit(Texts::group('openday'), false), 'il redattore non modifica i dati societari');
+check(Texts::saveGroup('corp', ['corp.phone1' => '+39 055 111 222'], [], 1) === [] && Texts::overrides()['it']['corp.phone1'] === '+39 055 111 222' && Texts::overrides()['en']['corp.phone1'] === '+39 055 111 222', 'telefono salvato per italiano e inglese insieme');
+check(Texts::saveGroup('corp', ['corp.email' => 'non-una-email'], [], 1) !== [], 'e-mail non valida rifiutata');
+check(Texts::saveGroup('corp', ['corp.email' => 'vendite@arnoplast.it'], [], 1) === [], 'e-mail valida accettata');
+check(Texts::saveGroup('links', ['link.facebook' => 'http://insicuro.example'], [], 1) !== [], 'collegamento senza https rifiutato');
+check(Texts::saveGroup('links', ['link.facebook' => 'https://www.facebook.com/arnoplast-nuova'], [], 1) === [], 'collegamento https accettato');
+check(count(Texts::group('usertypes')['keys']) === 12 && count(Texts::group('heroalt')['keys']) === 5 && count(Texts::group('meta')['keys']) === 2, 'gruppi tipologie utente (12), alt delle testate (5), descrizioni (2)');
+check(count(Texts::search('Rea', 60, false)) < count(Texts::search('Rea', 60, true)) || Texts::search('numero rea', 60, false) === [], 'la ricerca non mostra i dati societari al redattore');
+
 echo $fails === 0 ? "\nTutti i controlli superati\n" : "\n$fails controlli falliti\n";
 exit($fails === 0 ? 0 : 1);

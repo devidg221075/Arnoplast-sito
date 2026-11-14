@@ -18,6 +18,7 @@ from markupsafe import Markup
 from arnoplast.catalog import Catalog, load_catalog, text
 from arnoplast.site import fair_images as FI
 from arnoplast.site import gallery_tools as GT
+from arnoplast.site import pagetexts as PT
 from arnoplast.site import texts as TX
 from arnoplast.site.i18n import t
 from arnoplast.site.redirects import load_redirects, netlify_rules
@@ -73,6 +74,16 @@ CONTACTS = {
     "capital": "49.580,00 i.v.",
     "web": "www.arnoplast.it",
 }
+_CONTACTS_DEFAULT = copy.deepcopy(CONTACTS)
+
+
+def refresh_contacts() -> None:
+    """Riparte dai dati originali e applica le correzioni (l'oggetto CONTACTS resta lo stesso, usato da modelli e funzioni)."""
+    CONTACTS.clear()
+    CONTACTS.update(copy.deepcopy(_CONTACTS_DEFAULT))
+    PT.apply_contacts(CONTACTS)
+
+
 # Servizi esterni che la pagina Cookie e privacy elenca (si attivano solo al clic): (chiave testo, informativa ufficiale).
 EXTERNAL_SERVICES = [
     ("ck.ext_fb", "https://www.facebook.com/privacy/policy/"),
@@ -500,8 +511,9 @@ def _env(lang: str) -> Environment:
                       autoescape=select_autoescape(["html"], default=True),
                       trim_blocks=True, lstrip_blocks=True)
     env.filters["rich"] = rich
+    refresh_contacts()  # dati societari con le correzioni di data/testi.json
     env.globals.update(lang=lang, contacts=CONTACTS, forms_endpoint=forms_endpoint(), listini_url=listini_url(), stats_url=stats_url(), t=lambda k: t(k, lang), text=lambda d: text(d, lang),
-                       menu=menu_items(lang), nav_state=lambda path: nav_state(path, lang), social=SOCIAL, apps=APPS,
+                       menu=menu_items(lang), nav_state=lambda path: nav_state(path, lang), social=PT.apply_links(SOCIAL), apps=PT.apply_links(APPS),
                        privacy_url=privacy_url_for(lang), year=build_date().year, maps_url=MAPS_URL,
                        og_image=SITE_URL + "/static/img/home/sede-giorno-1280.webp")
     return env
@@ -777,13 +789,19 @@ def home_images(folder: Path = HOME_IMG_DIR, prefix: str = "/static/img/home/") 
     return out
 
 
+def hero_alt(hero: dict, lang: str) -> str:
+    """Testo alternativo della foto di testata nella lingua, con le correzioni di data/testi.json."""
+    base = HERO_ALT_EN.get(hero["alt"], hero["alt"]) if lang == "en" else hero["alt"]
+    return PT.ov(f"hero.{hero['alt_key']}.alt", lang, base) if hero.get("alt_key") else base
+
+
 def _hero(key: str, imgs: dict) -> dict | None:
     """Foto dell'hero di una pagina (None se i file mancano: la pagina mostra l'apertura compatta)."""
     name, portrait, alt = HEROES[key]
     if name not in imgs:
         return None
     sizes, portrait_sizes = HERO_SIZES.get(key, ("100vw", None))
-    hero = {"img": imgs[name], "portrait": imgs.get(portrait) if portrait else None, "alt": alt,
+    hero = {"img": imgs[name], "portrait": imgs.get(portrait) if portrait else None, "alt": alt, "alt_key": key,
             "sizes": sizes, "portrait_sizes": portrait_sizes}
     night = NIGHT_HEROES.get(key)  # variante serale, scelta in pagina dall'ora di chi visita
     if night and night[0] in imgs:
@@ -822,8 +840,7 @@ def hero_slides(c: Catalog, lang: str, imgs: dict, stats: dict, fairs: list[dict
         hero = _hero(key, imgs)
         if hero is None:
             continue
-        if lang == "en":
-            hero = dict(hero, alt=HERO_ALT_EN.get(hero["alt"], hero["alt"]))
+        hero = dict(hero, alt=hero_alt(hero, lang))
         if key in lines:
             l = lines[key]
             nf, np_ = len(l.families), sum(len(f.products) for f in l.families)
@@ -953,7 +970,7 @@ def organization_ld() -> str:
             "vatID": "IT" + c["vat"],
             "address": {"@type": "PostalAddress", "streetAddress": c["street"], "addressLocality": "Rignano sull'Arno",
                         "postalCode": "50067", "addressRegion": "FI", "addressCountry": "IT"},
-            "sameAs": [url for _, url, _ in SOCIAL]}
+            "sameAs": [url for _, url, _ in PT.apply_links(SOCIAL)]}
     return json.dumps(data, ensure_ascii=False).replace("</", "<\\/")
 
 
@@ -1049,8 +1066,8 @@ def build_site(c: Catalog, out: Path, lang: str = "it", sources: Path | None = N
         if sitemap:
             urls.append(canonical)
         ctx.setdefault("nav", env.globals["nav_state"](f"/{rel}/"))
-        if lang == "en" and ctx.get("hero"):
-            ctx["hero"] = dict(ctx["hero"], alt=HERO_ALT_EN.get(ctx["hero"]["alt"], ctx["hero"]["alt"]))
+        if ctx.get("hero"):
+            ctx["hero"] = dict(ctx["hero"], alt=hero_alt(ctx["hero"], lang))
         if lang == "en":  # versione inglese non ancora pubblica: nessuna indicizzazione
             ctx.setdefault("noindex", True)
         _write(dest / "index.html", env.get_template(tpl).render(
@@ -1136,13 +1153,15 @@ def build_site(c: Catalog, out: Path, lang: str = "it", sources: Path | None = N
            description=t("quote.intro", lang), privacy_url=privacy_url_for(lang))
     render("contacts.html", base / "contatti", line=None, title=t("page.contacts", lang),
            description=f"{CONTACTS['name']}, {CONTACTS['address']}. Tel. {CONTACTS['phone']}, {CONTACTS['email']}.",
-           hero=_hero("azienda", imgs), imgs=imgs, user_types=[(u, USER_TYPES_EN[u] if lang == "en" else u) for u in USER_TYPES], jsonld=organization_ld(), map_embed=MAP_EMBED, privacy_url=privacy_url_for(lang))
+           hero=_hero("azienda", imgs), imgs=imgs, user_types=PT.apply_user_types(USER_TYPES, USER_TYPES_EN, lang), jsonld=organization_ld(), map_embed=MAP_EMBED, privacy_url=privacy_url_for(lang))
     story = COMPANY_STORY if lang == "it" else load_en_story()
     if story is not None:
+      story = PT.apply_story(story, lang)
       render("company.html", base / "azienda", line=None, title=t("page.company", lang),
              description=" ".join(text for _, text in story["steps"][:2]), story=story,
              hero=_hero("azienda", imgs), imgs=imgs)
-    pack = load_packaging() if lang == "it" else load_en_packaging(load_packaging())
+    it_pack = PT.apply_pack(load_packaging(), "it", PACK_KINDS)  # il colore segue la raccolta (anche se corretta)
+    pack = it_pack if lang == "it" else PT.apply_pack(load_en_packaging(it_pack), "en")
     if lang == "it" or pack["paragrafi"]:  # in inglese solo con il testo inglese (data/en_imballaggi.json)
         render("packaging.html", base / "azienda" / "imballaggi", line=None, title=pack["titolo"], pack=pack,
                hero=_hero("imballaggi", imgs),
@@ -1150,8 +1169,7 @@ def build_site(c: Catalog, out: Path, lang: str = "it", sources: Path | None = N
     fairs = load_fairs()
     upcoming, past = split_fairs(fairs, build_date(), fair_photos(fairs), lang)
     render("fairs.html", base / "fiere", line=None, title=t("page.fairs", lang), upcoming=upcoming, past=past,
-           description=("The trade fairs ARNOplast attends: upcoming events and archive of past fairs." if lang == "en" else
-                        "Le fiere a cui partecipa ARNOplast: prossimi appuntamenti e archivio delle fiere passate."))
+           description=t("meta.fairs", lang))
     pdfs = []
     for slug, (src_name, pub_name, pages_key) in catalog_pdfs(lang, sources).items():
         f = out / "downloads" / pub_name
@@ -1162,8 +1180,7 @@ def build_site(c: Catalog, out: Path, lang: str = "it", sources: Path | None = N
                          "year": re.search(r"(\d{4})", pub_name).group(1),
                          "mb": f"{f.stat().st_size / 1e6:.1f}".replace(".", ",")})
     render("catalogs.html", base / "cataloghi", line=None, title=t("page.catalogs", lang), pdfs=pdfs,
-           description=("Cataloghi ARNOplast in PDF da scaricare (Agricoltura, Garden, Raccolta olive) e app ARNOplast."
-                        if lang == "it" else "ARNOplast catalogues in PDF to download (Agriculture, Garden, Olive harvest) and the ARNOplast app."))
+           description=t("meta.catalogs", lang))
     book = json.loads((DATA_DIR / "cataloghi.json").read_text(encoding="utf-8")) if (DATA_DIR / "cataloghi.json").is_file() else {}
     for p in pdfs:
         b = book.get(p["key"])
@@ -1295,6 +1312,15 @@ def main(out: Path | None = None, sources: Path | None = None, catalog_path: Pat
     clean_dir(out)
     written = build_site(c, out, sources=sources, videos=videos)
     print(f"{len(written)} pagine scritte in {out}")
+
+
+# Chiavi dei testi lunghi (storia, imballaggi): modificabili da data/testi.json e dal backoffice.
+PT.register(COMPANY_STORY, load_en_story(), load_packaging(), load_en_packaging(load_packaging()))
+PT.register_site(CONTACTS, SOCIAL, APPS, USER_TYPES, USER_TYPES_EN, HEROES, HERO_ALT_EN, {
+    "fairs": ("Le fiere a cui partecipa ARNOplast: prossimi appuntamenti e archivio delle fiere passate.",
+              "The trade fairs ARNOplast attends: upcoming events and archive of past fairs."),
+    "catalogs": ("Cataloghi ARNOplast in PDF da scaricare (Agricoltura, Garden, Raccolta olive) e app ARNOplast.",
+                 "ARNOplast catalogues in PDF to download (Agriculture, Garden, Olive harvest) and the ARNOplast app.")})
 
 
 if __name__ == "__main__":
