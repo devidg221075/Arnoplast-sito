@@ -14,6 +14,7 @@
 
 ## Tappa 4 — prossime sezioni (una per volta)
 - Download e area riservata; poi storia dell'azienda e imballaggi (testi lunghi, non voci singole). Il catalogo viene più avanti.
+- **Catalogo (tappa 5)**: decisioni in `docs/backoffice-decisioni.md` (IDML/PDF con differenze, correzioni a mano che prevalgono con avviso di conflitto, esportazione CSV delle correzioni). Si fa dopo la 4b.
 
 - **4b «Pubblica»**: da decidere la consegna dei file sul server (FTP automatico da GitHub Actions — consigliata —, cPanel Git o zip manuale), l'accesso del backoffice a GitHub
   (chiave a permessi minimi creata dal cliente, mai in chat o nel repository) e dove vivono gli originali delle foto nuove nel repository.

@@ -89,3 +89,12 @@ Variazione al progetto: niente WordPress. Il sito resta statico; i contenuti si 
 - Solo l'amministratore modifica i contenuti (il ruolo ARNOplast vede richieste e preventivi).
 - Pagine istituzionali (4a, fatta): i testi fissi del sito si correggono con uno strato `data/testi.json` applicato dalla build sopra gli originali (`arnoplast/site/texts.py`); il backoffice lo gestisce per gruppi di pagina (voce «Testi»). Testi legali esclusi. **Ancora da fare:** storia dell'azienda (testo lungo con tappe) e imballaggi, che non sono testi fissi singoli.
 - Galleria (4a, fatta): foto, categoria, testi alternativi italiano/inglese (nuovo campo `alt_en`, che il sito usa al posto del testo generico inglese), ordine, aggiunta ed eliminazione, in bozza. Le foto nuove le converte la build (`tools/galleria_apply.py`, `arnoplast/site/gallery_tools.py`): il backoffice non elabora immagini, così non dipende dalle librerie dell'hosting. **Da decidere con la 4b:** dove vivono gli originali delle foto nuove nel repository.
+
+## Catalogo (tappa 5): decisioni del 14 novembre 2026
+- **Una sola fonte**: i prodotti stanno nel database del backoffice (codice, linea, nome, testi IT/EN, righe della tabella tecnica, foto, pagina del catalogo); il sito si genera da lì.
+- **Aggiornamento completo**: caricamento di IDML di InDesign (preferito: testi e tabelle già strutturati) o PDF (ripiego). Schermata delle differenze per prodotto e campo (nuovi, cambiati, eliminati); l'esito entra come bozza dopo l'approvazione.
+- **Piccole correzioni** (un testo, una riga di tabella, una foto): dalla scheda prodotto, in bozza fino a «Pubblica», segnate «modificato a mano».
+- **Conflitti (scelta del cliente)**: la correzione manuale prevale sul nuovo file. Se il file porta un valore diverso, il conflitto compare nella schermata delle differenze con l'avviso; nessuna correzione si perde in silenzio.
+- **Prodotti riconosciuti dal codice** a ogni importazione.
+- **Il catalogo stampato non cambia**: elenco delle correzioni esportabile (CSV) per chi aggiorna l'IDML, così sito e catalogo non divergono.
+- **Ordine**: dopo la «Pubblica» (4b).
