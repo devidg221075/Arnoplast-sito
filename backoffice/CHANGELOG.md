@@ -13,6 +13,9 @@ Formato: versione, data, cosa cambia. La versione sta nel file `VERSION` e compa
 - **Fiere e Open Day**: schede in bozza con modifica e annullamento.
 - **Nuova grafica**: barra superiore scura, carte, tabelle, pulsanti e campi; versione per telefono.
 
+- **Ordini**: il preventivo inviato si segna come accettato e crea l'ordine (O-AAAA-NNNN). Stati confermato, in lavorazione, spedito, chiuso, solo in avanti.
+- **Dashboard iniziale**: indicatori con variazione rispetto al periodo precedente, ultime richieste, andamento preventivi e ordini, attività recenti e metriche, tutti dai dati reali.
+- **Nuova interfaccia**: barra laterale verde con il menu, barra in alto con ricerca, notifiche e utente, colori e decorazioni del mockup.
 - **Ruolistica interna**: quattro ruoli (Amministratore, Redattore contenuti, ARNOplast vendite, Commerciale) con una tabella unica dei permessi. Cambio ruolo dalla pagina «Utenti», con protezione dell'ultimo amministratore; ogni cambio finisce nel registro.
 
 ### Sicurezza

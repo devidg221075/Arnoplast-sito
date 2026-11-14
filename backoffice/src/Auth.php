@@ -11,15 +11,15 @@ final class Auth
 
     /** Permessi per ruolo. Cambiare qui è l'unico modo di cambiare cosa può fare un ruolo. */
     public const PERMISSIONS = [
-        'admin' => ['requests', 'quotes', 'orders', 'content', 'listini', 'listini.manage', 'stats', 'mail', 'users', 'activity', 'conditions'],
+        'admin' => ['dashboard', 'requests', 'quotes', 'orders', 'content', 'listini', 'listini.manage', 'stats', 'mail', 'users', 'activity', 'conditions'],
         'redattore' => ['content', 'listini'],
-        'staff' => ['requests', 'quotes', 'orders', 'mail', 'listini'],
+        'staff' => ['dashboard', 'requests', 'quotes', 'orders', 'mail', 'listini'],
         'commerciale' => ['listini'],
     ];
 
     /** Permesso richiesto da ogni pagina. Le pagine non elencate qui sono vietate. */
     public const PAGE_PERMISSION = [
-        'requests' => 'requests', 'request' => 'requests', 'quote_pdf' => 'quotes', 'orders' => 'orders', 'order' => 'orders',
+        'dashboard' => 'dashboard', 'requests' => 'requests', 'request' => 'requests', 'quote_pdf' => 'quotes', 'orders' => 'orders', 'order' => 'orders',
         'fairs' => 'content', 'fair' => 'content', 'gallery' => 'content', 'gallery_photo' => 'content', 'gallery_img' => 'content',
         'videos' => 'content', 'video' => 'content', 'texts' => 'content', 'text_group' => 'content',
         'listini' => 'listini', 'listino_file' => 'listini',
@@ -79,7 +79,7 @@ final class Auth
         return match ($user['role']) {
             'redattore' => 'fairs',
             'commerciale' => 'listini',
-            default => 'requests',
+            default => 'dashboard',
         };
     }
 

@@ -18,6 +18,8 @@ use Backoffice\Quote;
 use Backoffice\QuoteView;
 use Backoffice\Listini;
 use Backoffice\Orders;
+use Backoffice\Dashboard;
+use Backoffice\DashboardView;
 use Backoffice\Stats;
 use Backoffice\StatsView;
 use Backoffice\ListiniView;
@@ -56,23 +58,42 @@ $say = static function (string $text, bool $ok = true): void {
 
 /** Impaginazione comune. */
 $render = static function (string $title, string $body, ?array $user = null) use ($e, $url, $flash): never {
-    $nav = '';
+    $side = '';
+    $top = '';
     if ($user) {
-        $all = ['requests' => 'Richieste', 'orders' => 'Ordini', 'fairs' => 'Fiere', 'gallery' => 'Galleria', 'videos' => 'Video', 'listini' => 'Listini', 'stats' => 'Statistiche',
-            'texts' => 'Testi', 'mail' => 'Posta', 'conditions' => 'Condizioni PDF', 'users' => 'Utenti', 'activity' => 'Registro attività'];
-        $links = array_filter($all, static fn (string $p): bool => Auth::canOpen($user, $p), ARRAY_FILTER_USE_KEY) + ['account' => 'Il mio accesso'];
-        foreach ($links as $p => $label) {
-            $nav .= '<a href="' . $e($url($p)) . '">' . $e($label) . '</a>';
+        $all = ['dashboard' => ['Dashboard', 'home'], 'requests' => ['Richieste', 'doc'], 'orders' => ['Ordini', 'cart'],
+            'fairs' => ['Fiere', 'list'], 'gallery' => ['Galleria', 'box'], 'videos' => ['Video', 'list'], 'texts' => ['Testi', 'doc'],
+            'listini' => ['Listini', 'box'], 'stats' => ['Statistiche', 'chart'], 'mail' => ['Posta', 'list'], 'conditions' => ['Condizioni PDF', 'doc'],
+            'users' => ['Utenti e ruoli', 'shield'], 'activity' => ['Registro attività', 'list']];
+        $icon = static fn (string $n): string => '<svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="' . [
+            'home' => 'M3 11l9-8 9 8v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z', 'doc' => 'M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z M14 2v6h6',
+            'cart' => 'M3 3h2l2.4 12.6A2 2 0 0 0 9.4 17H18a2 2 0 0 0 2-1.6L21 8H6', 'box' => 'M21 8l-9-5-9 5 9 5 9-5z M3 8v8l9 5 9-5V8',
+            'list' => 'M8 6h13 M8 12h13 M8 18h13 M3 6h.01 M3 12h.01 M3 18h.01', 'chart' => 'M18 20V10 M12 20V4 M6 20v-6',
+            'shield' => 'M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z', 'gear' => 'M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6z'][$n] . '"/></svg>';
+        $links = array_filter($all, static fn (string $p): bool => Auth::canOpen($user, $p), ARRAY_FILTER_USE_KEY);
+        $current = $_GET['p'] ?? 'requests';
+        foreach ($links as $p => [$label, $ic]) {
+            $on = $p === $current ? ' class="on"' : '';
+            $side .= '<a' . $on . ' href="' . $e($url($p)) . '">' . $icon($ic) . '<span>' . $e($label) . '</span></a>';
         }
-        $nav = '<nav class="nav">' . $nav . '<form method="post" action="' . $e($url('logout')) . '"><input type="hidden" name="csrf" value="' . $e(Auth::csrf()) . '">'
-            . '<button class="link">Esci (' . $e($user['name']) . ')</button></form></nav>';
+        $side .= '<a' . ('account' === $current ? ' class="on"' : '') . ' href="' . $e($url('account')) . '">' . $icon('gear') . '<span>Il mio accesso</span></a>';
+        $top = '<form class="search" method="get" action="index.php"><input type="hidden" name="p" value="requests">'
+            . '<label class="sr">Cerca</label><input type="search" name="q" maxlength="80" placeholder="Cerca richieste, clienti, riferimenti…"></form>'
+            . '<div class="top-right"><a class="bell" href="' . $e($url('requests')) . '" aria-label="Richieste da gestire"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9 M13.7 21a2 2 0 0 1-3.4 0"/></svg></a>'
+            . '<details class="menu-user"><summary><span class="avatar">' . $e(mb_strtoupper(mb_substr((string) $user['name'], 0, 1))) . '</span><span>' . $e($user['name']) . '</span></summary>'
+            . '<div class="menu-box"><p class="sub">' . $e(Auth::ROLES[$user['role']] ?? $user['role']) . '</p>'
+            . '<form method="post" action="' . $e($url('logout')) . '"><input type="hidden" name="csrf" value="' . $e(Auth::csrf()) . '"><button class="menu-out">Esci</button></form></div></details></div>';
     }
+    $flashHtml = $flash ? '<p class="flash' . ($flash[1] ? ' ok' : '') . '" role="status">' . $e($flash[0]) . '</p>' : '';
+    $version = App::version() !== '' ? ' <span class="ver">v' . $e(App::version()) . '</span>' : '';
     echo '<!doctype html><html lang="it"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">'
         . '<meta name="robots" content="noindex, nofollow"><title>' . $e($title) . ' · Backoffice ' . $e(App::config('site_name', '')) . '</title>'
-        . '<link rel="stylesheet" href="assets/admin.css"></head><body>'
-        . '<header class="top"><a class="brand" href="' . $e($url('requests')) . '">' . $e(App::config('site_name', '')) . ' <span>backoffice' . (App::version() !== '' ? ' v' . $e(App::version()) : '') . '</span></a>' . $nav . '</header>'
-        . '<main class="wrap">' . ($flash ? '<p class="flash' . ($flash[1] ? ' ok' : '') . '" role="status">' . $e($flash[0]) . '</p>' : '')
-        . '<h1>' . $e($title) . '</h1>' . $body . '</main></body></html>';
+        . '<link rel="stylesheet" href="assets/admin.css"></head><body' . ($user ? ' class="app"' : '') . '>'
+        . ($user ? '<aside class="side"><a class="brand" href="' . $e($url('dashboard')) . '"><span class="logo"><b>ARNO</b>plast</span></a><nav class="nav-side" aria-label="Menu">' . $side . '</nav>'
+            . '<img class="deco-side" src="assets/deco-side.svg" alt="" width="250" height="170"><div class="side-foot">Backoffice' . $version . '</div></aside>'
+            . '<div class="main"><header class="topbar">' . $top . '</header>' : '')
+        . '<main class="wrap">' . $flashHtml . (($user && ($_GET['p'] ?? '') === 'dashboard') ? '' : '<h1>' . $e($title) . '</h1>') . $body . '</main>'
+        . ($user ? '</div>' : '') . '</body></html>';
     exit;
 };
 $csrfField = static fn (): string => '<input type="hidden" name="csrf" value="' . $e(Auth::csrf()) . '">';
@@ -398,6 +419,13 @@ if ($page === 'listini') {
 if ($page === 'stats' && Auth::can($user, 'stats')) {
     $days = in_array((int) ($_GET['d'] ?? 30), [7, 30, 90], true) ? (int) $_GET['d'] : 30;
     $render('Statistiche', StatsView::page(Stats::summary($days)), $user);
+}
+
+// --- Pagina iniziale: indicatori, ultime richieste, andamento, attività e metriche (dati reali).
+if ($page === 'dashboard') {
+    $data = ['kpis' => Dashboard::kpis(), 'latest' => Dashboard::latest(5), 'weekly' => Dashboard::weekly(8),
+        'activity' => Auth::can($user, 'activity') ? Dashboard::activity(6) : [], 'metrics' => Dashboard::metrics()];
+    $render('Dashboard', DashboardView::page($data, Auth::can($user, 'activity'), (string) $user['name'], $url('dashboard')), $user);
 }
 
 // --- Ordini (nascono dai preventivi accettati). Lo stato va solo avanti.

@@ -18,7 +18,7 @@ $pages = array_keys(Auth::PAGE_PERMISSION);
 $expect = [
     'admin' => $pages,
     'redattore' => ['fairs', 'fair', 'gallery', 'gallery_photo', 'gallery_img', 'videos', 'video', 'texts', 'text_group', 'listini', 'listino_file'],
-    'staff' => ['requests', 'request', 'quote_pdf', 'orders', 'order', 'mail', 'listini', 'listino_file'],
+    'staff' => ['dashboard', 'requests', 'request', 'quote_pdf', 'orders', 'order', 'mail', 'listini', 'listino_file'],
     'commerciale' => ['listini', 'listino_file'],
 ];
 foreach ($expect as $role => $allowed) {
@@ -33,7 +33,7 @@ foreach (['admin', 'redattore', 'staff', 'commerciale'] as $role) {
     check(Auth::canOpen(['role' => $role], 'account') && Auth::canOpen(['role' => $role], 'logout'), "$role: il proprio accesso e l'uscita sempre aperti");
     check(!Auth::canOpen(['role' => $role], 'pagina_inventata'), "$role: pagina sconosciuta vietata");
 }
-check(Auth::home(['role' => 'admin']) === 'requests' && Auth::home(['role' => 'staff']) === 'requests', 'amministratore e ARNOplast partono dalle richieste');
+check(Auth::home(['role' => 'admin']) === 'dashboard' && Auth::home(['role' => 'staff']) === 'dashboard', 'amministratore e ARNOplast partono dalla dashboard');
 check(Auth::home(['role' => 'redattore']) === 'fairs', 'redattore parte dalle fiere');
 check(Auth::home(['role' => 'commerciale']) === 'listini', 'commerciale parte dai listini');
 foreach (['admin', 'redattore', 'staff', 'commerciale'] as $role) {
