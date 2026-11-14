@@ -285,7 +285,6 @@ svg .dot-quotes { fill: var(--green); }
 .metrics li { display: flex; gap: 12px; align-items: center; }
 .metric-num { font-size: 26px; font-weight: 800; color: var(--ink); }
 @media (max-width: 900px) {
-  body.app { grid-template-columns: 1fr; }
   .side { position: static; height: auto; }
   .nav-side { grid-template-columns: repeat(2, 1fr); }
   .deco-side, .side-foot { display: none; }
@@ -312,3 +311,11 @@ svg .dot-quotes { fill: var(--green); }
 .mini-h { font-size: 14px; font-weight: 700; color: var(--green-d); margin: 0 0 10px; }
 .stats-panel { margin-bottom: 16px; }
 .stats-grid .chart, .stats-grid svg.line { width: 100%; height: auto; }
+/* Barra laterale a tutta altezza: fissa alla finestra, il contenuto parte dopo di lei */
+body.app { display: block; }
+body.app .side { position: fixed; top: 0; bottom: 0; left: 0; width: 252px; height: auto; z-index: 10; overflow-y: auto; }
+body.app .main { margin-left: 252px; min-height: 100vh; }
+@media (max-width: 900px) {
+  body.app .side { position: static; width: auto; height: auto; overflow: visible; }
+  body.app .main { margin-left: 0; }
+}
