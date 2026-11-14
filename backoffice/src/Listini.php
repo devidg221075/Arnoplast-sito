@@ -77,6 +77,19 @@ final class Listini
         return [$id, null];
     }
 
+    /** Motivo leggibile di un caricamento non riuscito (codici UPLOAD_ERR_* di PHP). */
+    public static function uploadError(int $code): string
+    {
+        $limit = (string) ini_get('upload_max_filesize');
+        return match ($code) {
+            UPLOAD_ERR_INI_SIZE, UPLOAD_ERR_FORM_SIZE => 'Il file è più grande del limite del server (' . $limit . '). Il file è troppo pesante per questo server: '
+                . 'in cPanel, «MultiPHP INI Editor», va alzato «upload_max_filesize» (almeno 32M) e «post_max_size» (almeno 40M).',
+            UPLOAD_ERR_NO_FILE => 'Non hai scelto nessun file.',
+            UPLOAD_ERR_PARTIAL => 'Il caricamento si è interrotto a metà: riprova.',
+            default => 'Caricamento non riuscito (codice ' . $code . '). Riprova o avvisa l\'amministratore.',
+        };
+    }
+
     /** Percorso del PDF di un listino in vigore, o null. */
     public static function path(string $id): ?string
     {

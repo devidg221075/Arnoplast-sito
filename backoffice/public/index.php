@@ -377,7 +377,7 @@ if ($page === 'listini') {
         if (Auth::can($user, 'listini.manage') && $action === 'upload') {
             $f = $_FILES['pdf'] ?? null;
             if (!is_array($f) || ($f['error'] ?? UPLOAD_ERR_NO_FILE) !== UPLOAD_ERR_OK) {
-                $say('Caricamento non riuscito: scegli un file PDF.', false);
+                $say(Listini::uploadError(is_array($f) ? (int) $f['error'] : UPLOAD_ERR_NO_FILE), false);
                 $go($url('listini'));
             }
             [, $error] = Listini::save((string) $f['tmp_name'], (int) $f['size'], (string) $f['name'], (string) ($_POST['titolo'] ?? ''), (string) ($_POST['lingua'] ?? ''), $uid);
