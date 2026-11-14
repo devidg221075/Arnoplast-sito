@@ -186,19 +186,19 @@ svg .seg.d4 { stroke: #d1d5db; }
 
 /* ===== Nuova interfaccia (mockup): barra laterale verde, barra in alto, dashboard ===== */
 :root {
-  --side: #1f2b22; --green: #4a7a2e; --green-d: #2f5a1f; --green-soft: #eef0dc;
-  --paper: #f8f5ef; --line: #e7e3d8; --muted: #7b8775; --ink: #1d2a1b;
+  --side: #242927; --green: #466d28; --green-d: #244b1c; --green-soft: #eef0dc;
+  --paper: #faf8f3; --line: #deded2; --muted: #6d7166; --ink: #20271f;
   --kpi-green: #eef0dc; --kpi-red: #f9e6dc; --kpi-cream: #f4f1e4; --kpi-pink: #f8e8e4;
   --red: #c8553d; --shadow: 0 1px 2px rgba(29, 42, 27, .05), 0 6px 18px rgba(29, 42, 27, .04);
 }
 body { background: var(--paper); }
 body.app { display: grid; grid-template-columns: 252px minmax(0, 1fr); min-height: 100vh; }
-.side { position: sticky; top: 0; height: 100vh; background: var(--side); color: #cdd7c6; padding: 22px 14px; display: flex; flex-direction: column; overflow: hidden; }
+.side { position: sticky; top: 0; height: 100vh; background: var(--side); color: #d4d8cf; padding: 22px 14px; display: flex; flex-direction: column; overflow: hidden; }
 .brand { display: block; padding: 6px 12px 22px; text-decoration: none; }
 .logo { font-size: 28px; font-weight: 800; color: #fff; letter-spacing: -.5px; font-style: italic; }
 .logo b { color: #e0463a; font-weight: 900; font-style: normal; }
 .nav-side { display: grid; gap: 4px; position: relative; z-index: 1; }
-.nav-side a { display: flex; align-items: center; gap: 12px; padding: 11px 14px; border-radius: 12px; color: #cdd7c6; text-decoration: none; font-size: 15px; }
+.nav-side a { display: flex; align-items: center; gap: 12px; padding: 11px 14px; border-radius: 12px; color: #d4d8cf; text-decoration: none; font-size: 15px; }
 .nav-side a:hover { background: rgba(255, 255, 255, .07); color: #fff; }
 .nav-side a.on { background: var(--green); color: #fff; box-shadow: 0 6px 16px rgba(0, 0, 0, .25); }
 .ic { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; flex: none; }
@@ -221,12 +221,12 @@ body.app { display: grid; grid-template-columns: 252px minmax(0, 1fr); min-heigh
 .menu-out { background: none; border: 0; color: var(--red); font: 600 14px var(--font); cursor: pointer; padding: 6px 0 0; }
 .wrap { max-width: none; padding: 8px 28px 60px; }
 h1 { font-size: 30px; font-weight: 800; color: var(--ink); }
-.btn { background: var(--green); box-shadow: 0 2px 6px rgba(74, 122, 46, .25); }
+.btn { background: var(--green); box-shadow: 0 2px 6px rgba(70, 109, 40, .25); }
 .btn:hover { background: var(--green-d); }
 .btn.dark { background: var(--ink); }
 a { color: var(--ink); }
 a:hover { color: var(--green-d); }
-.flash.ok { background: #e6f1dc; color: #2f5a1f; border-color: #c7e0b1; }
+.flash.ok { background: #e6f1dc; color: #244b1c; border-color: #c7e0b1; }
 .hello { margin: 0 0 20px; }
 .hello-title { font-size: 34px; font-weight: 800; color: var(--green-d); margin: 0; letter-spacing: -.02em; }
 .hello-sub { margin: 4px 0 0; color: #5b6b56; font-size: 16px; }
@@ -262,7 +262,7 @@ a:hover { color: var(--green-d); }
 .pill-amber { background: #fde5c3; color: #7a4a00; }
 .pill-blue { background: #dfe7f7; color: #2c4a8a; }
 .pill-violet { background: #e6e0f8; color: #4b3a8a; }
-.pill-green { background: #dcefd0; color: #2f5a1f; }
+.pill-green { background: #dcefd0; color: #244b1c; }
 .pill-grey { background: #eee; color: #444; }
 .muted { color: var(--muted); font-size: 13px; margin: 6px 0 0; }
 .chart { width: 100%; height: auto; display: block; }
