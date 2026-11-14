@@ -319,3 +319,5 @@ body.app .main { margin-left: 252px; min-height: 100vh; }
   body.app .side { position: static; width: auto; height: auto; overflow: visible; }
   body.app .main { margin-left: 0; }
 }
+.placeholder { max-width: 680px; }
+.placeholder h2 { margin-top: 0; }

@@ -61,7 +61,7 @@ $render = static function (string $title, string $body, ?array $user = null) use
     $side = '';
     $top = '';
     if ($user) {
-        $all = ['dashboard' => ['Dashboard', 'home'], 'requests' => ['Richieste', 'doc'], 'orders' => ['Ordini', 'cart'],
+        $all = ['dashboard' => ['Dashboard', 'home'], 'products' => ['Prodotti', 'box'], 'requests' => ['Preventivi e richieste', 'doc'], 'orders' => ['Ordini', 'cart'], 'clients' => ['Clienti', 'users'],
             'fairs' => ['Fiere', 'list'], 'gallery' => ['Galleria', 'box'], 'videos' => ['Video', 'list'], 'texts' => ['Testi', 'doc'],
             'listini' => ['Listini', 'box'], 'stats' => ['Statistiche', 'chart'], 'mail' => ['Posta', 'list'], 'conditions' => ['Condizioni PDF', 'doc'],
             'users' => ['Utenti e ruoli', 'shield'], 'activity' => ['Registro attività', 'list']];
@@ -427,6 +427,16 @@ if ($page === 'dashboard') {
         'activity' => Auth::can($user, 'activity') ? Dashboard::activity(6) : [], 'metrics' => Dashboard::metrics()];
     $stats = Auth::can($user, 'stats') ? Stats::summary(30) : null;
     $render('Dashboard', DashboardView::page($data, Auth::can($user, 'activity'), (string) $user['name'], $url('dashboard'), $stats), $user);
+}
+
+// --- Segnaposto: le sezioni arrivano con la tappa del catalogo e con l'elenco clienti.
+if ($page === 'products') {
+    $render('Prodotti', '<section class="card placeholder"><h2>In arrivo con il catalogo</h2><p class="meta">I prodotti si gestiranno qui: schede, foto, cataloghi PDF e prodotti in evidenza. '
+        . 'Arriva con la tappa del catalogo.</p></section>', $user);
+}
+if ($page === 'clients') {
+    $render('Clienti', '<section class="card placeholder"><h2>In arrivo</h2><p class="meta">Qui troverai l\'elenco dei clienti, con lo storico di richieste, preventivi e ordini. '
+        . 'Per ora le informazioni sono nelle singole richieste.</p><p><a class="btn" href="' . $e($url('requests')) . '">Vai alle richieste</a></p></section>', $user);
 }
 
 // --- Ordini (nascono dai preventivi accettati). Lo stato va solo avanti.
