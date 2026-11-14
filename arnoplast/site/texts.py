@@ -10,12 +10,17 @@ import json
 import re
 from pathlib import Path
 
-from arnoplast.site import i18n
+from arnoplast.site import i18n, pagetexts
 
 MAX_LEN = 400
 _CONTROL = re.compile(r"[\x00-\x08\x0b\x0c\x0e-\x1f\x7f]")
 # Testi legali e del banner cookie: non si cambiano da qui (li fornisce il cliente, vedi CLAUDE.md).
 LEGAL_PREFIXES = ("ck.", "page.cookie")
+
+
+def max_len(key: str) -> int:
+    """Una riga: 400 caratteri; i paragrafi della storia e degli imballaggi arrivano a pagetexts.LONG_MAX."""
+    return pagetexts.LONG_MAX if key.startswith(pagetexts.LONG_PREFIXES) else MAX_LEN
 
 
 def is_legal(key: str) -> bool:
@@ -40,8 +45,8 @@ def load_overrides(path: Path) -> dict[str, dict[str, str]]:
                 raise ValueError(f"{path.name}: {key!r} è un testo legale: non si modifica da qui")
             if not isinstance(text, str) or not text.strip():
                 raise ValueError(f"{path.name}: testo vuoto o non valido per {key!r} ({lang})")
-            if len(text) > MAX_LEN or _CONTROL.search(text) or "\n" in text:
-                raise ValueError(f"{path.name}: testo non valido per {key!r} ({lang}): una riga, al massimo {MAX_LEN} caratteri")
+            if len(text) > max_len(key) or _CONTROL.search(text) or "\n" in text:
+                raise ValueError(f"{path.name}: testo non valido per {key!r} ({lang}): una riga, al massimo {max_len(key)} caratteri")
         out[lang] = {k: v.strip() for k, v in rows.items()}
     return out
 

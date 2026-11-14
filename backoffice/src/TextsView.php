@@ -31,7 +31,7 @@ final class TextsView
                 . '</td><td>' . ($n > 0 ? '<span class="status todo">' . $n . ' in bozza</span>' : '') . '</td></tr>';
         }
         return $h . '</table><p class="meta">I testi legali (privacy, cookie e banner) non si modificano da qui: li fornisce ARNOplast. Le modifiche restano in bozza finché non si pubblica. '
-            . 'La storia dell\'azienda e gli imballaggi sono testi lunghi e si gestiscono a parte.</p>';
+            . 'La storia dell\'azienda e gli imballaggi sono nei gruppi «Azienda: la storia» e «Azienda: imballaggi».</p>';
     }
 
     public static function group(array $g, string $csrf, ?array $raw): string
@@ -40,8 +40,8 @@ final class TextsView
         $seed = Texts::seed()['texts'];
         $drafts = Texts::drafts();
         $live = Texts::overrides(true);
-        $h = '<p><a href="index.php?p=texts">← Tutti i testi</a></p><p class="meta">' . $e($g['help']) . ' Ogni campo contiene il testo che il sito mostra ora: modificalo direttamente. Se svuoti un campo, la correzione di quel testo viene tolta. Su una riga sola, al massimo '
-            . (int) Texts::seed()['max_len'] . ' caratteri.</p><form method="post" action="index.php?p=text_group&amp;g=' . $e($g['id']) . '" class="card">'
+        $h = '<p><a href="index.php?p=texts">← Tutti i testi</a></p><p class="meta">' . $e($g['help']) . ' Ogni campo contiene il testo che il sito mostra ora: modificalo direttamente. Se svuoti un campo, la correzione di quel testo viene tolta. Su una riga sola; i testi brevi al massimo '
+            . (int) Texts::seed()['max_len'] . ' caratteri, i paragrafi della storia e degli imballaggi fino a ' . (int) (Texts::seed()['max_len_long'] ?? 3000) . '.</p><form method="post" action="index.php?p=text_group&amp;g=' . $e($g['id']) . '" class="card">'
             . '<input type="hidden" name="csrf" value="' . $e($csrf) . '"><input type="hidden" name="action" value="save">'
             . '<table class="list texttable"><tr><th>Italiano</th><th>Inglese</th></tr>';
         foreach ($g['keys'] as $k) {
@@ -61,9 +61,11 @@ final class TextsView
                     $cur = $live[$lang][$k] ?? $base[$lang];
                 }
                 $long = mb_strlen($base[$lang]) > 80;
+                $max = Texts::maxLen($k);
+                $rows = max(3, min(12, (int) ceil(mb_strlen($cur) / 55)));
                 $field = $long
-                    ? '<textarea name="' . $lang . '[' . $e($k) . ']" rows="3" maxlength="400" aria-label="Testo, ' . $lang . '">' . $e($cur) . '</textarea>'
-                    : '<input name="' . $lang . '[' . $e($k) . ']" maxlength="400" value="' . $e($cur) . '" aria-label="Testo, ' . $lang . '">';
+                    ? '<textarea name="' . $lang . '[' . $e($k) . ']" rows="' . $rows . '" maxlength="' . $max . '" aria-label="Testo, ' . $lang . '">' . $e($cur) . '</textarea>'
+                    : '<input name="' . $lang . '[' . $e($k) . ']" maxlength="' . $max . '" value="' . $e($cur) . '" aria-label="Testo, ' . $lang . '">';
                 $h .= '<td>' . $field . ($cur !== $base[$lang] ? '<small>Originale: ' . $e($base[$lang]) . '</small>' : '') . '</td>';
             }
             $h .= '</tr>';

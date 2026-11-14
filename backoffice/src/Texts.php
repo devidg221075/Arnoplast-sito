@@ -53,6 +53,18 @@ final class Texts
         return $out;
     }
 
+    /** Lunghezza massima di un testo: una riga breve, oppure più lungo per i paragrafi (storia, imballaggi). */
+    public static function maxLen(string $key): int
+    {
+        $seed = self::seed();
+        foreach ((array) ($seed['long_prefixes'] ?? []) as $prefix) {
+            if (str_starts_with($key, (string) $prefix)) {
+                return (int) ($seed['max_len_long'] ?? 3000);
+            }
+        }
+        return (int) ($seed['max_len'] ?? 400);
+    }
+
     /**
      * Salva le correzioni di un gruppo. $it e $en: chiave → testo scritto. Restituisce gli errori (chiave → frase);
      * le voci valide si salvano comunque.
@@ -67,9 +79,9 @@ final class Texts
         }
         $seed = self::seed();
         $errors = [];
-        $max = (int) ($seed['max_len'] ?? 400);
         foreach ($g['keys'] as $key) {
             $base = $seed['texts'][$key];
+            $max = self::maxLen($key);
             $draft = [];
             foreach (['it' => $it, 'en' => $en] as $lang => $values) {
                 $v = trim((string) preg_replace('/\s+/u', ' ', (string) ($values[$key] ?? '')));

@@ -18,6 +18,7 @@ from markupsafe import Markup
 from arnoplast.catalog import Catalog, load_catalog, text
 from arnoplast.site import fair_images as FI
 from arnoplast.site import gallery_tools as GT
+from arnoplast.site import pagetexts as PT
 from arnoplast.site import texts as TX
 from arnoplast.site.i18n import t
 from arnoplast.site.redirects import load_redirects, netlify_rules
@@ -1139,10 +1140,12 @@ def build_site(c: Catalog, out: Path, lang: str = "it", sources: Path | None = N
            hero=_hero("azienda", imgs), imgs=imgs, user_types=[(u, USER_TYPES_EN[u] if lang == "en" else u) for u in USER_TYPES], jsonld=organization_ld(), map_embed=MAP_EMBED, privacy_url=privacy_url_for(lang))
     story = COMPANY_STORY if lang == "it" else load_en_story()
     if story is not None:
+      story = PT.apply_story(story, lang)
       render("company.html", base / "azienda", line=None, title=t("page.company", lang),
              description=" ".join(text for _, text in story["steps"][:2]), story=story,
              hero=_hero("azienda", imgs), imgs=imgs)
-    pack = load_packaging() if lang == "it" else load_en_packaging(load_packaging())
+    it_pack = PT.apply_pack(load_packaging(), "it", PACK_KINDS)  # il colore segue la raccolta (anche se corretta)
+    pack = it_pack if lang == "it" else PT.apply_pack(load_en_packaging(it_pack), "en")
     if lang == "it" or pack["paragrafi"]:  # in inglese solo con il testo inglese (data/en_imballaggi.json)
         render("packaging.html", base / "azienda" / "imballaggi", line=None, title=pack["titolo"], pack=pack,
                hero=_hero("imballaggi", imgs),
@@ -1295,6 +1298,10 @@ def main(out: Path | None = None, sources: Path | None = None, catalog_path: Pat
     clean_dir(out)
     written = build_site(c, out, sources=sources, videos=videos)
     print(f"{len(written)} pagine scritte in {out}")
+
+
+# Chiavi dei testi lunghi (storia, imballaggi): modificabili da data/testi.json e dal backoffice.
+PT.register(COMPANY_STORY, load_en_story(), load_packaging(), load_en_packaging(load_packaging()))
 
 
 if __name__ == "__main__":

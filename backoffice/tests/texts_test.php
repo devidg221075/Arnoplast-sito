@@ -59,5 +59,15 @@ foreach (Texts::group('contacts')['keys'] as $ck) { $cIt[$ck] = $seed['texts'][$
 Texts::saveGroup('contacts', $cIt, $cEn, 1);
 check(Texts::pendingByGroup()['contacts'] === 0, 'salvare senza cambiare: nessuna modifica in sospeso');
 
+// --- Testi lunghi: storia dell'azienda e imballaggi
+check(Texts::maxLen('story.s1.text') === 3000 && Texts::maxLen('pack.p1') === 3000 && Texts::maxLen('od.text') === 400, 'limiti: 3000 per storia e imballaggi, 400 per gli altri');
+check(Texts::group('story') !== null && count(Texts::group('story')['keys']) === 14 && count(Texts::group('packaging')['keys']) === 48, 'gruppi «Azienda: la storia» (14 testi) e «Azienda: imballaggi» (48)');
+$sk = 'story.s1.text';
+$long = str_repeat('Storia aggiornata dal test. ', 60);
+check(Texts::saveGroup('story', [$sk => $long], [], 1) === [] && Texts::overrides()['it'][$sk] === trim($long), 'paragrafo lungo (oltre 400 caratteri) salvato');
+check(Texts::saveGroup('story', [$sk => str_repeat('x', 3001)], [], 1) !== [], 'oltre 3000 caratteri: rifiutato');
+$long2 = Texts::saveGroup('packaging', ['pack.r1.codice' => 'ZZ 99'], [], 1);
+check($long2 === [] && Texts::overrides()['it']['pack.r1.codice'] === 'ZZ 99', 'cella della tabella imballaggi corretta');
+
 echo $fails === 0 ? "\nTutti i controlli superati\n" : "\n$fails controlli falliti\n";
 exit($fails === 0 ? 0 : 1);

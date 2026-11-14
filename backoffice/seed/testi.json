@@ -86,7 +86,7 @@
   {
    "id": "company",
    "name": "Azienda",
-   "help": "Etichette della pagina Azienda (la storia in sé si modifica a parte).",
+   "help": "Etichette della pagina Azienda (la storia è nel gruppo «Azienda: la storia»).",
    "keys": [
     "co.timeline",
     "co.packaging_title",
@@ -100,6 +100,82 @@
     "co.garden",
     "co.italy",
     "co.abroad"
+   ]
+  },
+  {
+   "id": "story",
+   "name": "Azienda: la storia",
+   "help": "Titoli e testi della storia dell'azienda (pagina Azienda): tappe 1975, 1983, anni Ottanta e Novanta, e «Oggi».",
+   "keys": [
+    "story.kicker",
+    "story.title",
+    "story.s1.label",
+    "story.s1.text",
+    "story.s2.label",
+    "story.s2.text",
+    "story.s3.label",
+    "story.s3.text",
+    "story.s4.label",
+    "story.s4.text",
+    "story.today_kicker",
+    "story.today_title",
+    "story.today.label",
+    "story.today.text"
+   ]
+  },
+  {
+   "id": "packaging",
+   "name": "Azienda: imballaggi",
+   "help": "Pagina Imballaggi: titolo, paragrafi, righe della tabella (imballaggio, codice, raccolta) e nota. Nei paragrafi **parola** diventa grassetto.",
+   "keys": [
+    "pack.title",
+    "pack.section",
+    "pack.note",
+    "pack.p1",
+    "pack.p2",
+    "pack.p3",
+    "pack.r1.imballaggio",
+    "pack.r1.codice",
+    "pack.r1.raccolta",
+    "pack.r2.imballaggio",
+    "pack.r2.codice",
+    "pack.r2.raccolta",
+    "pack.r3.imballaggio",
+    "pack.r3.codice",
+    "pack.r3.raccolta",
+    "pack.r4.imballaggio",
+    "pack.r4.codice",
+    "pack.r4.raccolta",
+    "pack.r5.imballaggio",
+    "pack.r5.codice",
+    "pack.r5.raccolta",
+    "pack.r6.imballaggio",
+    "pack.r6.codice",
+    "pack.r6.raccolta",
+    "pack.r7.imballaggio",
+    "pack.r7.codice",
+    "pack.r7.raccolta",
+    "pack.r8.imballaggio",
+    "pack.r8.codice",
+    "pack.r8.raccolta",
+    "pack.r9.imballaggio",
+    "pack.r9.codice",
+    "pack.r9.raccolta",
+    "pack.r10.imballaggio",
+    "pack.r10.codice",
+    "pack.r10.raccolta",
+    "pack.r11.imballaggio",
+    "pack.r11.codice",
+    "pack.r11.raccolta",
+    "pack.r12.imballaggio",
+    "pack.r12.codice",
+    "pack.r12.raccolta",
+    "pack.r13.imballaggio",
+    "pack.r13.codice",
+    "pack.r13.raccolta",
+    "pack.r14.imballaggio",
+    "pack.r14.codice",
+    "pack.r14.raccolta"
    ]
   },
   {
@@ -1776,9 +1852,262 @@
   "home.h2_lines": {
    "it": "Tre linee per il campo, il giardino e l'oliveto",
    "en": "Three ranges for the field, the garden and the olive grove"
+  },
+  "story.kicker": {
+   "it": "Da dove siamo nati",
+   "en": "Where we were born from"
+  },
+  "story.title": {
+   "it": "Arno Plast - La storia",
+   "en": "Arno Plast – The history"
+  },
+  "story.s1.label": {
+   "it": "1975",
+   "en": "1975"
+  },
+  "story.s1.text": {
+   "it": "ARNOplast s.r.l. nasce nel 1975 come ARNOstampi sdf. Nei primi anni l’azienda si focalizza sulla progettazione e sulla costruzione di stampi per iniezione e soffiaggio di materie plastiche.",
+   "en": "ARNOplast s.r.l. was established in 1975 as ARNO-stampi sdf. During the first years the company focused on designing and building moulds for injection moulding and blowing of plastic materials."
+  },
+  "story.s2.label": {
+   "it": "1983",
+   "en": "1983"
+  },
+  "story.s2.text": {
+   "it": "Nel 1983 la nuova denominazione ARNOplast s.r.l. contraddistingue il primo allineamento strategico. L’azienda implementa la volontà di fornire alla clientela un servizio completo, dalla progettazione al prodotto finito.",
+   "en": "In 1983 the new company’s name ARNOplast s.r.l. marks the first strategic layout which the company implements with the willingness to provide clients a complete service, from the designing to the finished product."
+  },
+  "story.s3.label": {
+   "it": "Anni Ottanta",
+   "en": "Mid 1980s"
+  },
+  "story.s3.text": {
+   "it": "A metà anni Ottanta inizia anche una limitata produzione di accessori a proprio marchio per agricoltura professionale rivolti in prevalenza al mercato dell’Italia meridionale.",
+   "en": "Also in the mid 1980’s the company begins a limited production of accessories with its own brand name for professional agriculture targeted predominantly to Southern Italy’s markets."
+  },
+  "story.s4.label": {
+   "it": "Anni Novanta",
+   "en": "End of the 1990s"
+  },
+  "story.s4.text": {
+   "it": "ARNOplast s.r.l. alla fine degli anni Novanta, intuendo le difficoltà cui sarebbe andata incontro di lì a poco la subfornitura, mette in atto una seconda svolta strategica. Come risultato di questa situazione decide di trarre il massimo dalle proprie capacità innovative. Presenta una gamma di prodotti a proprio marchio per agricoltura e giardinaggio; di questo periodo anche la creazione di una società dedita esclusivamente al processo di distribuzione, la ARNOcommerciale s.r.l.",
+   "en": "At the end of the 1990’s, realizing the difficulties it would encounter from there on and due to sub-supply, the company carried out a second strategic turning point and decided to get the best from their own innovative capacities, presenting a new range of products with their brand for agriculture and gardening; also in this period the creation of a Company dedicated exclusively to the distribution process was created, the ARNOcommerciale s.r.l."
+  },
+  "story.today_kicker": {
+   "it": "Chi siamo oggi, cosa facciamo e dove vogliamo andare",
+   "en": "Who we are today, what we do and where we want to go"
+  },
+  "story.today_title": {
+   "it": "Arno Plast oggi",
+   "en": "Arno Plast today"
+  },
+  "story.today.label": {
+   "it": "Oggi",
+   "en": "Today"
+  },
+  "story.today.text": {
+   "it": "Oggi ARNOplast ha sede e stabilimenti produttivi a Rignano sull’Arno, non lontano da Firenze. Assieme ad una squadra di conto terzisti in Toscana, collegata ad ARNOcommerciale, ha conquistato una posizione leader nel mercato italiano. Con i sistemi per il giardinaggio e l’agricoltura ARNOplast è arrivata a commercializzare i propri prodotti in tutta Europa, Mediterraneo e in diversi Paesi oltre oceano.",
+   "en": "Today ARNOplast with head office and production plant in Rignano sull’Arno not far from Florence, together with ARNOcommerciale have acquired a position in the Italian market for the gardening and agriculture systems and have commercialized their own products in all of Europe, in the Mediterranean area and in overseas countries."
+  },
+  "pack.title": {
+   "it": "Imballaggi",
+   "en": "Packaging"
+  },
+  "pack.section": {
+   "it": "I nostri imballaggi",
+   "en": "Our packaging"
+  },
+  "pack.note": {
+   "it": "Ricorda di verificare sempre le disposizioni del tuo Comune.",
+   "en": "Always check the regulations of your Municipality."
+  },
+  "pack.p1": {
+   "it": "Il decreto legislativo 3 settembre 2020, n. 116 dispone che tutti gli imballaggi siano “opportunamente etichettati secondo le modalità stabilite dalle norme tecniche UNI applicabili e in conformità alle determinazioni adottate dalla Commissione dell’Unione europea”.",
+   "en": "Legislative Decree 3 September 2020, no. 116 requires that all packaging be “suitably labelled according to the methods set out in the applicable UNI technical standards and in accordance with the decisions adopted by the European Commission”."
+  },
+  "pack.p2": {
+   "it": "L’**etichettatura ambientale** consiste nell’identificare tutti gli imballaggi immessi sul mercato italiano, per indicarne la **composizione**, facilitarne la **raccolta**, il **riutilizzo**, il **recupero**, il **riciclo** e il **corretto smaltimento** da parte del consumatore.",
+   "en": "**Environmental labelling** consists of identifying all packaging placed on the Italian market, to indicate its **composition**, to make its **collection**, **reuse**, **recovery**, **recycling** and **correct disposal** easier for the consumer."
+  },
+  "pack.p3": {
+   "it": "Secondo la normativa, l’etichetta deve essere apposta direttamente sull’imballaggio, tramite i canali digitali (App, Qr code, siti web), su documenti di trasporto, libretti d’istruzione o pannelli informativi nel punto vendita. I nostri imballaggi sono così definiti come da tabella sotto riportata.",
+   "en": "Under the regulations, the label must be applied directly on the packaging, through digital channels (App, QR code, websites), on transport documents, instruction leaflets or information panels at the point of sale. Our packaging is defined as shown in the table below."
+  },
+  "pack.r1.imballaggio": {
+   "it": "Scatola Cartone",
+   "en": "Cardboard box"
+  },
+  "pack.r1.codice": {
+   "it": "PAP 20",
+   "en": "PAP 20"
+  },
+  "pack.r1.raccolta": {
+   "it": "Raccolta Carta",
+   "en": "Paper collection"
+  },
+  "pack.r2.imballaggio": {
+   "it": "Etichetta Adesiva",
+   "en": "Adhesive label"
+  },
+  "pack.r2.codice": {
+   "it": "PAP 20",
+   "en": "PAP 20"
+  },
+  "pack.r2.raccolta": {
+   "it": "Indifferenziata",
+   "en": "Mixed waste"
+  },
+  "pack.r3.imballaggio": {
+   "it": "Nastro adesivo",
+   "en": "Adhesive tape"
+  },
+  "pack.r3.codice": {
+   "it": "PP 5",
+   "en": "PP 5"
+  },
+  "pack.r3.raccolta": {
+   "it": "Raccolta Plastica",
+   "en": "Plastic collection"
+  },
+  "pack.r4.imballaggio": {
+   "it": "Sacchetti Polietilene",
+   "en": "Polyethylene bags"
+  },
+  "pack.r4.codice": {
+   "it": "LDPE 4",
+   "en": "LDPE 4"
+  },
+  "pack.r4.raccolta": {
+   "it": "Raccolta Plastica",
+   "en": "Plastic collection"
+  },
+  "pack.r5.imballaggio": {
+   "it": "Film estensibile",
+   "en": "Stretch film"
+  },
+  "pack.r5.codice": {
+   "it": "LDPE 4",
+   "en": "LDPE 4"
+  },
+  "pack.r5.raccolta": {
+   "it": "Raccolta Plastica",
+   "en": "Plastic collection"
+  },
+  "pack.r6.imballaggio": {
+   "it": "Bancale Plastica",
+   "en": "Plastic pallet"
+  },
+  "pack.r6.codice": {
+   "it": "HDPE 2",
+   "en": "HDPE 2"
+  },
+  "pack.r6.raccolta": {
+   "it": "Raccolta Plastica",
+   "en": "Plastic collection"
+  },
+  "pack.r7.imballaggio": {
+   "it": "Confezione Dispenser",
+   "en": "Dispenser pack"
+  },
+  "pack.r7.codice": {
+   "it": "SBC 7",
+   "en": "SBC 7"
+  },
+  "pack.r7.raccolta": {
+   "it": "Raccolta Plastica",
+   "en": "Plastic collection"
+  },
+  "pack.r8.imballaggio": {
+   "it": "Confezione Telaietto",
+   "en": "Frame pack"
+  },
+  "pack.r8.codice": {
+   "it": "LLDPE 4",
+   "en": "LLDPE 4"
+  },
+  "pack.r8.raccolta": {
+   "it": "Raccolta Plastica",
+   "en": "Plastic collection"
+  },
+  "pack.r9.imballaggio": {
+   "it": "Fascette",
+   "en": "Cable ties"
+  },
+  "pack.r9.codice": {
+   "it": "PA 7",
+   "en": "PA 7"
+  },
+  "pack.r9.raccolta": {
+   "it": "Raccolta Plastica",
+   "en": "Plastic collection"
+  },
+  "pack.r10.imballaggio": {
+   "it": "Rocche Plastica",
+   "en": "Plastic reels"
+  },
+  "pack.r10.codice": {
+   "it": "PS 6",
+   "en": "PS 6"
+  },
+  "pack.r10.raccolta": {
+   "it": "Raccolta Plastica",
+   "en": "Plastic collection"
+  },
+  "pack.r11.imballaggio": {
+   "it": "Bancale Legno",
+   "en": "Wooden pallet"
+  },
+  "pack.r11.codice": {
+   "it": "FOR 50",
+   "en": "FOR 50"
+  },
+  "pack.r11.raccolta": {
+   "it": "Raccolta Isola Ecologica",
+   "en": "Eco-island collection"
+  },
+  "pack.r12.imballaggio": {
+   "it": "Flange e Tubi Cartoni Rocche",
+   "en": "Flanges and cardboard reel tubes"
+  },
+  "pack.r12.codice": {
+   "it": "PAP 21",
+   "en": "PAP 21"
+  },
+  "pack.r12.raccolta": {
+   "it": "Raccolta Carta",
+   "en": "Paper collection"
+  },
+  "pack.r13.imballaggio": {
+   "it": "Capsule Polistirolo",
+   "en": "Polystyrene capsules"
+  },
+  "pack.r13.codice": {
+   "it": "PS 6",
+   "en": "PS 6"
+  },
+  "pack.r13.raccolta": {
+   "it": "Raccolta Plastica",
+   "en": "Plastic collection"
+  },
+  "pack.r14.imballaggio": {
+   "it": "Rocche Plastica",
+   "en": "Plastic reels"
+  },
+  "pack.r14.codice": {
+   "it": "PP 5",
+   "en": "PP 5"
+  },
+  "pack.r14.raccolta": {
+   "it": "Raccolta Plastica",
+   "en": "Plastic collection"
   }
  },
  "max_len": 400,
+ "max_len_long": 3000,
+ "long_prefixes": [
+  "story.",
+  "pack."
+ ],
  "legal_excluded": [
   "ck.brief_1",
   "ck.brief_2",

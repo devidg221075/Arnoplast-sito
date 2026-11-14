@@ -2,6 +2,15 @@
 
 Formato: versione, data, cosa cambia. La versione sta nel file `VERSION` e compare in basso nella barra laterale: cliccandola si apre questa pagina («Novità»).
 
+## 0.10.1 — 14 novembre 2026
+
+### Novità
+- **Testi: tutta la pagina Azienda**. Nuovi gruppi «Azienda: la storia» (titoli, tappe 1975, 1983, anni Ottanta e Novanta, «Oggi», in italiano e inglese) e «Azienda: imballaggi» (titolo, paragrafi, righe della tabella e nota). I paragrafi lunghi accettano fino a 3000 caratteri.
+- Per le pagine di servizio restano fuori, per ora, i **dati societari** (indirizzo, telefoni, e-mail, partita IVA) e le voci del modulo contatti.
+
+### Tecnico
+- `arnoplast/site/pagetexts.py` (chiavi `story.*` e `pack.*`), limite per tipo di testo, seed dei testi aggiornato, `tests/test_pagetexts.py`.
+
 ## 0.10.0 — 14 novembre 2026
 
 ### Novità

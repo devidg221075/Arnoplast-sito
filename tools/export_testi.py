@@ -13,13 +13,15 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT))
 
-from arnoplast.site import i18n, texts  # noqa: E402
+from arnoplast.site import build, i18n, pagetexts, texts  # noqa: E402,F401  (build registra i testi della storia e degli imballaggi)
 
 # (id, nome per il cliente, a cosa serve, prefissi delle chiavi)
 GROUPS = [
     ("home", "Home: testata e primo schermo", "Titolo, sottotitolo e scritte della prima schermata della home.", ("home.", "hs.")),
     ("home2", "Home: sezioni", "Le sezioni sotto la testata: ricerca, preventivo in tre passi, famiglie, azienda.", ("hv.",)),
-    ("company", "Azienda", "Etichette della pagina Azienda (la storia in sé si modifica a parte).", ("co.",)),
+    ("company", "Azienda", "Etichette della pagina Azienda (la storia è nel gruppo «Azienda: la storia»).", ("co.",)),
+    ("story", "Azienda: la storia", "Titoli e testi della storia dell'azienda (pagina Azienda): tappe 1975, 1983, anni Ottanta e Novanta, e «Oggi».", ("story.",)),
+    ("packaging", "Azienda: imballaggi", "Pagina Imballaggi: titolo, paragrafi, righe della tabella (imballaggio, codice, raccolta) e nota. Nei paragrafi **parola** diventa grassetto.", ("pack.",)),
     ("contacts", "Contatti", "Pagina Contatti e modulo di contatto.", ("ct.", "contacts.")),
     ("quote", "Preventivo e moduli", "Pagina Richiesta di preventivo, messaggi dei moduli.", ("quote.", "form.", "qty.", "card.")),
     ("fairs", "Fiere", "Testi della pagina Fiere (le singole fiere sono in «Fiere»).", ("fairs.",)),
@@ -48,6 +50,7 @@ def build() -> dict:
     if rest:
         raise SystemExit(f"Testi senza gruppo: {rest}: aggiungere il prefisso in GROUPS")
     return {"groups": groups, "texts": {k: {"it": it[k], "en": en[k]} for k in keys}, "max_len": texts.MAX_LEN,
+            "max_len_long": pagetexts.LONG_MAX, "long_prefixes": list(pagetexts.LONG_PREFIXES),
             "legal_excluded": sorted(k for k in it if texts.is_legal(k))}
 
 
