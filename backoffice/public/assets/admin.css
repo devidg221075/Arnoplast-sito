@@ -202,11 +202,11 @@ body.app { display: grid; grid-template-columns: 252px minmax(0, 1fr); min-heigh
 .nav-side a:hover { background: rgba(255, 255, 255, .07); color: #fff; }
 .nav-side a.on { background: var(--green); color: #fff; box-shadow: 0 6px 16px rgba(0, 0, 0, .25); }
 .ic { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; flex: none; }
-.deco-side { position: absolute; left: 0; bottom: 0; width: 100%; height: auto; pointer-events: none; opacity: .95; }
+.deco-side { position: absolute; left: 0; bottom: 0; width: 100%; height: auto; pointer-events: none; }
 .side-foot { position: relative; z-index: 1; margin-top: auto; font-size: 12px; color: #8b9a86; padding: 0 12px; }
 .ver { opacity: .7; }
 .main { min-width: 0; display: flex; flex-direction: column; }
-.topbar { display: flex; align-items: center; gap: 18px; padding: 16px 28px; min-height: 96px; background: url(deco-top.svg) no-repeat right top / 520px auto; }
+.topbar { display: flex; align-items: center; gap: 18px; padding: 16px 28px; min-height: 96px; background: url(deco-top.webp) no-repeat right top / 566px auto; }
 .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
 .search { flex: 1 1 380px; max-width: 520px; margin: 0; }
 .search input { margin: 0; padding: 12px 16px; border-radius: 14px; border: 1px solid var(--line); background: #fff; box-shadow: var(--shadow); }
@@ -321,3 +321,14 @@ body.app .main { margin-left: 252px; min-height: 100vh; }
 }
 .placeholder { max-width: 680px; }
 .placeholder h2 { margin-top: 0; }
+
+/* Colore della barra laterale fino in fondo anche nelle pagine lunghe e negli screenshot a pagina intera */
+body.app { background: linear-gradient(to right, var(--side) 252px, var(--paper) 252px); }
+@media (max-width: 900px) { body.app { background: var(--paper); } }
+
+/* Illustrazione della barra: sotto il menu, mai sopra le voci */
+.deco-side { z-index: 0; }
+.nav-side, .side-foot, .brand { position: relative; z-index: 1; }
+.topbar { background-position: right 14px top 10px; }
+.nav-side { gap: 2px; }
+.nav-side a { padding: 9px 14px; }

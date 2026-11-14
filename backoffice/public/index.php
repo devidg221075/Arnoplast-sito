@@ -90,7 +90,7 @@ $render = static function (string $title, string $body, ?array $user = null) use
         . '<meta name="robots" content="noindex, nofollow"><title>' . $e($title) . ' · Backoffice ' . $e(App::config('site_name', '')) . '</title>'
         . '<link rel="stylesheet" href="assets/admin.css"></head><body' . ($user ? ' class="app"' : '') . '>'
         . ($user ? '<aside class="side"><a class="brand" href="' . $e($url('dashboard')) . '"><img src="assets/logo-negativo.svg" alt="ARNOplast" width="170" height="31"></a><nav class="nav-side" aria-label="Menu">' . $side . '</nav>'
-            . '<img class="deco-side" src="assets/deco-side.svg" alt="" width="250" height="170"><div class="side-foot">Backoffice' . $version . '</div></aside>'
+            . '<img class="deco-side" src="assets/deco-side.webp" alt="" width="272" height="189"><div class="side-foot">Backoffice' . $version . '</div></aside>'
             . '<div class="main"><header class="topbar">' . $top . '</header>' : '')
         . '<main class="wrap">' . $flashHtml . (($user && ($_GET['p'] ?? '') === 'dashboard') ? '' : '<h1>' . $e($title) . '</h1>') . $body . '</main>'
         . ($user ? '</div>' : '') . '</body></html>';
