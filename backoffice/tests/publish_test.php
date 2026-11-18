@@ -21,7 +21,7 @@ App::boot(['site_url' => 'https://www.arnoplast.it', 'secret' => 'test-secret-te
 Gallery::useDir($work . '/originali');
 mkdir($work . '/originali');
 Fairs::importSeed();
-Gallery::importSeed();
+Gallery::importSeed(__DIR__ . '/fixtures/galleria-145.json'); // copia ferma: il file del sito cresce a ogni pubblicazione
 Videos::importSeed();
 
 // Il «repository» di prova: i file dati veri del sito.

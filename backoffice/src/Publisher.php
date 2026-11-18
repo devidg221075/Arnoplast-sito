@@ -62,7 +62,7 @@ final class Publisher
         }
         if (isset($pending['Galleria'])) {
             $export = Gallery::export(false);
-            $json = self::json($export);
+            $json = self::json($export, 1); // come il file del sito: un solo spazio per livello
             $put('data/galleria.json', $json);
             $put(self::SEED . 'galleria.json', $json);
             foreach ($export['foto'] as $item) {
@@ -141,11 +141,11 @@ final class Publisher
         return is_array($cur) && isset($cur['_nota']) ? ['_nota' => $cur['_nota']] + $data : $data;
     }
 
-    private static function json(array|object $d): string
+    private static function json(array|object $d, int $indent = 2): string
     {
         $s = (string) json_encode($d, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT);
         // Due spazi per livello, come i file del sito: i confronti su GitHub restano leggibili.
-        $s = (string) preg_replace_callback('/^( +)/m', static fn (array $m): string => str_repeat(' ', intdiv(strlen($m[1]), 2)), $s);
+        $s = (string) preg_replace_callback('/^( +)/m', static fn (array $m): string => str_repeat(' ', intdiv(strlen($m[1]), (int) (4 / $indent))), $s);
         return $s . "\n";
     }
 }

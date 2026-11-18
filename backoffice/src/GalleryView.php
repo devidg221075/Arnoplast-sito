@@ -34,6 +34,15 @@ final class GalleryView
             $h .= '<option value="' . $e($k) . '">' . $e($label) . '</option>';
         }
         $h .= '</select></label></div><p class="meta">Le foto nuove vanno in fondo alla galleria con un testo alternativo provvisorio: aprile una per una per descriverle e spostarle. Il sito le mostra dopo «Pubblica».</p><button class="btn">Carica</button></form>';
+        $dups = Gallery::duplicates();
+        if ($dups) {
+            $n = array_sum(array_map(static fn (array $g): int => count($g['dups']), $dups));
+            $h .= '<details class="card"><summary>Ci sono ' . $n . ' foto doppie (identiche a un\'altra): togliele</summary>'
+                . '<form method="post" action="index.php?p=gallery"><input type="hidden" name="csrf" value="' . $e($csrf) . '"><input type="hidden" name="action" value="dedupe">'
+                . '<p>Di ogni gruppo di foto uguali resta la prima (numero più basso) e le altre diventano «da eliminare»: il sito cambia solo dopo «Pubblica».</p>'
+                . '<ul>' . implode('', array_map(static fn (array $g): string => '<li>Foto ' . $e($g['keep']) . ' uguale a: ' . $e(implode(', ', $g['dups'])) . '</li>', $dups)) . '</ul>'
+                . '<button class="btn dark">Sì, elimina le foto doppie</button></form></details>';
+        }
         $ids = Gallery::order($rows);
         $counts = array_fill_keys(array_keys(Gallery::CATEGORIES), 0);
         foreach ($rows as $r) {

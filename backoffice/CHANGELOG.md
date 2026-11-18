@@ -2,6 +2,13 @@
 
 Formato: versione, data, cosa cambia. La versione sta nel file `VERSION` e compare in basso nella barra laterale: cliccandola si apre questa pagina («Novità»).
 
+## 0.10.4 — 18 novembre 2026
+
+### Correzioni
+- **«MySQL server has gone away» nel caricamento di molte foto**: il backoffice ora controlla la connessione al database dopo una pausa (per esempio mentre elabora le foto) e, se il server l'ha chiusa, la riapre da solo.
+- **Foto doppie**: una foto identica a una già presente (stesso contenuto) viene rifiutata al caricamento, con il numero di quella già presente. Se ce ne sono già, in «Galleria» compare «Ci sono N foto doppie» con un solo pulsante per toglierle (si tiene la prima di ogni gruppo; il sito cambia dopo «Pubblica»).
+- «Pubblica» scrive `data/galleria.json` con lo stesso formato del file del sito, così nei confronti su GitHub si vedono solo le foto cambiate.
+
 ## 0.10.3 — 14 novembre 2026
 
 ### Correzioni

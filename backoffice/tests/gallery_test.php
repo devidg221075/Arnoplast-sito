@@ -19,9 +19,11 @@ $work = sys_get_temp_dir() . '/bo-gal-' . bin2hex(random_bytes(4));
 mkdir($work);
 App::boot(['site_url' => 'https://www.arnoplast.it', 'secret' => 'test-secret-test-secret-test-secret', 'db' => ['dsn' => 'sqlite:' . $work . '/db.sqlite']]);
 Gallery::useDir($work . '/originali');
-$seed = Gallery::seedItems();
+// Il file del sito cresce a ogni pubblicazione: la prova usa una copia ferma delle 145 foto originali.
+$fx = __DIR__ . '/fixtures/galleria-145.json';
+$seed = Gallery::seedItems($fx);
 check(count($seed) === 145, count($seed) . ' foto nel file del sito');
-check(Gallery::importSeed() === 145 && Gallery::importSeed() === 0, 'importazione una volta sola');
+check(Gallery::importSeed($fx) === 145 && Gallery::importSeed($fx) === 0, 'importazione una volta sola');
 check(Gallery::pending() === 0 && Gallery::export(true)['foto'] == $seed && Gallery::export()['foto'] == $seed, 'dopo l\'importazione bozza = pubblicato = file del sito');
 check(Gallery::order()[0] === '001' && Gallery::position('010') === 10, 'ordine del sito mantenuto');
 
@@ -71,6 +73,30 @@ check(Content::find(Gallery::KIND, '146') === null && Gallery::original('146') =
 Gallery::delete('010', 1);
 check(Content::status(Content::find(Gallery::KIND, '010')) === Content::REMOVED && count(Gallery::export()['foto']) === 145 - 1 + 1, 'foto pubblicata: "da eliminare", esce dalla bozza');
 check(in_array('010', array_column(Gallery::export(true)['foto'], 'id'), true), 'nel pubblicato c\'è ancora');
+
+// --- Foto doppie: rifiutate al caricamento e tolte con un clic
+$dupDir = $work . '/doppie';
+mkdir($dupDir);
+$im = imagecreatetruecolor(900, 700);
+imagefilledrectangle($im, 100, 100, 700, 500, imagecolorallocate($im, 200, 30, 90)); // diversa dalle foto già usate negli altri controlli
+imagejpeg($im, $dupDir . '/a.jpg');
+$mk = static fn (array $names): array => ['name' => $names, 'tmp_name' => array_map(static fn (string $n): string => $GLOBALS['dupDir'] . '/' . $n, $names),
+    'size' => array_map(static fn (string $n): int => filesize($GLOBALS['dupDir'] . '/' . $n), $names), 'error' => array_fill(0, count($names), 0)];
+[$a1, $e1] = Gallery::addUploads($mk(['a.jpg']), 'dettagli', 1);
+check(count($a1) === 1 && $e1 === [], 'prima foto aggiunta' . ($e1 ? ': ' . implode(' / ', $e1) : ''));
+[$a2, $e2] = Gallery::addUploads($mk(['a.jpg']), 'dettagli', 1);
+check($a2 === [] && count($e2) === 1 && str_contains($e2[0], 'già nella galleria'), 'la stessa foto caricata di nuovo è rifiutata, con il numero di quella già presente');
+copy($dupDir . '/a.jpg', $dupDir . '/b.jpg');
+[$a3, $e3] = Gallery::addUploads($mk(['a.jpg', 'b.jpg']), 'dettagli', 1);
+check($a3 === [] && count($e3) === 2, 'nemmeno due copie nello stesso invio');
+// Doppie già presenti (per esempio create da tentativi ripetuti): le troviamo e le togliamo.
+$orig = Gallery::dir();
+copy($orig . '/' . $a1[0] . '.jpg', $orig . '/990.jpg');
+Content::saveDraft(Gallery::KIND, '990', ['id' => '990', 'categoria' => 'dettagli', 'alt' => 'x', 'sorgente' => '990.jpg'], 1);
+Content::saveDraft(Gallery::ORDER, 'order', ['ids' => array_values(array_unique(array_merge(Gallery::order(), ['990'])))], 1);
+$g = Gallery::duplicates();
+check(count($g) === 1 && $g[0]['keep'] === $a1[0] && $g[0]['dups'] === ['990'], 'trovata la foto doppia: si tiene la prima');
+check(Gallery::removeDuplicates(1) === 1 && Gallery::duplicates() === [] && !isset(Gallery::rows()['990']) && !in_array('990', Gallery::order(), true), 'doppia eliminata (nuova: sparisce subito)');
 
 echo $fails === 0 ? "\nTutti i controlli superati\n" : "\n$fails controlli falliti\n";
 exit($fails === 0 ? 0 : 1);

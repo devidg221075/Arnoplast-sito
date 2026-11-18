@@ -274,6 +274,10 @@ if (($page === 'gallery' || $page === 'gallery_photo' || $page === 'gallery_img'
                 $n = Gallery::importSeed();
                 App::log($uid, 'galleria.importata', '', (string) $n);
                 $say($n > 0 ? "Importate $n foto dal sito." : 'Nessuna foto nuova da importare.');
+            } elseif ($action === 'dedupe') {
+                $n = Gallery::removeDuplicates($uid);
+                App::log($uid, 'galleria.doppie', '', (string) $n);
+                $say($n > 0 ? "Tolte $n foto doppie (da eliminare con «Pubblica»)." : 'Nessuna foto doppia.');
             } elseif ($action === 'add') {
                 [$added, $errors] = Gallery::addUploads($_FILES['photos'] ?? [], (string) ($_POST['categoria'] ?? ''), $uid);
                 App::log($uid, 'galleria.aggiunte', '', (string) count($added));
