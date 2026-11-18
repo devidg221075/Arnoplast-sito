@@ -12,6 +12,8 @@ final class Publisher
     /** Cartella delle foto nuove nel repository (le converte la build). */
     private const FAIR_PHOTOS = 'content/photos/fiere/';
     private const GALLERY_PHOTOS = 'content/photos/galleria/';
+    /** Copia dei dati nel pacchetto del backoffice (usata solo alla prima importazione): tenuta uguale ai dati del sito a ogni pubblicazione. */
+    private const SEED = 'backoffice/seed/';
 
     /** @return array<string,int> modifiche in attesa per sezione (solo quelle con modifiche) */
     public static function pending(): array
@@ -47,7 +49,9 @@ final class Publisher
         }
         if (isset($pending['Fiere e Open Day'])) {
             $fairs = self::fairs($read('data/fiere.json'));
-            $put('data/fiere.json', self::json(self::keepNote($read('data/fiere.json'), ['fiere' => $fairs])));
+            $json = self::json(self::keepNote($read('data/fiere.json'), ['fiere' => $fairs]));
+            $put('data/fiere.json', $json);
+            $put(self::SEED . 'fiere.json', $json);
             foreach (Content::all(Fairs::KIND) as $r) {
                 $img = (string) ($r['draft']['immagine'] ?? '');
                 $src = dirname(__DIR__) . '/var/content/fiere/' . basename($img);
@@ -58,7 +62,9 @@ final class Publisher
         }
         if (isset($pending['Galleria'])) {
             $export = Gallery::export(false);
-            $put('data/galleria.json', self::json($export));
+            $json = self::json($export);
+            $put('data/galleria.json', $json);
+            $put(self::SEED . 'galleria.json', $json);
             foreach ($export['foto'] as $item) {
                 $name = (string) ($item['sorgente'] ?? '');
                 $src = $name === '' ? '' : Gallery::dir() . '/' . basename($name);
@@ -75,6 +81,7 @@ final class Publisher
                 }
             }
             $put('data/tutorial.json', self::json(self::keepNote($read('data/tutorial.json'), ['video' => $videos])));
+            $put(self::SEED . 'video.json', self::json($videos));
         }
         return $files;
     }

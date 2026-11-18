@@ -1,4 +1,4 @@
-# Dove siamo (13 novembre 2026) e da dove si riprende
+# Dove siamo (14 novembre 2026) e da dove si riprende
 
 ## Fatto e provato sul server vero
 - Backoffice su `gestione.arnoplast.it` (PHP 8.3, MySQL): richieste dai moduli, e-mail al cliente e ad ARNOplast con logo incorporato, risposte dal backoffice,
@@ -8,6 +8,11 @@
 - Video e tutorial (4a, bozze): elenco per gruppo nel backoffice, aggiunta da link YouTube/Vimeo, modifica, eliminazione e annullamento. Provato sul server. Manca: ordine delle voci (su/giù) e la lista Garden, bloccata sul sito vecchio.
 - Pulizia di sicurezza fatta: `diag*.php` cancellati, `backoffice_old` cancellata, `setup_token` svuotato, password di `noreply@arnoplast.it` cambiata.
 
+## Fatto il 14 novembre 2026
+- **Tappa 4b «Pubblica» provata sul server vero**: backoffice → commit su GitHub (`main`) → GitHub Actions → FTP → `nuovo.arnoplast.it`. La prima consegna completa ha richiesto circa 24 minuti; le successive pochi secondi (solo i file cambiati). Costruzione notturna solo se serve (fiera finita ieri o primo gennaio).
+- Backoffice 0.10.2: grafica del kit (`admin.css`, `premium.css`), pagina «Novità» con le note di versione, testi di tutte le pagine di servizio modificabili (storia, imballaggi, dati societari e collegamenti solo amministratore, tipologie utente, alt delle testate, descrizioni).
+- Catalogo (tappa 5), decisioni prese: importazione IDML (preferito) o PDF con schermata delle differenze, correzioni a mano che prevalgono con avviso di conflitto, esportazione CSV delle correzioni. Si fa dopo la «Pubblica». Vedi `docs/backoffice-decisioni.md`.
+
 ## Da fare, in ordine
 1. Inglese: verifica dello zip del sito da parte del cliente, poi indicizzazione della versione inglese (togliere `noindex`, sitemap, hreflang).
 2. Proteggere `nuovo.arnoplast.it` dai motori di ricerca finché è in prova.
@@ -16,13 +21,17 @@
 - Download e area riservata; poi storia dell'azienda e imballaggi (testi lunghi, non voci singole). Il catalogo viene più avanti.
 - **Catalogo (tappa 5)**: decisioni in `docs/backoffice-decisioni.md` (IDML/PDF con differenze, correzioni a mano che prevalgono con avviso di conflitto, esportazione CSV delle correzioni). Si fa dopo la 4b.
 
-- **4b «Pubblica»**: fatta (scelta: FTP automatico da GitHub Actions). **Da collegare dal cliente** seguendo `docs/pubblicazione-ftp.md`: utente FTP dedicato, segreti e variabili in GitHub, chiave GitHub a permessi minimi in `config.php`, creazione del ramo `main` (unendo la pull request).
+- **4b «Pubblica»**: fatta, collegata e provata (FTP automatico da GitHub Actions; guida in `docs/pubblicazione-ftp.md`). Da ricordare: la chiave GitHub scade dopo 1 anno (rinnovarla); il codice va a `main` con una pull request, i contenuti dal backoffice vanno direttamente su `main`.
 
 ## Da ricevere dal cliente
 - **Da chiedere al cliente, da ricordare alla ripresa:** i PDF di ricambi Oleo 2016, ricambi Oleo Carbonio 2016, ricambi Facilitatore Martino 2018 e corda elastica 2018. Serve sapere se contengono prezzi: se sì, vanno nell'area riservata; se no, restano pubblici. Il cliente li manda prossimamente.
 - Condizioni generali del preventivo, italiano e inglese (pagina «Condizioni PDF» del backoffice).
 - Contenuti già in elenco in `docs/riepilogo-per-il-cliente.md` (8 fiere passate, listini/area riservata, tutorial, banner cookie, ecc.).
 - IDML del Garden 2026 per correggere i refusi; conferma sulla pagina 29 (gamma filo).
+
+## Prossimo passo suggerito
+- **Catalogo (tappa 5)**: struttura dati dei prodotti nel backoffice, importazione PDF/IDML con confronto, modifica a mano, esportazione delle correzioni; il cliente manda PDF o IDML quando vuole.
+- Poi: storia/pagine ancora a mano nel codice (nessuna), backup automatici (tappa 6), verifica di sicurezza esterna prima del lancio, passaggio a `www.arnoplast.it` (cambiare `FTP_DIR`/utente FTP e `site_url`/`assets_url`).
 
 ## Regole da ricordare
 - Una domanda alla volta, con risposte suggerite; mostrare sempre il risultato con schermate o prove.

@@ -2,6 +2,11 @@
 
 Formato: versione, data, cosa cambia. La versione sta nel file `VERSION` e compare in basso nella barra laterale: cliccandola si apre questa pagina («Novità»).
 
+## 0.10.3 — 14 novembre 2026
+
+### Correzioni
+- **«Pubblica» tiene allineata la copia dei dati nel pacchetto del backoffice** (`seed/fiere.json`, `seed/galleria.json`, `seed/video.json`): a ogni pubblicazione le copie vengono aggiornate nello stesso commit, così restano uguali ai dati del sito e il controllo automatico non segnala più differenze. Sistemato anche lo stato attuale delle fiere.
+
 ## 0.10.2 — 14 novembre 2026
 
 ### Novità
