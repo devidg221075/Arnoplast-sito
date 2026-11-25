@@ -55,6 +55,19 @@ def main(it_path: str, en_path: str, line: str, out: str) -> None:
             if (old or None) != cur:
                 changed.append((r.code, slug, f"{f}: {old}", f"{f}: {cur}"))
 
+    # schede prodotto: titolo e caratteristiche, italiano e inglese
+    prods = {p["slug"]: p for fam in ln["families"] for p in fam["products"]}
+    cards, card_problems = idml.cards(it_path, en_path, {k: v["name"]["it"] for k, v in prods.items()})
+    feat_changed, feat_same, feat_en = [], 0, 0
+    for slug, card in cards.items():
+        old = [norm(x) for x in prods[slug].get("features", [])]
+        if old == [norm(x) for x in card.features_it]:
+            feat_same += 1
+        else:
+            feat_changed.append((slug, len(old), len(card.features_it)))
+        if card.aligned and card.features_en:
+            feat_en += 1
+
     gone = sorted(set(known) - seen)
     lines = [f"# Anteprima aggiornamento catalogo «{line}»", "",
              f"- Righe lette: {len(pairs)} (italiano e inglese abbinate riga per riga)",
@@ -64,7 +77,15 @@ def main(it_path: str, en_path: str, line: str, out: str) -> None:
              f"- Righe senza abbinamento inglese: {no_en}", ""]
     if problems:
         lines += ["## Da controllare (abbinamento IT/EN)", *[f"- {p}" for p in problems], ""]
-    lines += ["## Articoli nuovi", ""]
+    lines += ["## Schede prodotto (nomi e caratteristiche)", "",
+              f"- Schede trovate nell'IDML: {len(cards)} su {len(prods)}",
+              f"- Caratteristiche italiane uguali al sito: {feat_same}; **diverse: {len(feat_changed)}**",
+              f"- Schede con nome e caratteristiche **inglesi** abbinate con sicurezza: {feat_en}",
+              f"- Da abbinare a mano (punti diversi tra le lingue o titolo doppio): {len(card_problems)}", ""]
+    lines += [f"- {p}" for p in card_problems]
+    lines += ["", "Caratteristiche italiane cambiate (punti prima → dopo):", ""]
+    lines += [f"- {slug}: {a} → {b}" for slug, a, b in feat_changed[:40]]
+    lines += ["", "## Articoli nuovi", ""]
     for r, e, near in new:
         lines.append(f"- `{r.code}` {r.description} — EN: {e.description if e else '—'} — scheda proposta: {near or 'da decidere'}")
     lines += ["", "## Articoli del sito non più nel catalogo", ""]

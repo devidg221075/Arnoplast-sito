@@ -111,3 +111,119 @@ def pair(it_rows: list[Row], en_rows: list[Row]) -> tuple[list[tuple[Row, Row | 
                     problems.append(f"{r.code}: {f} diverso tra le lingue ({getattr(r, f)} / {getattr(e, f)})")
         pairs.append((r, e))
     return pairs, problems
+
+
+# --- pagine e schede prodotto -------------------------------------------------
+
+@dataclass
+class Frame:
+    page: str
+    x: float
+    y: float
+    text: str
+    paras: list[str]
+    table: bool
+
+
+def _paras(root) -> list[str]:
+    """Paragrafi di una storia, escluse le tabelle (i <Br/> separano i paragrafi)."""
+    out: list[list[str]] = [[]]
+
+    def walk(e) -> None:
+        for c in e:
+            if c.tag == "Table":
+                continue
+            if c.tag == "Content":
+                out[-1].append(c.text or "")
+            elif c.tag == "Br":
+                out.append([])
+            else:
+                walk(c)
+
+    walk(root)
+    return [t for t in ("".join(x).strip() for x in out) if t]
+
+
+def _nums(s: str) -> list[float]:
+    return [float(v) for v in s.split()]
+
+
+def read_frames(path: str) -> list[Frame]:
+    """Tutti i riquadri di testo di ogni pagina, con posizione e paragrafi."""
+    frames: list[Frame] = []
+    with zipfile.ZipFile(path) as z:
+        names = set(z.namelist())
+        design = ET.fromstring(z.read("designmap.xml"))
+        spreads = [e.get("src") for e in design.iter()
+                   if e.tag.endswith("Spread") and (e.get("src") or "").startswith("Spreads/")]
+        stories: dict[str, object] = {}
+        for src in spreads:
+            sp = ET.fromstring(z.read(src)).find("Spread")
+            pages = []
+            for pg in sp.findall("Page"):
+                t, b = _nums(pg.get("ItemTransform")), _nums(pg.get("GeometricBounds"))
+                pages.append((pg.get("Name"), t[4], t[4] + b[3] - b[1]))
+            for tf in sp.iter("TextFrame"):
+                t = _nums(tf.get("ItemTransform"))
+                pts = [tuple(map(float, p.get("Anchor").split())) for p in tf.iter("PathPointType")]
+                if not pts:
+                    continue
+                x, y = t[4] + min(p[0] for p in pts), t[5] + min(p[1] for p in pts)
+                page = next((n for n, a, b in pages if a - 5 <= x <= b), None)
+                sid = tf.get("ParentStory")
+                fn = f"Stories/Story_{sid}.xml"
+                if page is None or fn not in names:
+                    continue
+                root = stories.get(sid) or stories.setdefault(sid, ET.fromstring(z.read(fn)))
+                text = _text(root)
+                if text:
+                    frames.append(Frame(page, x, y, text, _paras(root), root.find(".//Table") is not None))
+    return frames
+
+
+def _norm(s: str) -> str:
+    return " ".join(re.sub(r"\W+", " ", s.lower()).split())
+
+
+@dataclass
+class Card:
+    page: str
+    title_en: str | None
+    features_it: list[str]
+    features_en: list[str]
+    aligned: bool  # stesso numero di punti in italiano e inglese
+
+
+def cards(it_path: str, en_path: str, names: dict[str, str]) -> tuple[dict[str, Card], list[str]]:
+    """Scheda di ogni prodotto: titolo e caratteristiche in italiano e inglese.
+
+    `names` = {codice scheda: nome italiano}. Il titolo si trova per nome sulla
+    pagina; la caratteristiche sono il riquadro «CARATTERISTICHE» più vicino sotto
+    il titolo; l'inglese è il riquadro nella stessa posizione dello stesso foglio.
+    """
+    it, en = read_frames(it_path), read_frames(en_path)
+    problems: list[str] = []
+
+    def twin(f: Frame) -> Frame | None:
+        return next((e for e in en if e.page == f.page and abs(e.x - f.x) < 1 and abs(e.y - f.y) < 1), None)
+
+    out: dict[str, Card] = {}
+    for slug, name in names.items():
+        hits = [f for f in it if not f.table and _norm(f.text) == _norm(name)]
+        if not hits:
+            problems.append(f"{slug}: titolo «{name}» non trovato nell'IDML")
+            continue
+        if len(hits) > 1:
+            problems.append(f"{slug}: titolo presente {len(hits)} volte, uso la prima pagina")
+        t = hits[0]
+        feats = [f for f in it if f.page == t.page and not f.table
+                 and f.text.upper().startswith("CARATTERISTICHE") and f.y >= t.y - 5]
+        feat = min(feats, key=lambda f: f.y - t.y) if feats else None
+        te, fe = twin(t), (twin(feat) if feat else None)
+        fi = feat.paras[1:] if feat else []
+        fn = fe.paras[1:] if fe else []
+        aligned = bool(fe) and len(fi) == len(fn)
+        if feat and not aligned:
+            problems.append(f"{slug}: {len(fi)} punti in italiano, {len(fn)} in inglese (da abbinare a mano)")
+        out[slug] = Card(t.page, te.text if te else None, fi, fn, aligned)
+    return out, problems

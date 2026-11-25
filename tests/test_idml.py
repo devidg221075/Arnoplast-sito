@@ -50,3 +50,54 @@ def test_segnala_ordine_diverso_senza_indovinare(tmp_path):
     en = idml.read_rows(_idml(tmp_path, "en.idml", [("", "1104-0502", "B", "", "12")]))
     pairs, problems = idml.pair(it, en)
     assert pairs[0][1] is None and "1104-0502" in problems[0]
+
+
+# --- schede prodotto -----------------------------------------------------------
+
+def _frame(story, x, y):
+    return (f'<TextFrame ParentStory="{story}" ItemTransform="1 0 0 1 {x} {y}"><Properties><PathGeometry>'
+            '<GeometryPathType><PathPointArray>'
+            '<PathPointType Anchor="0 0"/><PathPointType Anchor="100 50"/>'
+            '</PathPointArray></GeometryPathType></PathGeometry></Properties></TextFrame>')
+
+
+def _story_par(*paras):
+    inner = "<Br/>".join(f"<Content>{p}</Content>" for p in paras)
+    return f"<Story><CharacterStyleRange>{inner}</CharacterStyleRange></Story>"
+
+
+def _catalog_idml(tmp_path, name, title, feats):
+    p = tmp_path / name
+    spread = ('<idPkg:Spread xmlns:idPkg="x"><Spread><Page Name="9" ItemTransform="1 0 0 1 0 0" '
+              'GeometricBounds="0 0 800 600"/>'
+              + _frame("t1", 10, 10) + _frame("f1", 10, 100) + "</Spread></idPkg:Spread>")
+    with zipfile.ZipFile(p, "w") as z:
+        z.writestr("designmap.xml", '<Document><idPkg:Spread xmlns:idPkg="x" src="Spreads/Spread_a.xml"/></Document>')
+        z.writestr("Spreads/Spread_a.xml", spread)
+        z.writestr("Stories/Story_t1.xml", _story_par(title))
+        z.writestr("Stories/Story_f1.xml", _story_par(*feats))
+    return str(p)
+
+
+def test_scheda_prodotto_abbina_italiano_e_inglese_per_posizione(tmp_path):
+    it = _catalog_idml(tmp_path, "it.idml", "TESTINA STILO", ["CARATTERISTICHE", "Resistente", "Leggera"])
+    en = _catalog_idml(tmp_path, "en.idml", "STILO HEAD", ["FEATURES", "Strong", "Light"])
+    cards, problems = idml.cards(it, en, {"stilo": "Testina Stilo"})
+    c = cards["stilo"]
+    assert (c.title_en, c.features_it, c.features_en, c.aligned) == (
+        "STILO HEAD", ["Resistente", "Leggera"], ["Strong", "Light"], True)
+    assert problems == []
+
+
+def test_scheda_con_punti_diversi_viene_segnalata(tmp_path):
+    it = _catalog_idml(tmp_path, "it.idml", "TESTINA STILO", ["CARATTERISTICHE", "A", "B"])
+    en = _catalog_idml(tmp_path, "en.idml", "STILO HEAD", ["FEATURES", "A"])
+    cards, problems = idml.cards(it, en, {"stilo": "Testina Stilo"})
+    assert cards["stilo"].aligned is False
+    assert "2 punti in italiano, 1 in inglese" in problems[0]
+
+
+def test_titolo_mancante_e_un_problema_non_un_errore(tmp_path):
+    it = _catalog_idml(tmp_path, "it.idml", "ALTRO", ["CARATTERISTICHE", "A"])
+    cards, problems = idml.cards(it, it, {"stilo": "Testina Stilo"})
+    assert cards == {} and "non trovato" in problems[0]
