@@ -889,6 +889,12 @@ def _unique_title(seen: set[str], name: str, family: str, line: str, shared: boo
     return title
 
 
+def block_indexing() -> bool:
+    """Sito di prova: non va indicizzato dai motori di ricerca (variabile ARNO_NOINDEX = 1). Con il sito definitivo
+    la variabile e' 0 o assente: robots.txt, sitemap e pagine tornano normali."""
+    return os.environ.get("ARNO_NOINDEX", "").strip().lower() in ("1", "true", "si", "yes")
+
+
 def security_headers(out: Path) -> str:
     """File `_headers` (Netlify / Cloudflare Pages) con le intestazioni di sicurezza. La Content-Security-Policy ammette
     solo risorse del sito, piu' i quattro servizi che si attivano al clic (YouTube senza cookie, Vimeo, Facebook, Google
@@ -929,7 +935,8 @@ def security_headers(out: Path) -> str:
             "  Referrer-Policy: strict-origin-when-cross-origin\n"
             "  Permissions-Policy: camera=(), microphone=(), geolocation=(), payment=(), usb=(), interest-cohort=()\n"
             "  Cross-Origin-Opener-Policy: same-origin\n"
-            "  Strict-Transport-Security: max-age=31536000; includeSubDomains\n")
+            "  Strict-Transport-Security: max-age=31536000; includeSubDomains\n"
+            + ("  X-Robots-Tag: noindex, nofollow\n" if block_indexing() else ""))
 
 
 def apache_htaccess(headers: str, rows: list[tuple[str, str]]) -> str:
@@ -1068,7 +1075,7 @@ def build_site(c: Catalog, out: Path, lang: str = "it", sources: Path | None = N
         ctx.setdefault("nav", env.globals["nav_state"](f"/{rel}/"))
         if ctx.get("hero"):
             ctx["hero"] = dict(ctx["hero"], alt=hero_alt(ctx["hero"], lang))
-        if lang == "en":  # versione inglese non ancora pubblica: nessuna indicizzazione
+        if lang == "en" or block_indexing():  # inglese non ancora pubblico, o sito di prova: nessuna indicizzazione
             ctx.setdefault("noindex", True)
         _write(dest / "index.html", env.get_template(tpl).render(
             description=_clip(description, 200) if description else None, canonical=canonical, path=f"/{rel}/",
@@ -1246,8 +1253,9 @@ def _write_globals(out: Path, urls: list[str], sources: Path | None, lang: str) 
         f'<link rel="canonical" href="{SITE_URL}/it/"><meta http-equiv="refresh" content="0; url=it/"></head>'
         '<body><p><a href="it/">ARNOplast – Italiano</a> · <a href="en/">English</a></p></body></html>\n',
         encoding="utf-8")
-    (out / "robots.txt").write_text(f"User-agent: *\nAllow: /\n\nSitemap: {SITE_URL}/sitemap.xml\n",
-                                    encoding="utf-8")
+    robots = ("User-agent: *\nDisallow: /\n" if block_indexing()
+              else f"User-agent: *\nAllow: /\n\nSitemap: {SITE_URL}/sitemap.xml\n")
+    (out / "robots.txt").write_text(robots, encoding="utf-8")
 
     static = SITE_DIR / "static"
     if static.is_dir():
