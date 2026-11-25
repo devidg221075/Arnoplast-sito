@@ -181,11 +181,17 @@ final class Gallery
             return [[], ['Al massimo ' . self::MAX_FILES . ' foto per volta.']];
         }
         $added = $errors = [];
+        $known = self::hashes(); // contenuto già presente: [sha1 => id foto]
         foreach ($list as $f) {
             $name = (string) ($f['name'] ?? 'foto');
             [$ext, $err] = self::check($f);
             if ($err !== null) {
                 $errors[] = $name . ': ' . $err;
+                continue;
+            }
+            $sha = (string) @sha1_file((string) $f['tmp_name']);
+            if ($sha !== '' && isset($known[$sha])) {
+                $errors[] = $name . ': è già nella galleria (foto ' . $known[$sha] . '), non l\'ho aggiunta due volte.';
                 continue;
             }
             $id = self::nextId();
@@ -203,6 +209,9 @@ final class Gallery
                 $errors[] = $name . ': non riesco a salvare il file.';
                 continue;
             }
+            if ($sha !== '') {
+                $known[$sha] = $id;
+            }
             Content::saveDraft(self::KIND, $id, ['id' => $id, 'categoria' => $category, 'alt' => self::DEFAULT_ALT, 'sorgente' => $file], $userId);
             $ids = self::order();
             $ids = array_values(array_unique(array_merge($ids, [$id])));
@@ -210,6 +219,72 @@ final class Gallery
             $added[] = $id;
         }
         return [$added, $errors];
+    }
+
+    /**
+     * Contenuto degli originali delle foto caricate dal backoffice (non eliminate): [sha1 => id della prima foto con quel contenuto].
+     * Le foto importate dal sito non hanno l'originale sul server e non compaiono qui.
+     * @return array<string,string>
+     */
+    public static function hashes(): array
+    {
+        $out = [];
+        $rows = self::rows();
+        foreach ($rows as $id => $row) {
+            if ($row['deleted']) {
+                continue;
+            }
+            foreach (glob(self::dir() . '/' . $id . '.*') ?: [] as $f) {
+                $h = sha1_file($f);
+                if ($h !== false && !isset($out[$h])) {
+                    $out[$h] = (string) $id;
+                }
+            }
+        }
+        return $out;
+    }
+
+    /**
+     * Foto identiche (stesso contenuto) fra quelle caricate dal backoffice: gruppi con la prima da tenere e le altre doppie.
+     * @return array<int, array{keep:string, dups:string[]}>
+     */
+    public static function duplicates(): array
+    {
+        $rows = self::rows();
+        $ids = array_keys($rows);
+        sort($ids, SORT_STRING);
+        $groups = [];
+        foreach ($ids as $id) {
+            if ($rows[$id]['deleted']) {
+                continue;
+            }
+            foreach (glob(self::dir() . '/' . $id . '.*') ?: [] as $f) {
+                $h = sha1_file($f);
+                if ($h !== false) {
+                    $groups[$h][] = (string) $id;
+                }
+            }
+        }
+        $out = [];
+        foreach ($groups as $g) {
+            if (count($g) > 1) {
+                $out[] = ['keep' => $g[0], 'dups' => array_slice($g, 1)];
+            }
+        }
+        return $out;
+    }
+
+    /** Elimina le foto doppie (si tiene la prima di ogni gruppo). Restituisce quante ne ha tolte. */
+    public static function removeDuplicates(?int $userId): int
+    {
+        $n = 0;
+        foreach (self::duplicates() as $g) {
+            foreach ($g['dups'] as $id) {
+                self::delete($id, $userId);
+                $n++;
+            }
+        }
+        return $n;
     }
 
     /** La galleria nel formato di data/galleria.json (in bozza o, con $published, come è sul sito). */

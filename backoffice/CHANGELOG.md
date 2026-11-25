@@ -2,6 +2,32 @@
 
 Formato: versione, data, cosa cambia. La versione sta nel file `VERSION` e compare in basso nella barra laterale: cliccandola si apre questa pagina («Novità»).
 
+## 0.12.0 — 25 novembre 2026
+
+### Novità
+- **Catalogo: approvazione dei cambiamenti.** Dopo il confronto con gli IDML scegli quali gruppi accettare: articoli nuovi (con la scheda in cui inserirli), descrizioni italiane corrette, confezioni e box, descrizioni inglesi, caratteristiche italiane, nomi e caratteristiche inglesi dei prodotti. Quello che accetti resta in **bozza**; arriva sul sito con **Pubblica**. Una bozza si può scartare dalla stessa pagina.
+- **Pubblica** scrive `data/catalog.json`, `data/en_prodotti.json` e `data/en_articoli.json` partendo dai file attuali del repository, quindi non perde nulla di quanto è già pubblicato; i testi inglesi del cliente sostituiscono quelli «tradotti da noi».
+- I prodotti su pagine con più schede insieme, o con titolo ripetuto, non si propongono in automatico (l'abbinamento per posizione potrebbe sbagliare): compaiono sotto «Da controllare».
+
+## 0.11.0 — 25 novembre 2026
+
+### Novità
+- **Catalogo (solo amministratore)**: nuova voce nel menu. Carichi i due file IDML di InDesign di una linea, italiano e inglese, e vedi le differenze con quello che c'è oggi sul sito: articoli nuovi, articoli tolti, descrizioni e dati cambiati, codici EAN (finora assenti), schede prodotto con caratteristiche in italiano e in inglese. Per ora è solo una anteprima: non cambia nulla sul sito (l'approvazione e la bozza arrivano dopo).
+- Italiano e inglese restano lingue indipendenti: i punti delle caratteristiche non si abbinano riga per riga; i casi con numero di punti diverso sono elencati sotto «Da controllare».
+- Il file viene letto e poi scartato: non resta salvato sul server, e si rifiutano file con dichiarazioni esterne.
+
+## 0.10.4 — 18 novembre 2026
+
+### Correzioni
+- **«MySQL server has gone away» nel caricamento di molte foto**: il backoffice ora controlla la connessione al database dopo una pausa (per esempio mentre elabora le foto) e, se il server l'ha chiusa, la riapre da solo.
+- **Foto doppie**: una foto identica a una già presente (stesso contenuto) viene rifiutata al caricamento, con il numero di quella già presente. Se ce ne sono già, in «Galleria» compare «Ci sono N foto doppie» con un solo pulsante per toglierle (si tiene la prima di ogni gruppo; il sito cambia dopo «Pubblica»).
+- «Pubblica» scrive `data/galleria.json` con lo stesso formato del file del sito, così nei confronti su GitHub si vedono solo le foto cambiate.
+
+## 0.10.3 — 14 novembre 2026
+
+### Correzioni
+- **«Pubblica» tiene allineata la copia dei dati nel pacchetto del backoffice** (`seed/fiere.json`, `seed/galleria.json`, `seed/video.json`): a ogni pubblicazione le copie vengono aggiornate nello stesso commit, così restano uguali ai dati del sito e il controllo automatico non segnala più differenze. Sistemato anche lo stato attuale delle fiere.
+
 ## 0.10.2 — 14 novembre 2026
 
 ### Novità

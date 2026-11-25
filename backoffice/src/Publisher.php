@@ -12,6 +12,8 @@ final class Publisher
     /** Cartella delle foto nuove nel repository (le converte la build). */
     private const FAIR_PHOTOS = 'content/photos/fiere/';
     private const GALLERY_PHOTOS = 'content/photos/galleria/';
+    /** Copia dei dati nel pacchetto del backoffice (usata solo alla prima importazione): tenuta uguale ai dati del sito a ogni pubblicazione. */
+    private const SEED = 'backoffice/seed/';
 
     /** @return array<string,int> modifiche in attesa per sezione (solo quelle con modifiche) */
     public static function pending(): array
@@ -21,6 +23,7 @@ final class Publisher
             'Fiere e Open Day' => Content::pending(Fairs::KIND),
             'Galleria' => Gallery::pending(),
             'Video e tutorial' => Content::pending(Videos::KIND),
+            'Catalogo' => CatalogPatch::pendingCount(),
         ];
         return array_filter($out, static fn (int $n): bool => $n > 0);
     }
@@ -47,7 +50,9 @@ final class Publisher
         }
         if (isset($pending['Fiere e Open Day'])) {
             $fairs = self::fairs($read('data/fiere.json'));
-            $put('data/fiere.json', self::json(self::keepNote($read('data/fiere.json'), ['fiere' => $fairs])));
+            $json = self::json(self::keepNote($read('data/fiere.json'), ['fiere' => $fairs]));
+            $put('data/fiere.json', $json);
+            $put(self::SEED . 'fiere.json', $json);
             foreach (Content::all(Fairs::KIND) as $r) {
                 $img = (string) ($r['draft']['immagine'] ?? '');
                 $src = dirname(__DIR__) . '/var/content/fiere/' . basename($img);
@@ -58,7 +63,9 @@ final class Publisher
         }
         if (isset($pending['Galleria'])) {
             $export = Gallery::export(false);
-            $put('data/galleria.json', self::json($export));
+            $json = self::json($export, 1); // come il file del sito: un solo spazio per livello
+            $put('data/galleria.json', $json);
+            $put(self::SEED . 'galleria.json', $json);
             foreach ($export['foto'] as $item) {
                 $name = (string) ($item['sorgente'] ?? '');
                 $src = $name === '' ? '' : Gallery::dir() . '/' . basename($name);
@@ -75,6 +82,26 @@ final class Publisher
                 }
             }
             $put('data/tutorial.json', self::json(self::keepNote($read('data/tutorial.json'), ['video' => $videos])));
+            $put(self::SEED . 'video.json', self::json($videos));
+        }
+        if (isset($pending['Catalogo'])) {
+            // La patch si applica ai file attuali del repository (non al pacchetto): così non si perde nulla di quanto è già pubblicato.
+            $cat = json_decode((string) $read('data/catalog.json'), true);
+            $enP = json_decode((string) $read('data/en_prodotti.json'), true);
+            $enA = json_decode((string) $read('data/en_articoli.json'), true);
+            if (!is_array($cat) || !isset($cat['lines']) || !is_array($enP) || !is_array($enA)) {
+                throw new \RuntimeException('Non riesco a leggere il catalogo dal repository: pubblicazione del catalogo annullata.');
+            }
+            foreach (Content::all(CatalogPatch::KIND) as $r) {
+                if (!$r['deleted']) {
+                    [$cat, $enP, $enA] = CatalogPatch::apply($cat, $enP, $enA, (string) $r['item_id'], $r['draft']);
+                }
+            }
+            foreach (['data/catalog.json' => [$cat, 2, 'catalogo.json'], 'data/en_prodotti.json' => [$enP, 1, 'en_prodotti.json'], 'data/en_articoli.json' => [$enA, 1, 'en_articoli.json']] as $path => [$data, $ind, $seed]) {
+                $json = self::json($data, $ind);
+                $put($path, $json);
+                $put(self::SEED . $seed, $json);
+            }
         }
         return $files;
     }
@@ -96,7 +123,7 @@ final class Publisher
         }
         foreach (array_keys($pending) as $section) {
             foreach (match ($section) {
-                'Testi' => [Texts::KIND], 'Fiere e Open Day' => [Fairs::KIND], 'Galleria' => [Gallery::KIND, Gallery::ORDER], default => [Videos::KIND],
+                'Testi' => [Texts::KIND], 'Fiere e Open Day' => [Fairs::KIND], 'Galleria' => [Gallery::KIND, Gallery::ORDER], 'Catalogo' => [CatalogPatch::KIND], default => [Videos::KIND],
             } as $kind) {
                 Content::publishAll($kind);
             }
@@ -134,11 +161,11 @@ final class Publisher
         return is_array($cur) && isset($cur['_nota']) ? ['_nota' => $cur['_nota']] + $data : $data;
     }
 
-    private static function json(array|object $d): string
+    private static function json(array|object $d, int $indent = 2): string
     {
         $s = (string) json_encode($d, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT);
         // Due spazi per livello, come i file del sito: i confronti su GitHub restano leggibili.
-        $s = (string) preg_replace_callback('/^( +)/m', static fn (array $m): string => str_repeat(' ', intdiv(strlen($m[1]), 2)), $s);
+        $s = (string) preg_replace_callback('/^( +)/m', static fn (array $m): string => str_repeat(' ', intdiv(strlen($m[1]), (int) (4 / $indent))), $s);
         return $s . "\n";
     }
 }

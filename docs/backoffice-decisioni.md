@@ -98,3 +98,15 @@ Variazione al progetto: niente WordPress. Il sito resta statico; i contenuti si 
 - **Prodotti riconosciuti dal codice** a ogni importazione.
 - **Il catalogo stampato non cambia**: elenco delle correzioni esportabile (CSV) per chi aggiorna l'IDML, così sito e catalogo non divergono.
 - **Ordine**: dopo la «Pubblica» (4b).
+
+## Catalogo: italiano e inglese sono la stessa scheda (25 novembre 2026)
+- Ogni prodotto è **un solo record**, riconosciuto dai codici articolo; i testi IT ed EN stanno affiancati nello stesso record. Foto, tabelle, codici, EAN e confezioni sono **una sola volta**, comuni alle lingue.
+- L'importazione dai due IDML (ITA ed ENG) li **collega** tra loro: stesso codice articolo = stessa riga; i testi si abbinano in ordine nei blocchi di ciascun prodotto. Se l'abbinamento non è sicuro, compare nella schermata delle differenze.
+- Prova del 25 novembre sul Garden 2026: ITA ed ENG hanno gli stessi 344 codici; 340 sono già nel sito, 4 nuovi (clip per tubo irrigazione 16/20/25/32 mm, `1704-0216/0220/0225/0232`); 257 righe su 369 hanno il codice EAN (oggi assente dal sito). Il file «FRA» ricevuto per errore non si usa.
+- Le foto non sono incluse nell'IDML (collegamenti esterni): restano quelle già nel sito; per prodotti nuovi serve la cartella `Links` del catalogo.
+
+## Catalogo: stato dei lavori al 25 novembre 2026 (backoffice 0.11.0)
+- Fatto: lettura IDML in PHP (`backoffice/src/Idml.php`) gemella di quella in Python (`arnoplast/extract/idml.py`), confronto (`CatalogDiff.php`) e pagina «Catalogo» (solo amministratore), in sola lettura. La copia del catalogo con cui si confronta è `backoffice/seed/catalogo.json` (uguale a `data/catalog.json`, controllata dai test).
+- Decisione: italiano e inglese restano **lingue indipendenti** nei punti delle caratteristiche (9 schede del Garden hanno un numero diverso di punti).
+- Fatto (0.12.0): approvazione per gruppi, bozza (tipo `catalogo`, una patch per linea, idempotente), «Pubblica» scrive `catalog.json`, `en_prodotti.json` e `en_articoli.json` partendo dai file del repository. EAN: inseriti nei dati con `tools/idml_apply_ean.py` (solo codici sicuri), non mostrati sul sito. Prodotti su pagine con più schede: non proposti in automatico.
+- Da fare (ordine): correzioni manuali alle schede con avviso di conflitto; esportazione CSV delle correzioni; Agricoltura e Raccolta olive (IDML da ricevere); 8 EAN dubbi del Garden da confermare dal cliente.

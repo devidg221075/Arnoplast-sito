@@ -21,7 +21,7 @@ App::boot(['site_url' => 'https://www.arnoplast.it', 'secret' => 'test-secret-te
 Gallery::useDir($work . '/originali');
 mkdir($work . '/originali');
 Fairs::importSeed();
-Gallery::importSeed();
+Gallery::importSeed(__DIR__ . '/fixtures/galleria-145.json'); // copia ferma: il file del sito cresce a ogni pubblicazione
 Videos::importSeed();
 
 // Il «repository» di prova: i file dati veri del sito.
@@ -93,7 +93,8 @@ $p = Publisher::pending();
 check(array_keys($p) === ['Testi', 'Fiere e Open Day', 'Video e tutorial'] && !isset($p['Galleria']), 'in attesa: testi, fiere e video (non la galleria)');
 
 $files = Publisher::files($gh->read(...));
-check(array_keys($files) === ['data/testi.json', 'data/fiere.json', 'data/tutorial.json'], 'file del commit: solo le sezioni cambiate');
+check(array_keys($files) === ['data/testi.json', 'data/fiere.json', 'backoffice/seed/fiere.json', 'data/tutorial.json', 'backoffice/seed/video.json'], 'file del commit: solo le sezioni cambiate (dati e copia nel pacchetto)');
+check($files['backoffice/seed/fiere.json'] === $files['data/fiere.json'] && json_decode($files['backoffice/seed/video.json'], true) === json_decode($files['data/tutorial.json'], true)['video'], 'la copia nel pacchetto del backoffice è uguale ai dati del sito');
 $t = json_decode($files['data/testi.json'], true);
 check($t['it'][$key] === 'Testo corretto dal test' && isset($t['_nota']), 'testi.json: correzione e nota in testa conservata');
 check(str_contains($files['data/testi.json'], '"en": {}'), 'testi.json: lingua senza correzioni scritta come {} (la build vuole una mappa)');
@@ -110,7 +111,7 @@ check(str_contains($files['data/testi.json'], "\n  \"it\": {\n    \"") && str_en
 [$url, $sections] = Publisher::publish($gh, 1);
 check($url === 'https://github.com/proprietario/sito/commit/commit1' && $sections === ['Testi', 'Fiere e Open Day', 'Video e tutorial'], 'commit creato');
 check($log['parents'] === ['parent1'] && str_contains($log['message'], 'Testi') && str_contains($log['patched'], '/git/refs/heads/main'), 'commit sul ramo giusto, con messaggio');
-check(count($log['tree']) === 3 && $log['tree'][0]['path'] === 'data/testi.json', 'albero con i tre file');
+check(count($log['tree']) === 5 && $log['tree'][0]['path'] === 'data/testi.json', 'albero con i cinque file (tre dati e due copie)');
 check(Publisher::pending() === [] && Content::pending(Videos::KIND) === 0, 'dopo la pubblicazione non resta nulla in attesa');
 check(Texts::overrides(true)['it'][$key] === 'Testo corretto dal test', 'testo ora pubblicato');
 
@@ -124,7 +125,7 @@ $repo['data/tutorial.json'] = $files['data/tutorial.json'];
 $repo['data/testi.json'] = $files['data/testi.json'];
 $repo['data/fiere.json'] = $files['data/fiere.json'];
 $files = Publisher::files($gh->read(...));
-check(isset($files['content/photos/galleria/200.webp']) && isset($files['data/galleria.json']), 'foto nuova: file originale e galleria.json nel commit');
+check(isset($files['content/photos/galleria/200.webp']) && isset($files['data/galleria.json']) && ($files['backoffice/seed/galleria.json'] ?? '') === $files['data/galleria.json'], 'foto nuova: file originale, galleria.json e la sua copia nel commit');
 $gj = json_decode($files['data/galleria.json'], true)['foto'];
 check(end($gj)['sorgente'] === '200.webp' && count($gj) === 146, 'galleria.json: foto nuova in fondo, con la sorgente da convertire');
 check(count(json_decode($files['data/tutorial.json'], true)['video']) === count(Videos::seed()) - 1, 'tutorial.json: video eliminato tolto');

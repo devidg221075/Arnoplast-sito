@@ -21,7 +21,7 @@ final class Auth
     public const PAGE_PERMISSION = [
         'dashboard' => 'dashboard', 'products' => 'content', 'clients' => 'clients', 'requests' => 'requests', 'request' => 'requests', 'quote_pdf' => 'quotes', 'orders' => 'orders', 'order' => 'orders',
         'fairs' => 'content', 'fair' => 'content', 'gallery' => 'content', 'gallery_photo' => 'content', 'gallery_img' => 'content',
-        'videos' => 'content', 'video' => 'content', 'texts' => 'content', 'text_group' => 'content',
+        'videos' => 'content', 'video' => 'content', 'catalog' => 'publish', 'texts' => 'content', 'text_group' => 'content',
         'listini' => 'listini', 'listino_file' => 'listini',
         'stats' => 'stats', 'mail' => 'mail', 'users' => 'users', 'activity' => 'activity', 'conditions' => 'conditions', 'publish' => 'publish',
     ];

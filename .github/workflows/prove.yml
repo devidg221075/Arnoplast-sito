@@ -28,6 +28,8 @@ jobs:
           extensions: mbstring, pdo_sqlite, curl, gd, zip
       - run: sudo apt-get update && sudo apt-get install -y --no-install-recommends poppler-utils
       - run: pip install -r requirements.txt
+      - name: Foto nuove della galleria (come nella costruzione del sito)
+        run: python tools/galleria_apply.py
       - run: python -m pytest -q
       - run: npm run test:js
       - name: Prove del backoffice

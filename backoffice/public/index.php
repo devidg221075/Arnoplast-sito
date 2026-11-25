@@ -4,7 +4,11 @@ declare(strict_types=1);
 
 use Backoffice\App;
 use Backoffice\Auth;
+use Backoffice\CatalogDiff;
+use Backoffice\CatalogPatch;
+use Backoffice\CatalogView;
 use Backoffice\Changelog;
+use Backoffice\Idml;
 use Backoffice\GitHub;
 use Backoffice\Publisher;
 use Backoffice\PublishView;
@@ -73,7 +77,7 @@ $render = static function (string $title, string $body, ?array $user = null) use
         exit;
     }
     $all = ['dashboard' => ['Dashboard', 'dashboard'], 'products' => ['Prodotti', 'products'], 'requests' => ['Preventivi e richieste', 'requests'], 'orders' => ['Ordini', 'orders'],
-        'clients' => ['Clienti', 'clients'], 'fairs' => ['Fiere', 'content'], 'gallery' => ['Galleria', 'eye'], 'videos' => ['Video', 'arrow-right'], 'texts' => ['Testi', 'content'],
+        'clients' => ['Clienti', 'clients'], 'fairs' => ['Fiere', 'content'], 'gallery' => ['Galleria', 'eye'], 'videos' => ['Video', 'arrow-right'], 'texts' => ['Testi', 'content'], 'catalog' => ['Catalogo', 'products'],
         'listini' => ['Listini riservati', 'listini'], 'stats' => ['Statistiche', 'stats'], 'mail' => ['Posta', 'mail'], 'conditions' => ['Condizioni PDF', 'requests'], 'publish' => ['Pubblica', 'external-link'],
         'users' => ['Utenti e ruoli', 'users'], 'activity' => ['Registro attività', 'activity']];
     $links = array_filter($all, static fn (string $p): bool => Auth::canOpen($user, $p), ARRAY_FILTER_USE_KEY);
@@ -274,6 +278,10 @@ if (($page === 'gallery' || $page === 'gallery_photo' || $page === 'gallery_img'
                 $n = Gallery::importSeed();
                 App::log($uid, 'galleria.importata', '', (string) $n);
                 $say($n > 0 ? "Importate $n foto dal sito." : 'Nessuna foto nuova da importare.');
+            } elseif ($action === 'dedupe') {
+                $n = Gallery::removeDuplicates($uid);
+                App::log($uid, 'galleria.doppie', '', (string) $n);
+                $say($n > 0 ? "Tolte $n foto doppie (da eliminare con «Pubblica»)." : 'Nessuna foto doppia.');
             } elseif ($action === 'add') {
                 [$added, $errors] = Gallery::addUploads($_FILES['photos'] ?? [], (string) ($_POST['categoria'] ?? ''), $uid);
                 App::log($uid, 'galleria.aggiunte', '', (string) count($added));
@@ -323,6 +331,61 @@ if (($page === 'gallery' || $page === 'gallery_photo' || $page === 'gallery_img'
 }
 
 // --- Testi fissi del sito, per pagina (solo amministratore). Le modifiche restano in bozza.
+// --- Catalogo: confronto con gli IDML di InDesign e approvazione per gruppi (solo amministratore). Le modifiche restano in bozza fino a «Pubblica».
+if ($page === 'catalog' && Auth::can($user, 'publish')) {
+    $lines = CatalogDiff::lines();
+    $line = is_string($_POST['line'] ?? null) && isset($lines[$_POST['line']]) ? $_POST['line'] : (string) array_key_first($lines);
+    $action = (string) ($_POST['action'] ?? '');
+    if ($isPost && $action === 'approve') {
+        $saved = $_SESSION['catalog_report'] ?? null;
+        if (!is_array($saved) || ($saved['line'] ?? '') !== $line) {
+            $say('Il confronto è scaduto: ricarica i due file e riprova.', false);
+            $go($url('catalog'));
+        }
+        $groups = array_values(array_intersect(array_keys(CatalogPatch::GROUPS), array_map('strval', (array) ($_POST['g'] ?? []))));
+        $dest = [];
+        foreach ((array) ($_POST['dest'] ?? []) as $code => $slug) {
+            $dest[(string) $code] = (string) $slug;
+        }
+        $patch = CatalogPatch::fromReport($saved['report'], $groups, $dest);
+        if (CatalogPatch::count($patch) === 0) {
+            $say('Nessun gruppo scelto: non ho salvato nulla.', false);
+            $go($url('catalog'));
+        }
+        Content::saveDraft(CatalogPatch::KIND, $line, CatalogPatch::merge(CatalogPatch::draft($line), $patch), $uid);
+        App::log($uid, 'catalogo.bozza', $line, implode(',', $groups));
+        unset($_SESSION['catalog_report']);
+        $say('Bozza del catalogo salvata. Per metterla sul sito premi «Pubblica».');
+        $go($url('catalog'));
+    }
+    if ($isPost && $action === 'discard') {
+        $row = Content::find(CatalogPatch::KIND, $line);
+        if ($row) {
+            $row['published'] === null ? Content::markDeleted(CatalogPatch::KIND, $line, $uid) : Content::revert(CatalogPatch::KIND, $line, $uid);
+            App::log($uid, 'catalogo.bozza_scartata', $line);
+            $say('Bozza del catalogo scartata.');
+        }
+        $go($url('catalog'));
+    }
+    if ($isPost) {
+        $ok = static fn ($f): bool => is_array($f) && ($f['error'] ?? UPLOAD_ERR_NO_FILE) === UPLOAD_ERR_OK && is_uploaded_file((string) $f['tmp_name']);
+        if (!$ok($_FILES['idml_it'] ?? null) || !$ok($_FILES['idml_en'] ?? null)) {
+            $render('Catalogo', '<p class="flash">Servono entrambi i file, italiano e inglese. Se sono molto grandi controlla il limite di caricamento del server.</p>' . CatalogView::form(Auth::csrf(), $line), $user);
+        }
+        try {
+            @ini_set('memory_limit', '512M');
+            $report = CatalogDiff::compare(Idml::open($_FILES['idml_it']['tmp_name']), Idml::open($_FILES['idml_en']['tmp_name']), $line);
+        } catch (\Throwable $ex) {
+            $render('Catalogo', '<p class="flash">' . $e($ex instanceof \RuntimeException ? $ex->getMessage() : 'Non riesco a leggere i file.') . '</p>' . CatalogView::form(Auth::csrf(), $line), $user);
+        }
+        $_SESSION['catalog_report'] = ['line' => $line, 'report' => $report];
+        App::log($uid, 'catalogo.confronto', $line);
+        $render('Catalogo: differenze con il sito', CatalogView::report($report, Auth::csrf(), $line), $user);
+    }
+    unset($_SESSION['catalog_report']);
+    $render('Catalogo', CatalogView::drafts(Auth::csrf()) . CatalogView::form(Auth::csrf(), $line), $user);
+}
+
 // --- Video e tutorial (solo amministratore): elenco con gruppi, aggiunta, scheda di un video. Le modifiche restano in bozza.
 if (($page === 'videos' || $page === 'video') && Auth::can($user, 'content')) {
     Videos::importSeed();

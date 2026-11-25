@@ -31,7 +31,14 @@ def test_fair_dates_match_between_backoffice_and_build():
 
 
 def test_gallery_seed_is_the_site_data():
-    assert (ROOT / "backoffice" / "seed" / "galleria.json").read_text(encoding="utf-8") == (ROOT / "data" / "galleria.json").read_text(encoding="utf-8"), \
+    """La copia della galleria nel pacchetto del backoffice ha le stesse foto del sito (stesso elenco, ordine, categorie e testi).
+
+    Il file del sito può avere in più i dati calcolati dalla build (misure, nome dell'originale): non si confrontano.
+    """
+    keys = ("id", "categoria", "alt", "alt_en")
+    seed = json.loads((ROOT / "backoffice" / "seed" / "galleria.json").read_text(encoding="utf-8"))["foto"]
+    data = json.loads((ROOT / "data" / "galleria.json").read_text(encoding="utf-8"))["foto"]
+    assert [{k: p.get(k) for k in keys} for p in seed] == [{k: p.get(k) for k in keys} for p in data], \
         "copiare data/galleria.json in backoffice/seed/galleria.json"
 
 
@@ -76,11 +83,11 @@ def test_gallery_from_backoffice_is_accepted_by_the_build_tools(tmp_path):
     img = tmp_path / "nuova.png"
     Image.new("RGB", (1600, 900), "green").save(img)
     code = ('define("BACKOFFICE_TESTING", true); require "backoffice/vendor/autoload.php"; use Backoffice\\{App, Gallery};'
-            ' App::boot(["site_url" => "https://x.it", "secret" => "s", "db" => ["dsn" => "sqlite::memory:"]]); Gallery::useDir(getenv("ORIG")); Gallery::importSeed();'
+            ' App::boot(["site_url" => "https://x.it", "secret" => "s", "db" => ["dsn" => "sqlite::memory:"]]); Gallery::useDir(getenv("ORIG")); Gallery::importSeed(getenv("FX"));'
             ' Gallery::save("003", "serre", "Tunnel", "Tunnel EN", 1, 1); Gallery::delete("010", 1);'
             ' $f = ["name" => ["n.png"], "tmp_name" => [getenv("IMG")], "size" => [filesize(getenv("IMG"))], "error" => [0]];'
             ' Gallery::addUploads($f, "dettagli", 1); echo json_encode(Gallery::export(), JSON_UNESCAPED_UNICODE);')
-    data = subprocess.check_output([PHP, "-r", code], cwd=ROOT, env=dict(os.environ, IMG=str(img), ORIG=str(tmp_path / "originali"))).decode()
+    data = subprocess.check_output([PHP, "-r", code], cwd=ROOT, env=dict(os.environ, IMG=str(img), ORIG=str(tmp_path / "originali"), FX=str(ROOT / "backoffice" / "tests" / "fixtures" / "galleria-145.json"))).decode()
     exported = json.loads(data)["foto"]
     assert exported[0]["id"] == "003" and exported[0]["alt_en"] == "Tunnel EN" and exported[0]["categoria"] == "serre"
     assert "010" not in [p["id"] for p in exported]
@@ -101,3 +108,18 @@ def test_gallery_from_backoffice_is_accepted_by_the_build_tools(tmp_path):
     final = json.loads(dp.read_text(encoding="utf-8"))["foto"]
     assert (final[-1]["w"], final[-1]["h"]) == (1400, 788) and "sorgente" not in final[-1]
     GT.check(final)
+
+
+def test_catalog_seed_is_the_site_catalog():
+    """seed/catalogo.json è la copia di data/catalog.json con cui il backoffice confronta gli IDML: devono coincidere."""
+    seed = (ROOT / "backoffice" / "seed" / "catalogo.json").read_text(encoding="utf-8")
+    data = (ROOT / "data" / "catalog.json").read_text(encoding="utf-8")
+    assert seed == data, "copiare data/catalog.json in backoffice/seed/catalogo.json"
+
+
+def test_english_catalog_seeds_are_the_site_data():
+    """seed/en_prodotti.json e seed/en_articoli.json sono le copie dei testi inglesi con cui il backoffice confronta gli IDML."""
+    for name in ("en_prodotti.json", "en_articoli.json"):
+        seed = (ROOT / "backoffice" / "seed" / name).read_text(encoding="utf-8")
+        data = (ROOT / "data" / name).read_text(encoding="utf-8")
+        assert seed == data, f"copiare data/{name} in backoffice/seed/{name}"

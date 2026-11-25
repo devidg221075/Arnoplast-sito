@@ -9,6 +9,8 @@ use PDO;
 final class App
 {
     private static ?PDO $pdo = null;
+    /** Quando il database è stato usato l'ultima volta (per accorgersi di una connessione chiusa dal server). */
+    private static float $lastUse = 0.0;
     private static array $config = [];
 
     public static function boot(array $config): void
@@ -37,8 +39,34 @@ final class App
         return $v;
     }
 
+    /** Vero per «MySQL server has gone away» (2006) e «Lost connection» (2013): il server ha chiuso la connessione. */
+    public static function connectionLost(\Throwable $e): bool
+    {
+        $m = strtolower($e->getMessage());
+        return str_contains($m, 'server has gone away') || str_contains($m, 'lost connection') || str_contains($m, 'error while sending')
+            || in_array((int) ($e instanceof \PDOException ? ($e->errorInfo[1] ?? 0) : 0), [2006, 2013], true);
+    }
+
+    /** Chiude la connessione: la prossima richiesta al database ne apre una nuova. */
+    public static function reconnect(): void
+    {
+        self::$pdo = null;
+    }
+
     public static function db(): PDO
     {
+        // Dopo una pausa (per esempio mentre si elaborano molte foto) il server può aver chiuso la connessione: si controlla e, se serve, si riapre.
+        if (self::$pdo !== null && microtime(true) - self::$lastUse > 2.0) {
+            try {
+                self::$pdo->query('SELECT 1');
+            } catch (\PDOException $e) {
+                if (!self::connectionLost($e)) {
+                    throw $e;
+                }
+                self::$pdo = null;
+            }
+        }
+        self::$lastUse = microtime(true);
         if (self::$pdo === null) {
             $db = self::config('db');
             self::$pdo = new PDO($db['dsn'], $db['user'] ?? null, $db['password'] ?? null, [
