@@ -335,9 +335,6 @@ final class Idml
                 $problems[] = $slug . ': titolo «' . $name . '» non trovato nell\'IDML';
                 continue;
             }
-            if (count($hits) > 1) {
-                $problems[] = $slug . ': titolo presente ' . count($hits) . ' volte, uso la prima pagina';
-            }
             $t = $hits[0];
             $feats = array_values(array_filter($fi, static fn($f) => $f['page'] === $t['page'] && !$f['table']
                 && str_starts_with(strtoupper($f['text']), 'CARATTERISTICHE') && $f['y'] >= $t['y'] - 5));
@@ -347,15 +344,20 @@ final class Idml
                     $feat = $f;
                 }
             }
+            // Pagina con più prodotti (più riquadri «CARATTERISTICHE») o titolo ripetuto: l'abbinamento per posizione può sbagliare.
+            $onPage = count(array_filter($fi, static fn($f) => $f['page'] === $t['page'] && !$f['table'] && str_starts_with(strtoupper($f['text']), 'CARATTERISTICHE')));
+            $ambiguous = count($hits) > 1 || $onPage > 1;
             $te = $twin($t);
             $fet = $feat ? $twin($feat) : null;
             $a = $feat ? array_slice($feat['paras'], 1) : [];
             $b = $fet ? array_slice($fet['paras'], 1) : [];
             $aligned = $fet !== null && count($a) === count($b);
-            if ($feat && !$aligned) {
+            if ($ambiguous) {
+                $problems[] = $slug . ': pagina con più prodotti o titolo ripetuto: nome e caratteristiche da verificare a mano, non proposti';
+            } elseif ($feat && !$aligned) {
                 $problems[] = $slug . ': ' . count($a) . ' punti in italiano, ' . count($b) . ' in inglese (le lingue restano indipendenti)';
             }
-            $out[$slug] = ['page' => $t['page'], 'title_en' => $te['text'] ?? null, 'features_it' => $a, 'features_en' => $b, 'aligned' => $aligned];
+            $out[$slug] = ['page' => $t['page'], 'title_en' => $te['text'] ?? null, 'features_it' => $a, 'features_en' => $b, 'aligned' => $aligned, 'ambiguous' => $ambiguous];
         }
         return [$out, $problems];
     }

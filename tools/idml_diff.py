@@ -60,6 +60,8 @@ def main(it_path: str, en_path: str, line: str, out: str) -> None:
     cards, card_problems = idml.cards(it_path, en_path, {k: v["name"]["it"] for k, v in prods.items()})
     feat_changed, feat_same, feat_en = [], 0, 0
     for slug, card in cards.items():
+        if card.ambiguous:
+            continue
         old = [norm(x) for x in prods[slug].get("features", [])]
         if old == [norm(x) for x in card.features_it]:
             feat_same += 1

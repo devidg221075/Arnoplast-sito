@@ -192,6 +192,7 @@ class Card:
     features_it: list[str]
     features_en: list[str]
     aligned: bool  # stesso numero di punti in italiano e inglese
+    ambiguous: bool = False  # pagina con più prodotti o titolo ripetuto: da verificare a mano
 
 
 def cards(it_path: str, en_path: str, names: dict[str, str]) -> tuple[dict[str, Card], list[str]]:
@@ -213,17 +214,19 @@ def cards(it_path: str, en_path: str, names: dict[str, str]) -> tuple[dict[str, 
         if not hits:
             problems.append(f"{slug}: titolo «{name}» non trovato nell'IDML")
             continue
-        if len(hits) > 1:
-            problems.append(f"{slug}: titolo presente {len(hits)} volte, uso la prima pagina")
         t = hits[0]
         feats = [f for f in it if f.page == t.page and not f.table
                  and f.text.upper().startswith("CARATTERISTICHE") and f.y >= t.y - 5]
         feat = min(feats, key=lambda f: f.y - t.y) if feats else None
+        on_page = sum(1 for f in it if f.page == t.page and not f.table and f.text.upper().startswith("CARATTERISTICHE"))
+        ambiguous = len(hits) > 1 or on_page > 1
         te, fe = twin(t), (twin(feat) if feat else None)
         fi = feat.paras[1:] if feat else []
         fn = fe.paras[1:] if fe else []
         aligned = bool(fe) and len(fi) == len(fn)
-        if feat and not aligned:
+        if ambiguous:
+            problems.append(f"{slug}: pagina con più prodotti o titolo ripetuto: nome e caratteristiche da verificare a mano, non proposti")
+        elif feat and not aligned:
             problems.append(f"{slug}: {len(fi)} punti in italiano, {len(fn)} in inglese (le lingue restano indipendenti)")
-        out[slug] = Card(t.page, te.text if te else None, fi, fn, aligned)
+        out[slug] = Card(t.page, te.text if te else None, fi, fn, aligned, ambiguous)
     return out, problems

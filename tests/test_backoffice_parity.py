@@ -115,3 +115,11 @@ def test_catalog_seed_is_the_site_catalog():
     seed = (ROOT / "backoffice" / "seed" / "catalogo.json").read_text(encoding="utf-8")
     data = (ROOT / "data" / "catalog.json").read_text(encoding="utf-8")
     assert seed == data, "copiare data/catalog.json in backoffice/seed/catalogo.json"
+
+
+def test_english_catalog_seeds_are_the_site_data():
+    """seed/en_prodotti.json e seed/en_articoli.json sono le copie dei testi inglesi con cui il backoffice confronta gli IDML."""
+    for name in ("en_prodotti.json", "en_articoli.json"):
+        seed = (ROOT / "backoffice" / "seed" / name).read_text(encoding="utf-8")
+        data = (ROOT / "data" / name).read_text(encoding="utf-8")
+        assert seed == data, f"copiare data/{name} in backoffice/seed/{name}"

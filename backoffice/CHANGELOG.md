@@ -2,6 +2,13 @@
 
 Formato: versione, data, cosa cambia. La versione sta nel file `VERSION` e compare in basso nella barra laterale: cliccandola si apre questa pagina («Novità»).
 
+## 0.12.0 — 25 novembre 2026
+
+### Novità
+- **Catalogo: approvazione dei cambiamenti.** Dopo il confronto con gli IDML scegli quali gruppi accettare: articoli nuovi (con la scheda in cui inserirli), descrizioni italiane corrette, confezioni e box, descrizioni inglesi, caratteristiche italiane, nomi e caratteristiche inglesi dei prodotti. Quello che accetti resta in **bozza**; arriva sul sito con **Pubblica**. Una bozza si può scartare dalla stessa pagina.
+- **Pubblica** scrive `data/catalog.json`, `data/en_prodotti.json` e `data/en_articoli.json` partendo dai file attuali del repository, quindi non perde nulla di quanto è già pubblicato; i testi inglesi del cliente sostituiscono quelli «tradotti da noi».
+- I prodotti su pagine con più schede insieme, o con titolo ripetuto, non si propongono in automatico (l'abbinamento per posizione potrebbe sbagliare): compaiono sotto «Da controllare».
+
 ## 0.11.0 — 25 novembre 2026
 
 ### Novità

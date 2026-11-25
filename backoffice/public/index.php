@@ -5,6 +5,7 @@ declare(strict_types=1);
 use Backoffice\App;
 use Backoffice\Auth;
 use Backoffice\CatalogDiff;
+use Backoffice\CatalogPatch;
 use Backoffice\CatalogView;
 use Backoffice\Changelog;
 use Backoffice\Idml;
@@ -330,10 +331,42 @@ if (($page === 'gallery' || $page === 'gallery_photo' || $page === 'gallery_img'
 }
 
 // --- Testi fissi del sito, per pagina (solo amministratore). Le modifiche restano in bozza.
-// --- Catalogo: confronto con gli IDML di InDesign (solo amministratore). Sola lettura: non cambia nulla sul sito.
+// --- Catalogo: confronto con gli IDML di InDesign e approvazione per gruppi (solo amministratore). Le modifiche restano in bozza fino a «Pubblica».
 if ($page === 'catalog' && Auth::can($user, 'publish')) {
     $lines = CatalogDiff::lines();
     $line = is_string($_POST['line'] ?? null) && isset($lines[$_POST['line']]) ? $_POST['line'] : (string) array_key_first($lines);
+    $action = (string) ($_POST['action'] ?? '');
+    if ($isPost && $action === 'approve') {
+        $saved = $_SESSION['catalog_report'] ?? null;
+        if (!is_array($saved) || ($saved['line'] ?? '') !== $line) {
+            $say('Il confronto è scaduto: ricarica i due file e riprova.', false);
+            $go($url('catalog'));
+        }
+        $groups = array_values(array_intersect(array_keys(CatalogPatch::GROUPS), array_map('strval', (array) ($_POST['g'] ?? []))));
+        $dest = [];
+        foreach ((array) ($_POST['dest'] ?? []) as $code => $slug) {
+            $dest[(string) $code] = (string) $slug;
+        }
+        $patch = CatalogPatch::fromReport($saved['report'], $groups, $dest);
+        if (CatalogPatch::count($patch) === 0) {
+            $say('Nessun gruppo scelto: non ho salvato nulla.', false);
+            $go($url('catalog'));
+        }
+        Content::saveDraft(CatalogPatch::KIND, $line, CatalogPatch::merge(CatalogPatch::draft($line), $patch), $uid);
+        App::log($uid, 'catalogo.bozza', $line, implode(',', $groups));
+        unset($_SESSION['catalog_report']);
+        $say('Bozza del catalogo salvata. Per metterla sul sito premi «Pubblica».');
+        $go($url('catalog'));
+    }
+    if ($isPost && $action === 'discard') {
+        $row = Content::find(CatalogPatch::KIND, $line);
+        if ($row) {
+            $row['published'] === null ? Content::markDeleted(CatalogPatch::KIND, $line, $uid) : Content::revert(CatalogPatch::KIND, $line, $uid);
+            App::log($uid, 'catalogo.bozza_scartata', $line);
+            $say('Bozza del catalogo scartata.');
+        }
+        $go($url('catalog'));
+    }
     if ($isPost) {
         $ok = static fn ($f): bool => is_array($f) && ($f['error'] ?? UPLOAD_ERR_NO_FILE) === UPLOAD_ERR_OK && is_uploaded_file((string) $f['tmp_name']);
         if (!$ok($_FILES['idml_it'] ?? null) || !$ok($_FILES['idml_en'] ?? null)) {
@@ -345,10 +378,12 @@ if ($page === 'catalog' && Auth::can($user, 'publish')) {
         } catch (\Throwable $ex) {
             $render('Catalogo', '<p class="flash">' . $e($ex instanceof \RuntimeException ? $ex->getMessage() : 'Non riesco a leggere i file.') . '</p>' . CatalogView::form(Auth::csrf(), $line), $user);
         }
+        $_SESSION['catalog_report'] = ['line' => $line, 'report' => $report];
         App::log($uid, 'catalogo.confronto', $line);
-        $render('Catalogo: differenze con il sito', CatalogView::report($report) . CatalogView::form(Auth::csrf(), $line), $user);
+        $render('Catalogo: differenze con il sito', CatalogView::report($report, Auth::csrf(), $line), $user);
     }
-    $render('Catalogo', CatalogView::form(Auth::csrf(), $line), $user);
+    unset($_SESSION['catalog_report']);
+    $render('Catalogo', CatalogView::drafts(Auth::csrf()) . CatalogView::form(Auth::csrf(), $line), $user);
 }
 
 // --- Video e tutorial (solo amministratore): elenco con gruppi, aggiunta, scheda di un video. Le modifiche restano in bozza.

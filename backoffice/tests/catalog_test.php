@@ -5,7 +5,7 @@ declare(strict_types=1);
 define('BACKOFFICE_TESTING', true);
 require __DIR__ . '/../vendor/autoload.php';
 
-use Backoffice\{Auth, CatalogDiff, Idml};
+use Backoffice\{App, Auth, CatalogDiff, CatalogPatch, Content, Idml, Publisher};
 
 $fails = 0;
 function check(bool $ok, string $what): void
@@ -17,6 +17,7 @@ function check(bool $ok, string $what): void
 
 $work = sys_get_temp_dir() . '/bo-cat-' . bin2hex(random_bytes(4));
 mkdir($work);
+App::boot(['site_url' => 'https://www.arnoplast.it', 'secret' => 'test-secret-test-secret-test-secret', 'db' => ['dsn' => 'sqlite:' . $work . '/db.sqlite']]);
 
 function story(array $rows, array $head = ['Cod. EAN', 'Art.', 'Descrizione', 'Conf.', 'Box']): string
 {
@@ -120,6 +121,65 @@ try {
 } catch (InvalidArgumentException) {
     check(true, 'linea sconosciuta rifiutata');
 }
+
+
+// --- Approvazione: dai gruppi alla bozza, e dalla bozza ai file del repository
+$repo = dirname(__DIR__, 2);
+$read = static fn (string $path): ?string => is_file($repo . '/' . $path) ? (string) file_get_contents($repo . '/' . $path) : null;
+check(Publisher::files($read) === [] && CatalogPatch::pendingCount() === 0, 'senza bozze del catalogo, «Pubblica» non scrive nulla');
+
+$report = CatalogDiff::compare(Idml::open($work . '/c-it.idml'), Idml::open($work . '/c-en.idml'), 'garden');
+check(count($report['dati']) === 0 && count($report['desc_en']) >= 1 && count($report['new']) === 1, 'proposta: descrizioni inglesi e articolo nuovo');
+$sugg = $report['new'][0]['product'];
+check($sugg === '' || isset($report['product_names'][$sugg]), 'scheda proposta per il nuovo articolo: ' . ($sugg !== '' ? $sugg : 'nessuna'));
+$target = $p0['slug'];
+$patch = CatalogPatch::fromReport($report, ['desc_it', 'new', 'desc_en'], ['9999-0001' => $target]);
+check(($patch['articles'][$a0['code']]['it'] ?? '') === $itRows[0][2] && ($patch['articles'][$a0['code']]['en'] ?? '') === 'ENGLISH TEXT'
+    && $patch['new'][0]['product'] === $target && !isset($patch['products']['x']), 'patch dai gruppi scelti (con la scheda scelta per il nuovo articolo)');
+check(CatalogPatch::fromReport($report, [], [])['articles'] === [], 'nessun gruppo scelto: nessuna modifica');
+$bad = CatalogPatch::fromReport($report, ['new'], ['9999-0001' => 'scheda-che-non-esiste']);
+check($bad['new'] === [], 'scheda di destinazione inesistente: articolo non aggiunto');
+
+// patch idempotente e unione di bozze
+[$c1, $p1, $e1] = CatalogPatch::apply(...[...CatalogPatch::base(), 'garden', $patch]);
+[$c2, $p2, $e2] = CatalogPatch::apply($c1, $p1, $e1, 'garden', $patch);
+check($c1 === $c2 && $p1 === $p2 && $e1 === $e2, 'applicare due volte la patch dà lo stesso risultato');
+$added = null;
+foreach ($c1['lines'] as $l) {
+    foreach ($l['families'] as $f) {
+        foreach ($f['products'] as $p) {
+            foreach ($p['articles'] as $a) {
+                if ($a['code'] === '9999-0001') {
+                    $added = [$p['slug'], $a];
+                }
+            }
+        }
+    }
+}
+check($added !== null && $added[0] === $target && $added[1]['description']['it'] === 'ARTICOLO NUOVO' && $added[1]['kind'] === 'article' && $added[1]['pallet'] === null, 'articolo nuovo aggiunto alla scheda scelta');
+check(($e1['articoli']['9999-0001'] ?? '') === 'NEW ITEM' && ($e1['articoli'][$a0['code']] ?? '') === 'ENGLISH TEXT', 'inglese scritto in en_articoli');
+$withTrad = ['articoli' => [], 'tradotti_da_noi' => [$a0['code'] => 'OLD'], 'mancanti' => [$a0['code'], 'altro']];
+[, , $e3] = CatalogPatch::apply(['lines' => []], [], $withTrad, 'garden', ['articles' => [$a0['code'] => ['en' => 'NEW']]]);
+check($e3['articoli'][$a0['code']] === 'NEW' && !isset($e3['tradotti_da_noi'][$a0['code']]) && $e3['mancanti'] === ['altro'], 'il testo del cliente sostituisce quello «tradotto da noi» (che altrimenti lo coprirebbe)');
+$m = CatalogPatch::merge(['articles' => ['A' => ['it' => 'x']], 'new' => [], 'products' => []], ['articles' => ['A' => ['en' => 'y'], 'B' => ['it' => 'z']], 'new' => [], 'products' => []]);
+check($m['articles']['A'] === ['en' => 'y', 'it' => 'x'] && isset($m['articles']['B']), 'unione di bozze: valori nuovi sopra i vecchi, il resto resta');
+
+// bozza → Content → Pubblica
+Content::saveDraft(CatalogPatch::KIND, 'garden', $patch, 1);
+check(CatalogPatch::pendingCount() === count($patch['articles']) + 1 && array_key_exists('Catalogo', Publisher::pending()), 'bozza contata tra le modifiche in attesa');
+$eff = CatalogPatch::effective();
+check(count(array_filter(CatalogDiff::catalog()['lines'], fn($l) => $l['slug'] === 'garden')) === 1 && $eff[2]['articoli']['9999-0001'] === 'NEW ITEM', 'il confronto parte dallo stato con le bozze');
+$files = Publisher::files($read);
+check(isset($files['data/catalog.json'], $files['data/en_articoli.json'], $files['backoffice/seed/catalogo.json']) && !isset($files['data/fiere.json']), 'Pubblica scrive catalogo, inglese e copie nel pacchetto, nient\'altro');
+$out = json_decode($files['data/catalog.json'], true);
+$orig = json_decode((string) $read('data/catalog.json'), true);
+check(count($out['lines']) === count($orig['lines']) && $out['lines'][0] === $orig['lines'][0] && $out['lines'][2] === $orig['lines'][2], 'le altre linee non cambiano');
+check($files['data/catalog.json'] === $files['backoffice/seed/catalogo.json'] && !isset($files['data/en_prodotti.json']), 'solo i file che cambiano; copia nel pacchetto uguale');
+// formato byte per byte: una patch senza effetto non cambia nessun file
+Content::saveDraft(CatalogPatch::KIND, 'garden', ['articles' => ['0000-0000' => ['it' => 'x']], 'new' => [], 'products' => []], 1);
+check(Publisher::files($read) === [], 'patch senza effetto: i tre file escono identici byte per byte (formato del sito mantenuto)');
+Content::publishAll(CatalogPatch::KIND);
+check(CatalogPatch::pendingCount() === 0, 'dopo la pubblicazione la bozza non è più in attesa');
 
 // --- Permessi: solo l'amministratore
 check(Auth::canOpen(['role' => 'admin'], 'catalog') && !Auth::canOpen(['role' => 'redattore'], 'catalog'), 'pagina «Catalogo» solo per l\'amministratore');

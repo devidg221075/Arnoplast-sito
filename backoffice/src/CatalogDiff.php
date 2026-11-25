@@ -10,11 +10,10 @@ namespace Backoffice;
  */
 final class CatalogDiff
 {
+    /** Il catalogo del sito con le bozze già approvate (seed + patch). */
     public static function catalog(): array
     {
-        $f = dirname(__DIR__) . '/seed/catalogo.json';
-        $d = is_file($f) ? json_decode((string) file_get_contents($f), true) : null;
-        return is_array($d) && isset($d['lines']) ? $d : ['lines' => []];
+        return CatalogPatch::effective()[0];
     }
 
     /** @return array<string,string> slug => nome della linea */
@@ -33,13 +32,14 @@ final class CatalogDiff
     }
 
     /**
-     * @return array{rows:int, distinct:int, known:int, new:array, gone:array, changed:array, ean:int, no_en:int,
-     *               problems:string[], cards:int, products:int, feat_same:int, feat_changed:array, feat_en:int, card_problems:string[]}
+     * Confronto e proposta di modifiche (gruppi da approvare).
+     * @return array<string,mixed>
      */
     public static function compare(Idml $it, Idml $en, string $line): array
     {
+        [$catalog, $enP, $enA] = CatalogPatch::effective();
         $ln = null;
-        foreach (self::catalog()['lines'] as $l) {
+        foreach ($catalog['lines'] as $l) {
             if ($l['slug'] === $line) {
                 $ln = $l;
             }
@@ -49,40 +49,53 @@ final class CatalogDiff
         }
         $known = [];
         $prods = [];
+        $family = [];   // prime 4 cifre del codice => [slug => quanti articoli], per proporre la scheda dei nuovi
         foreach ($ln['families'] as $fam) {
             foreach ($fam['products'] as $p) {
                 $prods[$p['slug']] = $p;
                 foreach ($p['articles'] as $a) {
                     $known[$a['code']] ??= [$p['slug'], $a];
+                    $k = substr($a['code'], 0, 4);
+                    $family[$k][$p['slug']] = ($family[$k][$p['slug']] ?? 0) + 1;
                 }
             }
         }
         [$pairs, $problems] = Idml::pair($it->rows(), $en->rows());
+        $enNow = static fn (string $code): string => (string) ($enA['articoli'][$code] ?? $enA['tradotti_da_noi'][$code] ?? '');
 
         $new = [];
         $changed = [];
+        $dati = [];
+        $descEn = [];
         $seen = [];
         $ean = 0;
         $noEn = 0;
-        foreach ($pairs as $n => [$r, $e]) {
+        foreach ($pairs as [$r, $e]) {
             $noEn += $e === null ? 1 : 0;
             $ean += $r['ean'] !== '' ? 1 : 0;
             if (isset($seen[$r['code']])) {
                 continue;
             }
             $seen[$r['code']] = true;
+            $enText = $e['description'] ?? '';
             if (!isset($known[$r['code']])) {
-                $new[] = ['code' => $r['code'], 'it' => $r['description'], 'en' => $e['description'] ?? null];
+                $fam = $family[substr($r['code'], 0, 4)] ?? [];
+                arsort($fam);
+                $new[] = ['code' => $r['code'], 'it' => $r['description'], 'en' => $e['description'] ?? null, 'conf' => $r['conf'], 'imb' => $r['box'],
+                    'ean' => $r['ean'], 'kind' => $r['spare'] ? 'spare' : 'article', 'product' => (string) (array_key_first($fam) ?? '')];
                 continue;
             }
             [$slug, $a] = $known[$r['code']];
             if (self::norm($a['description']['it'] ?? '') !== self::norm($r['description'])) {
                 $changed[] = ['code' => $r['code'], 'product' => $slug, 'field' => 'descrizione', 'old' => $a['description']['it'] ?? '', 'new' => $r['description']];
             }
-            foreach ([['conf', $a['conf'] ?? null, $r['conf']], ['box', $a['imb'] ?? null, $r['box']]] as [$f, $old, $cur]) {
+            foreach ([['conf', $a['conf'] ?? null, $r['conf']], ['imb', $a['imb'] ?? null, $r['box']]] as [$f, $old, $cur]) {
                 if (($old ?: null) !== $cur) {
-                    $changed[] = ['code' => $r['code'], 'product' => $slug, 'field' => $f, 'old' => (string) ($old ?? '—'), 'new' => (string) ($cur ?? '—')];
+                    $dati[] = ['code' => $r['code'], 'product' => $slug, 'field' => $f, 'old' => (string) ($old ?? '—'), 'new' => (string) ($cur ?? '—'), 'val' => $cur];
                 }
+            }
+            if ($enText !== '' && self::norm($enNow($r['code'])) !== self::norm($enText)) {
+                $descEn[] = ['code' => $r['code'], 'old' => $enNow($r['code']), 'new' => $enText];
             }
         }
         $gone = array_values(array_diff(array_keys($known), array_keys($seen)));
@@ -94,23 +107,34 @@ final class CatalogDiff
         }
         [$cards, $cardProblems] = Idml::cards($it, $en, $names);
         $same = 0;
-        $featChanged = [];
-        $featEn = 0;
+        $featIt = [];
+        $prodEn = [];
         foreach ($cards as $slug => $c) {
-            $old = array_map([self::class, 'norm'], $prods[$slug]['features'] ?? []);
-            if ($old === array_map([self::class, 'norm'], $c['features_it'])) {
+            if ($c['ambiguous']) {
+                continue; // pagina con più prodotti: non si propone nulla in automatico
+            }
+            $old = $prods[$slug]['features'] ?? [];
+            if (array_map([self::class, 'norm'], $old) === array_map([self::class, 'norm'], $c['features_it'])) {
                 $same++;
             } else {
-                $featChanged[] = ['product' => $slug, 'old' => count($old), 'new' => count($c['features_it'])];
+                $featIt[] = ['product' => $slug, 'old' => $old, 'new' => $c['features_it']];
             }
-            $featEn += $c['features_en'] ? 1 : 0;
+            $cur = $enP['prodotti'][$slug] ?? [];
+            $nameNew = (string) ($c['title_en'] ?? '');
+            $nameDiff = $nameNew !== '' && self::norm((string) ($cur['nome_en'] ?? '')) !== self::norm($nameNew);
+            $featDiff = $c['features_en'] && array_map([self::class, 'norm'], $cur['features_en'] ?? []) !== array_map([self::class, 'norm'], $c['features_en']);
+            if ($nameDiff || $featDiff) {
+                $prodEn[] = ['product' => $slug, 'name_old' => (string) ($cur['nome_en'] ?? ''), 'name_new' => $nameDiff ? $nameNew : null,
+                    'feat_old' => $cur['features_en'] ?? [], 'feat_new' => $featDiff ? $c['features_en'] : null];
+            }
         }
         return [
             'rows' => count($pairs), 'distinct' => count($seen), 'known' => count(array_intersect_key($seen, $known)),
-            'new' => $new, 'gone' => array_map(static fn($c) => ['code' => $c, 'product' => $known[$c][0]], $gone),
-            'changed' => $changed, 'ean' => $ean, 'no_en' => $noEn, 'problems' => $problems,
+            'new' => $new, 'gone' => array_map(static fn ($c) => ['code' => $c, 'product' => $known[$c][0]], $gone),
+            'changed' => $changed, 'dati' => $dati, 'desc_en' => $descEn, 'ean' => $ean, 'no_en' => $noEn, 'problems' => $problems,
             'cards' => count($cards), 'products' => count($prods), 'feat_same' => $same,
-            'feat_changed' => $featChanged, 'feat_en' => $featEn, 'card_problems' => $cardProblems,
+            'feat_changed' => $featIt, 'prod_en' => $prodEn, 'feat_en' => count(array_filter($cards, static fn ($c) => $c['features_en'])), 'card_problems' => $cardProblems,
+            'product_names' => array_map(static fn ($p) => (string) $p['name']['it'], $prods),
         ];
     }
 }
