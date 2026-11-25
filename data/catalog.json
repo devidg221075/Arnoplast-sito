@@ -5936,7 +5936,8 @@
                   "conf": null,
                   "imb": 12,
                   "pallet": null,
-                  "kind": "article"
+                  "kind": "article",
+                  "ean": "8025721010802"
                 },
                 {
                   "code": "1103-0302",
@@ -5946,7 +5947,8 @@
                   "conf": null,
                   "imb": 18,
                   "pallet": null,
-                  "kind": "article"
+                  "kind": "article",
+                  "ean": "8025721010796"
                 },
                 {
                   "code": "1203-0330",
@@ -5956,7 +5958,8 @@
                   "conf": null,
                   "imb": 12,
                   "pallet": null,
-                  "kind": "article"
+                  "kind": "article",
+                  "ean": "8025721032187"
                 },
                 {
                   "code": "1203-0300",
@@ -5966,7 +5969,8 @@
                   "conf": null,
                   "imb": 18,
                   "pallet": null,
-                  "kind": "article"
+                  "kind": "article",
+                  "ean": "8025721032194"
                 },
                 {
                   "code": "2412-0301",
@@ -6061,7 +6065,8 @@
                   "conf": null,
                   "imb": 12,
                   "pallet": null,
-                  "kind": "article"
+                  "kind": "article",
+                  "ean": "8025721031104"
                 },
                 {
                   "code": "1103-0502",
@@ -6071,7 +6076,8 @@
                   "conf": null,
                   "imb": 18,
                   "pallet": null,
-                  "kind": "article"
+                  "kind": "article",
+                  "ean": "8025721031111"
                 },
                 {
                   "code": "1203-0530",
@@ -6081,7 +6087,8 @@
                   "conf": null,
                   "imb": 12,
                   "pallet": null,
-                  "kind": "article"
+                  "kind": "article",
+                  "ean": "8025721032200"
                 },
                 {
                   "code": "1203-0500",
@@ -6091,7 +6098,8 @@
                   "conf": null,
                   "imb": 18,
                   "pallet": null,
-                  "kind": "article"
+                  "kind": "article",
+                  "ean": "8025721032217"
                 },
                 {
                   "code": "2412-0303",
@@ -6185,7 +6193,8 @@
                   "conf": null,
                   "imb": 18,
                   "pallet": null,
-                  "kind": "article"
+                  "kind": "article",
+                  "ean": "8025721010628"
                 },
                 {
                   "code": "1103-0202",
@@ -6195,7 +6204,8 @@
                   "conf": null,
                   "imb": 12,
                   "pallet": null,
-                  "kind": "article"
+                  "kind": "article",
+                  "ean": "8025721010635"
                 },
                 {
                   "code": "1203-0230",
@@ -6205,7 +6215,8 @@
                   "conf": null,
                   "imb": 18,
                   "pallet": null,
-                  "kind": "article"
+                  "kind": "article",
+                  "ean": "8025721032163"
                 },
                 {
                   "code": "1203-0200",
@@ -6215,7 +6226,8 @@
                   "conf": null,
                   "imb": 12,
                   "pallet": null,
-                  "kind": "article"
+                  "kind": "article",
+                  "ean": "8025721032170"
                 },
                 {
                   "code": "2411-0305",
@@ -6307,7 +6319,8 @@
                   "conf": null,
                   "imb": 12,
                   "pallet": null,
-                  "kind": "article"
+                  "kind": "article",
+                  "ean": "8025721033726"
                 },
                 {
                   "code": "1104-0602",
@@ -6317,7 +6330,8 @@
                   "conf": null,
                   "imb": 18,
                   "pallet": null,
-                  "kind": "article"
+                  "kind": "article",
+                  "ean": "8025721033733"
                 },
                 {
                   "code": "1204-0630",
@@ -6327,7 +6341,8 @@
                   "conf": null,
                   "imb": 12,
                   "pallet": null,
-                  "kind": "article"
+                  "kind": "article",
+                  "ean": "8025721033740"
                 },
                 {
                   "code": "1204-0600",
@@ -6337,7 +6352,8 @@
                   "conf": null,
                   "imb": 18,
                   "pallet": null,
-                  "kind": "article"
+                  "kind": "article",
+                  "ean": "8025721033757"
                 },
                 {
                   "code": "2411-0806",
@@ -6429,7 +6445,8 @@
                   "conf": null,
                   "imb": 12,
                   "pallet": null,
-                  "kind": "article"
+                  "kind": "article",
+                  "ean": "8025721033412"
                 },
                 {
                   "code": "1104-0502",
@@ -6439,7 +6456,8 @@
                   "conf": null,
                   "imb": 18,
                   "pallet": null,
-                  "kind": "article"
+                  "kind": "article",
+                  "ean": "8025721033429"
                 },
                 {
                   "code": "1204-0530",
@@ -6449,7 +6467,8 @@
                   "conf": null,
                   "imb": 12,
                   "pallet": null,
-                  "kind": "article"
+                  "kind": "article",
+                  "ean": "8025721033450"
                 },
                 {
                   "code": "1204-0500",
@@ -6459,7 +6478,8 @@
                   "conf": null,
                   "imb": 18,
                   "pallet": null,
-                  "kind": "article"
+                  "kind": "article",
+                  "ean": "8025721033467"
                 },
                 {
                   "code": "2411-0806",
@@ -6561,7 +6581,8 @@
                   "conf": null,
                   "imb": 12,
                   "pallet": null,
-                  "kind": "article"
+                  "kind": "article",
+                  "ean": "8025721033405"
                 },
                 {
                   "code": "1204-0230",
@@ -6571,7 +6592,8 @@
                   "conf": null,
                   "imb": 18,
                   "pallet": null,
-                  "kind": "article"
+                  "kind": "article",
+                  "ean": "8025721033436"
                 },
                 {
                   "code": "1204-0200",
@@ -6581,7 +6603,8 @@
                   "conf": null,
                   "imb": 12,
                   "pallet": null,
-                  "kind": "article"
+                  "kind": "article",
+                  "ean": "8025721033443"
                 },
                 {
                   "code": "2411-0804",
@@ -6674,7 +6697,8 @@
                   "conf": null,
                   "imb": 18,
                   "pallet": null,
-                  "kind": "article"
+                  "kind": "article",
+                  "ean": "8025721034396"
                 },
                 {
                   "code": "1103-0802",
@@ -6684,7 +6708,8 @@
                   "conf": null,
                   "imb": 12,
                   "pallet": null,
-                  "kind": "article"
+                  "kind": "article",
+                  "ean": "8025721034402"
                 },
                 {
                   "code": "1203-0830",
@@ -6694,7 +6719,8 @@
                   "conf": null,
                   "imb": 18,
                   "pallet": null,
-                  "kind": "article"
+                  "kind": "article",
+                  "ean": "8025721034419"
                 },
                 {
                   "code": "1203-0800",
@@ -6704,7 +6730,8 @@
                   "conf": null,
                   "imb": 12,
                   "pallet": null,
-                  "kind": "article"
+                  "kind": "article",
+                  "ean": "8025721034426"
                 },
                 {
                   "code": "2411-0332",
@@ -6817,7 +6844,8 @@
                   "conf": null,
                   "imb": 18,
                   "pallet": null,
-                  "kind": "article"
+                  "kind": "article",
+                  "ean": "8025721034365"
                 },
                 {
                   "code": "1102-0702",
@@ -6827,7 +6855,8 @@
                   "conf": null,
                   "imb": 15,
                   "pallet": null,
-                  "kind": "article"
+                  "kind": "article",
+                  "ean": "8025721033122"
                 },
                 {
                   "code": "1202-0730",
@@ -6847,7 +6876,8 @@
                   "conf": null,
                   "imb": 15,
                   "pallet": null,
-                  "kind": "article"
+                  "kind": "article",
+                  "ean": "8025721034389"
                 },
                 {
                   "code": "2411-0216",
@@ -6902,7 +6932,8 @@
                   "conf": null,
                   "imb": 15,
                   "pallet": null,
-                  "kind": "article"
+                  "kind": "article",
+                  "ean": "8025721031357"
                 },
                 {
                   "code": "1102-0104",
@@ -6912,7 +6943,8 @@
                   "conf": null,
                   "imb": 15,
                   "pallet": null,
-                  "kind": "article"
+                  "kind": "article",
+                  "ean": "8025721032088"
                 },
                 {
                   "code": "2411-0203",
@@ -6967,7 +6999,8 @@
                   "conf": null,
                   "imb": 15,
                   "pallet": null,
-                  "kind": "article"
+                  "kind": "article",
+                  "ean": "8025721010673"
                 },
                 {
                   "code": "1102-0102",
@@ -6977,7 +7010,8 @@
                   "conf": null,
                   "imb": 15,
                   "pallet": null,
-                  "kind": "article"
+                  "kind": "article",
+                  "ean": "8025721010680"
                 },
                 {
                   "code": "1102-0107",
@@ -6987,7 +7021,8 @@
                   "conf": null,
                   "imb": 15,
                   "pallet": null,
-                  "kind": "article"
+                  "kind": "article",
+                  "ean": "8025721034174"
                 },
                 {
                   "code": "1102-0108",
@@ -6997,7 +7032,8 @@
                   "conf": null,
                   "imb": 15,
                   "pallet": null,
-                  "kind": "article"
+                  "kind": "article",
+                  "ean": "8025721034181"
                 },
                 {
                   "code": "2411-0201",
@@ -7064,7 +7100,8 @@
                   "conf": null,
                   "imb": 12,
                   "pallet": null,
-                  "kind": "article"
+                  "kind": "article",
+                  "ean": "8025721010611"
                 },
                 {
                   "code": "1103-0102",
@@ -7074,7 +7111,8 @@
                   "conf": null,
                   "imb": 8,
                   "pallet": null,
-                  "kind": "article"
+                  "kind": "article",
+                  "ean": "8025721010642"
                 },
                 {
                   "code": "1203-0150",
@@ -7084,7 +7122,8 @@
                   "conf": null,
                   "imb": 12,
                   "pallet": null,
-                  "kind": "article"
+                  "kind": "article",
+                  "ean": "8025721031661"
                 },
                 {
                   "code": "1203-0140",
@@ -7094,7 +7133,8 @@
                   "conf": null,
                   "imb": 8,
                   "pallet": null,
-                  "kind": "article"
+                  "kind": "article",
+                  "ean": "8025721031647"
                 },
                 {
                   "code": "2411-0318",
@@ -7190,7 +7230,8 @@
                   "conf": null,
                   "imb": 12,
                   "pallet": null,
-                  "kind": "article"
+                  "kind": "article",
+                  "ean": "8025721031630"
                 },
                 {
                   "code": "1103-0106",
@@ -7200,7 +7241,8 @@
                   "conf": null,
                   "imb": 12,
                   "pallet": null,
-                  "kind": "article"
+                  "kind": "article",
+                  "ean": "8025721032095"
                 },
                 {
                   "code": "1203-0130",
@@ -7220,7 +7262,8 @@
                   "conf": null,
                   "imb": 12,
                   "pallet": null,
-                  "kind": "article"
+                  "kind": "article",
+                  "ean": "8025721032156"
                 },
                 {
                   "code": "2411-0318",
@@ -7313,7 +7356,8 @@
                   "conf": null,
                   "imb": 15,
                   "pallet": null,
-                  "kind": "article"
+                  "kind": "article",
+                  "ean": "8025721010055"
                 },
                 {
                   "code": "1101-0102",
@@ -7323,7 +7367,8 @@
                   "conf": null,
                   "imb": 12,
                   "pallet": null,
-                  "kind": "article"
+                  "kind": "article",
+                  "ean": "8025721010666"
                 },
                 {
                   "code": "1201-0130",
@@ -7343,7 +7388,8 @@
                   "conf": null,
                   "imb": 12,
                   "pallet": null,
-                  "kind": "article"
+                  "kind": "article",
+                  "ean": "8025721032132"
                 },
                 {
                   "code": "2411-0101",
@@ -7442,7 +7488,8 @@
                   "conf": 1,
                   "imb": 15,
                   "pallet": null,
-                  "kind": "article"
+                  "kind": "article",
+                  "ean": "8025721031159"
                 },
                 {
                   "code": "1401-0130",
@@ -7452,7 +7499,8 @@
                   "conf": 1,
                   "imb": 15,
                   "pallet": null,
-                  "kind": "article"
+                  "kind": "article",
+                  "ean": "8025721030350"
                 },
                 {
                   "code": "1401-0135",
@@ -7462,7 +7510,8 @@
                   "conf": 1,
                   "imb": 15,
                   "pallet": null,
-                  "kind": "article"
+                  "kind": "article",
+                  "ean": "8025721030367"
                 },
                 {
                   "code": "1401-0140",
@@ -7472,7 +7521,8 @@
                   "conf": 1,
                   "imb": 15,
                   "pallet": null,
-                  "kind": "article"
+                  "kind": "article",
+                  "ean": "8025721030374"
                 },
                 {
                   "code": "1401-0225",
@@ -7482,7 +7532,8 @@
                   "conf": 1,
                   "imb": 15,
                   "pallet": null,
-                  "kind": "article"
+                  "kind": "article",
+                  "ean": "8025721030381"
                 },
                 {
                   "code": "1401-0227",
@@ -7492,7 +7543,8 @@
                   "conf": 1,
                   "imb": 15,
                   "pallet": null,
-                  "kind": "article"
+                  "kind": "article",
+                  "ean": "8025721033474"
                 },
                 {
                   "code": "1401-0230",
@@ -7502,7 +7554,8 @@
                   "conf": 1,
                   "imb": 15,
                   "pallet": null,
-                  "kind": "article"
+                  "kind": "article",
+                  "ean": "8025721030398"
                 },
                 {
                   "code": "1401-0235",
@@ -7512,7 +7565,8 @@
                   "conf": 1,
                   "imb": 15,
                   "pallet": null,
-                  "kind": "article"
+                  "kind": "article",
+                  "ean": "8025721030404"
                 },
                 {
                   "code": "1401-0240",
@@ -7522,7 +7576,8 @@
                   "conf": 1,
                   "imb": 15,
                   "pallet": null,
-                  "kind": "article"
+                  "kind": "article",
+                  "ean": "8025721030411"
                 },
                 {
                   "code": "1402-0125",
@@ -7532,7 +7587,8 @@
                   "conf": 1,
                   "imb": 12,
                   "pallet": null,
-                  "kind": "article"
+                  "kind": "article",
+                  "ean": "8025721030053"
                 },
                 {
                   "code": "1402-0127",
@@ -7542,7 +7598,8 @@
                   "conf": 1,
                   "imb": 12,
                   "pallet": null,
-                  "kind": "article"
+                  "kind": "article",
+                  "ean": "8025721031142"
                 },
                 {
                   "code": "1402-0130",
@@ -7552,7 +7609,8 @@
                   "conf": 1,
                   "imb": 12,
                   "pallet": null,
-                  "kind": "article"
+                  "kind": "article",
+                  "ean": "8025721030008"
                 },
                 {
                   "code": "1402-0135",
@@ -7562,7 +7620,8 @@
                   "conf": 1,
                   "imb": 12,
                   "pallet": null,
-                  "kind": "article"
+                  "kind": "article",
+                  "ean": "8025721030015"
                 },
                 {
                   "code": "1402-0140",
@@ -7572,7 +7631,8 @@
                   "conf": 1,
                   "imb": 12,
                   "pallet": null,
-                  "kind": "article"
+                  "kind": "article",
+                  "ean": "8025721030077"
                 },
                 {
                   "code": "1402-0225",
@@ -7582,7 +7642,8 @@
                   "conf": 1,
                   "imb": 12,
                   "pallet": null,
-                  "kind": "article"
+                  "kind": "article",
+                  "ean": "8025721030060"
                 },
                 {
                   "code": "1402-0227",
@@ -7592,7 +7653,8 @@
                   "conf": 1,
                   "imb": 12,
                   "pallet": null,
-                  "kind": "article"
+                  "kind": "article",
+                  "ean": "8025721033481"
                 },
                 {
                   "code": "1402-0230",
@@ -7602,7 +7664,8 @@
                   "conf": 1,
                   "imb": 12,
                   "pallet": null,
-                  "kind": "article"
+                  "kind": "article",
+                  "ean": "8025721030022"
                 },
                 {
                   "code": "1402-0235",
@@ -7612,7 +7675,8 @@
                   "conf": 1,
                   "imb": 12,
                   "pallet": null,
-                  "kind": "article"
+                  "kind": "article",
+                  "ean": "8025721030039"
                 },
                 {
                   "code": "1402-0240",
@@ -7622,7 +7686,8 @@
                   "conf": 1,
                   "imb": 12,
                   "pallet": null,
-                  "kind": "article"
+                  "kind": "article",
+                  "ean": "8025721030084"
                 },
                 {
                   "code": "1403-1140",
@@ -7632,7 +7697,8 @@
                   "conf": 1,
                   "imb": 20,
                   "pallet": null,
-                  "kind": "article"
+                  "kind": "article",
+                  "ean": "8025721031203"
                 },
                 {
                   "code": "1403-1235",
@@ -7642,7 +7708,8 @@
                   "conf": 1,
                   "imb": 20,
                   "pallet": null,
-                  "kind": "article"
+                  "kind": "article",
+                  "ean": "8025721031210"
                 },
                 {
                   "code": "1403-1240",
@@ -7652,7 +7719,8 @@
                   "conf": 1,
                   "imb": 20,
                   "pallet": null,
-                  "kind": "article"
+                  "kind": "article",
+                  "ean": "8025721030633"
                 },
                 {
                   "code": "1404-0000",
@@ -7702,7 +7770,8 @@
                   "conf": 1,
                   "imb": 15,
                   "pallet": null,
-                  "kind": "article"
+                  "kind": "article",
+                  "ean": "8025721033894"
                 },
                 {
                   "code": "1422-0130",
@@ -7712,7 +7781,8 @@
                   "conf": 1,
                   "imb": 15,
                   "pallet": null,
-                  "kind": "article"
+                  "kind": "article",
+                  "ean": "8025721033900"
                 },
                 {
                   "code": "1422-0133",
@@ -7722,7 +7792,8 @@
                   "conf": 1,
                   "imb": 15,
                   "pallet": null,
-                  "kind": "article"
+                  "kind": "article",
+                  "ean": "8025721033917"
                 },
                 {
                   "code": "1421-0130",
@@ -7732,7 +7803,8 @@
                   "conf": 1,
                   "imb": 12,
                   "pallet": null,
-                  "kind": "article"
+                  "kind": "article",
+                  "ean": "8025721033696"
                 },
                 {
                   "code": "1421-0133",
@@ -7742,7 +7814,8 @@
                   "conf": 1,
                   "imb": 12,
                   "pallet": null,
-                  "kind": "article"
+                  "kind": "article",
+                  "ean": "8025721033702"
                 },
                 {
                   "code": "1421-0139",
@@ -7752,7 +7825,8 @@
                   "conf": 1,
                   "imb": 12,
                   "pallet": null,
-                  "kind": "article"
+                  "kind": "article",
+                  "ean": "8025721033719"
                 },
                 {
                   "code": "1424-0124",
@@ -7762,7 +7836,8 @@
                   "conf": 1,
                   "imb": 4,
                   "pallet": null,
-                  "kind": "article"
+                  "kind": "article",
+                  "ean": "8025721034013"
                 },
                 {
                   "code": "1424-0130",
@@ -7772,7 +7847,8 @@
                   "conf": 1,
                   "imb": 4,
                   "pallet": null,
-                  "kind": "article"
+                  "kind": "article",
+                  "ean": "8025721034020"
                 },
                 {
                   "code": "1424-0133",
@@ -7782,7 +7858,8 @@
                   "conf": 1,
                   "imb": 4,
                   "pallet": null,
-                  "kind": "article"
+                  "kind": "article",
+                  "ean": "8025721034037"
                 },
                 {
                   "code": "1424-0139",
@@ -7792,7 +7869,8 @@
                   "conf": 1,
                   "imb": 4,
                   "pallet": null,
-                  "kind": "article"
+                  "kind": "article",
+                  "ean": "8025721034044"
                 },
                 {
                   "code": "1425-0000",
@@ -7832,7 +7910,8 @@
                   "conf": 1,
                   "imb": 15,
                   "pallet": null,
-                  "kind": "article"
+                  "kind": "article",
+                  "ean": "8025721033160"
                 },
                 {
                   "code": "1411-0135",
@@ -7842,7 +7921,8 @@
                   "conf": 1,
                   "imb": 15,
                   "pallet": null,
-                  "kind": "article"
+                  "kind": "article",
+                  "ean": "8025721033177"
                 },
                 {
                   "code": "1411-0140",
@@ -7852,7 +7932,8 @@
                   "conf": 1,
                   "imb": 15,
                   "pallet": null,
-                  "kind": "article"
+                  "kind": "article",
+                  "ean": "8025721033276"
                 },
                 {
                   "code": "1412-0130",
@@ -7862,7 +7943,8 @@
                   "conf": 1,
                   "imb": 12,
                   "pallet": null,
-                  "kind": "article"
+                  "kind": "article",
+                  "ean": "8025721033184"
                 },
                 {
                   "code": "1412-0135",
@@ -7872,7 +7954,8 @@
                   "conf": 1,
                   "imb": 12,
                   "pallet": null,
-                  "kind": "article"
+                  "kind": "article",
+                  "ean": "8025721033191"
                 },
                 {
                   "code": "1412-0140",
@@ -7882,7 +7965,8 @@
                   "conf": 1,
                   "imb": 12,
                   "pallet": null,
-                  "kind": "article"
+                  "kind": "article",
+                  "ean": "8025721033283"
                 },
                 {
                   "code": "1417-0130",
@@ -7892,7 +7976,8 @@
                   "conf": 1,
                   "imb": 4,
                   "pallet": null,
-                  "kind": "article"
+                  "kind": "article",
+                  "ean": "8025721033207"
                 },
                 {
                   "code": "1417-0135",
@@ -7902,7 +7987,8 @@
                   "conf": 1,
                   "imb": 4,
                   "pallet": null,
-                  "kind": "article"
+                  "kind": "article",
+                  "ean": "8025721033214"
                 },
                 {
                   "code": "1417-0140",
@@ -7952,7 +8038,8 @@
                   "conf": 1,
                   "imb": 15,
                   "pallet": null,
-                  "kind": "article"
+                  "kind": "article",
+                  "ean": "8025721033955"
                 },
                 {
                   "code": "1431-0130",
@@ -7962,7 +8049,8 @@
                   "conf": 1,
                   "imb": 15,
                   "pallet": null,
-                  "kind": "article"
+                  "kind": "article",
+                  "ean": "8025721033962"
                 },
                 {
                   "code": "1431-0133",
@@ -7972,7 +8060,8 @@
                   "conf": 1,
                   "imb": 15,
                   "pallet": null,
-                  "kind": "article"
+                  "kind": "article",
+                  "ean": "8025721033979"
                 },
                 {
                   "code": "1431-0140",
@@ -7982,7 +8071,8 @@
                   "conf": 1,
                   "imb": 15,
                   "pallet": null,
-                  "kind": "article"
+                  "kind": "article",
+                  "ean": "8025721034549"
                 },
                 {
                   "code": "1432-0127",
@@ -7992,7 +8082,8 @@
                   "conf": 1,
                   "imb": 12,
                   "pallet": null,
-                  "kind": "article"
+                  "kind": "article",
+                  "ean": "8025721033986"
                 },
                 {
                   "code": "1432-0130",
@@ -8002,7 +8093,8 @@
                   "conf": 1,
                   "imb": 12,
                   "pallet": null,
-                  "kind": "article"
+                  "kind": "article",
+                  "ean": "8025721033993"
                 },
                 {
                   "code": "1432-0133",
@@ -8012,7 +8104,8 @@
                   "conf": 1,
                   "imb": 12,
                   "pallet": null,
-                  "kind": "article"
+                  "kind": "article",
+                  "ean": "8025721034006"
                 },
                 {
                   "code": "1432-0140",
@@ -8022,7 +8115,8 @@
                   "conf": 1,
                   "imb": 12,
                   "pallet": null,
-                  "kind": "article"
+                  "kind": "article",
+                  "ean": "8025721034297"
                 },
                 {
                   "code": "1434-0127",
@@ -8032,7 +8126,8 @@
                   "conf": 4,
                   "imb": null,
                   "pallet": null,
-                  "kind": "article"
+                  "kind": "article",
+                  "ean": "8025721034259"
                 },
                 {
                   "code": "1434-0130",
@@ -8042,7 +8137,8 @@
                   "conf": 4,
                   "imb": null,
                   "pallet": null,
-                  "kind": "article"
+                  "kind": "article",
+                  "ean": "8025721034266"
                 },
                 {
                   "code": "1434-0133",
@@ -8052,7 +8148,8 @@
                   "conf": 4,
                   "imb": null,
                   "pallet": null,
-                  "kind": "article"
+                  "kind": "article",
+                  "ean": "8025721034273"
                 },
                 {
                   "code": "1434-0140",
@@ -8062,7 +8159,8 @@
                   "conf": 4,
                   "imb": null,
                   "pallet": null,
-                  "kind": "article"
+                  "kind": "article",
+                  "ean": "8025721034280"
                 },
                 {
                   "code": "1435-0000",
@@ -8102,7 +8200,8 @@
                   "conf": 1,
                   "imb": 15,
                   "pallet": null,
-                  "kind": "article"
+                  "kind": "article",
+                  "ean": "8025721031715"
                 },
                 {
                   "code": "1301-1120",
@@ -8112,7 +8211,8 @@
                   "conf": 1,
                   "imb": 15,
                   "pallet": null,
-                  "kind": "article"
+                  "kind": "article",
+                  "ean": "8025721031722"
                 },
                 {
                   "code": "1301-1124",
@@ -8122,7 +8222,8 @@
                   "conf": 1,
                   "imb": 15,
                   "pallet": null,
-                  "kind": "article"
+                  "kind": "article",
+                  "ean": "8025721031739"
                 },
                 {
                   "code": "1301-1127",
@@ -8132,7 +8233,8 @@
                   "conf": 1,
                   "imb": 15,
                   "pallet": null,
-                  "kind": "article"
+                  "kind": "article",
+                  "ean": "8025721031746"
                 },
                 {
                   "code": "1301-1130",
@@ -8142,7 +8244,8 @@
                   "conf": 1,
                   "imb": 15,
                   "pallet": null,
-                  "kind": "article"
+                  "kind": "article",
+                  "ean": "8025721031753"
                 },
                 {
                   "code": "1301-1133",
@@ -8152,7 +8255,8 @@
                   "conf": 1,
                   "imb": 15,
                   "pallet": null,
-                  "kind": "article"
+                  "kind": "article",
+                  "ean": "8025721031760"
                 },
                 {
                   "code": "1301-1224",
@@ -8162,7 +8266,8 @@
                   "conf": 1,
                   "imb": 15,
                   "pallet": null,
-                  "kind": "article"
+                  "kind": "article",
+                  "ean": "8025721031777"
                 },
                 {
                   "code": "1301-1227",
@@ -8172,7 +8277,8 @@
                   "conf": 1,
                   "imb": 15,
                   "pallet": null,
-                  "kind": "article"
+                  "kind": "article",
+                  "ean": "8025721031784"
                 },
                 {
                   "code": "1301-1230",
@@ -8182,7 +8288,8 @@
                   "conf": 1,
                   "imb": 15,
                   "pallet": null,
-                  "kind": "article"
+                  "kind": "article",
+                  "ean": "8025721031791"
                 },
                 {
                   "code": "1301-1233",
@@ -8192,7 +8299,8 @@
                   "conf": 1,
                   "imb": 15,
                   "pallet": null,
-                  "kind": "article"
+                  "kind": "article",
+                  "ean": "8025721031807"
                 },
                 {
                   "code": "1301-1324",
@@ -8202,7 +8310,8 @@
                   "conf": 1,
                   "imb": 15,
                   "pallet": null,
-                  "kind": "article"
+                  "kind": "article",
+                  "ean": "8025721031814"
                 },
                 {
                   "code": "1301-1330",
@@ -8212,7 +8321,8 @@
                   "conf": 1,
                   "imb": 15,
                   "pallet": null,
-                  "kind": "article"
+                  "kind": "article",
+                  "ean": "8025721031821"
                 },
                 {
                   "code": "1302-0116",
@@ -8222,7 +8332,8 @@
                   "conf": 1,
                   "imb": 12,
                   "pallet": null,
-                  "kind": "article"
+                  "kind": "article",
+                  "ean": "8025721020115"
                 },
                 {
                   "code": "1302-0120",
@@ -8232,7 +8343,8 @@
                   "conf": 1,
                   "imb": 12,
                   "pallet": null,
-                  "kind": "article"
+                  "kind": "article",
+                  "ean": "8025721020122"
                 },
                 {
                   "code": "1302-0124",
@@ -8242,7 +8354,8 @@
                   "conf": 1,
                   "imb": 12,
                   "pallet": null,
-                  "kind": "article"
+                  "kind": "article",
+                  "ean": "8025721020139"
                 },
                 {
                   "code": "1302-0127",
@@ -8252,7 +8365,8 @@
                   "conf": 1,
                   "imb": 12,
                   "pallet": null,
-                  "kind": "article"
+                  "kind": "article",
+                  "ean": "8025721020146"
                 },
                 {
                   "code": "1302-0130",
@@ -8262,7 +8376,8 @@
                   "conf": 1,
                   "imb": 12,
                   "pallet": null,
-                  "kind": "article"
+                  "kind": "article",
+                  "ean": "8025721020153"
                 },
                 {
                   "code": "1302-0133",
@@ -8272,7 +8387,8 @@
                   "conf": 1,
                   "imb": 12,
                   "pallet": null,
-                  "kind": "article"
+                  "kind": "article",
+                  "ean": "8025721020160"
                 },
                 {
                   "code": "1302-0140",
@@ -8282,7 +8398,8 @@
                   "conf": 1,
                   "imb": 12,
                   "pallet": null,
-                  "kind": "article"
+                  "kind": "article",
+                  "ean": "8025721020467"
                 },
                 {
                   "code": "1302-0224",
@@ -8292,7 +8409,8 @@
                   "conf": 1,
                   "imb": 12,
                   "pallet": null,
-                  "kind": "article"
+                  "kind": "article",
+                  "ean": "8025721020177"
                 },
                 {
                   "code": "1302-0227",
@@ -8302,7 +8420,8 @@
                   "conf": 1,
                   "imb": 12,
                   "pallet": null,
-                  "kind": "article"
+                  "kind": "article",
+                  "ean": "8025721030237"
                 },
                 {
                   "code": "1302-0230",
@@ -8312,7 +8431,8 @@
                   "conf": 1,
                   "imb": 12,
                   "pallet": null,
-                  "kind": "article"
+                  "kind": "article",
+                  "ean": "8025721020184"
                 },
                 {
                   "code": "1302-0233",
@@ -8322,7 +8442,8 @@
                   "conf": 1,
                   "imb": 12,
                   "pallet": null,
-                  "kind": "article"
+                  "kind": "article",
+                  "ean": "8025721020191"
                 },
                 {
                   "code": "1302-0240",
@@ -8332,7 +8453,8 @@
                   "conf": 1,
                   "imb": 12,
                   "pallet": null,
-                  "kind": "article"
+                  "kind": "article",
+                  "ean": "8025721030046"
                 },
                 {
                   "code": "1302-0324",
@@ -8342,7 +8464,8 @@
                   "conf": 1,
                   "imb": 12,
                   "pallet": null,
-                  "kind": "article"
+                  "kind": "article",
+                  "ean": "8025721020207"
                 },
                 {
                   "code": "1302-0330",
@@ -8352,7 +8475,8 @@
                   "conf": 1,
                   "imb": 12,
                   "pallet": null,
-                  "kind": "article"
+                  "kind": "article",
+                  "ean": "8025721020214"
                 },
                 {
                   "code": "1302-0340",
@@ -8362,7 +8486,8 @@
                   "conf": 1,
                   "imb": 12,
                   "pallet": null,
-                  "kind": "article"
+                  "kind": "article",
+                  "ean": "8025721020856"
                 },
                 {
                   "code": "1306-0113",
@@ -8372,7 +8497,8 @@
                   "conf": 1,
                   "imb": 50,
                   "pallet": null,
-                  "kind": "article"
+                  "kind": "article",
+                  "ean": "8025721020603"
                 },
                 {
                   "code": "1306-0116",
@@ -8382,7 +8508,8 @@
                   "conf": 1,
                   "imb": 50,
                   "pallet": null,
-                  "kind": "article"
+                  "kind": "article",
+                  "ean": "8025721031340"
                 },
                 {
                   "code": "1306-0120",
@@ -8392,7 +8519,8 @@
                   "conf": 1,
                   "imb": 50,
                   "pallet": null,
-                  "kind": "article"
+                  "kind": "article",
+                  "ean": "8025721020474"
                 },
                 {
                   "code": "1306-0124",
@@ -8402,7 +8530,8 @@
                   "conf": 1,
                   "imb": 50,
                   "pallet": null,
-                  "kind": "article"
+                  "kind": "article",
+                  "ean": "8025721020481"
                 },
                 {
                   "code": "1306-0127",
@@ -8412,7 +8541,8 @@
                   "conf": 1,
                   "imb": 50,
                   "pallet": null,
-                  "kind": "article"
+                  "kind": "article",
+                  "ean": "8025721020665"
                 },
                 {
                   "code": "1306-0130",
@@ -8422,7 +8552,8 @@
                   "conf": 1,
                   "imb": 50,
                   "pallet": null,
-                  "kind": "article"
+                  "kind": "article",
+                  "ean": "8025721020504"
                 },
                 {
                   "code": "1306-0133",
@@ -8432,7 +8563,8 @@
                   "conf": 1,
                   "imb": 50,
                   "pallet": null,
-                  "kind": "article"
+                  "kind": "article",
+                  "ean": "8025721020689"
                 },
                 {
                   "code": "1306-0140",
@@ -8442,7 +8574,8 @@
                   "conf": 1,
                   "imb": 40,
                   "pallet": null,
-                  "kind": "article"
+                  "kind": "article",
+                  "ean": "8025721020696"
                 },
                 {
                   "code": "1306-0224",
@@ -8452,7 +8585,8 @@
                   "conf": 1,
                   "imb": 50,
                   "pallet": null,
-                  "kind": "article"
+                  "kind": "article",
+                  "ean": "8025721020535"
                 },
                 {
                   "code": "1306-0227",
@@ -8462,7 +8596,8 @@
                   "conf": 1,
                   "imb": 50,
                   "pallet": null,
-                  "kind": "article"
+                  "kind": "article",
+                  "ean": "8025721020719"
                 },
                 {
                   "code": "1306-0230",
@@ -8472,7 +8607,8 @@
                   "conf": 1,
                   "imb": 50,
                   "pallet": null,
-                  "kind": "article"
+                  "kind": "article",
+                  "ean": "8025721020559"
                 },
                 {
                   "code": "1306-0233",
@@ -8482,7 +8618,8 @@
                   "conf": 1,
                   "imb": 50,
                   "pallet": null,
-                  "kind": "article"
+                  "kind": "article",
+                  "ean": "8025721020733"
                 },
                 {
                   "code": "1306-0240",
@@ -8492,7 +8629,8 @@
                   "conf": 1,
                   "imb": 40,
                   "pallet": null,
-                  "kind": "article"
+                  "kind": "article",
+                  "ean": "8025721030220"
                 },
                 {
                   "code": "1306-0324",
@@ -8502,7 +8640,8 @@
                   "conf": 1,
                   "imb": 50,
                   "pallet": null,
-                  "kind": "article"
+                  "kind": "article",
+                  "ean": "8025721030107"
                 },
                 {
                   "code": "1306-0330",
@@ -8512,7 +8651,8 @@
                   "conf": 1,
                   "imb": 50,
                   "pallet": null,
-                  "kind": "article"
+                  "kind": "article",
+                  "ean": "8025721020580"
                 },
                 {
                   "code": "1306-0340",
@@ -8522,7 +8662,8 @@
                   "conf": 1,
                   "imb": 40,
                   "pallet": null,
-                  "kind": "article"
+                  "kind": "article",
+                  "ean": "8025721020764"
                 },
                 {
                   "code": "1308-0124",
@@ -8532,7 +8673,8 @@
                   "conf": 1,
                   "imb": 20,
                   "pallet": null,
-                  "kind": "article"
+                  "kind": "article",
+                  "ean": "8025721033764"
                 },
                 {
                   "code": "1308-0127",
@@ -8542,7 +8684,8 @@
                   "conf": 1,
                   "imb": 20,
                   "pallet": null,
-                  "kind": "article"
+                  "kind": "article",
+                  "ean": "8025721033771"
                 },
                 {
                   "code": "1308-0130",
@@ -8552,7 +8695,8 @@
                   "conf": 1,
                   "imb": 20,
                   "pallet": null,
-                  "kind": "article"
+                  "kind": "article",
+                  "ean": "8025721033689"
                 },
                 {
                   "code": "1308-0133",
@@ -8562,7 +8706,8 @@
                   "conf": 1,
                   "imb": 20,
                   "pallet": null,
-                  "kind": "article"
+                  "kind": "article",
+                  "ean": "8025721033788"
                 },
                 {
                   "code": "1308-0140",
@@ -8572,7 +8717,8 @@
                   "conf": 1,
                   "imb": 20,
                   "pallet": null,
-                  "kind": "article"
+                  "kind": "article",
+                  "ean": "8025721033795"
                 },
                 {
                   "code": "1308-0224",
@@ -8582,7 +8728,8 @@
                   "conf": 1,
                   "imb": 20,
                   "pallet": null,
-                  "kind": "article"
+                  "kind": "article",
+                  "ean": "8025721033801"
                 },
                 {
                   "code": "1308-0227",
@@ -8592,7 +8739,8 @@
                   "conf": 1,
                   "imb": 20,
                   "pallet": null,
-                  "kind": "article"
+                  "kind": "article",
+                  "ean": "8025721033818"
                 },
                 {
                   "code": "1308-0230",
@@ -8602,7 +8750,8 @@
                   "conf": 1,
                   "imb": 20,
                   "pallet": null,
-                  "kind": "article"
+                  "kind": "article",
+                  "ean": "8025721033825"
                 },
                 {
                   "code": "1308-0233",
@@ -8612,7 +8761,8 @@
                   "conf": 1,
                   "imb": 20,
                   "pallet": null,
-                  "kind": "article"
+                  "kind": "article",
+                  "ean": "8025721033832"
                 },
                 {
                   "code": "1308-0240",
@@ -8622,7 +8772,8 @@
                   "conf": 1,
                   "imb": 20,
                   "pallet": null,
-                  "kind": "article"
+                  "kind": "article",
+                  "ean": "8025721033849"
                 },
                 {
                   "code": "1303-1140",
@@ -8632,7 +8783,8 @@
                   "conf": 1,
                   "imb": 20,
                   "pallet": null,
-                  "kind": "article"
+                  "kind": "article",
+                  "ean": "8025721031180"
                 },
                 {
                   "code": "1303-1233",
@@ -8642,7 +8794,8 @@
                   "conf": 1,
                   "imb": 20,
                   "pallet": null,
-                  "kind": "article"
+                  "kind": "article",
+                  "ean": "8025721031197"
                 },
                 {
                   "code": "1303-1240",
@@ -8652,7 +8805,8 @@
                   "conf": 1,
                   "imb": 20,
                   "pallet": null,
-                  "kind": "article"
+                  "kind": "article",
+                  "ean": "8025721032002"
                 },
                 {
                   "code": "1304-0000",
@@ -8714,7 +8868,8 @@
                   "conf": null,
                   "imb": 4,
                   "pallet": null,
-                  "kind": "article"
+                  "kind": "article",
+                  "ean": "8025721031067"
                 },
                 {
                   "code": "1501-1001",
@@ -8724,7 +8879,8 @@
                   "conf": null,
                   "imb": 4,
                   "pallet": null,
-                  "kind": "article"
+                  "kind": "article",
+                  "ean": "8025721033313"
                 }
               ]
             },
@@ -8747,7 +8903,8 @@
                   "conf": null,
                   "imb": 1,
                   "pallet": null,
-                  "kind": "article"
+                  "kind": "article",
+                  "ean": "8025721034433"
                 },
                 {
                   "code": "1501-0205",
@@ -8767,7 +8924,8 @@
                   "conf": null,
                   "imb": 1,
                   "pallet": null,
-                  "kind": "article"
+                  "kind": "article",
+                  "ean": "8025721034440"
                 },
                 {
                   "code": "1501-0207",
@@ -8800,7 +8958,8 @@
                   "conf": null,
                   "imb": 1,
                   "pallet": null,
-                  "kind": "article"
+                  "kind": "article",
+                  "ean": "8025721032408"
                 }
               ]
             },
@@ -8823,7 +8982,8 @@
                   "conf": null,
                   "imb": 2,
                   "pallet": null,
-                  "kind": "article"
+                  "kind": "article",
+                  "ean": "8025721033498"
                 }
               ]
             },
@@ -8846,7 +9006,8 @@
                   "conf": null,
                   "imb": 4,
                   "pallet": null,
-                  "kind": "article"
+                  "kind": "article",
+                  "ean": "8025721030275"
                 },
                 {
                   "code": "1501-0501",
@@ -8856,7 +9017,8 @@
                   "conf": null,
                   "imb": 4,
                   "pallet": null,
-                  "kind": "article"
+                  "kind": "article",
+                  "ean": "8025721030916"
                 }
               ]
             },
@@ -8879,7 +9041,8 @@
                   "conf": null,
                   "imb": 1,
                   "pallet": null,
-                  "kind": "article"
+                  "kind": "article",
+                  "ean": "8025721034310"
                 }
               ]
             },
@@ -8902,7 +9065,8 @@
                   "conf": null,
                   "imb": 4,
                   "pallet": null,
-                  "kind": "article"
+                  "kind": "article",
+                  "ean": "8025721020351"
                 },
                 {
                   "code": "1505-3020",
@@ -8912,7 +9076,8 @@
                   "conf": null,
                   "imb": 4,
                   "pallet": null,
-                  "kind": "article"
+                  "kind": "article",
+                  "ean": "8025721020610"
                 },
                 {
                   "code": "1506-3020",
@@ -8922,7 +9087,8 @@
                   "conf": null,
                   "imb": 4,
                   "pallet": null,
-                  "kind": "article"
+                  "kind": "article",
+                  "ean": "8025721034532"
                 }
               ]
             },
@@ -8945,7 +9111,8 @@
                   "conf": null,
                   "imb": 4,
                   "pallet": null,
-                  "kind": "article"
+                  "kind": "article",
+                  "ean": "8025721020290"
                 },
                 {
                   "code": "1502-3030",
@@ -8955,7 +9122,8 @@
                   "conf": null,
                   "imb": 4,
                   "pallet": null,
-                  "kind": "article"
+                  "kind": "article",
+                  "ean": "8025721020306"
                 }
               ]
             },
@@ -8978,7 +9146,8 @@
                   "conf": null,
                   "imb": 4,
                   "pallet": null,
-                  "kind": "article"
+                  "kind": "article",
+                  "ean": "8025721020337"
                 },
                 {
                   "code": "1503-2530",
@@ -8988,7 +9157,8 @@
                   "conf": null,
                   "imb": 4,
                   "pallet": null,
-                  "kind": "article"
+                  "kind": "article",
+                  "ean": "8025721033092"
                 }
               ]
             },
@@ -9011,7 +9181,8 @@
                   "conf": null,
                   "imb": 4,
                   "pallet": null,
-                  "kind": "article"
+                  "kind": "article",
+                  "ean": "8025721030732"
                 },
                 {
                   "code": "1506-3031",
@@ -9021,7 +9192,8 @@
                   "conf": null,
                   "imb": 4,
                   "pallet": null,
-                  "kind": "article"
+                  "kind": "article",
+                  "ean": "8025721034327"
                 }
               ]
             }
@@ -9057,7 +9229,8 @@
                   "conf": null,
                   "imb": 1,
                   "pallet": null,
-                  "kind": "article"
+                  "kind": "article",
+                  "ean": "8025721030701"
                 }
               ]
             },
@@ -9085,7 +9258,8 @@
                   "conf": null,
                   "imb": 20,
                   "pallet": null,
-                  "kind": "article"
+                  "kind": "article",
+                  "ean": "8025721033320"
                 },
                 {
                   "code": "1601-0301",
@@ -9095,7 +9269,8 @@
                   "conf": null,
                   "imb": 20,
                   "pallet": null,
-                  "kind": "article"
+                  "kind": "article",
+                  "ean": "8025721033337"
                 }
               ]
             },
@@ -9123,7 +9298,8 @@
                   "conf": null,
                   "imb": 20,
                   "pallet": null,
-                  "kind": "article"
+                  "kind": "article",
+                  "ean": "8025721030183"
                 }
               ]
             },
@@ -9151,7 +9327,8 @@
                   "conf": null,
                   "imb": 20,
                   "pallet": null,
-                  "kind": "article"
+                  "kind": "article",
+                  "ean": "8025721020788"
                 }
               ]
             },
@@ -9178,7 +9355,8 @@
                   "conf": null,
                   "imb": 20,
                   "pallet": null,
-                  "kind": "article"
+                  "kind": "article",
+                  "ean": "8025721030190"
                 }
               ]
             },
@@ -9205,7 +9383,8 @@
                   "conf": null,
                   "imb": 20,
                   "pallet": null,
-                  "kind": "article"
+                  "kind": "article",
+                  "ean": "8025721020795"
                 }
               ]
             }
@@ -9243,7 +9422,8 @@
                   "conf": null,
                   "imb": 5,
                   "pallet": null,
-                  "kind": "article"
+                  "kind": "article",
+                  "ean": "8025721030756"
                 },
                 {
                   "code": "1602-0202",
@@ -9263,7 +9443,8 @@
                   "conf": null,
                   "imb": 5,
                   "pallet": null,
-                  "kind": "article"
+                  "kind": "article",
+                  "ean": "8025721034068"
                 }
               ]
             },
@@ -9290,7 +9471,8 @@
                   "conf": null,
                   "imb": 5,
                   "pallet": null,
-                  "kind": "article"
+                  "kind": "article",
+                  "ean": "8025721030657"
                 },
                 {
                   "code": "1602-0301",
@@ -9300,7 +9482,8 @@
                   "conf": null,
                   "imb": 5,
                   "pallet": null,
-                  "kind": "article"
+                  "kind": "article",
+                  "ean": "8025721031449"
                 },
                 {
                   "code": "1602-0304",
@@ -9310,7 +9493,8 @@
                   "conf": null,
                   "imb": 5,
                   "pallet": null,
-                  "kind": "article"
+                  "kind": "article",
+                  "ean": "8025721034075"
                 }
               ]
             },
@@ -9336,7 +9520,8 @@
                   "conf": null,
                   "imb": 2,
                   "pallet": null,
-                  "kind": "article"
+                  "kind": "article",
+                  "ean": "8025721030329"
                 }
               ]
             }
@@ -9374,7 +9559,8 @@
                   "conf": null,
                   "imb": 12,
                   "pallet": null,
-                  "kind": "article"
+                  "kind": "article",
+                  "ean": "8025721032439"
                 },
                 {
                   "code": "1603-0202",
@@ -9384,7 +9570,8 @@
                   "conf": null,
                   "imb": 50,
                   "pallet": null,
-                  "kind": "article"
+                  "kind": "article",
+                  "ean": "8025721030244"
                 }
               ]
             },
@@ -9412,7 +9599,8 @@
                   "conf": null,
                   "imb": 4,
                   "pallet": null,
-                  "kind": "article"
+                  "kind": "article",
+                  "ean": "8025721032996"
                 },
                 {
                   "code": "1603-0302",
@@ -9422,7 +9610,8 @@
                   "conf": null,
                   "imb": 12,
                   "pallet": null,
-                  "kind": "article"
+                  "kind": "article",
+                  "ean": "8025721033009"
                 }
               ]
             },
@@ -9445,7 +9634,8 @@
                   "conf": null,
                   "imb": 1,
                   "pallet": null,
-                  "kind": "article"
+                  "kind": "article",
+                  "ean": "8025721032453"
                 },
                 {
                   "code": "1604-0502",
@@ -9455,7 +9645,8 @@
                   "conf": null,
                   "imb": 1,
                   "pallet": null,
-                  "kind": "article"
+                  "kind": "article",
+                  "ean": "8025721032460"
                 },
                 {
                   "code": "1604-0503",
@@ -9465,7 +9656,8 @@
                   "conf": null,
                   "imb": 1,
                   "pallet": null,
-                  "kind": "article"
+                  "kind": "article",
+                  "ean": "8025721032477"
                 },
                 {
                   "code": "1604-0504",
@@ -9475,7 +9667,8 @@
                   "conf": null,
                   "imb": 1,
                   "pallet": null,
-                  "kind": "article"
+                  "kind": "article",
+                  "ean": "8025721032484"
                 },
                 {
                   "code": "1604-0505",
@@ -9485,7 +9678,8 @@
                   "conf": null,
                   "imb": 1,
                   "pallet": null,
-                  "kind": "article"
+                  "kind": "article",
+                  "ean": "8025721032491"
                 },
                 {
                   "code": "1604-0506",
@@ -9495,7 +9689,8 @@
                   "conf": null,
                   "imb": 1,
                   "pallet": null,
-                  "kind": "article"
+                  "kind": "article",
+                  "ean": "8025721034303"
                 },
                 {
                   "code": "1604-0301",
@@ -9505,7 +9700,8 @@
                   "conf": null,
                   "imb": 3,
                   "pallet": null,
-                  "kind": "article"
+                  "kind": "article",
+                  "ean": "8025721032422"
                 },
                 {
                   "code": "1604-0302",
@@ -9515,7 +9711,8 @@
                   "conf": null,
                   "imb": 3,
                   "pallet": null,
-                  "kind": "article"
+                  "kind": "article",
+                  "ean": "8025721034334"
                 }
               ]
             },
@@ -9538,7 +9735,8 @@
                   "conf": null,
                   "imb": 1,
                   "pallet": null,
-                  "kind": "article"
+                  "kind": "article",
+                  "ean": "8025721030206"
                 },
                 {
                   "code": "1006-0171",
@@ -9548,7 +9746,8 @@
                   "conf": null,
                   "imb": 1,
                   "pallet": null,
-                  "kind": "article"
+                  "kind": "article",
+                  "ean": "8025721034051"
                 },
                 {
                   "code": "1006-0160",
@@ -9558,7 +9757,8 @@
                   "conf": null,
                   "imb": 1,
                   "pallet": null,
-                  "kind": "article"
+                  "kind": "article",
+                  "ean": "8025721034488"
                 }
               ]
             },
@@ -9581,7 +9781,8 @@
                   "conf": null,
                   "imb": 2,
                   "pallet": null,
-                  "kind": "article"
+                  "kind": "article",
+                  "ean": "8025721033344"
                 },
                 {
                   "code": "1602-0602",
@@ -9591,7 +9792,8 @@
                   "conf": null,
                   "imb": 4,
                   "pallet": null,
-                  "kind": "article"
+                  "kind": "article",
+                  "ean": "8025721030749"
                 },
                 {
                   "code": "1602-0604",
@@ -9601,7 +9803,8 @@
                   "conf": null,
                   "imb": 2,
                   "pallet": null,
-                  "kind": "article"
+                  "kind": "article",
+                  "ean": "8025721034082"
                 }
               ]
             },
@@ -9724,7 +9927,8 @@
                   "conf": null,
                   "imb": 1,
                   "pallet": null,
-                  "kind": "article"
+                  "kind": "article",
+                  "ean": "8025721030787"
                 }
               ]
             },
@@ -9747,7 +9951,8 @@
                   "conf": null,
                   "imb": 1,
                   "pallet": null,
-                  "kind": "article"
+                  "kind": "article",
+                  "ean": "8025721032446"
                 },
                 {
                   "code": "1604-0203",
@@ -9757,7 +9962,8 @@
                   "conf": null,
                   "imb": 1,
                   "pallet": null,
-                  "kind": "article"
+                  "kind": "article",
+                  "ean": "8025721033566"
                 }
               ]
             },
@@ -9780,7 +9986,8 @@
                   "conf": null,
                   "imb": 4,
                   "pallet": null,
-                  "kind": "article"
+                  "kind": "article",
+                  "ean": "8025721032262"
                 },
                 {
                   "code": "2412-0801",
@@ -9790,7 +9997,8 @@
                   "conf": null,
                   "imb": 4,
                   "pallet": null,
-                  "kind": "article"
+                  "kind": "article",
+                  "ean": "8025721032279"
                 },
                 {
                   "code": "2412-0802",
@@ -9800,7 +10008,8 @@
                   "conf": null,
                   "imb": 4,
                   "pallet": null,
-                  "kind": "article"
+                  "kind": "article",
+                  "ean": "8025721032286"
                 },
                 {
                   "code": "2412-1001",
@@ -9810,7 +10019,8 @@
                   "conf": null,
                   "imb": 4,
                   "pallet": null,
-                  "kind": "article"
+                  "kind": "article",
+                  "ean": "8025721032293"
                 },
                 {
                   "code": "2412-1002",
@@ -9820,7 +10030,8 @@
                   "conf": null,
                   "imb": 4,
                   "pallet": null,
-                  "kind": "article"
+                  "kind": "article",
+                  "ean": "8025721032309"
                 },
                 {
                   "code": "2412-1003",
@@ -9830,7 +10041,8 @@
                   "conf": null,
                   "imb": 4,
                   "pallet": null,
-                  "kind": "article"
+                  "kind": "article",
+                  "ean": "8025721032316"
                 },
                 {
                   "code": "2412-1004",
@@ -9840,7 +10052,8 @@
                   "conf": null,
                   "imb": 4,
                   "pallet": null,
-                  "kind": "article"
+                  "kind": "article",
+                  "ean": "8025721032323"
                 },
                 {
                   "code": "2412-1005",
@@ -9850,7 +10063,8 @@
                   "conf": null,
                   "imb": 4,
                   "pallet": null,
-                  "kind": "article"
+                  "kind": "article",
+                  "ean": "8025721032330"
                 },
                 {
                   "code": "2412-1201",
@@ -9860,7 +10074,8 @@
                   "conf": null,
                   "imb": 4,
                   "pallet": null,
-                  "kind": "article"
+                  "kind": "article",
+                  "ean": "8025721032347"
                 },
                 {
                   "code": "2412-1202",
@@ -9870,7 +10085,8 @@
                   "conf": null,
                   "imb": 4,
                   "pallet": null,
-                  "kind": "article"
+                  "kind": "article",
+                  "ean": "8025721032354"
                 },
                 {
                   "code": "2412-1203",
@@ -9880,7 +10096,8 @@
                   "conf": null,
                   "imb": 4,
                   "pallet": null,
-                  "kind": "article"
+                  "kind": "article",
+                  "ean": "8025721032361"
                 },
                 {
                   "code": "2412-1204",
@@ -9890,7 +10107,8 @@
                   "conf": null,
                   "imb": 4,
                   "pallet": null,
-                  "kind": "article"
+                  "kind": "article",
+                  "ean": "8025721032378"
                 },
                 {
                   "code": "2412-1205",
@@ -9900,7 +10118,8 @@
                   "conf": null,
                   "imb": 4,
                   "pallet": null,
-                  "kind": "article"
+                  "kind": "article",
+                  "ean": "8025721032385"
                 },
                 {
                   "code": "2412-1401",
@@ -9910,7 +10129,8 @@
                   "conf": null,
                   "imb": 4,
                   "pallet": null,
-                  "kind": "article"
+                  "kind": "article",
+                  "ean": "8025721033887"
                 },
                 {
                   "code": "2412-0000",
@@ -9920,7 +10140,8 @@
                   "conf": null,
                   "imb": 4,
                   "pallet": null,
-                  "kind": "article"
+                  "kind": "article",
+                  "ean": "8025721032392"
                 },
                 {
                   "code": "2412-1208",
@@ -9985,7 +10206,8 @@
                   "conf": null,
                   "imb": 10,
                   "pallet": null,
-                  "kind": "article"
+                  "kind": "article",
+                  "ean": "8025721030336"
                 },
                 {
                   "code": "1604-0103",
@@ -9995,7 +10217,8 @@
                   "conf": null,
                   "imb": 1,
                   "pallet": null,
-                  "kind": "article"
+                  "kind": "article",
+                  "ean": "8025721033351"
                 },
                 {
                   "code": "1604-0105",
@@ -10005,7 +10228,8 @@
                   "conf": null,
                   "imb": 1,
                   "pallet": null,
-                  "kind": "article"
+                  "kind": "article",
+                  "ean": "8025721034358"
                 },
                 {
                   "code": "1604-0401",
@@ -10015,7 +10239,8 @@
                   "conf": null,
                   "imb": 1,
                   "pallet": null,
-                  "kind": "article"
+                  "kind": "article",
+                  "ean": "8025721033139"
                 },
                 {
                   "code": "1604-0418",
@@ -10142,7 +10367,8 @@
                   "conf": null,
                   "imb": 20,
                   "pallet": null,
-                  "kind": "article"
+                  "kind": "article",
+                  "ean": "8025721034501"
                 }
               ]
             }
@@ -10182,7 +10408,8 @@
                   "conf": 500,
                   "imb": 3000,
                   "pallet": null,
-                  "kind": "article"
+                  "kind": "article",
+                  "ean": "8025721010369"
                 },
                 {
                   "code": "1702-0306",
@@ -10192,7 +10419,8 @@
                   "conf": 250,
                   "imb": 3000,
                   "pallet": null,
-                  "kind": "article"
+                  "kind": "article",
+                  "ean": "8025721010352"
                 },
                 {
                   "code": "1702-0307",
@@ -10202,7 +10430,8 @@
                   "conf": 100,
                   "imb": 3000,
                   "pallet": null,
-                  "kind": "article"
+                  "kind": "article",
+                  "ean": "8025721010345"
                 },
                 {
                   "code": "1702-0308",
@@ -10212,7 +10441,8 @@
                   "conf": 50,
                   "imb": 1000,
                   "pallet": null,
-                  "kind": "article"
+                  "kind": "article",
+                  "ean": "8025721030992"
                 }
               ]
             },
@@ -10242,7 +10472,8 @@
                   "conf": 60,
                   "imb": 480,
                   "pallet": null,
-                  "kind": "article"
+                  "kind": "article",
+                  "ean": "8025721031562"
                 }
               ]
             },
@@ -10272,7 +10503,8 @@
                   "conf": 60,
                   "imb": 480,
                   "pallet": null,
-                  "kind": "article"
+                  "kind": "article",
+                  "ean": "8025721032507"
                 }
               ]
             },
@@ -10304,7 +10536,8 @@
                   "conf": 50,
                   "imb": 1000,
                   "pallet": null,
-                  "kind": "article"
+                  "kind": "article",
+                  "ean": "8025721031982"
                 }
               ]
             },
@@ -10335,7 +10568,8 @@
                   "conf": 200,
                   "imb": 3000,
                   "pallet": null,
-                  "kind": "article"
+                  "kind": "article",
+                  "ean": "8025721030893"
                 },
                 {
                   "code": "1705-0103",
@@ -10345,7 +10579,8 @@
                   "conf": 20,
                   "imb": 360,
                   "pallet": null,
-                  "kind": "article"
+                  "kind": "article",
+                  "ean": "8025721030251"
                 },
                 {
                   "code": "1705-0104",
@@ -10355,7 +10590,8 @@
                   "conf": 100,
                   "imb": 500,
                   "pallet": null,
-                  "kind": "article"
+                  "kind": "article",
+                  "ean": "8025721032590"
                 },
                 {
                   "code": "1705-0105",
@@ -10365,7 +10601,8 @@
                   "conf": 20,
                   "imb": 200,
                   "pallet": null,
-                  "kind": "article"
+                  "kind": "article",
+                  "ean": "8025721032569"
                 },
                 {
                   "code": "1705-0106",
@@ -10375,7 +10612,8 @@
                   "conf": 100,
                   "imb": 700,
                   "pallet": null,
-                  "kind": "article"
+                  "kind": "article",
+                  "ean": "8025721032613"
                 },
                 {
                   "code": "1705-0107",
@@ -10385,7 +10623,8 @@
                   "conf": 20,
                   "imb": 200,
                   "pallet": null,
-                  "kind": "article"
+                  "kind": "article",
+                  "ean": "8025721032606"
                 },
                 {
                   "code": "1705-0403",
@@ -10395,7 +10634,8 @@
                   "conf": 20,
                   "imb": 200,
                   "pallet": null,
-                  "kind": "article"
+                  "kind": "article",
+                  "ean": "8025721033368"
                 },
                 {
                   "code": "1705-0401",
@@ -10405,7 +10645,8 @@
                   "conf": 100,
                   "imb": 500,
                   "pallet": null,
-                  "kind": "article"
+                  "kind": "article",
+                  "ean": "8025721033375"
                 },
                 {
                   "code": "1705-0404",
@@ -10415,7 +10656,8 @@
                   "conf": 20,
                   "imb": 200,
                   "pallet": null,
-                  "kind": "article"
+                  "kind": "article",
+                  "ean": "8025721033382"
                 },
                 {
                   "code": "1705-0402",
@@ -10454,7 +10696,8 @@
                   "conf": 6000,
                   "imb": 250,
                   "pallet": null,
-                  "kind": "article"
+                  "kind": "article",
+                  "ean": "8025721030886"
                 },
                 {
                   "code": "1705-0203",
@@ -10464,7 +10707,8 @@
                   "conf": 6000,
                   "imb": 250,
                   "pallet": null,
-                  "kind": "article"
+                  "kind": "article",
+                  "ean": "8025721031425"
                 }
               ]
             },
@@ -10569,7 +10813,8 @@
                   "conf": 1,
                   "imb": 15,
                   "pallet": null,
-                  "kind": "article"
+                  "kind": "article",
+                  "ean": "8025721030138"
                 },
                 {
                   "code": "1901-0130",
@@ -10579,7 +10824,8 @@
                   "conf": 1,
                   "imb": 15,
                   "pallet": null,
-                  "kind": "article"
+                  "kind": "article",
+                  "ean": "8025721030145"
                 },
                 {
                   "code": "1901-0260",
@@ -10589,7 +10835,8 @@
                   "conf": 1,
                   "imb": 15,
                   "pallet": null,
-                  "kind": "article"
+                  "kind": "article",
+                  "ean": "8025721032620"
                 }
               ]
             }
@@ -10621,7 +10868,8 @@
                   "conf": null,
                   "imb": 1,
                   "pallet": null,
-                  "kind": "article"
+                  "kind": "article",
+                  "ean": "8025721031975"
                 },
                 {
                   "code": "5703-0003",
@@ -10631,7 +10879,8 @@
                   "conf": null,
                   "imb": 1,
                   "pallet": null,
-                  "kind": "article"
+                  "kind": "article",
+                  "ean": "8025721032637"
                 }
               ]
             }
