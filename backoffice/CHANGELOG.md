@@ -2,6 +2,13 @@
 
 Formato: versione, data, cosa cambia. La versione sta nel file `VERSION` e compare in basso nella barra laterale: cliccandola si apre questa pagina («Novità»).
 
+## 0.11.0 — 25 novembre 2026
+
+### Novità
+- **Catalogo (solo amministratore)**: nuova voce nel menu. Carichi i due file IDML di InDesign di una linea, italiano e inglese, e vedi le differenze con quello che c'è oggi sul sito: articoli nuovi, articoli tolti, descrizioni e dati cambiati, codici EAN (finora assenti), schede prodotto con caratteristiche in italiano e in inglese. Per ora è solo una anteprima: non cambia nulla sul sito (l'approvazione e la bozza arrivano dopo).
+- Italiano e inglese restano lingue indipendenti: i punti delle caratteristiche non si abbinano riga per riga; i casi con numero di punti diverso sono elencati sotto «Da controllare».
+- Il file viene letto e poi scartato: non resta salvato sul server, e si rifiutano file con dichiarazioni esterne.
+
 ## 0.10.4 — 18 novembre 2026
 
 ### Correzioni

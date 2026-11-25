@@ -224,6 +224,6 @@ def cards(it_path: str, en_path: str, names: dict[str, str]) -> tuple[dict[str, 
         fn = fe.paras[1:] if fe else []
         aligned = bool(fe) and len(fi) == len(fn)
         if feat and not aligned:
-            problems.append(f"{slug}: {len(fi)} punti in italiano, {len(fn)} in inglese (da abbinare a mano)")
+            problems.append(f"{slug}: {len(fi)} punti in italiano, {len(fn)} in inglese (le lingue restano indipendenti)")
         out[slug] = Card(t.page, te.text if te else None, fi, fn, aligned)
     return out, problems

@@ -4,7 +4,10 @@ declare(strict_types=1);
 
 use Backoffice\App;
 use Backoffice\Auth;
+use Backoffice\CatalogDiff;
+use Backoffice\CatalogView;
 use Backoffice\Changelog;
+use Backoffice\Idml;
 use Backoffice\GitHub;
 use Backoffice\Publisher;
 use Backoffice\PublishView;
@@ -73,7 +76,7 @@ $render = static function (string $title, string $body, ?array $user = null) use
         exit;
     }
     $all = ['dashboard' => ['Dashboard', 'dashboard'], 'products' => ['Prodotti', 'products'], 'requests' => ['Preventivi e richieste', 'requests'], 'orders' => ['Ordini', 'orders'],
-        'clients' => ['Clienti', 'clients'], 'fairs' => ['Fiere', 'content'], 'gallery' => ['Galleria', 'eye'], 'videos' => ['Video', 'arrow-right'], 'texts' => ['Testi', 'content'],
+        'clients' => ['Clienti', 'clients'], 'fairs' => ['Fiere', 'content'], 'gallery' => ['Galleria', 'eye'], 'videos' => ['Video', 'arrow-right'], 'texts' => ['Testi', 'content'], 'catalog' => ['Catalogo', 'products'],
         'listini' => ['Listini riservati', 'listini'], 'stats' => ['Statistiche', 'stats'], 'mail' => ['Posta', 'mail'], 'conditions' => ['Condizioni PDF', 'requests'], 'publish' => ['Pubblica', 'external-link'],
         'users' => ['Utenti e ruoli', 'users'], 'activity' => ['Registro attività', 'activity']];
     $links = array_filter($all, static fn (string $p): bool => Auth::canOpen($user, $p), ARRAY_FILTER_USE_KEY);
@@ -327,6 +330,27 @@ if (($page === 'gallery' || $page === 'gallery_photo' || $page === 'gallery_img'
 }
 
 // --- Testi fissi del sito, per pagina (solo amministratore). Le modifiche restano in bozza.
+// --- Catalogo: confronto con gli IDML di InDesign (solo amministratore). Sola lettura: non cambia nulla sul sito.
+if ($page === 'catalog' && Auth::can($user, 'publish')) {
+    $lines = CatalogDiff::lines();
+    $line = is_string($_POST['line'] ?? null) && isset($lines[$_POST['line']]) ? $_POST['line'] : (string) array_key_first($lines);
+    if ($isPost) {
+        $ok = static fn ($f): bool => is_array($f) && ($f['error'] ?? UPLOAD_ERR_NO_FILE) === UPLOAD_ERR_OK && is_uploaded_file((string) $f['tmp_name']);
+        if (!$ok($_FILES['idml_it'] ?? null) || !$ok($_FILES['idml_en'] ?? null)) {
+            $render('Catalogo', '<p class="flash">Servono entrambi i file, italiano e inglese. Se sono molto grandi controlla il limite di caricamento del server.</p>' . CatalogView::form(Auth::csrf(), $line), $user);
+        }
+        try {
+            @ini_set('memory_limit', '512M');
+            $report = CatalogDiff::compare(Idml::open($_FILES['idml_it']['tmp_name']), Idml::open($_FILES['idml_en']['tmp_name']), $line);
+        } catch (\Throwable $ex) {
+            $render('Catalogo', '<p class="flash">' . $e($ex instanceof \RuntimeException ? $ex->getMessage() : 'Non riesco a leggere i file.') . '</p>' . CatalogView::form(Auth::csrf(), $line), $user);
+        }
+        App::log($uid, 'catalogo.confronto', $line);
+        $render('Catalogo: differenze con il sito', CatalogView::report($report) . CatalogView::form(Auth::csrf(), $line), $user);
+    }
+    $render('Catalogo', CatalogView::form(Auth::csrf(), $line), $user);
+}
+
 // --- Video e tutorial (solo amministratore): elenco con gruppi, aggiunta, scheda di un video. Le modifiche restano in bozza.
 if (($page === 'videos' || $page === 'video') && Auth::can($user, 'content')) {
     Videos::importSeed();

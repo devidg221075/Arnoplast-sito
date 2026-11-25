@@ -104,3 +104,8 @@ Variazione al progetto: niente WordPress. Il sito resta statico; i contenuti si 
 - L'importazione dai due IDML (ITA ed ENG) li **collega** tra loro: stesso codice articolo = stessa riga; i testi si abbinano in ordine nei blocchi di ciascun prodotto. Se l'abbinamento non è sicuro, compare nella schermata delle differenze.
 - Prova del 25 novembre sul Garden 2026: ITA ed ENG hanno gli stessi 344 codici; 340 sono già nel sito, 4 nuovi (clip per tubo irrigazione 16/20/25/32 mm, `1704-0216/0220/0225/0232`); 257 righe su 369 hanno il codice EAN (oggi assente dal sito). Il file «FRA» ricevuto per errore non si usa.
 - Le foto non sono incluse nell'IDML (collegamenti esterni): restano quelle già nel sito; per prodotti nuovi serve la cartella `Links` del catalogo.
+
+## Catalogo: stato dei lavori al 25 novembre 2026 (backoffice 0.11.0)
+- Fatto: lettura IDML in PHP (`backoffice/src/Idml.php`) gemella di quella in Python (`arnoplast/extract/idml.py`), confronto (`CatalogDiff.php`) e pagina «Catalogo» (solo amministratore), in sola lettura. La copia del catalogo con cui si confronta è `backoffice/seed/catalogo.json` (uguale a `data/catalog.json`, controllata dai test).
+- Decisione: italiano e inglese restano **lingue indipendenti** nei punti delle caratteristiche (9 schede del Garden hanno un numero diverso di punti).
+- Da fare (ordine): approvazione dei cambiamenti e salvataggio come bozza; applicazione a `data/catalog.json` con «Pubblica»; correzioni manuali con avviso di conflitto; esportazione CSV delle correzioni; poi Agricoltura e Raccolta olive (IDML da ricevere).

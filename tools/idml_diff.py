@@ -81,7 +81,7 @@ def main(it_path: str, en_path: str, line: str, out: str) -> None:
               f"- Schede trovate nell'IDML: {len(cards)} su {len(prods)}",
               f"- Caratteristiche italiane uguali al sito: {feat_same}; **diverse: {len(feat_changed)}**",
               f"- Schede con nome e caratteristiche **inglesi** abbinate con sicurezza: {feat_en}",
-              f"- Da abbinare a mano (punti diversi tra le lingue o titolo doppio): {len(card_problems)}", ""]
+              f"- Da controllare (punti diversi tra le lingue, titolo doppio: le lingue restano indipendenti): {len(card_problems)}", ""]
     lines += [f"- {p}" for p in card_problems]
     lines += ["", "Caratteristiche italiane cambiate (punti prima → dopo):", ""]
     lines += [f"- {slug}: {a} → {b}" for slug, a, b in feat_changed[:40]]

@@ -108,3 +108,10 @@ def test_gallery_from_backoffice_is_accepted_by_the_build_tools(tmp_path):
     final = json.loads(dp.read_text(encoding="utf-8"))["foto"]
     assert (final[-1]["w"], final[-1]["h"]) == (1400, 788) and "sorgente" not in final[-1]
     GT.check(final)
+
+
+def test_catalog_seed_is_the_site_catalog():
+    """seed/catalogo.json è la copia di data/catalog.json con cui il backoffice confronta gli IDML: devono coincidere."""
+    seed = (ROOT / "backoffice" / "seed" / "catalogo.json").read_text(encoding="utf-8")
+    data = (ROOT / "data" / "catalog.json").read_text(encoding="utf-8")
+    assert seed == data, "copiare data/catalog.json in backoffice/seed/catalogo.json"
