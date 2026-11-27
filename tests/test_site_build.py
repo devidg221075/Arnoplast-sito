@@ -380,3 +380,22 @@ def test_build_writes_apache_htaccess(tmp_path):
     assert "RedirectMatch 301 \"^/catalogo-agricoltura-professionale/?$\" \"/it/agricoltura/\"" in ht
     assert ht.count("RedirectMatch") >= 100
     assert "Options -Indexes" in ht
+
+
+def test_test_site_is_not_indexable_when_flagged(tmp_path, monkeypatch):
+    """Sito di prova (ARNO_NOINDEX=1): robots.txt blocca tutto, ogni pagina è noindex, intestazione X-Robots-Tag."""
+    monkeypatch.setenv("ARNO_NOINDEX", "1")
+    build_site(cat(prod()), tmp_path)
+    assert (tmp_path / "robots.txt").read_text(encoding="utf-8") == "User-agent: *\nDisallow: /\n"
+    for f in tmp_path.rglob("*.html"):
+        assert 'name="robots" content="noindex"' in f.read_text(encoding="utf-8"), f
+    assert "X-Robots-Tag: noindex, nofollow" in (tmp_path / "_headers").read_text(encoding="utf-8")
+    assert 'Header always set X-Robots-Tag "noindex, nofollow"' in (tmp_path / ".htaccess").read_text(encoding="utf-8")
+
+
+def test_final_site_stays_indexable_without_the_flag(tmp_path, monkeypatch):
+    monkeypatch.delenv("ARNO_NOINDEX", raising=False)
+    build_site(cat(prod()), tmp_path)
+    assert "Allow: /" in (tmp_path / "robots.txt").read_text(encoding="utf-8")
+    assert "X-Robots-Tag" not in (tmp_path / "_headers").read_text(encoding="utf-8")
+    assert "noindex" not in (tmp_path / "it" / "index.html").read_text(encoding="utf-8")

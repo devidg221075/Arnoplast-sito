@@ -67,6 +67,8 @@ jobs:
       - name: Costruzione del sito
         env:
           ARNO_FORMS_ENDPOINT: ${{ vars.ARNO_FORMS_ENDPOINT || 'https://gestione.arnoplast.it/api/submit.php' }}
+          # Sito di prova (nuovo.arnoplast.it): non indicizzabile. Con il sito definitivo, creare la variabile ARNO_NOINDEX = 0.
+          ARNO_NOINDEX: ${{ vars.ARNO_NOINDEX || '1' }}
         run: python -m arnoplast.site.build
 
       - name: Consegna via FTP

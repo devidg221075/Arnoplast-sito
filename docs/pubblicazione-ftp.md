@@ -40,6 +40,13 @@ Nessuna password sta nel repository: i segreti stanno in GitHub (FTP) e in `conf
 - GitHub → Actions → «Costruisci e pubblica il sito» → **Run workflow**. Se è verde, il sito è sul server.
 - Poi nel backoffice: modifica un testo → **Pubblica** → controlla che lo stato dell'ultima costruzione passi a «riuscita».
 
+## Il sito di prova non va sui motori di ricerca
+Finché il sito sta su `nuovo.arnoplast.it`, la costruzione lo rende non indicizzabile: `robots.txt` con «Disallow: /», ogni pagina con «noindex», intestazione `X-Robots-Tag: noindex, nofollow` (anche per PDF e immagini) e nessuna riga «Sitemap». Lo decide la variabile `ARNO_NOINDEX` del workflow, che per impostazione predefinita vale 1.
+
+**Quando si passa a www.arnoplast.it** bisogna toglierlo, altrimenti il sito definitivo non comparirà su Google: nel repository, «Settings → Secrets and variables → Actions → Variables», creare `ARNO_NOINDEX` con valore `0`, poi premere «Pubblica» (o avviare il workflow a mano). Controllare che `https://www.arnoplast.it/robots.txt` contenga «Allow: /» e la riga «Sitemap».
+
+Nota: il blocco avvisa i motori di ricerca onesti; non impedisce a chi conosce l'indirizzo di aprire il sito. Per renderlo davvero privato serve una password sul sito (cPanel → «Directory Privacy»).
+
 ## Quando si passa a www.arnoplast.it
 - Cambia `FTP_DIR` / l'utente FTP perché puntino alla radice del sito definitivo e, in `config.php`, `site_url` e `assets_url`.
 - Il file `.ftp-deploy-sync-state.json` che l'azione scrive sul server serve a caricare solo i file cambiati: non va cancellato.
